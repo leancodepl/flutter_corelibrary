@@ -1,0 +1,17 @@
+name: login_client
+description: A new Flutter package project.
+version: 0.0.0
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/login_client
+repository: https://github.com/leancodepl/flutter_corelibrary
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
