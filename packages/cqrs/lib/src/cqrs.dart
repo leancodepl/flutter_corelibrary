@@ -15,28 +15,48 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
+import 'command_result.dart';
+import 'cqrs_exception.dart';
 import 'transport_types.dart';
 
-typedef ClientFactory = Client Function();
-
+/// Class used for communicating with the backend via queries and commands.
 class CQRS {
+  /// Creates a [CQRS] class.
+  ///
+  /// [_client] is an [http.Client] client to be used for sending requests. It
+  /// should handle authentication and renewing the token when it is neccessary.
+  ///
+  /// If there are errors with requests being sent to the wrong URL, make sure
+  /// you provided a correct [_apiUri], that is with presense or lack of the
+  /// trailing slash.
+  ///
+  /// The [timeout] defaults to 30 seconds. [headers] have lesser priority than
+  /// those provided directly into [get] or [run] methods and will be overrided
+  /// by those in case of some headers sharing the same key.
   CQRS(
-    this._clientFactory,
+    this._client,
     this._apiUri, {
     Duration timeout = const Duration(seconds: 30),
     Map<String, String> headers = const {},
-  })  : _timeout = timeout,
+  })  : assert(_client != null),
+        assert(_apiUri != null),
+        assert(timeout != null),
+        assert(headers != null),
+        _timeout = timeout,
         _headers = headers;
 
-  final ClientFactory _clientFactory;
+  final http.Client _client;
   final Uri _apiUri;
   final Duration _timeout;
   final Map<String, String> _headers;
 
-  Client get _client => _clientFactory();
-
+  /// Send a query to the backend and expect a result of the type [T].
+  ///
+  /// Headers provided in [headers] are on top of the [CQRS.headers], meaning
+  /// [headers] override [_headers]. `Content-Type` header will be
+  /// ignored.
   Future<T> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -44,82 +64,58 @@ class CQRS {
     final response = await _send(query, headers: headers);
 
     if (response.statusCode == 200) {
-      final decodedJson = json.decode(response.body);
-      return decodedJson != null ? query.resultFactory(decodedJson) : null;
+      // TODO(Albert221): Catching decoding errors
+      final json = jsonDecode(response.body);
+      return json != null ? query.resultFactory(json) : null;
     }
 
-    throw CQRSException(response.statusCode, response.reasonPhrase);
+    throw CQRSException(
+      response,
+      'Invalid, non 200 status code returned by ${query.getFullName()} query.',
+    );
   }
 
+  /// Send a command to the backend and get the results of running it, that is
+  /// whether it was successful and validation errors if there were any.
+  ///
+  /// Headers provided in [headers] are on top of the [CQRS.headers], meaning
+  /// [headers] override [_headers]. `Content-Type` header will be
+  /// ignored.
   Future<CommandResult> run(
     Command command, {
     Map<String, String> headers = const {},
   }) async {
     final response = await _send(command, headers: headers);
 
-    if (response.statusCode == 200 || response.statusCode == 422) {
-      final decodedJson = json.decode(response.body) as Map<String, dynamic>;
-      return _commandResultFromDecodedJson(decodedJson);
+    if ([200, 422].contains(response.statusCode)) {
+      // TODO(Albert221): Catching decoding errors
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+
+      return CommandResult.fromJson(json);
     }
 
-    throw CQRSException(response.statusCode, response.reasonPhrase);
+    throw CQRSException(
+      response,
+      'Invalid, non 200 or 422 status code returned '
+      'by ${command.getFullName()} command.',
+    );
   }
 
-  Future<Response> _send(
+  Future<http.Response> _send(
     Contractable contractable, {
     Map<String, String> headers = const {},
   }) async {
+    // TODO(Albert221): Catch network errors
     return _client.post(
       _apiUri
           .resolve('${contractable.pathPrefix}/${contractable.getFullName()}'),
-      body: json.encode(contractable),
+      // TODO(Albert221): Catching encoding errors
+      body: jsonEncode(contractable),
       headers: {
         ..._headers,
         ...headers,
         'Content-Type': 'application/json',
       },
     ).timeout(_timeout);
-  }
-
-  CommandResult _commandResultFromDecodedJson(Map<String, dynamic> map) {
-    final wasSuccessful = map['WasSuccessful'] as bool;
-
-    final list = map['ValidationErrors'] as List;
-
-    final validationErrors = list
-        .map((error) => ValidationError(
-              error['ErrorCode'] as int,
-              error['ErrorMessage'] as String,
-            ))
-        .toList();
-
-    return CommandResult(wasSuccessful, validationErrors);
-  }
-}
-
-class CommandResult {
-  // ignore: avoid_positional_boolean_parameters
-  const CommandResult(this.wasSuccessful, this.validationErrors);
-
-  final bool wasSuccessful;
-  final List<ValidationError> validationErrors;
-}
-
-class ValidationError {
-  const ValidationError(this.code, this.message);
-
-  final int code;
-  final String message;
-}
-
-class CQRSException implements Exception {
-  const CQRSException(this.statusCode, this.reasonPhrase);
-
-  final int statusCode;
-  final String reasonPhrase;
-
-  @override
-  String toString() {
-    return '$statusCode: $reasonPhrase';
   }
 }

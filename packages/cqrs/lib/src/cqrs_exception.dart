@@ -12,10 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'transport_types.dart';
+import 'package:http/http.dart';
 
-/// A generic interface describing a query and its result.
-abstract class IRemoteQuery<T> extends Query<T> {}
+class CQRSException implements Exception {
+  const CQRSException(this.response, [this.message]) : assert(response != null);
 
-/// A command interface.
-abstract class IRemoteCommand extends Command {}
+  final Response response;
+  final String message;
+
+  @override
+  String toString() {
+    final builder = StringBuffer();
+
+    if (message != null) {
+      builder.writeln(message);
+    }
+
+    builder.writeln(
+      'Server returned a ${response.statusCode} ${response.reasonPhrase} '
+      'status. Response body:',
+    );
+    builder.write(response.body);
+
+    return builder.toString();
+  }
+}

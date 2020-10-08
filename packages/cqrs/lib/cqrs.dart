@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO(Albert221): Library dartdoc
 library cqrs;
 
+export 'src/command_result.dart';
 export 'src/cqrs.dart';
