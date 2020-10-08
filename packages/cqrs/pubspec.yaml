@@ -1,8 +1,11 @@
-name: "cqrs"
-version: 3.0.2
+name: cqrs
 description: CQRS client with helper Command/Query classes for Dart
-homepage: https://leancode.pl/
+version: 3.0.2
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/cqrs
+repository: https://github.com/leancodepl/flutter_corelibrary
+
 environment:
-  sdk: ">=2.0.0<3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
+
 dependencies:
-  http: ^0.12.0
+  http: ^0.12.2
