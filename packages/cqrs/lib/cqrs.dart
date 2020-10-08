@@ -9,14 +9,14 @@ class CQRS {
   CQRS(this._getClient, this._apiEndpoint, this._timeLimit, {this.headers});
 
   Client get _client => _getClient();
-  ClientGetter _getClient;
-  Uri _apiEndpoint;
-  Duration _timeLimit;
+  final ClientGetter _getClient;
+  final Uri _apiEndpoint;
+  final Duration _timeLimit;
   Map<String, String> headers;
 
   Future<TResult> get<TResult>(Query<TResult> query) async {
     final Response response = await _client
-        .post(_apiEndpoint.resolve('query/' + query.getFullName()),
+        .post(_apiEndpoint.resolve('query/${query.getFullName()}'),
             headers:
                 headers ?? <String, String>{'Content-Type': 'application/json'},
             body: json.encode(query.toJson()))
@@ -32,14 +32,15 @@ class CQRS {
 
   Future<CommandResult> run(Command command) async {
     final Response response = await _client
-        .post(_apiEndpoint.resolve('command/' + command.getFullName()),
+        .post(_apiEndpoint.resolve('command/${command.getFullName()}'),
             headers:
                 headers ?? <String, String>{'Content-Type': 'application/json'},
             body: json.encode(command.toJson()))
         .timeout(_timeLimit);
 
     if (response.statusCode == 200 || response.statusCode == 422) {
-      final dynamic decodedJson = json.decode(_getReponseBodyString(response));
+      final decodedJson =
+          json.decode(_getReponseBodyString(response)) as Map<String, dynamic>;
       return _commandResultFromDecodedJson(decodedJson);
     }
 
@@ -47,13 +48,13 @@ class CQRS {
   }
 
   CommandResult _commandResultFromDecodedJson(Map<String, dynamic> map) {
-    final bool wasSuccessful = map['WasSuccessful'];
+    final bool wasSuccessful = map['WasSuccessful'] as bool;
 
-    final List<dynamic> list = map['ValidationErrors'];
+    final List<dynamic> list = map['ValidationErrors'] as List;
 
     final List<ValidationError> validationErrors = list
-        .map((dynamic error) =>
-            ValidationError(error['ErrorCode'], error['ErrorMessage']))
+        .map((dynamic error) => ValidationError(
+            error['ErrorCode'] as int, error['ErrorMessage'] as String))
         .toList();
 
     return CommandResult(wasSuccessful, validationErrors);
@@ -76,6 +77,7 @@ abstract class CallToApi {
 }
 
 class CommandResult {
+  // ignore: avoid_positional_boolean_parameters
   const CommandResult(this.wasSuccessful, this.validationErrors);
 
   final bool wasSuccessful;
