@@ -17,3 +17,4 @@ library cqrs;
 
 export 'src/command_result.dart';
 export 'src/cqrs.dart';
+export 'src/cqrs_exception.dart';

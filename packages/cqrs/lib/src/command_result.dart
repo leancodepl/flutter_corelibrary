@@ -32,7 +32,7 @@ class CommandResult {
   /// Validation errors related to the data carried by the [Command].
   final List<ValidationError> errors;
 
-  /// Checks whether this [CommandResult] contains a provided error [code] in
+  /// Checks whether this [CommandResult] contains a provided error `code` in
   /// its validation errors.
   bool hasError(int code) => errors.any((error) => error.code == code);
 }

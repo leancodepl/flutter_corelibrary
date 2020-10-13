@@ -25,14 +25,14 @@ import 'transport_types.dart';
 class CQRS {
   /// Creates a [CQRS] class.
   ///
-  /// [_client] is an [http.Client] client to be used for sending requests. It
+  /// `_client` is an [http.Client] client to be used for sending requests. It
   /// should handle authentication and renewing the token when it is neccessary.
   ///
   /// If there are errors with requests being sent to the wrong URL, make sure
-  /// you provided a correct [_apiUri], that is with presense or lack of the
+  /// you provided a correct `_apiUri`, that is with presense or lack of the
   /// trailing slash.
   ///
-  /// The [timeout] defaults to 30 seconds. [headers] have lesser priority than
+  /// The `timeout` defaults to 30 seconds. `headers` have lesser priority than
   /// those provided directly into [get] or [run] methods and will be overrided
   /// by those in case of some headers sharing the same key.
   CQRS(
@@ -52,11 +52,11 @@ class CQRS {
   final Duration _timeout;
   final Map<String, String> _headers;
 
-  /// Send a query to the backend and expect a result of the type [T].
+  /// Send a query to the backend and expect a result of the type `T`.
   ///
-  /// Headers provided in [headers] are on top of the [CQRS.headers], meaning
-  /// [headers] override [_headers]. `Content-Type` header will be
-  /// ignored.
+  /// Headers provided in `headers` are on top of the `headers` from the [CQRS]
+  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
+  /// will be ignored.
   Future<T> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -78,9 +78,9 @@ class CQRS {
   /// Send a command to the backend and get the results of running it, that is
   /// whether it was successful and validation errors if there were any.
   ///
-  /// Headers provided in [headers] are on top of the [CQRS.headers], meaning
-  /// [headers] override [_headers]. `Content-Type` header will be
-  /// ignored.
+  /// Headers provided in `headers` are on top of the `headers` from the [CQRS]
+  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
+  /// will be ignored.
   Future<CommandResult> run(
     Command command, {
     Map<String, String> headers = const {},
@@ -102,15 +102,14 @@ class CQRS {
   }
 
   Future<http.Response> _send(
-    Contractable contractable, {
+    CQRSMethod cqrsMethod, {
     Map<String, String> headers = const {},
   }) async {
     // TODO(Albert221): Catch network errors
     return _client.post(
-      _apiUri
-          .resolve('${contractable.pathPrefix}/${contractable.getFullName()}'),
+      _apiUri.resolve('${cqrsMethod.pathPrefix}/${cqrsMethod.getFullName()}'),
       // TODO(Albert221): Catching encoding errors
-      body: jsonEncode(contractable),
+      body: jsonEncode(cqrsMethod),
       headers: {
         ..._headers,
         ...headers,

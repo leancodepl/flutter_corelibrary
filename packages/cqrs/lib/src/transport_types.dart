@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Base class for contracts that can be serialized and sent to the backend.
-abstract class Contractable {
+abstract class CQRSMethod {
   /// Returns a JSON-encoded representation of the data this class carries.
   Map<String, dynamic> toJson();
 
@@ -27,8 +27,8 @@ abstract class Contractable {
 }
 
 /// Query describing a criteria for a query and the results it returns.
-abstract class Query<T> implements Contractable {
-  /// Returns a result of type [T] deserialzied from the [json].
+abstract class Query<T> implements CQRSMethod {
+  /// Returns a result of type `T` deserialzied from the `json`.
   T resultFactory(dynamic json);
 
   @override
@@ -36,7 +36,7 @@ abstract class Query<T> implements Contractable {
 }
 
 /// Command carrying data related to performing a certain action on the backend.
-abstract class Command implements Contractable {
+abstract class Command implements CQRSMethod {
   @override
   String get pathPrefix => 'command';
 }
