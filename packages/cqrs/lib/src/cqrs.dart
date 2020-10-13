@@ -57,6 +57,8 @@ class CQRS {
   /// Headers provided in `headers` are on top of the `headers` from the [CQRS]
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
+  ///
+  /// A [CQRSException] will be thrown in case of an error.
   Future<T> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -64,9 +66,16 @@ class CQRS {
     final response = await _send(query, headers: headers);
 
     if (response.statusCode == 200) {
-      // TODO(Albert221): Catching decoding errors
-      final json = jsonDecode(response.body);
-      return json != null ? query.resultFactory(json) : null;
+      try {
+        final json = jsonDecode(response.body);
+
+        return json != null ? query.resultFactory(json) : null;
+      } catch (e) {
+        throw CQRSException(
+          response,
+          'An error occured while decoding response body JSON:\n$e',
+        );
+      }
     }
 
     throw CQRSException(
@@ -81,6 +90,8 @@ class CQRS {
   /// Headers provided in `headers` are on top of the `headers` from the [CQRS]
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
+  ///
+  /// A [CQRSException] will be thrown in case of an error.
   Future<CommandResult> run(
     Command command, {
     Map<String, String> headers = const {},
@@ -88,10 +99,16 @@ class CQRS {
     final response = await _send(command, headers: headers);
 
     if ([200, 422].contains(response.statusCode)) {
-      // TODO(Albert221): Catching decoding errors
-      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      try {
+        final json = jsonDecode(response.body) as Map<String, dynamic>;
 
-      return CommandResult.fromJson(json);
+        return CommandResult.fromJson(json);
+      } catch (e) {
+        throw CQRSException(
+          response,
+          'An error occured while decoding response body JSON:\n$e',
+        );
+      }
     }
 
     throw CQRSException(
@@ -105,10 +122,8 @@ class CQRS {
     CQRSMethod cqrsMethod, {
     Map<String, String> headers = const {},
   }) async {
-    // TODO(Albert221): Catch network errors
     return _client.post(
       _apiUri.resolve('${cqrsMethod.pathPrefix}/${cqrsMethod.getFullName()}'),
-      // TODO(Albert221): Catching encoding errors
       body: jsonEncode(cqrsMethod),
       headers: {
         ..._headers,
