@@ -2,32 +2,66 @@ import 'package:cqrs/src/command_result.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('ValidationError', () {
-    test('has correct field values', () {
-      const error = ValidationError(123, 'Test message');
+  group('CommandResult', () {
+    const error1 = ValidationError(1, 'First error');
+    const error2 = ValidationError(2, 'Second error');
 
-      expect(error.code, 123);
-      expect(error.message, 'Test message');
+    test('has correct fields values', () {
+      const result1 = CommandResult([], success: true);
+
+      expect(result1.success, true);
+      expect(result1.errors, isEmpty);
+
+      const result2 = CommandResult([error1, error2], success: false);
+
+      expect(result2.success, false);
+      expect(result2.errors, hasLength(2));
     });
 
-    test('returns correct string value', () {
-      const error = ValidationError(1337, 'Some message');
+    test('hasError returns correct values', () {
+      const result1 = CommandResult([error1, error2], success: false);
 
-      expect(error.toString(), '1337: Some message');
+      expect(result1.hasError(1), true);
+      expect(result1.hasError(2), true);
+      expect(result1.hasError(3), false);
+
+      const result2 = CommandResult([error2], success: false);
+
+      expect(result2.hasError(1), false);
+      expect(result2.hasError(2), true);
+      expect(result2.hasError(3), false);
+
+      const result3 = CommandResult([], success: false);
+
+      expect(result3.hasError(1), false);
+      expect(result3.hasError(2), false);
+      expect(result3.hasError(3), false);
     });
 
     test('is correctly deserialized from JSON', () {
-      final error = ValidationError.fromJson({
-        'ErrorCode': 128,
-        'ErrorMessage': 'Some other message',
+      final result = CommandResult.fromJson({
+        'WasSuccessful': false,
+        'ValidationErrors': [
+          {
+            'ErrorCode': 12,
+            'ErrorMessage': 'This is an error.',
+          },
+        ],
       });
 
-      expect(error.code, 128);
-      expect(error.message, 'Some other message');
+      expect(
+          result,
+          isA<CommandResult>()
+              .having((r) => r.success, 'success', false)
+              .having(
+                  (r) => r.errors,
+                  'errors',
+                  contains(
+                    isA<ValidationError>()
+                        .having((e) => e.code, 'code', 12)
+                        .having(
+                            (e) => e.message, 'message', 'This is an error.'),
+                  )));
     });
-  });
-
-  group('CommandResult', () {
-    //
   });
 }
