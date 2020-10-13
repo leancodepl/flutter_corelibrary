@@ -38,18 +38,21 @@ jobs:
           channel: ${{ matrix.channel }}
           flutter-version: ${{ matrix.version }}
 
+      - name: Dart version
+        run: dart --version
+
       - name: Cache pub dependencies
         uses: actions/cache@v2
         with:
-          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
       - name: Download pub dependencies
-        run: flutter pub get
+        run: dart pub get
 
       - name: Run analyzer
-        run: flutter analyze
+        run: dart analyze
 
       - name: Run tests
-        run: flutter pub test
+        run: dart --enable-experiment=non-nullable test
