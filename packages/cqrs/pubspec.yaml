@@ -5,7 +5,7 @@ homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/cqrs
 repository: https://github.com/leancodepl/flutter_corelibrary
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   http: ^0.12.2

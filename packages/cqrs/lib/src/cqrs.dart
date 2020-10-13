@@ -40,11 +40,7 @@ class CQRS {
     this._apiUri, {
     Duration timeout = const Duration(seconds: 30),
     Map<String, String> headers = const {},
-  })  : assert(_client != null),
-        assert(_apiUri != null),
-        assert(timeout != null),
-        assert(headers != null),
-        _timeout = timeout,
+  })  : _timeout = timeout,
         _headers = headers;
 
   final http.Client _client;
@@ -69,7 +65,7 @@ class CQRS {
       try {
         final json = jsonDecode(response.body);
 
-        return json != null ? query.resultFactory(json) : null;
+        return query.resultFactory(json);
       } catch (e) {
         throw CQRSException(
           response,

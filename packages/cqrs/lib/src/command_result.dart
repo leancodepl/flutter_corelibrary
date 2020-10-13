@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart';
-
 /// The result of running a [Command].
 class CommandResult {
-  const CommandResult(this.errors, {@required this.success})
-      : assert(errors != null),
-        assert(success != null);
+  const CommandResult(this.errors, {required this.success});
 
   CommandResult.fromJson(Map<String, dynamic> json)
       : success = json['WasSuccessful'] as bool,
@@ -39,9 +35,7 @@ class CommandResult {
 
 /// A validation error.
 class ValidationError {
-  const ValidationError(this.code, this.message)
-      : assert(code != null),
-        assert(message != null);
+  const ValidationError(this.code, this.message);
 
   ValidationError.fromJson(Map<String, dynamic> json)
       : code = json['ErrorCode'] as int,

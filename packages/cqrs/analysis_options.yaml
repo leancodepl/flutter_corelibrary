@@ -3,3 +3,7 @@ include: package:lint/analysis_options_package.yaml
 linter:
   rules:
     - sort_constructors_first
+
+analyzer:
+  enable-experiment:
+    - non-nullable

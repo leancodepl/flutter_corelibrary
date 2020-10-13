@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart';
+
 /// Base class for contracts that can be serialized and sent to the backend.
 abstract class CQRSMethod {
   /// Returns a JSON-encoded representation of the data this class carries.
@@ -23,7 +25,8 @@ abstract class CQRSMethod {
 
   /// Returns a prefix applied before the full name of the contractable when
   /// sending a request to the backend.
-  String pathPrefix;
+  @visibleForOverriding
+  String get pathPrefix;
 }
 
 /// Query describing a criteria for a query and the results it returns.
