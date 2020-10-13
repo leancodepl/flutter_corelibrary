@@ -10,7 +10,6 @@ on:
     paths:
       - 'packages/cqrs/**'
 
-
 jobs:
   test:
     name: Flutter ${{ matrix.channel }}${{ matrix.version }}
@@ -24,7 +23,7 @@ jobs:
             - channel: stable
             - channel: beta
             - channel: dev
-    
+
     defaults:
       run:
         working-directory: packages/cqrs
@@ -38,6 +37,13 @@ jobs:
         with:
           channel: ${{ matrix.channel }}
           flutter-version: ${{ matrix.version }}
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
 
       - name: Download pub dependencies
         run: flutter pub get
