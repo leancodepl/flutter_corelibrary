@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'transport_types.dart';
+
 /// The result of running a [Command].
 class CommandResult {
   const CommandResult(this.errors, {required this.success});
