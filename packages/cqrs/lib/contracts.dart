@@ -14,6 +14,12 @@
 
 /// A convenience library providing types used in generated contracts across all
 /// (or almost all) projects.
+///
+/// Import this file in your contracts:
+///
+/// ```dart
+/// import 'package:cqrs/contracts.dart';
+/// ```
 library contracts;
 
 export 'src/contract_types.dart';
