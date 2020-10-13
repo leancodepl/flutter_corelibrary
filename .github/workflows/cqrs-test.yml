@@ -1,0 +1,49 @@
+name: cqrs test
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'packages/cqrs/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/cqrs/**'
+
+
+jobs:
+  test:
+    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+            - version: '1.22.0'
+            - channel: stable
+            - channel: beta
+            - channel: dev
+    
+    defaults:
+      run:
+        working-directory: packages/cqrs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
+
+      - name: Download pub dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter pub test
