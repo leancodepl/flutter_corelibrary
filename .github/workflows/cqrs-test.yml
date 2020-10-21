@@ -12,17 +12,16 @@ on:
 
 jobs:
   test:
-    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
+    name: Dart ${{ matrix.dart_release }}
 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-            - version: '1.22.0'
-            - channel: stable
-            - channel: beta
-            - channel: dev
+        dart_release: ['2.10', '2.11-dev']
+      
+    container:
+      image: google/dart:${{ matrix.dart_release }}
 
     defaults:
       run:
@@ -31,12 +30,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v1
-        with:
-          channel: ${{ matrix.channel }}
-          flutter-version: ${{ matrix.version }}
 
       - name: Dart version
         run: dart --version
@@ -55,4 +48,4 @@ jobs:
         run: dart analyze
 
       - name: Run tests
-        run: dart --enable-experiment=non-nullable test
+        run: dart test
