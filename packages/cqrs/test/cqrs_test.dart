@@ -6,38 +6,6 @@ import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class MockClient extends Mock implements Client {}
-
-class ExampleQuery extends Query<bool> {
-  @override
-  String getFullName() => 'ExampleQuery';
-
-  @override
-  bool resultFactory(dynamic json) => json as bool;
-
-  @override
-  Map<String, dynamic> toJson() => {};
-}
-
-class ExampleQueryFailingResultFactory extends Query<bool> {
-  @override
-  String getFullName() => 'ExampleQuery';
-
-  @override
-  bool resultFactory(dynamic json) => throw Exception('This is error.');
-
-  @override
-  Map<String, dynamic> toJson() => {};
-}
-
-class ExampleCommand extends Command {
-  @override
-  String getFullName() => 'ExampleCommand';
-
-  @override
-  Map<String, dynamic> toJson() => {};
-}
-
 void main() {
   group('CQRS', () {
     Client client;
@@ -172,4 +140,36 @@ void main() {
       });
     });
   });
+}
+
+class MockClient extends Mock implements Client {}
+
+class ExampleQuery extends Query<bool> {
+  @override
+  String getFullName() => 'ExampleQuery';
+
+  @override
+  bool resultFactory(dynamic json) => json as bool;
+
+  @override
+  Map<String, dynamic> toJson() => {};
+}
+
+class ExampleQueryFailingResultFactory extends Query<bool> {
+  @override
+  String getFullName() => 'ExampleQuery';
+
+  @override
+  bool resultFactory(dynamic json) => throw Exception('This is error.');
+
+  @override
+  Map<String, dynamic> toJson() => {};
+}
+
+class ExampleCommand extends Command {
+  @override
+  String getFullName() => 'ExampleCommand';
+
+  @override
+  Map<String, dynamic> toJson() => {};
 }
