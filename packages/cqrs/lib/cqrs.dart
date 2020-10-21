@@ -15,6 +15,8 @@
 /// A library for convenient communication with CQRS-compatible backends, using
 /// queries and commands.
 ///
+/// Example:
+///
 /// ```dart
 /// final apiUri = Uri.parse('https://flowers.garden/api/');
 ///
@@ -23,34 +25,15 @@
 ///   apiUri,
 /// );
 ///
-/// final flowersRepository = FlowersRepository(cqrs);
-/// ```
+/// // Fetching first page of flowers
+/// final flowers = await cqrs.get(AllFlowers()..page = 1);
 ///
-/// ```dart
-/// import 'package:cqrs/cqrs.dart';
+/// // Adding a new flower
+/// final result = await cqrs.run(AddFlower()
+///   ..name = 'Daisy'
+///   ..pretty = true);
 ///
-/// import 'contracts.dart';
-/// import 'flower_mapper.dart';
-///
-/// class FlowerRepository {
-///   const FlowersRepository(this._cqrs);
-///
-///   final CQRS _cqrs;
-///
-///   Future<List<Flower>> fetchAll([int page = 1]) {
-///     return _cqrs.get(AllFlowers()..page = page).then(FlowerMapper.mapAll);
-///   }
-///
-///   Future<Flower> fetchById(String id) {
-///     return _cqrs.get(FlowerById().id == id).then(FlowerMapper.mapOne);
-///   }
-///
-///   Future<CommandResult> addFlower(String name, bool pretty) {
-///     return _cqrs.run(AddFlower()
-///       ..name = name
-///       ..pretty = pretty);
-///   }
-/// }
+/// print(result.success); // true
 /// ```
 ///
 /// See also:
