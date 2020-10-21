@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart';
-
 /// Base class for contracts that can be serialized and sent to the backend.
 abstract class CQRSMethod {
   /// Returns a JSON-encoded representation of the data this class carries.
@@ -22,24 +20,13 @@ abstract class CQRSMethod {
   /// Returns a full name of this contractable, usually that is a fully
   /// qualified class name of the backend class.
   String getFullName();
-
-  /// Returns a prefix applied before the full name of the contractable when
-  /// sending a request to the backend.
-  @visibleForOverriding
-  String get pathPrefix;
 }
 
 /// Query describing a criteria for a query and the results it returns.
 abstract class Query<T> implements CQRSMethod {
   /// Returns a result of type `T` deserialzied from the `json`.
   T resultFactory(dynamic json);
-
-  @override
-  String get pathPrefix => 'query';
 }
 
 /// Command carrying data related to performing a certain action on the backend.
-abstract class Command implements CQRSMethod {
-  @override
-  String get pathPrefix => 'command';
-}
+abstract class Command implements CQRSMethod {}

@@ -16,6 +16,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 
 import 'command_result.dart';
 import 'cqrs_exception.dart';
@@ -66,7 +67,7 @@ class CQRS {
     assert(query != null);
     assert(headers != null);
 
-    final response = await _send(query, headers: headers);
+    final response = await _send(query, pathPrefix: 'query', headers: headers);
 
     if (response.statusCode == 200) {
       try {
@@ -102,7 +103,11 @@ class CQRS {
     assert(command != null);
     assert(headers != null);
 
-    final response = await _send(command, headers: headers);
+    final response = await _send(
+      command,
+      pathPrefix: 'command',
+      headers: headers,
+    );
 
     if ([200, 422].contains(response.statusCode)) {
       try {
@@ -126,13 +131,15 @@ class CQRS {
 
   Future<http.Response> _send(
     CQRSMethod cqrsMethod, {
+    @required String pathPrefix,
     Map<String, String> headers = const {},
   }) async {
     assert(cqrsMethod != null);
+    assert(pathPrefix != null);
     assert(headers != null);
 
     return _client.post(
-      _apiUri.resolve('${cqrsMethod.pathPrefix}/${cqrsMethod.getFullName()}'),
+      _apiUri.resolve('$pathPrefix/${cqrsMethod.getFullName()}'),
       body: jsonEncode(cqrsMethod),
       headers: {
         ..._headers,
