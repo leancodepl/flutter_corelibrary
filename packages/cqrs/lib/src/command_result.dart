@@ -24,8 +24,9 @@ class CommandResult {
 
   CommandResult.fromJson(Map<String, dynamic> json)
       : success = json['WasSuccessful'] as bool,
-        errors = (json['ValidationErrors'] as List<Map<String, dynamic>>)
-            .map((error) => ValidationError.fromJson(error))
+        errors = (json['ValidationErrors'] as List)
+            .map((error) =>
+                ValidationError.fromJson(error as Map<String, dynamic>))
             .toList();
 
   /// Whether the command has succeeded.
