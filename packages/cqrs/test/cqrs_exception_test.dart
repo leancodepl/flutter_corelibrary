@@ -6,16 +6,20 @@ void main() {
   group('CQRSException', () {
     final response = Response('', 401, reasonPhrase: 'Unauthorized');
 
-    test('has correct fields values', () {
-      final exception1 = CQRSException(response, 'This is a message.');
+    group('has correct fields values', () {
+      test('with message present', () {
+        final exception1 = CQRSException(response, 'This is a message.');
 
-      expect(exception1.response, response);
-      expect(exception1.message, 'This is a message.');
+        expect(exception1.response, response);
+        expect(exception1.message, 'This is a message.');
+      });
 
-      final exception2 = CQRSException(response);
+      test('with message absent', () {
+        final exception2 = CQRSException(response);
 
-      expect(exception2.response, response);
-      expect(exception2.message, isNull);
+        expect(exception2.response, response);
+        expect(exception2.message, isNull);
+      });
     });
 
     test('correctly converts to String', () {

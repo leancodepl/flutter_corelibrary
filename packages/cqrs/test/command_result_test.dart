@@ -6,73 +6,81 @@ void main() {
     const error1 = ValidationError(1, 'First error');
     const error2 = ValidationError(2, 'Second error');
 
-    test('has correct fields values', () {
-      const result1 = CommandResult([], success: true);
+    group('fields values are correct', () {
+      test('when constructed without errors with success', () {
+        const result = CommandResult([], success: true);
 
-      expect(result1.success, true);
-      expect(result1.errors, isEmpty);
-
-      const result2 = CommandResult([error1, error2], success: false);
-
-      expect(result2.success, false);
-      expect(result2.errors, hasLength(2));
-    });
-
-    test('hasError returns correct values', () {
-      const result1 = CommandResult([error1, error2], success: false);
-
-      expect(result1.hasError(1), true);
-      expect(result1.hasError(2), true);
-      expect(result1.hasError(3), false);
-
-      const result2 = CommandResult([error2], success: false);
-
-      expect(result2.hasError(1), false);
-      expect(result2.hasError(2), true);
-      expect(result2.hasError(3), false);
-
-      const result3 = CommandResult([], success: false);
-
-      expect(result3.hasError(1), false);
-      expect(result3.hasError(2), false);
-      expect(result3.hasError(3), false);
-    });
-
-    test('is correctly deserialized from JSON', () {
-      final result1 = CommandResult.fromJson({
-        'WasSuccessful': false,
-        'ValidationErrors': [
-          {
-            'ErrorCode': 12,
-            'ErrorMessage': 'This is an error.',
-          },
-        ],
+        expect(result.success, true);
+        expect(result.errors, isEmpty);
       });
 
-      expect(
-        result1,
-        isA<CommandResult>().having((r) => r.success, 'success', false).having(
-              (r) => r.errors,
-              'errors',
-              contains(
-                isA<ValidationError>()
-                    .having((e) => e.code, 'code', 12)
-                    .having((e) => e.message, 'message', 'This is an error.'),
+      test('when constructed with errors without success', () {
+        const result = CommandResult([error1, error2], success: false);
+
+        expect(result.success, false);
+        expect(result.errors, hasLength(2));
+      });
+    });
+
+    group('hasError returns correct values', () {
+      test('when there are some errors present', () {
+        const result = CommandResult([error1, error2], success: false);
+
+        expect(result.hasError(1), true);
+        expect(result.hasError(2), true);
+        expect(result.hasError(3), false);
+      });
+
+      test('when there are no errors present', () {
+        const result = CommandResult([], success: false);
+
+        expect(result.hasError(1), false);
+        expect(result.hasError(2), false);
+        expect(result.hasError(3), false);
+      });
+    });
+
+    group('is correctly deserialized from JSON', () {
+      test('with some validation errors', () {
+        final result = CommandResult.fromJson({
+          'WasSuccessful': false,
+          'ValidationErrors': [
+            {
+              'ErrorCode': 12,
+              'ErrorMessage': 'This is an error.',
+            },
+          ],
+        });
+
+        expect(
+          result,
+          isA<CommandResult>()
+              .having((r) => r.success, 'success', false)
+              .having(
+                (r) => r.errors,
+                'errors',
+                contains(
+                  isA<ValidationError>()
+                      .having((e) => e.code, 'code', 12)
+                      .having((e) => e.message, 'message', 'This is an error.'),
+                ),
               ),
-            ),
-      );
-
-      final result2 = CommandResult.fromJson({
-        'WasSuccessful': true,
-        'ValidationErrors': [],
+        );
       });
 
-      expect(
-        result2,
-        isA<CommandResult>()
-            .having((r) => r.success, 'success', true)
-            .having((r) => r.errors, 'errors', isEmpty),
-      );
+      test('without validation errors, with success', () {
+        final result = CommandResult.fromJson({
+          'WasSuccessful': true,
+          'ValidationErrors': [],
+        });
+
+        expect(
+          result,
+          isA<CommandResult>()
+              .having((r) => r.success, 'success', true)
+              .having((r) => r.errors, 'errors', isEmpty),
+        );
+      });
     });
   });
 }
