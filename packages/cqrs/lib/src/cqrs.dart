@@ -40,7 +40,11 @@ class CQRS {
     this._apiUri, {
     Duration timeout = const Duration(seconds: 30),
     Map<String, String> headers = const {},
-  })  : _timeout = timeout,
+  })  : assert(_client != null),
+        assert(_apiUri != null),
+        assert(timeout != null),
+        assert(headers != null),
+        _timeout = timeout,
         _headers = headers;
 
   final http.Client _client;
@@ -59,6 +63,9 @@ class CQRS {
     Query<T> query, {
     Map<String, String> headers = const {},
   }) async {
+    assert(query != null);
+    assert(headers != null);
+
     final response = await _send(query, headers: headers);
 
     if (response.statusCode == 200) {
@@ -92,6 +99,9 @@ class CQRS {
     Command command, {
     Map<String, String> headers = const {},
   }) async {
+    assert(command != null);
+    assert(headers != null);
+
     final response = await _send(command, headers: headers);
 
     if ([200, 422].contains(response.statusCode)) {
@@ -118,6 +128,9 @@ class CQRS {
     CQRSMethod cqrsMethod, {
     Map<String, String> headers = const {},
   }) async {
+    assert(cqrsMethod != null);
+    assert(headers != null);
+
     return _client.post(
       _apiUri.resolve('${cqrsMethod.pathPrefix}/${cqrsMethod.getFullName()}'),
       body: jsonEncode(cqrsMethod),

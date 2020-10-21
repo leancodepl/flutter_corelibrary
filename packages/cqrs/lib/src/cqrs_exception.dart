@@ -15,10 +15,10 @@
 import 'package:http/http.dart';
 
 class CQRSException implements Exception {
-  const CQRSException(this.response, [this.message]);
+  const CQRSException(this.response, [this.message]) : assert(response != null);
 
   final Response response;
-  final String? message;
+  final String message;
 
   @override
   String toString() {
