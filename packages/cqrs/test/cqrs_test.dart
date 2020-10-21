@@ -19,11 +19,7 @@ void main() {
       test(
           "correctly serializes query, calls client's send and"
           " deserializes result", () async {
-        when(client.post(
-          any,
-          body: anyNamed('body'),
-          headers: anyNamed('headers'),
-        )).thenAnswer((_) async => Response('true', 200));
+        mockClientPost(client, Response('true', 200));
 
         final result = await cqrs.get(
           ExampleQuery(),
@@ -46,11 +42,7 @@ void main() {
       });
 
       test('throws CQRSException on json decoding failure', () async {
-        when(client.post(
-          any,
-          body: anyNamed('body'),
-          headers: anyNamed('headers'),
-        )).thenAnswer((_) async => Response('true', 200));
+        mockClientPost(client, Response('true', 200));
 
         final result = cqrs.get(ExampleQueryFailingResultFactory());
 
@@ -68,11 +60,7 @@ void main() {
       });
 
       test('throws CQRSException when response code is other than 200', () {
-        when(client.post(
-          any,
-          body: anyNamed('body'),
-          headers: anyNamed('headers'),
-        )).thenAnswer((_) async => Response('', 404));
+        mockClientPost(client, Response('', 404));
 
         final result = cqrs.get(ExampleQuery());
 
@@ -93,14 +81,10 @@ void main() {
       test(
           "correctly serializes command, calls client's send and deserializes "
           "command results", () async {
-        when(client.post(
-          any,
-          body: anyNamed('body'),
-          headers: anyNamed('headers'),
-        )).thenAnswer((_) async => Response(
-              '{"WasSuccessful":true,"ValidationErrors":[]}',
-              200,
-            ));
+        mockClientPost(
+          client,
+          Response('{"WasSuccessful":true,"ValidationErrors":[]}', 200),
+        );
 
         final result = await cqrs.run(ExampleCommand());
 
@@ -118,11 +102,7 @@ void main() {
 
       test('throws CQRSException when response code is other than 200 and 422',
           () {
-        when(client.post(
-          any,
-          body: anyNamed('body'),
-          headers: anyNamed('headers'),
-        )).thenAnswer((_) async => Response('', 500));
+        mockClientPost(client, Response('', 500));
 
         final result = cqrs.run(ExampleCommand());
 
@@ -140,6 +120,14 @@ void main() {
       });
     });
   });
+}
+
+void mockClientPost(Client client, Response response) {
+  when(client.post(
+    any,
+    body: anyNamed('body'),
+    headers: anyNamed('headers'),
+  )).thenAnswer((_) async => response);
 }
 
 class MockClient extends Mock implements Client {}
