@@ -1,11 +1,13 @@
 name: cqrs
-description: CQRS client with helper Command/Query classes for Dart
-version: 3.0.2
+version: 4.0.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/cqrs
 repository: https://github.com/leancodepl/flutter_corelibrary
+description: >-
+  A library for convenient communication with CQRS-compatible backends, using
+  queries and commands.
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: '>=2.10.0 <3.0.0'
 
 dependencies:
   http: ^0.12.2
