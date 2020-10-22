@@ -1,7 +1,7 @@
 | Package | pub | CI | 
 | - | - | - |
-| [`cqrs`][cqrs-link] | [![navigation pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link] | [![][cqrs-build-badge]][cqrs-build-badge-link] |
-| `login_client` | [![navigation pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link] | ![][build-badge-placeholder] |
+| [`cqrs`][cqrs-link] | [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link] | [![][cqrs-build-badge]][cqrs-build-badge-link] |
+| `login_client` | [![login_client pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link] | ![][build-badge-placeholder] |
 
 
 
