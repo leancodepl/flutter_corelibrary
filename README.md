@@ -3,7 +3,9 @@
 | [`cqrs`][cqrs-link] | [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link] | [![][cqrs-build-badge]][cqrs-build-badge-link] |
 | `login_client` | [![login_client pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link] | ![][build-badge-placeholder] |
 
+## pub.dev release process
 
+Tag your desired commit with `<package_name>-v<version>` and let the GitHub Actions do the rest.
 
 [cqrs-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/cqrs
 [cqrs-pub-badge]: https://img.shields.io/pub/v/cqrs
