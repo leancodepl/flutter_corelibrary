@@ -22,9 +22,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download pub.dev credentials
+        env:
+          CREDENTIALS: ${{ secrets.PUB_DEV_CREDENTIALS }}
         run: |
           mkdir -p ~/.pub-cache
-          echo "${{ secrets.PUB_DEV_CREDENTIALS }}" > ~/.pub-cache/credentials.json
+          echo $CREDENTIALS > ~/.pub-cache/credentials.json
 
       - name: Publish
         run: dart publish -f
