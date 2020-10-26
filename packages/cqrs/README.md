@@ -20,8 +20,7 @@ final apiUri = Uri.parse('https://flowers.garden/api/');
 
 // Then construct a CQRS instance using the just created Uri
 // and an HTTP client which in most cases will be probably handling
-// refreshment of the tokens and their rotation. It could be either
-// and oauth2 client or a login_client library client.
+// refreshment of the tokens and their rotation.
 final cqrs = CQRS(loginClient, apiUri);
 
 // Fetch first page of the all flowers query from the CQRS server.
@@ -41,37 +40,6 @@ if (result.success) {
   print('Error occured');
 }
 ```
-
-## Contracts
-
-_Contracts_ are classes and interfaces describing (mainly but not only) [queries and commands](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation). They are usually written in C# and are transpiled to the Dart code using a custom code generation tool.
-
-They describe data structures coming to and from the CQRS server and usually expose data transportation objects. Those are the objects being sent by the cqrs library with `get` in case of _queries_ and `run` in case of _commands_.
-
-### Code generation
-
-https://www.nuget.org/packages/LeanCode.ContractsGenerator/ - code generation tool for easy contracts transpilation from C# to Dart and TypeScript.
-
-There is a helpful library to be imported right in the contracts. It contains few of the base interfaces used for queries and commands.
-
-```dart
-import 'package:cqrs/contracts.dart';
-```
-
-You might want to add it to your `contracts-config.json` preamble.
-
-```json
-[
-    {
-        "Dart": {
-            "ContractsPreambleLines": [
-                "import 'package:cqrs/contracts.dart';"
-            ]
-        }
-    }
-]
-```
-
 
 [cqrs-pub-badge]: https://img.shields.io/pub/v/cqrs
 [cqrs-pub-badge-link]: https://pub.dev/packages/cqrs
