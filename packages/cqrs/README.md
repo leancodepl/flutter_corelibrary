@@ -10,8 +10,37 @@ A library for convenient communication with CQRS-compatible backends, using quer
 ```dart
 import 'package:cqrs/cqrs.dart';
 
-// Import your generated contracts.
-import 'contracts.dart';
+// You may use json_serializable for cutting on boilerplate code for your queries...
+class AllFlowers implements Query<List<Flower>> {
+  int page;
+
+  @override
+  String getFullName() => 'AllFlowers';
+
+  @override
+  List<Flower> resultFactory(dynamic json) {
+    return List<Flower>.of(json as List).map(Flower.fromJson).toList();
+  }
+
+  @override
+  Map<String, dynamic> toJson() => {'page': page};
+}
+
+// ...as well as commands.
+class AddFlower implements Command {
+  String name;
+  bool pretty;
+
+  @override
+  String getFullName() => 'AddFlower';
+
+  @override
+  Map<String, dynamic> toJson() => {'Name': name, 'Pretty': pretty};
+}
+
+abstract class AddFlowerErrorCodes {
+  static const alreadyExists = 1;
+}
 
 // Firstly you need an Uri to which the requests will be sent.
 // Remember about the trailing slash as otherwise resolved paths
@@ -24,7 +53,6 @@ final apiUri = Uri.parse('https://flowers.garden/api/');
 final cqrs = CQRS(loginClient, apiUri);
 
 // Fetch first page of the all flowers query from the CQRS server.
-// You can map the DTOs received to other objects or use it as-is.
 final flowers = await cqrs.get(AllFlowers()..page = 1);
 
 // Run a command called add flower which... adds a pretty Daisy.
