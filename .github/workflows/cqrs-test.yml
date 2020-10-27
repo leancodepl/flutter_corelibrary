@@ -1,0 +1,52 @@
+name: cqrs test
+
+on:
+  push:
+    branches: [master]
+    ignore-tags: ['cqrs-v*']
+    paths:
+      - 'packages/cqrs/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/cqrs/**'
+
+jobs:
+  test:
+    name: Dart ${{ matrix.dart_release }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dart_release: ['2.10', '2.11-dev']
+      
+    container:
+      image: google/dart:${{ matrix.dart_release }}
+
+    defaults:
+      run:
+        working-directory: packages/cqrs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Dart version
+        run: dart --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Download pub dependencies
+        run: dart pub get
+
+      - name: Run analyzer
+        run: dart analyze
+
+      - name: Run tests
+        run: dart test

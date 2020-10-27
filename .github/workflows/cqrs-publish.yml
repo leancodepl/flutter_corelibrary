@@ -1,0 +1,32 @@
+name: cqrs publish
+
+on:
+  push:
+    tags: ['cqrs-v*']
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: google/dart:2.10
+
+    defaults:
+      run:
+        working-directory: packages/cqrs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download pub.dev credentials
+        env:
+          CREDENTIALS: ${{ secrets.PUB_DEV_CREDENTIALS }}
+        run: |
+          mkdir -p ~/.pub-cache
+          echo $CREDENTIALS > ~/.pub-cache/credentials.json
+
+      - name: Publish
+        run: dart publish -f
