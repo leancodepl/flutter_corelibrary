@@ -1,17 +1,26 @@
-name: login_client
+name: leancode_login_client
 description: A new Flutter package project.
-version: 0.0.0
-homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/login_client
-repository: https://github.com/leancodepl/flutter_corelibrary
+homepage: https://leancode.pl/
+version: 0.6.0
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
+  leancode_logging: ^1.2.0
+
+  http: ^0.12.0+4
+
+  leancode_common:
+    git:
+      url: git@bitbucket.org:leancode-team/corelibrary-flutter.git
+      path: packages/leancode_common
+      ref: "v1.2.1"
+      
+  oauth2:
+    git: git@bitbucket.org:leancode-team/oauth2-flutter.git
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^4.1.1

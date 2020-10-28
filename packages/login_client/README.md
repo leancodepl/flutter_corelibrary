@@ -1,6 +1,3 @@
-# login_client
+# leancode_login_manager
 
-[![pub.dev badge][pub-badge]][pub-badge-link]
-
-[pub-badge]: https://img.shields.io/pub/v/login_client
-[pub-badge-link]: https://pub.dev/packages/login_client
+OAuth2-compliant login manager for our apps
