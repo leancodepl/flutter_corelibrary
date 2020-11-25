@@ -19,12 +19,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        matrix:
-          include:
-              - version: '1.22.1'
-              - channel: stable
-              - channel: beta
-              - channel: dev
+        include:
+            - version: '1.22.1'
+            - channel: stable
+            - channel: beta
+            - channel: dev
 
     defaults:
       run:
