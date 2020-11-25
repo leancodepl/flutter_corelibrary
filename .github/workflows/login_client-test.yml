@@ -13,17 +13,16 @@ on:
 
 jobs:
   test:
-    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
+    name: Dart ${{ matrix.dart_release }}
 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-            - version: '1.22.1'
-            - channel: stable
-            - channel: beta
-            - channel: dev
+        dart_release: ['2.10', '2.11-dev']
+      
+    container:
+      image: google/dart:${{ matrix.dart_release }}
 
     defaults:
       run:
@@ -33,30 +32,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v1
-        with:
-          channel: stable
-
-      - name: Flutter version
-        run: flutter --version
+      - name: Dart version
+        run: dart --version
 
       - name: Cache pub dependencies
         uses: actions/cache@v2
         with:
-          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
       - name: Download pub dependencies
-        run: flutter pub get
+        run: dart pub get
 
       - name: Run analyzer
-        run: flutter analyze
+        run: dart analyze
 
       - name: Run tests
-        run: flutter test
+        run: dart test
 
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
-        run: pub publish --dry-run || true
+        run: dart pub publish --dry-run || true
