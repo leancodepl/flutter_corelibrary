@@ -5,11 +5,13 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import 'credentials_storage/credentials_storage.dart';
 import 'oauth_settings.dart';
 import 'strategies/authorization_strategy.dart';
+import 'utils.dart';
 
 typedef CredentialsChangedCallback = void Function(oauth2.Credentials);
 
 typedef _LoggerCallback = void Function(String);
 
+// ignore: avoid_print
 void _defaultPrintLogger(String message) => print('[LoginClient] $message');
 
 class LoginClient extends http.BaseClient {
@@ -41,7 +43,12 @@ class LoginClient extends http.BaseClient {
   Future<void> initialize() async {
     final credentials = await _credentialsStorage.read();
     if (credentials != null) {
-      _oAuthClient = _buildClientFromCredentials(credentials);
+      _oAuthClient = buildOAuth2ClientFromCredentials(
+        credentials,
+        oAuthSettings: _oAuthSettings,
+        httpClient: _httpClient,
+        onCredentialsRefreshed: _onCredentialsRefreshed,
+      );
     }
 
     _credentialsChangedCallback?.call(credentials);
@@ -100,16 +107,6 @@ class LoginClient extends http.BaseClient {
 
     _oAuthClient.close();
     _oAuthClient = null;
-  }
-
-  oauth2.Client _buildClientFromCredentials(oauth2.Credentials credentials) {
-    return oauth2.Client(
-      credentials,
-      identifier: _oAuthSettings.clientId,
-      secret: _oAuthSettings.clientSecret,
-      httpClient: _httpClient,
-      onCredentialsRefreshed: _onCredentialsRefreshed,
-    );
   }
 
   Future<void> _onCredentialsRefreshed(oauth2.Credentials credentials) async {

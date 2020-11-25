@@ -1,15 +1,14 @@
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 
-import '../oauth2/assertion_grant.dart';
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-class UserAssertionStrategy extends AuthorizationStrategy {
-  UserAssertionStrategy(this.grantName, this.userToken);
+class ResourceOwnerPasswordStrategy extends AuthorizationStrategy {
+  ResourceOwnerPasswordStrategy(this.username, this.password);
 
-  final String grantName;
-  final String userToken;
+  final String username;
+  final String password;
 
   @override
   Future<oauth2.Client> execute(
@@ -17,10 +16,10 @@ class UserAssertionStrategy extends AuthorizationStrategy {
     http.Client client,
     oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
   ) {
-    return assertionGrant(
+    return oauth2.resourceOwnerPasswordGrant(
       oAuthSettings.authorizationEndpointUri,
-      grantName,
-      userToken,
+      username,
+      password,
       identifier: oAuthSettings.clientId,
       secret: oAuthSettings.clientSecret,
       scopes: oAuthSettings.scopes,

@@ -1,27 +1,31 @@
-import 'package:leancode_logging/logger.dart';
-import 'package:leancode_login_client/src/models/api_consts.dart';
-import 'package:leancode_login_client/src/models/auth_strategy.dart';
-import 'package:oauth2/oauth2.dart';
 import 'package:http/http.dart' as http;
+import 'package:oauth2/oauth2.dart' as oauth2;
 
-class SMSTokenStrategy extends AuthStrategy {
-  SMSTokenStrategy(this.username, this.smsCode);
+import '../oauth2/sms_token_grant.dart';
+import '../oauth_settings.dart';
+import 'authorization_strategy.dart';
+
+class SmsTokenStrategy extends AuthorizationStrategy {
+  SmsTokenStrategy(this.username, this.smsToken);
 
   final String username;
-  final String smsCode;
+  final String smsToken;
 
   @override
-  Future<Client> execute(ApiConsts apiConsts, http.Client client) {
-    logger.logInfo('Logging in with sms token');
-
+  Future<oauth2.Client> execute(
+    OAuthSettings oAuthSettings,
+    http.Client client,
+    oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
+  ) {
     return smsTokenGrant(
-      apiConsts.authEndpoint,
+      oAuthSettings.authorizationEndpointUri,
       username,
-      smsCode,
-      identifier: apiConsts.authClientId,
-      secret: apiConsts.authSecret,
-      scopes: apiConsts.authScopes,
+      smsToken,
+      identifier: oAuthSettings.clientId,
+      secret: oAuthSettings.clientSecret,
+      scopes: oAuthSettings.scopes,
       httpClient: client,
+      onCredentialsRefreshed: onCredentialsRefreshed,
     );
   }
 }
