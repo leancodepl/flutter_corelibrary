@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   leancode_logging: ^1.2.0
+  meta: ^1.2.4
 
   http: ^0.12.0+4
 
