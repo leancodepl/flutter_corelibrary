@@ -20,15 +20,15 @@ class LoginClient extends http.BaseClient {
     @required CredentialsStorage credentialsStorage,
     http.Client httpClient,
     CredentialsChangedCallback credentialsChangedCallback,
-    _LoggerCallback loggerCallback = _defaultPrintLogger,
+    _LoggerCallback logger = _defaultPrintLogger,
   })  : assert(oAuthSettings != null),
         assert(credentialsStorage != null),
-        assert(_logger != null),
+        assert(logger != null),
         _oAuthSettings = oAuthSettings,
         _httpClient = httpClient ?? http.Client(),
         _credentialsStorage = credentialsStorage,
         _credentialsChangedCallback = credentialsChangedCallback,
-        _logger = loggerCallback;
+        _logger = logger;
 
   final OAuthSettings _oAuthSettings;
   final CredentialsStorage _credentialsStorage;
