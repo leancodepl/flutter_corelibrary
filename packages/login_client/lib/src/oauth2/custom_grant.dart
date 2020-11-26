@@ -12,10 +12,11 @@ import 'package:oauth2/oauth2.dart';
 import 'package:oauth2/src/handle_access_token_response.dart';
 import 'package:oauth2/src/utils.dart';
 
-Future<Client> assertionGrant(
+Future<Client> customGrant(
   Uri authorizationEndpoint,
   String grantName,
-  String userToken, {
+  String tokenFieldName,
+  String tokenFieldValue, {
   String identifier,
   String secret,
   Iterable<String> scopes,
@@ -29,7 +30,7 @@ Future<Client> assertionGrant(
   httpClient ??= http.Client();
 
   final startTime = DateTime.now();
-  final body = {'grant_type': grantName, 'assertion': userToken};
+  final body = {'grant_type': grantName, tokenFieldName: tokenFieldValue};
   final headers = <String, String>{};
 
   if (identifier != null) {
