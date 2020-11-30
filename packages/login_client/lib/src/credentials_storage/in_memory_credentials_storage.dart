@@ -16,6 +16,7 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 
 import 'credentials_storage.dart';
 
+/// A [CredentialsStorage] implementation storing credentials in the memory.
 class InMemoryCredentialsStorage extends CredentialsStorage {
   oauth2.Credentials _credentials;
 
