@@ -18,6 +18,7 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 
 import 'credentials_storage/credentials_storage.dart';
 import 'oauth_settings.dart';
+import 'refresh_exception.dart';
 import 'strategies/authorization_strategy.dart';
 import 'utils.dart';
 
@@ -28,7 +29,33 @@ typedef _LoggerCallback = void Function(String);
 // ignore: avoid_print
 void _defaultPrintLogger(String message) => print('[LoginClient] $message');
 
+/// An implementation of an OAuth2 client that also manages storing
+/// the obtained credentials and restoring/refreshing them when needed.
 class LoginClient extends http.BaseClient {
+  /// Creates an [http.Client] that is compliant with OAuth2.
+  ///
+  /// The `oAuthSettings` stores authorization related settings, like
+  /// the client's identifier and secret or the authorization's endpoint.
+  ///
+  /// The `credentialsStorage` handles saving and retrieving the authorization
+  /// credentials.
+  ///
+  /// The `httpClient` is an [http.Client] that's used as a parent for the
+  /// authorized HTTP client. It is also used for sending unauthorized requests.
+  /// Defaults to [http.Client].
+  ///
+  /// The `credentialsChangedCallback` is where you can listen for changes
+  /// to the credentials, e.g. for updating the displayed permissions in
+  /// the app or showing when the user will be logged out.
+  ///
+  /// The `logger` is a simple callback used for logging debug information
+  /// that may be helpful. Defaults to printing with a `[LoginClient]` prefix.
+  ///
+  /// Make sure to call [initialize] after instantiating the [LoginClient]
+  /// to correctly restore saved credentials from the `credentialsStorage`.
+  ///
+  /// See also:
+  /// - [InMemoryCredentialsStorage]
   LoginClient({
     @required OAuthSettings oAuthSettings,
     @required CredentialsStorage credentialsStorage,
@@ -52,8 +79,10 @@ class LoginClient extends http.BaseClient {
 
   oauth2.Client _oAuthClient;
 
+  /// Whether this [LoginClient] is authorized or not.
   bool get loggedIn => _oAuthClient != null;
 
+  /// Restores saved credentials from the credentials storage.
   Future<void> initialize() async {
     final credentials = await _credentialsStorage.read();
     if (credentials != null) {
@@ -74,6 +103,9 @@ class LoginClient extends http.BaseClient {
     }
   }
 
+  /// Authorizes the [LoginClient] using the passed `strategy`.
+  ///
+  /// This method will log the [LoginClient] out on the authorization failure.
   Future<void> logIn(AuthorizationStrategy strategy) async {
     try {
       _oAuthClient = await strategy.execute(
@@ -94,10 +126,17 @@ class LoginClient extends http.BaseClient {
     }
   }
 
+  /// Refreshes the currently used credentials.
+  ///
+  /// `newScopes` can be also provided to obtain a different set of scopes
+  /// after the refreshing. If left null, old scopes are used.
+  ///
+  /// This method will log the [LoginClient] out on the authorization failure.
   Future<void> refresh([List<String> newScopes]) async {
     if (_oAuthClient == null) {
-      // TODO: Use more specific exception class
-      throw Exception('Cannot refresh unauthorized client. Login first.');
+      throw const RefreshException(
+        'Cannot refresh unauthorized client. Login first.',
+      );
     }
 
     try {
@@ -110,6 +149,8 @@ class LoginClient extends http.BaseClient {
     }
   }
 
+  /// Logs the [LoginClient] out. Also removes the credentials from
+  /// the credentials storage.
   Future<void> logOut() async {
     await _logOutInternal();
     _logger('Successfully logged out and cleared the credentials.');

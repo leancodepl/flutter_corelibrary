@@ -3,7 +3,9 @@ version: 1.0.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/login_client
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
-  A new Flutter package project.
+  OAuth2 compliant login client that stores credentials
+  for the currently authenticated user and automatically
+  refreshes tokens.
 
 environment:
   sdk: '>=2.10.0 <3.0.0'

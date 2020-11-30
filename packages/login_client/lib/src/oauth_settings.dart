@@ -14,7 +14,9 @@
 
 import 'package:meta/meta.dart';
 
+/// OAuth2 authorization requests settings.
 class OAuthSettings {
+  /// Creates the [OAuthSettings].
   const OAuthSettings({
     @required this.authorizationEndpointUri,
     this.clientId,
@@ -22,8 +24,19 @@ class OAuthSettings {
     this.scopes = const [],
   });
 
+  /// The [`authorization endpoint`](https://tools.ietf.org/html/rfc6749#section-3.1)
+  /// from the RFC 6749.
   final Uri authorizationEndpointUri;
+
+  /// The [`client_id`](https://tools.ietf.org/html/rfc6749#appendix-A.1)
+  /// from the RFC 6749.
   final String clientId;
+
+  /// The [`client_secret`](https://tools.ietf.org/html/rfc6749#appendix-A.2)
+  /// from the RFC 6749.
   final String clientSecret;
+
+  /// The [`scope`](https://tools.ietf.org/html/rfc6749#appendix-A.4)
+  /// from the RFC 6749.
   final List<String> scopes;
 }
