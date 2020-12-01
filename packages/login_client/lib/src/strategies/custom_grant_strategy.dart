@@ -26,22 +26,15 @@ class CustomGrantStrategy implements AuthorizationStrategy {
   ///
   /// The [grantName] is the custom grant name.
   ///
-  /// The [tokenFieldName] and the [tokenFieldValue] are a key-value pair
-  /// of a custom field to be used by the custom grant.
-  const CustomGrantStrategy(
-    this.grantName,
-    this.tokenFieldName,
-    this.tokenFieldValue,
-  );
+  /// The [grantFields] are the key-value pairs sent in the access
+  /// token request.
+  const CustomGrantStrategy(this.grantName, this.grantFields);
 
   /// The custom grant name.
   final String grantName;
 
-  /// The token field name.
-  final String tokenFieldName;
-
-  /// The token field value.
-  final String tokenFieldValue;
+  /// The custom grant custom fields.
+  final Map<String, String> grantFields;
 
   @override
   Future<oauth2.Client> execute(
@@ -52,8 +45,7 @@ class CustomGrantStrategy implements AuthorizationStrategy {
     return customGrant(
       oAuthSettings.authorizationEndpointUri,
       grantName,
-      tokenFieldName,
-      tokenFieldValue,
+      grantFields,
       identifier: oAuthSettings.clientId,
       secret: oAuthSettings.clientSecret,
       scopes: oAuthSettings.scopes,

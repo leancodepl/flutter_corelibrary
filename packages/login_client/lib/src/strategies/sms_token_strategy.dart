@@ -15,7 +15,7 @@
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 
-import '../oauth2/sms_token_grant.dart';
+import '../oauth2/custom_grant.dart';
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
@@ -27,6 +27,8 @@ class SmsTokenStrategy implements AuthorizationStrategy {
   /// The [phoneNumber] is the resource owner phone number. The [smsToken] is
   /// the resource owner SMS token received on the [phoneNumber].
   const SmsTokenStrategy(this.phoneNumber, this.smsToken);
+
+  static const _grantName = 'sms_token';
 
   /// The resource owner phone number.
   final String phoneNumber;
@@ -40,10 +42,10 @@ class SmsTokenStrategy implements AuthorizationStrategy {
     http.Client client,
     oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
   ) {
-    return smsTokenGrant(
+    return customGrant(
       oAuthSettings.authorizationEndpointUri,
-      phoneNumber,
-      smsToken,
+      _grantName,
+      {'phone_number': phoneNumber, 'token': smsToken},
       identifier: oAuthSettings.clientId,
       secret: oAuthSettings.clientSecret,
       scopes: oAuthSettings.scopes,

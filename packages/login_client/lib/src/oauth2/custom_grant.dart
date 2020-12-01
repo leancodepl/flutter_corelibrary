@@ -14,8 +14,6 @@
 
 // ignore_for_file: implementation_imports
 
-import 'dart:async';
-
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:oauth2/oauth2.dart';
@@ -25,8 +23,7 @@ import 'package:oauth2/src/utils.dart';
 Future<Client> customGrant(
   Uri authorizationEndpoint,
   String grantName,
-  String tokenFieldName,
-  String tokenFieldValue, {
+  Map<String, String> grantFields, {
   String identifier,
   String secret,
   Iterable<String> scopes,
@@ -40,7 +37,7 @@ Future<Client> customGrant(
   httpClient ??= http.Client();
 
   final startTime = DateTime.now();
-  final body = {'grant_type': grantName, tokenFieldName: tokenFieldValue};
+  final body = {'grant_type': grantName, ...grantFields};
   final headers = <String, String>{};
 
   if (identifier != null) {
