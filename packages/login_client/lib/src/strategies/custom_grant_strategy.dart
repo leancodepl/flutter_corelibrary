@@ -31,6 +31,9 @@ class CustomGrantStrategy implements AuthorizationStrategy {
   const CustomGrantStrategy(this.grantName, this.grantFields);
 
   /// The custom grant name.
+  ///
+  /// You should not use grant names that are already defined in the OAuth2:
+  /// https://tools.ietf.org/html/rfc6749#appendix-A.10
   final String grantName;
 
   /// The custom grant custom fields.
