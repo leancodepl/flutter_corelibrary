@@ -22,6 +22,8 @@ import 'refresh_exception.dart';
 import 'strategies/authorization_strategy.dart';
 import 'utils.dart';
 
+/// Signature for callbacks that report that the underlying credentials have
+/// changed.
 typedef CredentialsChangedCallback = void Function(oauth2.Credentials);
 
 typedef _LoggerCallback = void Function(String);
@@ -108,6 +110,7 @@ class LoginClient extends http.BaseClient {
   /// This method will log the [LoginClient] out on the authorization failure.
   Future<void> logIn(AuthorizationStrategy strategy) async {
     try {
+      _oAuthClient?.close();
       _oAuthClient = await strategy.execute(
         _oAuthSettings,
         _httpClient,
@@ -163,7 +166,7 @@ class LoginClient extends http.BaseClient {
     _credentialsChangedCallback?.call(null);
     await _credentialsStorage.clear();
 
-    _oAuthClient.close();
+    _oAuthClient?.close();
     _oAuthClient = null;
   }
 
@@ -190,4 +193,8 @@ class LoginClient extends http.BaseClient {
 
     return response;
   }
+
+  // ignore: use_setters_to_change_properties
+  @visibleForTesting
+  void setAuthorizedClient(oauth2.Client client) => _oAuthClient = client;
 }
