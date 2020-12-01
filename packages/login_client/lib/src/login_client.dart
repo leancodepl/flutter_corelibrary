@@ -132,6 +132,9 @@ class LoginClient extends http.BaseClient {
   /// after the refreshing. If left null, old scopes are used.
   ///
   /// This method will log the [LoginClient] out on the authorization failure.
+  ///
+  /// See also:
+  /// - https://tools.ietf.org/html/rfc6749#section-6
   Future<void> refresh([List<String> newScopes]) async {
     if (_oAuthClient == null) {
       throw const RefreshException(

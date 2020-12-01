@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// An exception that occurs when there is some problem with refreshing
+/// the credentials.
 class RefreshException implements Exception {
+  /// Creates the [RefreshException] with a [message].
   const RefreshException(this.message);
 
+  /// The exception message.
   final String message;
 
   @override

@@ -15,9 +15,13 @@
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 
+import '../login_client.dart';
 import '../oauth_settings.dart';
 
+/// An interface describing a strategy of logging in to the [LoginClient].
 abstract class AuthorizationStrategy {
+  /// Execute this [AuthorizationStrategy] and create an [oauth2.Client] that
+  /// is authorized.
   Future<oauth2.Client> execute(
     OAuthSettings oAuthSettings,
     http.Client client,

@@ -19,10 +19,19 @@ import '../oauth2/sms_token_grant.dart';
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-class SmsTokenStrategy extends AuthorizationStrategy {
-  SmsTokenStrategy(this.username, this.smsToken);
+/// An [AuthorizationStrategy] that uses a phone number and an SMS token to
+/// authorize the resource owner.
+class SmsTokenStrategy implements AuthorizationStrategy {
+  /// Creates the [SmsTokenStrategy].
+  ///
+  /// The [phoneNumber] is the resource owner phone number. The [smsToken] is
+  /// the resource owner SMS token received on the [phoneNumber].
+  const SmsTokenStrategy(this.phoneNumber, this.smsToken);
 
-  final String username;
+  /// The resource owner phone number.
+  final String phoneNumber;
+
+  /// The resource owner SMS token received on the [phoneNumber].
   final String smsToken;
 
   @override
@@ -33,7 +42,7 @@ class SmsTokenStrategy extends AuthorizationStrategy {
   ) {
     return smsTokenGrant(
       oAuthSettings.authorizationEndpointUri,
-      username,
+      phoneNumber,
       smsToken,
       identifier: oAuthSettings.clientId,
       secret: oAuthSettings.clientSecret,

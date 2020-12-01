@@ -18,11 +18,14 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-class ClientCredentialsStrategy extends AuthorizationStrategy {
-  ClientCredentialsStrategy(this.username, this.password);
-
-  final String username;
-  final String password;
+/// An [AuthorizationStrategy] that uses the Client Credentials Grant.
+///
+/// See also:
+/// - https://oauth.net/2/grant-types/client-credentials/
+/// - https://tools.ietf.org/html/rfc6749#section-4.4
+class ClientCredentialsStrategy implements AuthorizationStrategy {
+  /// Creates the [ClientCredentialsStrategy].
+  const ClientCredentialsStrategy();
 
   @override
   Future<oauth2.Client> execute(

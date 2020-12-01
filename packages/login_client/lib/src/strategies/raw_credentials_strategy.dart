@@ -19,9 +19,16 @@ import '../oauth_settings.dart';
 import '../utils.dart';
 import 'authorization_strategy.dart';
 
-class RawCredentialsStrategy extends AuthorizationStrategy {
-  RawCredentialsStrategy(this.credentials);
+/// An [AuthorizationStrategy] that uses a preexisting [oauth2.Credentials] to
+/// authorize user in.
+class RawCredentialsStrategy implements AuthorizationStrategy {
+  /// Creates the [RawCredentialsStrategy].
+  ///
+  /// The [credentials] are the preexisting credentials used
+  /// for an authorization.
+  const RawCredentialsStrategy(this.credentials);
 
+  /// The preexisting credentials.
   final oauth2.Credentials credentials;
 
   @override

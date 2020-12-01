@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// An OAuth2 compliant login client library.
 library login_client;
 
 export 'src/credentials_storage/credentials_storage.dart';

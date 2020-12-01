@@ -18,10 +18,21 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-class ResourceOwnerPasswordStrategy extends AuthorizationStrategy {
-  ResourceOwnerPasswordStrategy(this.username, this.password);
+/// An [AuthorizationStrategy] that uses the Resource Owner Password Grant.
+///
+/// See also:
+/// - https://tools.ietf.org/html/rfc6749#section-4.3
+class ResourceOwnerPasswordStrategy implements AuthorizationStrategy {
+  /// Creates the [ResourceOwnerPasswordStrategy].
+  ///
+  /// The [username] is the resource owner username. The [password] is
+  /// the resource owner password.
+  const ResourceOwnerPasswordStrategy(this.username, this.password);
 
+  /// The resource owner username.
   final String username;
+
+  /// The resource owner password.
   final String password;
 
   @override

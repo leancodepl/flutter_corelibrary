@@ -19,18 +19,28 @@ import '../oauth2/custom_grant.dart';
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-class CustomGrantStrategy extends AuthorizationStrategy {
-  CustomGrantStrategy(
+/// An [AuthorizationStrategy] that authorizes using a custom grant with
+/// a customized token field.
+class CustomGrantStrategy implements AuthorizationStrategy {
+  /// Creates the [CustomGrantStrategy].
+  ///
+  /// The [grantName] is the custom grant name.
+  ///
+  /// The [tokenFieldName] and the [tokenFieldValue] are a key-value pair
+  /// of a custom field to be used by the custom grant.
+  const CustomGrantStrategy(
     this.grantName,
     this.tokenFieldName,
     this.tokenFieldValue,
-  ) : assert(
-          !['password', 'client_credentials', 'sms_token'].contains(grantName),
-          'You cannot use reserved grant name in a CustomGrantStrategy.',
-        );
+  );
 
+  /// The custom grant name.
   final String grantName;
+
+  /// The token field name.
   final String tokenFieldName;
+
+  /// The token field value.
   final String tokenFieldValue;
 
   @override
