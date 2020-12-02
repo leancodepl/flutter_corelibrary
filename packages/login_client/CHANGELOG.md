@@ -1,72 +1,78 @@
-## [0.6.0] - 19.06.2020
-Refactor login behavior
-Extract grant details to AuthStrategy implementations
+# 1.0.0
 
-## [0.5.0] - 7.04.2020
+- Complete rewrite of a library with **breaking changes**.
+- Replaced `ApiConsts` with refreshed `OAuthSettings`.
+- Simplified error handling to reuse OAuth2's `AuthorizationException` or this library's `RefreshException`.
+- Started using official `oauth2` package instead of a unsupported fork.
+- Removed `AssertionStrategy`. Use `CustomGrantStrategy` instead.
 
-Upgrade packages
+# 0.6.0
 
-## [0.4.3] - 30.10.2019
+- Refactor login behavior
+- Extract grant details to AuthStrategy implementations
 
-Include expiration field in token model
+# 0.5.0
 
-## [0.4.2] - 29.10.2019
+- Upgrade packages
 
-Add assertion and sms token authentication
+# 0.4.3
 
-## [0.4.1] - 25.10.2019
+- Include expiration field in token model
 
-Export models
+# 0.4.2
 
-## [0.4.0] - 25.10.2019
+- Add assertion and sms token authentication
 
-Reimplement authentication
+# 0.4.1
 
-`leancode_login_manager` has been replaced with `leancode_login_client`.
+- Export models
+
+# 0.4.0
+
+- Reimplement authentication
+- `leancode_login_manager` has been replaced with `leancode_login_client`.
 Right now it only supports logging in with credentials.
 
-## [0.3.4] - 22.10.2019
+# 0.3.4
 
-Fix: Base login manager - initialize client from http library when there is no token.
+- Fix: Base login manager - initialize client from http library when there is no token.
 
-## [0.3.3] - 22.10.2019
+# 0.3.3
 
-Fix: Export login result enum
+- Fix: Export login result enum
 
-## [0.3.2] - 22.10.2019
+# 0.3.2
 
-Fix: Add rxdart and flutter_test dependencies
+- Fix: Add rxdart and flutter_test dependencies
 
-## [0.3.1] - 16.10.2019
+# 0.3.1
 
-Fix: now grant handlers use client from their login manager instance
+- Fix: now grant handlers use client from their login manager instance
+- Tests: added simple result tests
 
-Tests: added simple result tests
+# 0.3.0
 
-## [0.3.0] - 16.10.2019
+- Breaking change: Grant handlers now return LoginResult instances instead of simple boolean value.
+- Fix: isLoggedIn value was null when error was added into the stream. Now errors never happen there and unhandled exceptions are being rethrown.
 
-Breaking change: Grant handlers now return LoginResult instances instead of simple boolean value.
+# 0.2.4
 
-Fix: isLoggedIn value was null when error was added into the stream. Now errors never happen there and unhandled exceptions are being rethrown.
+- Fix: handle only unauthrized requests
 
-## [0.2.4] - 27.09.2019
+# 0.2.3
 
-Fix: handle only unauthrized requests
+- Fix: handling requests during token refresh
 
-## [0.2.3] - 20.09.2019
+# 0.2.2
 
-Fix: handling requests during token refresh
+- Fix: regression with logout on every request
 
-## [0.2.2] - 9.09.2019
-
-Fix: regression with logout on every request
-
-## [0.2.1] - 4.09.2019
+# 0.2.1
 
 _DO NOT USE THIS VERSION, IT HAS A SEVERE REGRESSION_
 
-Fix: wrongly released mutex on multiple refresh requests
+- Fix: wrongly released mutex on multiple refresh requests
 
-## [0.2.0]
+# 0.2.0
 
-Initial release
+- Initial release

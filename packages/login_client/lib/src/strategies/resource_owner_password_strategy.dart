@@ -15,26 +15,25 @@
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 
-import '../oauth2/custom_grant.dart';
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-/// An [AuthorizationStrategy] that uses a phone number and an SMS token to
-/// authorize the resource owner.
-class SmsTokenStrategy implements AuthorizationStrategy {
-  /// Creates the [SmsTokenStrategy].
+/// An [AuthorizationStrategy] that uses the Resource Owner Password Grant.
+///
+/// See also:
+/// - https://tools.ietf.org/html/rfc6749#section-4.3
+class ResourceOwnerPasswordStrategy implements AuthorizationStrategy {
+  /// Creates the [ResourceOwnerPasswordStrategy].
   ///
-  /// The [phoneNumber] is the resource owner phone number. The [smsToken] is
-  /// the resource owner SMS token received on the [phoneNumber].
-  const SmsTokenStrategy(this.phoneNumber, this.smsToken);
+  /// The [username] is the resource owner username. The [password] is
+  /// the resource owner password.
+  const ResourceOwnerPasswordStrategy(this.username, this.password);
 
-  static const _grantName = 'sms_token';
+  /// The resource owner username.
+  final String username;
 
-  /// The resource owner phone number.
-  final String phoneNumber;
-
-  /// The resource owner SMS token received on the [phoneNumber].
-  final String smsToken;
+  /// The resource owner password.
+  final String password;
 
   @override
   Future<oauth2.Client> execute(
@@ -42,10 +41,10 @@ class SmsTokenStrategy implements AuthorizationStrategy {
     http.Client client,
     oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
   ) {
-    return customGrant(
+    return oauth2.resourceOwnerPasswordGrant(
       oAuthSettings.authorizationUri,
-      _grantName,
-      {'phone_number': phoneNumber, 'token': smsToken},
+      username,
+      password,
       identifier: oAuthSettings.clientId,
       secret: oAuthSettings.clientSecret,
       scopes: oAuthSettings.scopes,

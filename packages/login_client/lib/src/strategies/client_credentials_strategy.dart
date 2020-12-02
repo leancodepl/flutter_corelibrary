@@ -15,42 +15,30 @@
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 
-import '../oauth2/custom_grant.dart';
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-/// An [AuthorizationStrategy] that uses a phone number and an SMS token to
-/// authorize the resource owner.
-class SmsTokenStrategy implements AuthorizationStrategy {
-  /// Creates the [SmsTokenStrategy].
-  ///
-  /// The [phoneNumber] is the resource owner phone number. The [smsToken] is
-  /// the resource owner SMS token received on the [phoneNumber].
-  const SmsTokenStrategy(this.phoneNumber, this.smsToken);
-
-  static const _grantName = 'sms_token';
-
-  /// The resource owner phone number.
-  final String phoneNumber;
-
-  /// The resource owner SMS token received on the [phoneNumber].
-  final String smsToken;
+/// An [AuthorizationStrategy] that uses the Client Credentials Grant.
+///
+/// See also:
+/// - https://oauth.net/2/grant-types/client-credentials/
+/// - https://tools.ietf.org/html/rfc6749#section-4.4
+class ClientCredentialsStrategy implements AuthorizationStrategy {
+  /// Creates the [ClientCredentialsStrategy].
+  const ClientCredentialsStrategy();
 
   @override
   Future<oauth2.Client> execute(
     OAuthSettings oAuthSettings,
     http.Client client,
-    oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
+    oauth2.CredentialsRefreshedCallback onCredentialsRefreshed, // not used
   ) {
-    return customGrant(
+    return oauth2.clientCredentialsGrant(
       oAuthSettings.authorizationUri,
-      _grantName,
-      {'phone_number': phoneNumber, 'token': smsToken},
-      identifier: oAuthSettings.clientId,
-      secret: oAuthSettings.clientSecret,
+      oAuthSettings.clientId,
+      oAuthSettings.clientSecret,
       scopes: oAuthSettings.scopes,
       httpClient: client,
-      onCredentialsRefreshed: onCredentialsRefreshed,
     );
   }
 }

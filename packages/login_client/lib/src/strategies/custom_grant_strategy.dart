@@ -19,22 +19,25 @@ import '../oauth2/custom_grant.dart';
 import '../oauth_settings.dart';
 import 'authorization_strategy.dart';
 
-/// An [AuthorizationStrategy] that uses a phone number and an SMS token to
-/// authorize the resource owner.
-class SmsTokenStrategy implements AuthorizationStrategy {
-  /// Creates the [SmsTokenStrategy].
+/// An [AuthorizationStrategy] that authorizes using a custom grant with
+/// a customized token field.
+class CustomGrantStrategy implements AuthorizationStrategy {
+  /// Creates the [CustomGrantStrategy].
   ///
-  /// The [phoneNumber] is the resource owner phone number. The [smsToken] is
-  /// the resource owner SMS token received on the [phoneNumber].
-  const SmsTokenStrategy(this.phoneNumber, this.smsToken);
+  /// The [grantName] is the custom grant name.
+  ///
+  /// The [grantFields] are the key-value pairs sent in the access
+  /// token request.
+  const CustomGrantStrategy(this.grantName, this.grantFields);
 
-  static const _grantName = 'sms_token';
+  /// The custom grant name.
+  ///
+  /// You should not use grant names that are already defined in the OAuth2:
+  /// https://tools.ietf.org/html/rfc6749#appendix-A.10
+  final String grantName;
 
-  /// The resource owner phone number.
-  final String phoneNumber;
-
-  /// The resource owner SMS token received on the [phoneNumber].
-  final String smsToken;
+  /// The custom grant custom fields.
+  final Map<String, String> grantFields;
 
   @override
   Future<oauth2.Client> execute(
@@ -44,8 +47,8 @@ class SmsTokenStrategy implements AuthorizationStrategy {
   ) {
     return customGrant(
       oAuthSettings.authorizationUri,
-      _grantName,
-      {'phone_number': phoneNumber, 'token': smsToken},
+      grantName,
+      grantFields,
       identifier: oAuthSettings.clientId,
       secret: oAuthSettings.clientSecret,
       scopes: oAuthSettings.scopes,

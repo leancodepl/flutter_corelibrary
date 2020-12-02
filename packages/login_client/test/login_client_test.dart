@@ -1,309 +1,168 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:leancode_login_client/leancode_login_client.dart';
-import 'package:leancode_login_client/src/models/models.dart';
-import 'package:leancode_login_client/src/strategies/assertion_strategy.dart';
-import 'package:leancode_login_client/src/strategies/password_credentials_strategy.dart';
-import 'package:leancode_login_client/src/strategies/preauthentication_strategy.dart';
-import 'package:leancode_login_client/src/strategies/sms_token_strategy.dart';
+import 'package:http/http.dart' show BaseRequest;
 import 'package:mockito/mockito.dart';
-import 'package:leancode_logging/logger.dart';
-import 'package:oauth2/oauth2.dart' as auth;
-import 'package:http/http.dart' as http;
+import 'package:oauth2/oauth2.dart';
+import 'package:test/test.dart';
 
-class FakeLogger extends Mock implements Logger {}
-
-class FakeAuthClient extends Mock implements auth.Client {}
-
-class FakeClient extends Mock implements http.Client {}
-
-class FakeRequest extends Mock implements http.BaseRequest {}
-
-class FakeResponse extends Mock implements http.StreamedResponse {}
-
-class FakeTokenStorage extends Mock implements TokenStorage {}
-
-class FakePasswordCredentialsStrategy extends Mock
-    implements PasswordCredentialsStrategy {}
-
-class FakeAssertionStrategy extends Mock implements AssertionStrategy {}
-
-class FakeSMSTokenStrategy extends Mock implements SMSTokenStrategy {}
-
-class FakePreauthenticationStrategy extends Mock
-    implements PreauthenticationStrategy {}
+import 'package:login_client/login_client.dart';
 
 void main() {
-  group('Api client tests', () {
-    final client = FakeClient();
-    final authClient = FakeAuthClient();
-    final fakeTokenStorage = FakeTokenStorage();
-    final fakeRequest = FakeRequest();
-    final fakeResponse = FakeResponse();
-
-    final passwordCredentialsStrategy = FakePasswordCredentialsStrategy();
-    final smsTokenStrategy = FakeSMSTokenStrategy();
-    final assertionStrategy = FakeAssertionStrategy();
-
-    final token = Token()
-      ..accessToken = 'access_token'
-      ..refreshToken = 'refresh_token';
-
-    final newToken = Token()
-      ..accessToken = 'new_access_token'
-      ..refreshToken = 'new_refresh_token';
-
-    OAuthLoginClient apiClient;
-
-    setUpAll(() {
-      logger = FakeLogger();
-
-      when(passwordCredentialsStrategy.execute(any, any))
-          .thenAnswer((_) async => authClient);
-
-      when(smsTokenStrategy.execute(any, any))
-          .thenAnswer((_) async => authClient);
-
-      when(assertionStrategy.execute(any, any))
-          .thenAnswer((_) async => authClient);
-    });
-
-    setUp(() async {
-      apiClient = OAuthLoginClient(
-        client,
-        ApiConsts(),
-        fakeTokenStorage,
-        generateClientFromToken: (_) => authClient,
+  group('LoginClient', () {
+    OAuthSettings oAuthSettings;
+    CredentialsStorage credentialsStorage;
+    CredentialsChangedCallback credentialsChangedCallback;
+    void Function(String) logger;
+    LoginClient loginClient;
+    setUp(() {
+      oAuthSettings = MockOAuthSettings();
+      credentialsStorage = MockCredentialsStorage();
+      credentialsChangedCallback = MockCredentialsChangedCallback();
+      logger = MockLogger();
+      loginClient = LoginClient(
+        oAuthSettings: oAuthSettings,
+        credentialsStorage: credentialsStorage,
+        credentialsChangedCallback: credentialsChangedCallback,
+        logger: logger,
       );
     });
 
-    test('Should login and use authorized client when initializing with token.',
-        () async {
-      when(fakeTokenStorage.getToken()).thenAnswer((_) async => token);
+    test(
+      'initialize() reads from storage, calls the callback and logs',
+      () async {
+        final credentials = Credentials('some token');
 
-      final apiClient = OAuthLoginClient(
-        client,
-        ApiConsts(),
-        fakeTokenStorage,
+        when(credentialsStorage.read()).thenAnswer((_) async => credentials);
+
+        await loginClient.initialize();
+
+        expect(loginClient.loggedIn, true);
+
+        verify(credentialsStorage.read()).called(1);
+        verify(credentialsChangedCallback(credentials)).called(1);
+        verify(logger('Successfully initialized with credentials.')).called(1);
+      },
+    );
+
+    test(
+      'logIn() calls callbacks, saves credentials and logs on success',
+      () async {
+        final client = MockOAuthClient();
+        final strategy = MockAuthorizationStrategy();
+        when(strategy.execute(any, any, any)).thenAnswer((_) async => client);
+
+        await loginClient.logIn(strategy);
+
+        expect(loginClient.loggedIn, true);
+
+        verify(credentialsChangedCallback(client.credentials)).called(1);
+        verify(credentialsStorage.save(client.credentials)).called(1);
+        verify(logger('Successfully logged in and saved the credentials.'))
+            .called(1);
+      },
+    );
+
+    test(
+      'logIn() logs out, logs and rethrows on AuthorizationException',
+      () async {
+        final authorizationException =
+            AuthorizationException('Error', 'Description', Uri());
+
+        final strategy = MockAuthorizationStrategy();
+        when(strategy.execute(any, any, any)).thenThrow(authorizationException);
+
+        await expectLater(
+          loginClient.logIn(strategy),
+          throwsA(isA<AuthorizationException>()),
+        );
+
+        expect(loginClient.loggedIn, false);
+
+        verify(credentialsChangedCallback(null)).called(1);
+        verify(credentialsStorage.clear()).called(1);
+        verify(logger(
+          'An error while logging in occured, '
+          'successfully logged out and cleared credentials.',
+        )).called(1);
+      },
+    );
+
+    test('refresh() throws on unauthorized client', () async {
+      expectLater(
+        loginClient.refresh(),
+        throwsA(isA<RefreshException>()),
       );
+    });
 
-      await apiClient.initializeAsync();
+    test('refresh() calls the refresh credentials', () async {
+      final authorizedClient = MockOAuthClient();
+      final refreshedClient = MockOAuthClient();
+      when(authorizedClient.refreshCredentials(any))
+          .thenAnswer((_) async => refreshedClient);
 
-      final auth.Client authClient = apiClient.client;
+      loginClient.setAuthorizedClient(authorizedClient);
+      await loginClient.refresh();
 
-      expect(authClient.credentials.accessToken, token.accessToken);
-      expect(apiClient.isLoggedIn, true);
+      expect(loginClient.loggedIn, true);
+
+      verify(authorizedClient.refreshCredentials(any)).called(1);
+    });
+
+    test('logOut() logs out, calls callback and logs', () async {
+      await loginClient.logOut();
+
+      expect(loginClient.loggedIn, false);
+
+      verify(credentialsChangedCallback(null)).called(1);
+      verify(credentialsStorage.clear()).called(1);
+      verify(logger('Successfully logged out and cleared the credentials.'))
+          .called(1);
     });
 
     test(
-        'Should logout and use unauthorized client when initializing without token.',
-        () async {
-      when(fakeTokenStorage.getToken()).thenAnswer((_) async => null);
+      'send() logs out, logs and rethrows on AuthorizationException',
+      () async {
+        final request = FakeRequest();
+        final mockOauthClient = MockOAuthClient();
+        when(mockOauthClient.send(request))
+            .thenThrow(AuthorizationException('Error', 'Description', Uri()));
 
-      await apiClient.initializeAsync();
+        loginClient.setAuthorizedClient(mockOauthClient);
 
-      expect(apiClient.client, client);
-      expect(apiClient.isLoggedIn, false);
-    });
+        await expectLater(
+          loginClient.send(request),
+          throwsA(isA<AuthorizationException>()),
+        );
 
-    test(
-        'Should login, save token and use authorized client when logging in with password.',
-        () async {
-      when(authClient.credentials).thenAnswer((_) => auth.Credentials(
-          token.accessToken,
-          refreshToken: token.refreshToken));
+        expect(loginClient.loggedIn, false);
 
-      final result = await apiClient.login(passwordCredentialsStrategy);
-
-      expect(result, isA<Success>());
-      verify(fakeTokenStorage.setToken(argThat(predicate<Token>((t) {
-        return t.accessToken == token.accessToken &&
-            t.refreshToken == token.refreshToken;
-      })))).called(1);
-      expect(apiClient.client, authClient);
-      expect(apiClient.isLoggedIn, true);
-    });
-
-    test(
-        'Should login, save token and use authorized client when logging in with assertion token.',
-        () async {
-      when(authClient.credentials).thenAnswer((_) => auth.Credentials(
-          token.accessToken,
-          refreshToken: token.refreshToken));
-
-      final result = await apiClient.login(assertionStrategy);
-
-      expect(result, isA<Success>());
-      verify(fakeTokenStorage.setToken(argThat(predicate<Token>((t) {
-        return t.accessToken == token.accessToken &&
-            t.refreshToken == token.refreshToken;
-      })))).called(1);
-      expect(apiClient.client, authClient);
-      expect(apiClient.isLoggedIn, true);
-    });
-
-    test(
-        'Should login, save token and use authorized client when logging in with sms token.',
-        () async {
-      when(authClient.credentials).thenAnswer((_) => auth.Credentials(
-          token.accessToken,
-          refreshToken: token.refreshToken));
-
-      final result = await apiClient.login(smsTokenStrategy);
-
-      expect(result, isA<Success>());
-      verify(fakeTokenStorage.setToken(argThat(predicate<Token>((t) {
-        return t.accessToken == token.accessToken &&
-            t.refreshToken == token.refreshToken;
-      })))).called(1);
-      expect(apiClient.client, authClient);
-      expect(apiClient.isLoggedIn, true);
-    });
-
-    test(
-        'Should logout and use unauthorized client when logging in with incorrect password.',
-        () async {
-      when(passwordCredentialsStrategy.execute(any, any))
-          .thenThrow(auth.AuthorizationException('', '', null));
-
-      final result = await apiClient.login(passwordCredentialsStrategy);
-
-      expect(result, isA<AuthorizationFailed>());
-      expect(apiClient.client, client);
-      expect(apiClient.isLoggedIn, false);
-    });
-
-    test(
-        'Should logout and use unauthorized client when logging in with incorrect assertion token.',
-        () async {
-      when(assertionStrategy.execute(any, any))
-          .thenThrow(auth.AuthorizationException('', '', null));
-
-      final result = await apiClient.login(assertionStrategy);
-
-      expect(result, isA<AuthorizationFailed>());
-      expect(apiClient.client, client);
-      expect(apiClient.isLoggedIn, false);
-    });
-
-    test(
-        'Should logout and use unauthorized client when logging in with incorrect sms token.',
-        () async {
-      when(smsTokenStrategy.execute(any, any))
-          .thenThrow(auth.AuthorizationException('', '', null));
-
-      final result = await apiClient.login(smsTokenStrategy);
-
-      expect(result, isA<AuthorizationFailed>());
-      expect(apiClient.client, client);
-      expect(apiClient.isLoggedIn, false);
-    });
-
-    test('Should wipe token when logout', () async {
-      when(authClient.credentials).thenAnswer((_) => auth.Credentials(
-          token.accessToken,
-          refreshToken: token.refreshToken));
-      await apiClient.login(passwordCredentialsStrategy);
-
-      await apiClient.logout();
-
-      verify(fakeTokenStorage.wipeToken()).called(1);
-      expect(apiClient.client, client);
-      expect(apiClient.isLoggedIn, false);
-    });
-
-    test('Should return cannotBeRefreshed when client is unauthorized',
-        () async {
-      final result = await apiClient.refreshToken();
-
-      expect(result, isA<CannotBeRefreshed>());
-    });
-
-    test('Should refresh, save token and use authorized client', () async {
-      final credentials = auth.Credentials(token.accessToken,
-          refreshToken: token.refreshToken, tokenEndpoint: Uri());
-
-      when(authClient.credentials).thenAnswer((_) => credentials);
-      when(fakeTokenStorage.getToken()).thenAnswer((_) async => token);
-      when(authClient.refreshCredentials()).thenAnswer((_) async => authClient);
-
-      await apiClient.initializeAsync();
-
-      final result = await apiClient.refreshToken();
-
-      expect(result, isA<Success>());
-      verify(fakeTokenStorage.setToken(argThat(predicate<Token>((t) {
-        return t.accessToken == token.accessToken &&
-            t.refreshToken == token.refreshToken;
-      })))).called(1);
-    });
-
-    test(
-        'Should return unexpectedOAuthError when refreshCredentials throws exceptions',
-        () async {
-      final credentials = auth.Credentials(token.accessToken,
-          refreshToken: token.refreshToken, tokenEndpoint: Uri());
-
-      when(authClient.credentials).thenAnswer((_) => credentials);
-      when(fakeTokenStorage.getToken()).thenAnswer((_) async => token);
-      when(authClient.refreshCredentials())
-          .thenThrow(const FormatException('', '', null));
-
-      await apiClient.initializeAsync();
-
-      final result = await apiClient.refreshToken();
-      expect(result, isA<UnexpectedOAuthError>());
-    });
-
-    test(
-        'Should return invalidGrant when refreshCredentials throws authorization exception',
-        () async {
-      final credentials = auth.Credentials(token.accessToken,
-          refreshToken: token.refreshToken, tokenEndpoint: Uri());
-
-      when(authClient.credentials).thenAnswer((_) => credentials);
-      when(fakeTokenStorage.getToken()).thenAnswer((_) async => token);
-      when(authClient.refreshCredentials())
-          .thenThrow(auth.AuthorizationException('', '', null));
-
-      await apiClient.initializeAsync();
-
-      final result = await apiClient.refreshToken();
-      expect(result, isA<AuthorizationFailed>());
-    });
-
-    test('Should save new token when old expires', () async {
-      // Initialize auth client.
-      when(fakeTokenStorage.getToken()).thenAnswer((_) async => token);
-      await apiClient.initializeAsync();
-
-      // Simulate token refresh.
-      when(authClient.credentials).thenAnswer((_) => auth.Credentials(
-          newToken.accessToken,
-          refreshToken: newToken.refreshToken));
-
-      when(authClient.send(any)).thenAnswer((_) async => fakeResponse);
-
-      await apiClient.send(fakeRequest);
-
-      verify(fakeTokenStorage.setToken(argThat(predicate<Token>((t) {
-        return t.accessToken == newToken.accessToken &&
-            t.refreshToken == newToken.refreshToken;
-      })))).called(1);
-    });
-
-    test('Should logout when send throws authorization exception', () async {
-      when(fakeTokenStorage.getToken()).thenAnswer((_) async => token);
-      await apiClient.initializeAsync();
-      when(authClient.send(any))
-          .thenThrow(auth.AuthorizationException('', '', null));
-
-      await expectLater(apiClient.send(fakeRequest),
-          throwsA(isA<auth.AuthorizationException>()));
-      expect(apiClient.isLoggedIn, false);
-    });
-
-    tearDown(() {
-      apiClient.close();
-    });
+        verify(credentialsChangedCallback(null)).called(1);
+        verify(credentialsStorage.clear()).called(1);
+        verify(logger(
+          'An error while sending a request occured, '
+          'successfully logged out and cleared credentials.',
+        )).called(1);
+      },
+    );
   });
 }
+
+class MockOAuthSettings extends Mock implements OAuthSettings {}
+
+class MockCredentialsStorage extends Mock implements CredentialsStorage {}
+
+class MockCredentialsChangedCallback extends Mock {
+  void call(Credentials credentials) =>
+      noSuchMethod(Invocation.method(#call, [credentials]));
+}
+
+class MockLogger extends Mock {
+  void call(String log) => noSuchMethod(Invocation.method(#call, [log]));
+}
+
+class MockAuthorizationStrategy extends Mock implements AuthorizationStrategy {}
+
+class MockOAuthClient extends Mock implements Client {
+  @override
+  final credentials = Credentials('fake access token');
+}
+
+class FakeRequest extends Fake implements BaseRequest {}

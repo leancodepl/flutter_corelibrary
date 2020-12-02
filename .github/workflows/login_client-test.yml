@@ -1,0 +1,56 @@
+name: login_client test
+
+on:
+  push:
+    branches: [master]
+    ignore-tags: ['login_client-v*']
+    paths:
+      - 'packages/login_client/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/login_client/**'
+
+jobs:
+  test:
+    name: Dart ${{ matrix.dart_release }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dart_release: ['2.10', '2.11-beta']
+      
+    container:
+      image: google/dart:${{ matrix.dart_release }}
+
+    defaults:
+      run:
+        working-directory: packages/login_client
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Dart version
+        run: dart --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Download pub dependencies
+        run: dart pub get
+
+      - name: Run analyzer
+        run: dart analyze
+
+      - name: Run tests
+        run: dart test
+
+      - name: Dry run pub publish
+        # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
+        run: dart pub publish --dry-run || true
