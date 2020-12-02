@@ -13,6 +13,28 @@ final loginClient = LoginClient(
   // ...
 );
 ```
+
+## Android `javax.crypto.BadPaddingException`
+
+Exclude Flutter Secure Storage from Android full backup.
+
+```xml
+<!-- AndroidManifest.xml -->
+
+    <application
+        ...
+        android:fullBackupContent="@xml/backup_rules">
+```
+
+```xml
+<!-- res/xml/backup_rules.xml -->
+
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <exclude domain="sharedpref" path="FlutterSecureStorage" />
+</full-backup-content>
+```
+
 [login_client_flutter-pub-badge]: https://img.shields.io/pub/v/login_client_flutter
 [login_client_flutter-pub-badge-link]: https://pub.dev/packages/login_client_flutter
 [login_client_flutter-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client_flutter%2520test
