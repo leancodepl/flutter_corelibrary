@@ -15,8 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_secure_storage: ^3.3.5
-  login_client:
-    path: ../login_client
+  login_client: ^1.0.0
   oauth2: ^1.6.3
 
 dev_dependencies:
