@@ -34,7 +34,7 @@ For Flutter implementation of the `CredentialsStorage`, check out [`login_client
 
 [login_client-pub-badge]: https://img.shields.io/pub/v/login_client
 [login_client-pub-badge-link]: https://pub.dev/packages/login_client
-[login_client-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%2520test
+[login_client-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%20test
 [login_client-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client+test%22
 [snippet]: assets/snippet.png
 [login_client_flutter]: https://pub.dev/packages/login_client_flutter

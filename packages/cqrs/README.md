@@ -71,5 +71,5 @@ if (result.success) {
 
 [cqrs-pub-badge]: https://img.shields.io/pub/v/cqrs
 [cqrs-pub-badge-link]: https://pub.dev/packages/cqrs
-[cqrs-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%2520test
+[cqrs-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
 [cqrs-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22

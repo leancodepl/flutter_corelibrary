@@ -12,13 +12,13 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [cqrs-documentation]: https://pub.dev/documentation/cqrs/latest/
 [cqrs-pub-badge]: https://img.shields.io/pub/v/cqrs
 [cqrs-pub-badge-link]: https://pub.dev/packages/cqrs
-[cqrs-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%2520test
+[cqrs-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
 [cqrs-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22
 [login_client-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client
 [login_client-documentation]: https://pub.dev/documentation/login_client/latest/
 [login_client-pub-badge]: https://img.shields.io/pub/v/login_client
 [login_client-pub-badge-link]: https://pub.dev/packages/login_client
-[login_client-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%2520test
+[login_client-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%20test
 [login_client-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client+test%22
 [login_client_flutter-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client_flutter
 [login_client_flutter-documentation]: https://pub.dev/documentation/login_client_flutter/latest/
