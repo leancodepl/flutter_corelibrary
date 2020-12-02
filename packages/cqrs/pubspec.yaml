@@ -1,6 +1,6 @@
 name: cqrs
-version: 4.0.0+1
-homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/cqrs
+version: 4.0.0+2
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/cqrs
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
   A library for convenient communication with CQRS-compatible backends, using
