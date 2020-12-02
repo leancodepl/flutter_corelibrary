@@ -9,9 +9,24 @@ OAuth2 compliant login client that:
 - automatically refreshes tokens,
 - is easily pluggable into existing codebases.
 
-<div align="center">
-    <img src="assets/snippet.png" alt="login_client sample code snippet">
-</div>
+## Usage
+
+```dart
+final loginClient = LoginClient(
+  oAuthSettings: OAuthSettings(
+    authorizationUri: apiUri.resolve('/auth'),
+    clientId: 'pl.leancode.sample_app',
+  ),
+  credentialsStorage: const FlutterSecureCredentialsStorage(),
+);
+
+await loginClient.logIn(
+  //                                       my secret pwd
+  ResourceOwnerPasswordStrategy('Albert221', 'ny4ncat'),
+);
+
+final response = await loginClient.get('/secret-stuff');
+```
 
 ## Flutter
 
