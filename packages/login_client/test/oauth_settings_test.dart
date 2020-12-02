@@ -8,7 +8,7 @@ void main() {
     OAuthSettings settings;
     setUp(() {
       settings = OAuthSettings(
-        authorizationEndpointUri: authorizationUri,
+        authorizationUri: authorizationUri,
         clientId: 'com.example.client',
         clientSecret: 's3cr3t',
         scopes: ['email', 'profile'],
@@ -16,7 +16,7 @@ void main() {
     });
 
     test('has authorizationEndpointUri property set', () {
-      expect(settings.authorizationEndpointUri, authorizationUri);
+      expect(settings.authorizationUri, authorizationUri);
     });
 
     test('has clientId property set', () {

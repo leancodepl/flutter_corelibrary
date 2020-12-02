@@ -34,7 +34,7 @@ class ClientCredentialsStrategy implements AuthorizationStrategy {
     oauth2.CredentialsRefreshedCallback onCredentialsRefreshed, // not used
   ) {
     return oauth2.clientCredentialsGrant(
-      oAuthSettings.authorizationEndpointUri,
+      oAuthSettings.authorizationUri,
       oAuthSettings.clientId,
       oAuthSettings.clientSecret,
       scopes: oAuthSettings.scopes,

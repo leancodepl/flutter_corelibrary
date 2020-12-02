@@ -18,7 +18,7 @@ import 'package:meta/meta.dart';
 class OAuthSettings {
   /// Creates the [OAuthSettings].
   const OAuthSettings({
-    @required this.authorizationEndpointUri,
+    @required this.authorizationUri,
     this.clientId,
     this.clientSecret,
     this.scopes = const [],
@@ -26,7 +26,7 @@ class OAuthSettings {
 
   /// The [`authorization endpoint`](https://tools.ietf.org/html/rfc6749#section-3.1)
   /// from the RFC 6749.
-  final Uri authorizationEndpointUri;
+  final Uri authorizationUri;
 
   /// The [`client_id`](https://tools.ietf.org/html/rfc6749#appendix-A.1)
   /// from the RFC 6749.

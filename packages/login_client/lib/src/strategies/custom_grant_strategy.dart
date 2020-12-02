@@ -46,7 +46,7 @@ class CustomGrantStrategy implements AuthorizationStrategy {
     oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
   ) {
     return customGrant(
-      oAuthSettings.authorizationEndpointUri,
+      oAuthSettings.authorizationUri,
       grantName,
       grantFields,
       identifier: oAuthSettings.clientId,

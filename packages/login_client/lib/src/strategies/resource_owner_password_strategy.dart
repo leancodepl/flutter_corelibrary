@@ -42,7 +42,7 @@ class ResourceOwnerPasswordStrategy implements AuthorizationStrategy {
     oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
   ) {
     return oauth2.resourceOwnerPasswordGrant(
-      oAuthSettings.authorizationEndpointUri,
+      oAuthSettings.authorizationUri,
       username,
       password,
       identifier: oAuthSettings.clientId,

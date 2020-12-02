@@ -43,7 +43,7 @@ class SmsTokenStrategy implements AuthorizationStrategy {
     oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
   ) {
     return customGrant(
-      oAuthSettings.authorizationEndpointUri,
+      oAuthSettings.authorizationUri,
       _grantName,
       {'phone_number': phoneNumber, 'token': smsToken},
       identifier: oAuthSettings.clientId,
