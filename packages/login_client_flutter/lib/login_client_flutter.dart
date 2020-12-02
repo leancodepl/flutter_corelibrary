@@ -13,6 +13,9 @@
 // limitations under the License.
 
 /// flutter_secure_storage implementation of the credentials storage.
+///
+/// See also:
+/// - https://github.com/mogol/flutter_secure_storage
 library login_client_flutter;
 
 export 'src/flutter_secure_credentials_storage.dart';
