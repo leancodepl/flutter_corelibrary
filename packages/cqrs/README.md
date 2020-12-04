@@ -75,4 +75,4 @@ if (result.success) {
 [build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22
 [codecov-badge]: https://img.shields.io/codecov/c/gh/leancodepl/flutter_corelibrary?flag=cqrs
-[codecov-badge-link]: https://codecov.io/gh/leancodepl/flutter_corelibrary?flag=cqrs
+[codecov-badge-link]: https://codecov.io/gh/leancodepl/flutter_corelibrary
