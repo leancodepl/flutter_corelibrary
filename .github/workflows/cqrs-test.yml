@@ -48,9 +48,13 @@ jobs:
       - name: Run analyzer
         run: dart analyze
 
-      - name: Run tests
-        run: dart test
+      - name: Run tests with coverage
+        run: dart pub run test_coverage --no-badge --print-test-output
 
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
         run: dart pub publish --dry-run || true
+
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: cqrs

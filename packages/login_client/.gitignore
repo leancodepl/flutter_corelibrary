@@ -107,6 +107,7 @@ unlinked_spec.ds
 
 # Coverage
 coverage/
+test/.test_coverage.dart
 
 # Symbols
 app.*.symbols
