@@ -1,7 +1,8 @@
 # cqrs
 
-[![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link]
-[![][cqrs-build-badge]][cqrs-build-badge-link]
+[![cqrs pub.dev badge][pub-badge]][pub-badge-link]
+[![][build-badge]][build-badge-link]
+[![][codecov-badge]][codecov-badge-link]
 
 A library for convenient communication with CQRS-compatible backends, using queries and commands.
 
@@ -69,7 +70,9 @@ if (result.success) {
 }
 ```
 
-[cqrs-pub-badge]: https://img.shields.io/pub/v/cqrs
-[cqrs-pub-badge-link]: https://pub.dev/packages/cqrs
-[cqrs-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
-[cqrs-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22
+[pub-badge]: https://img.shields.io/pub/v/cqrs
+[pub-badge-link]: https://pub.dev/packages/cqrs
+[build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22
+[codecov-badge]: https://img.shields.io/codecov/c/gh/leancodepl/flutter_corelibrary?flag=cqrs
+[codecov-badge-link]: https://codecov.io/gh/leancodepl/flutter_corelibrary

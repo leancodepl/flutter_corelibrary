@@ -1,7 +1,8 @@
 # login_client
 
-[![login_client pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link]
-[![][login_client-build-badge]][login_client-build-badge-link]
+[![login_client pub.dev badge][pub-badge]][pub-badge-link]
+[![][build-badge]][build-badge-link]
+[![][codecov-badge]][codecov-badge-link]
 
 OAuth2 compliant login client that:
 
@@ -32,9 +33,11 @@ final response = await loginClient.get('/secret-stuff');
 
 For Flutter implementation of the `CredentialsStorage`, check out [`login_client_flutter`][login_client_flutter].
 
-[login_client-pub-badge]: https://img.shields.io/pub/v/login_client
-[login_client-pub-badge-link]: https://pub.dev/packages/login_client
-[login_client-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%20test
-[login_client-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client+test%22
+[pub-badge]: https://img.shields.io/pub/v/login_client
+[pub-badge-link]: https://pub.dev/packages/login_client
+[build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%20test
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client+test%22
+[codecov-badge]: https://img.shields.io/codecov/c/gh/leancodepl/flutter_corelibrary?flag=login_client
+[codecov-badge-link]: https://codecov.io/gh/leancodepl/flutter_corelibrary
 [snippet]: assets/snippet.png
 [login_client_flutter]: https://pub.dev/packages/login_client_flutter
