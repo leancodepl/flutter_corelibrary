@@ -18,7 +18,8 @@ import 'transport_types.dart';
 class CommandResult {
   const CommandResult(
     this.errors, {
-    @Deprecated("Success is derived from the `errors` emptiness.") bool success,
+    @Deprecated("Success is derived from the `errors` emptiness.")
+        bool? success,
   }) : assert(errors != null);
 
   /// Creates a success [CommandResult] without any errors.
@@ -50,9 +51,7 @@ class CommandResult {
 
 /// A validation error.
 class ValidationError {
-  const ValidationError(this.code, this.message)
-      : assert(code != null),
-        assert(message != null);
+  const ValidationError(this.code, this.message);
 
   ValidationError.fromJson(Map<String, dynamic> json)
       : code = json['ErrorCode'] as int,

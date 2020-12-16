@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dart_release: ['2.10', '2.11-beta']
+        dart_release: ['2.12-beta']
       
     container:
       image: google/dart:${{ matrix.dart_release }}

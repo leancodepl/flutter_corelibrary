@@ -8,8 +8,8 @@ import 'package:test/test.dart';
 
 void main() {
   group('CQRS', () {
-    Client client;
-    CQRS cqrs;
+    late Client client;
+    late CQRS cqrs;
     setUp(() {
       client = MockClient();
       cqrs = CQRS(client, Uri.parse('https://example.org/api/'));
