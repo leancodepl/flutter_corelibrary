@@ -18,7 +18,7 @@ import 'credentials_storage.dart';
 
 /// A [CredentialsStorage] implementation storing credentials in the memory.
 class InMemoryCredentialsStorage extends CredentialsStorage {
-  oauth2.Credentials _credentials;
+  oauth2.Credentials? _credentials;
 
   @override
   Future<oauth2.Credentials> read() {

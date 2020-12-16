@@ -7,10 +7,10 @@ import 'package:login_client/login_client.dart';
 
 void main() {
   group('LoginClient', () {
-    OAuthSettings oAuthSettings;
-    CredentialsStorage credentialsStorage;
-    void Function(String) logger;
-    LoginClient loginClient;
+    late OAuthSettings oAuthSettings;
+    late CredentialsStorage credentialsStorage;
+    late void Function(String) logger;
+    late LoginClient loginClient;
     setUp(() {
       oAuthSettings = MockOAuthSettings();
       credentialsStorage = MockCredentialsStorage();

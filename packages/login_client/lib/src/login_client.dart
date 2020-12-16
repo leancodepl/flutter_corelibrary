@@ -26,7 +26,7 @@ import 'utils.dart';
 
 /// Signature for callbacks that report that the underlying credentials have
 /// changed.
-typedef CredentialsChangedCallback = void Function(oauth2.Credentials);
+typedef CredentialsChangedCallback = void Function(oauth2.Credentials?);
 
 typedef _LoggerCallback = void Function(String);
 
@@ -62,16 +62,13 @@ class LoginClient extends http.BaseClient {
   /// See also:
   /// - [InMemoryCredentialsStorage]
   LoginClient({
-    @required OAuthSettings oAuthSettings,
-    @required CredentialsStorage credentialsStorage,
-    http.Client httpClient,
+    required OAuthSettings oAuthSettings,
+    required CredentialsStorage credentialsStorage,
+    http.Client? httpClient,
     @Deprecated('Use onCredentialsChanged instead.')
-        CredentialsChangedCallback credentialsChangedCallback,
+        CredentialsChangedCallback? credentialsChangedCallback,
     _LoggerCallback logger = _defaultPrintLogger,
-  })  : assert(oAuthSettings != null),
-        assert(credentialsStorage != null),
-        assert(logger != null),
-        _oAuthSettings = oAuthSettings,
+  })  : _oAuthSettings = oAuthSettings,
         _httpClient = httpClient ?? http.Client(),
         _credentialsStorage = credentialsStorage,
         _logger = logger {
@@ -89,7 +86,7 @@ class LoginClient extends http.BaseClient {
   final _onCredentialsChanged =
       StreamController<oauth2.Credentials>.broadcast();
 
-  oauth2.Client _oAuthClient;
+  oauth2.Client? _oAuthClient;
 
   /// Whether this [LoginClient] is authorized or not.
   bool get loggedIn => _oAuthClient != null;
@@ -131,7 +128,7 @@ class LoginClient extends http.BaseClient {
       );
 
       _onCredentialsChanged.add(_oAuthClient.credentials);
-      await _credentialsStorage.save(_oAuthClient.credentials);
+      await _credentialsStorage.save(_oAuthClient!.credentials);
 
       _logger('Successfully logged in and saved the credentials.');
     } on oauth2.AuthorizationException {
@@ -151,7 +148,7 @@ class LoginClient extends http.BaseClient {
   ///
   /// See also:
   /// - https://tools.ietf.org/html/rfc6749#section-6
-  Future<void> refresh([List<String> newScopes]) async {
+  Future<void> refresh([List<String>? newScopes]) async {
     if (_oAuthClient == null) {
       throw const RefreshException(
         'Cannot refresh unauthorized client. Login first.',
@@ -159,7 +156,7 @@ class LoginClient extends http.BaseClient {
     }
 
     try {
-      _oAuthClient = await _oAuthClient.refreshCredentials(newScopes);
+      _oAuthClient = await _oAuthClient!.refreshCredentials(newScopes);
     } on oauth2.AuthorizationException {
       await _logOutInternal();
       _logger('An error while force refreshing occured, '

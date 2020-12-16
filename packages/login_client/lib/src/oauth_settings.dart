@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart';
-
 /// OAuth2 authorization requests settings.
 class OAuthSettings {
   /// Creates the [OAuthSettings].
   const OAuthSettings({
-    @required this.authorizationUri,
-    @required this.clientId,
+    required this.authorizationUri,
+    required this.clientId,
     this.clientSecret = '',
     this.scopes = const [],
   })  : assert(clientId != null),
@@ -31,11 +29,11 @@ class OAuthSettings {
 
   /// The [`client_id`](https://tools.ietf.org/html/rfc6749#appendix-A.1)
   /// from the RFC 6749.
-  final String clientId;
+  final String? clientId;
 
   /// The [`client_secret`](https://tools.ietf.org/html/rfc6749#appendix-A.2)
   /// from the RFC 6749.
-  final String clientSecret;
+  final String? clientSecret;
 
   /// The [`scope`](https://tools.ietf.org/html/rfc6749#appendix-A.4)
   /// from the RFC 6749.
