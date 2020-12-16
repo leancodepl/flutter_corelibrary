@@ -1,3 +1,8 @@
+# 5.0.0-nullsafety.0
+
+- Migration to null-safety.
+- Minimum Dart version bumped to 2.12 prerelease.
+
 # 4.1.1
 
 - Fix exception thrown when the query result is `null`.
