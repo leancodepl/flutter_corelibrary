@@ -25,7 +25,7 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   FlutterSecureStorage get _storage => const FlutterSecureStorage();
 
   @override
-  Future<Credentials> read() async {
+  Future<Credentials?> read() async {
     final json = await _storage.read(key: _key);
     if (json == null) {
       return null;
