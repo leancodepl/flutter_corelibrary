@@ -7,7 +7,7 @@ void main() {
     const error2 = ValidationError(2, 'Second error');
 
     group('fields values are correct', () {
-      test('when constructed without errors with success', () {
+      test('when constructed without errors', () {
         const result = CommandResult([]);
 
         expect(result.success, true);
@@ -15,7 +15,7 @@ void main() {
         expect(result.errors, isEmpty);
       });
 
-      test('when constructed with errors without success', () {
+      test('when constructed with errors', () {
         const result = CommandResult([error1, error2]);
 
         expect(result.success, false);
