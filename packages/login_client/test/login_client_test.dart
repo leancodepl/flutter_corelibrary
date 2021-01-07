@@ -9,18 +9,15 @@ void main() {
   group('LoginClient', () {
     OAuthSettings oAuthSettings;
     CredentialsStorage credentialsStorage;
-    CredentialsChangedCallback credentialsChangedCallback;
     void Function(String) logger;
     LoginClient loginClient;
     setUp(() {
       oAuthSettings = MockOAuthSettings();
       credentialsStorage = MockCredentialsStorage();
-      credentialsChangedCallback = MockCredentialsChangedCallback();
       logger = MockLogger();
       loginClient = LoginClient(
         oAuthSettings: oAuthSettings,
         credentialsStorage: credentialsStorage,
-        credentialsChangedCallback: credentialsChangedCallback,
         logger: logger,
       );
     });
@@ -32,12 +29,13 @@ void main() {
 
         when(credentialsStorage.read()).thenAnswer((_) async => credentials);
 
+        expectLater(loginClient.onCredentialsChanged, emits(credentials));
+
         await loginClient.initialize();
 
         expect(loginClient.loggedIn, true);
 
         verify(credentialsStorage.read()).called(1);
-        verify(credentialsChangedCallback(credentials)).called(1);
         verify(logger('Successfully initialized with credentials.')).called(1);
       },
     );
@@ -49,11 +47,15 @@ void main() {
         final strategy = MockAuthorizationStrategy();
         when(strategy.execute(any, any, any)).thenAnswer((_) async => client);
 
+        expectLater(
+          loginClient.onCredentialsChanged,
+          emits(client.credentials),
+        );
+
         await loginClient.logIn(strategy);
 
         expect(loginClient.loggedIn, true);
 
-        verify(credentialsChangedCallback(client.credentials)).called(1);
         verify(credentialsStorage.save(client.credentials)).called(1);
         verify(logger('Successfully logged in and saved the credentials.'))
             .called(1);
@@ -69,6 +71,8 @@ void main() {
         final strategy = MockAuthorizationStrategy();
         when(strategy.execute(any, any, any)).thenThrow(authorizationException);
 
+        expectLater(loginClient.onCredentialsChanged, emits(null));
+
         await expectLater(
           loginClient.logIn(strategy),
           throwsA(isA<AuthorizationException>()),
@@ -76,7 +80,6 @@ void main() {
 
         expect(loginClient.loggedIn, false);
 
-        verify(credentialsChangedCallback(null)).called(1);
         verify(credentialsStorage.clear()).called(1);
         verify(logger(
           'An error while logging in occured, '
@@ -107,11 +110,12 @@ void main() {
     });
 
     test('logOut() logs out, calls callback and logs', () async {
+      expectLater(loginClient.onCredentialsChanged, emits(null));
+
       await loginClient.logOut();
 
       expect(loginClient.loggedIn, false);
 
-      verify(credentialsChangedCallback(null)).called(1);
       verify(credentialsStorage.clear()).called(1);
       verify(logger('Successfully logged out and cleared the credentials.'))
           .called(1);
@@ -127,6 +131,8 @@ void main() {
 
         loginClient.setAuthorizedClient(mockOauthClient);
 
+        expectLater(loginClient.onCredentialsChanged, emits(null));
+
         await expectLater(
           loginClient.send(request),
           throwsA(isA<AuthorizationException>()),
@@ -134,7 +140,6 @@ void main() {
 
         expect(loginClient.loggedIn, false);
 
-        verify(credentialsChangedCallback(null)).called(1);
         verify(credentialsStorage.clear()).called(1);
         verify(logger(
           'An error while sending a request occured, '
@@ -148,11 +153,6 @@ void main() {
 class MockOAuthSettings extends Mock implements OAuthSettings {}
 
 class MockCredentialsStorage extends Mock implements CredentialsStorage {}
-
-class MockCredentialsChangedCallback extends Mock {
-  void call(Credentials credentials) =>
-      noSuchMethod(Invocation.method(#call, [credentials]));
-}
 
 class MockLogger extends Mock {
   void call(String log) => noSuchMethod(Invocation.method(#call, [log]));

@@ -1,3 +1,11 @@
+# 1.1.0
+
+- OAuth2 `clientId` is now required.
+- OAuth2 `clientSecret` now defaults to an empty string.
+- Export `oauth2` `Credentials`, `AuthorizationException` and `ExpirationException`.
+- Add `onCredentialsChanged` stream to `LoginClient`.
+- Deprecate `credentialsChangedCallback`.
+
 # 1.0.0+1
 
 - Refresh pub listing.
