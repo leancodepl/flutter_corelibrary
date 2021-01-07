@@ -19,10 +19,11 @@ class OAuthSettings {
   /// Creates the [OAuthSettings].
   const OAuthSettings({
     @required this.authorizationUri,
-    this.clientId,
-    this.clientSecret,
+    this.clientId = '',
+    this.clientSecret = '',
     this.scopes = const [],
-  });
+  })  : assert(clientId != null),
+        assert(clientSecret != null);
 
   /// The [`authorization endpoint`](https://tools.ietf.org/html/rfc6749#section-3.1)
   /// from the RFC 6749.
