@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
+
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
@@ -49,6 +51,7 @@ class LoginClient extends http.BaseClient {
   /// The `credentialsChangedCallback` is where you can listen for changes
   /// to the credentials, e.g. for updating the displayed permissions in
   /// the app or showing when the user will be logged out.
+  /// THIS PARAMETER IS DEPRECATED! Use [onCredentialsChanged] instead.
   ///
   /// The `logger` is a simple callback used for logging debug information
   /// that may be helpful. Defaults to printing with a `[LoginClient]` prefix.
@@ -62,7 +65,8 @@ class LoginClient extends http.BaseClient {
     @required OAuthSettings oAuthSettings,
     @required CredentialsStorage credentialsStorage,
     http.Client httpClient,
-    CredentialsChangedCallback credentialsChangedCallback,
+    @Deprecated('Use onCredentialsChanged instead.')
+        CredentialsChangedCallback credentialsChangedCallback,
     _LoggerCallback logger = _defaultPrintLogger,
   })  : assert(oAuthSettings != null),
         assert(credentialsStorage != null),
@@ -70,19 +74,28 @@ class LoginClient extends http.BaseClient {
         _oAuthSettings = oAuthSettings,
         _httpClient = httpClient ?? http.Client(),
         _credentialsStorage = credentialsStorage,
-        _credentialsChangedCallback = credentialsChangedCallback,
-        _logger = logger;
+        _logger = logger {
+    // TODO: Remove once the `credentialsChangedCallback` was deleted.
+    onCredentialsChanged.listen((event) {
+      credentialsChangedCallback?.call(event);
+    });
+  }
 
   final OAuthSettings _oAuthSettings;
   final CredentialsStorage _credentialsStorage;
   final http.Client _httpClient;
-  final CredentialsChangedCallback _credentialsChangedCallback;
   final _LoggerCallback _logger;
+
+  final _onCredentialsChanged =
+      StreamController<oauth2.Credentials>.broadcast();
 
   oauth2.Client _oAuthClient;
 
   /// Whether this [LoginClient] is authorized or not.
   bool get loggedIn => _oAuthClient != null;
+
+  Stream<oauth2.Credentials> get onCredentialsChanged =>
+      _onCredentialsChanged.stream;
 
   /// Restores saved credentials from the credentials storage.
   Future<void> initialize() async {
@@ -96,7 +109,7 @@ class LoginClient extends http.BaseClient {
       );
     }
 
-    _credentialsChangedCallback?.call(credentials);
+    _onCredentialsChanged.add(credentials);
 
     if (credentials != null) {
       _logger('Successfully initialized with credentials.');
@@ -117,7 +130,7 @@ class LoginClient extends http.BaseClient {
         _onCredentialsRefreshed,
       );
 
-      _credentialsChangedCallback?.call(_oAuthClient.credentials);
+      _onCredentialsChanged.add(_oAuthClient.credentials);
       await _credentialsStorage.save(_oAuthClient.credentials);
 
       _logger('Successfully logged in and saved the credentials.');
@@ -163,7 +176,7 @@ class LoginClient extends http.BaseClient {
   }
 
   Future<void> _logOutInternal() async {
-    _credentialsChangedCallback?.call(null);
+    _onCredentialsChanged.add(null);
     await _credentialsStorage.clear();
 
     _oAuthClient?.close();
@@ -171,7 +184,7 @@ class LoginClient extends http.BaseClient {
   }
 
   Future<void> _onCredentialsRefreshed(oauth2.Credentials credentials) async {
-    _credentialsChangedCallback?.call(credentials);
+    _onCredentialsChanged.add(credentials);
     await _credentialsStorage.save(credentials);
 
     _logger('Successfully refreshed and saved the new credentials.');
@@ -193,6 +206,9 @@ class LoginClient extends http.BaseClient {
 
     return response;
   }
+
+  /// Disposes the [LoginClient].
+  Future<void> dispose() => _onCredentialsChanged.close();
 
   // ignore: use_setters_to_change_properties
   @visibleForTesting
