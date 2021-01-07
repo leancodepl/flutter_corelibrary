@@ -1,5 +1,9 @@
 include: package:lint/analysis_options_package.yaml
 
+analyzer:
+  exclude:
+    - test/.test_coverage.dart
+
 linter:
   rules:
     - sort_constructors_first
