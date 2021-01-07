@@ -19,7 +19,7 @@ class OAuthSettings {
   /// Creates the [OAuthSettings].
   const OAuthSettings({
     @required this.authorizationUri,
-    this.clientId = '',
+    @required this.clientId,
     this.clientSecret = '',
     this.scopes = const [],
   })  : assert(clientId != null),
