@@ -1,6 +1,6 @@
 # 1.1.0
 
-- OAauth2 `clientId` and `clientSecret` now default to an empty string.
+- OAuth2 `clientId` and `clientSecret` now default to an empty string.
 - Export `oauth2` `Credentials`, `AuthorizationException` and `ExpirationException`.
 - Add `onCredentialsChanged` stream to `LoginClient`.
 - Deprecate `credentialsChangedCallback`.
