@@ -1,3 +1,10 @@
+# 4.1.0
+
+- Add `success` and `failed` constructors in `CommandResult`.
+- Add `failed` getter in `CommandResult`.
+- Make `success` field in `CommandResult` a getter. This is compatible with how [the backend works](https://github.com/leancodepl/corelibrary/blob/a3a2a27b20e1cf684fb88aa55958721eff19c2bc/src/Domain/LeanCode.CQRS/CommandResult.cs#L11).
+- Deprecate `success` param in `CommandResult` constructor.
+
 # 4.0.0+2
 
 - Refresh pub listing.

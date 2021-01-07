@@ -1,4 +1,4 @@
-// Copyright 2020 LeanCode Sp. z o.o.
+// Copyright 2021 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,25 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart';
-
 import 'transport_types.dart';
 
 /// The result of running a [Command].
 class CommandResult {
-  const CommandResult(this.errors, {@required this.success})
-      : assert(errors != null),
-        assert(success != null);
+  const CommandResult(
+    this.errors, {
+    @Deprecated("Success is derived from the `errors` emptiness.") bool success,
+  }) : assert(errors != null);
+
+  /// Creates a success [CommandResult] without any errors.
+  const CommandResult.success() : errors = const [];
+
+  /// Creates a failed [CommandResult] and ensures it has errors.
+  CommandResult.failed(this.errors)
+      : assert(errors != null && errors.isNotEmpty);
 
   CommandResult.fromJson(Map<String, dynamic> json)
-      : success = json['WasSuccessful'] as bool,
-        errors = (json['ValidationErrors'] as List)
+      : errors = (json['ValidationErrors'] as List)
             .map((error) =>
                 ValidationError.fromJson(error as Map<String, dynamic>))
             .toList();
 
   /// Whether the command has succeeded.
-  final bool success;
+  bool get success => errors.isEmpty;
+
+  /// Whether the command has failed with [errors].
+  bool get failed => errors.isNotEmpty;
 
   /// Validation errors related to the data carried by the [Command].
   final List<ValidationError> errors;

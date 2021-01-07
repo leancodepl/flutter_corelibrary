@@ -7,24 +7,42 @@ void main() {
     const error2 = ValidationError(2, 'Second error');
 
     group('fields values are correct', () {
-      test('when constructed without errors with success', () {
-        const result = CommandResult([], success: true);
+      test('when constructed without errors', () {
+        const result = CommandResult([]);
 
         expect(result.success, true);
+        expect(result.failed, false);
         expect(result.errors, isEmpty);
       });
 
-      test('when constructed with errors without success', () {
-        const result = CommandResult([error1, error2], success: false);
+      test('when constructed with errors', () {
+        const result = CommandResult([error1, error2]);
 
         expect(result.success, false);
+        expect(result.failed, true);
         expect(result.errors, hasLength(2));
+      });
+
+      test('when constructed with success constructor', () {
+        const result = CommandResult.success();
+
+        expect(result.success, true);
+        expect(result.failed, false);
+        expect(result.errors, isEmpty);
+      });
+
+      test('when constructed with success constructor', () {
+        final result = CommandResult.failed([error1]);
+
+        expect(result.success, false);
+        expect(result.failed, true);
+        expect(result.errors, hasLength(1));
       });
     });
 
     group('hasError returns correct values', () {
       test('when there are some errors present', () {
-        const result = CommandResult([error1, error2], success: false);
+        const result = CommandResult([error1, error2]);
 
         expect(result.hasError(1), true);
         expect(result.hasError(2), true);
@@ -32,7 +50,7 @@ void main() {
       });
 
       test('when there are no errors present', () {
-        const result = CommandResult([], success: false);
+        const result = CommandResult([]);
 
         expect(result.hasError(1), false);
         expect(result.hasError(2), false);
