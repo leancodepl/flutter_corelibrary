@@ -1,0 +1,24 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+      cqrs:
+        target: auto
+        flags:
+          - cqrs
+      login_client:
+        target: auto
+        flags:
+          - login_client
+
+comment:
+  branches: null
+
+flags:
+  cqrs:
+    paths: packages/cqrs
+    carryforward: true
+  login_client:
+    paths: packages/login_client
+    carryforward: true
