@@ -41,6 +41,14 @@ void main() {
         )).called(1);
       });
 
+      test('correctly deserializes null query result', () async {
+        mockClientPost(client, Response('null', 200));
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(result, null);
+      });
+
       test('throws CQRSException on json decoding failure', () async {
         mockClientPost(client, Response('true', 200));
 

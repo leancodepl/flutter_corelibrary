@@ -1,3 +1,7 @@
+# 4.1.1
+
+- Fix exception thrown when the query result is `null`.
+
 # 4.1.0
 
 - Add `success` and `failed` constructors in `CommandResult`.

@@ -73,6 +73,11 @@ class CQRS {
       try {
         final json = jsonDecode(response.body);
 
+        // Fix for https://github.com/leancodepl/corelibrary/issues/193
+        if (json == null) {
+          return null;
+        }
+
         return query.resultFactory(json);
       } catch (e) {
         throw CQRSException(
