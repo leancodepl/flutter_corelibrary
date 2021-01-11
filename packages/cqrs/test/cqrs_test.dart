@@ -41,7 +41,7 @@ void main() {
         )).called(1);
       });
 
-      test("correctly deserializes null query result", () async {
+      test('correctly deserializes null query result', () async {
         mockClientPost(client, Response('null', 200));
 
         final result = await cqrs.get(ExampleQuery());
