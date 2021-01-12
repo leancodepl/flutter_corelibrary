@@ -179,7 +179,6 @@ class LoginClient extends http.BaseClient {
     _onCredentialsChanged.add(null);
     await _credentialsStorage.clear();
 
-    _oAuthClient?.close();
     _oAuthClient = null;
   }
 
