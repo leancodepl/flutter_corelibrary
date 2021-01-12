@@ -1,3 +1,7 @@
+# 1.1.1
+
+- Fix closing default HTTP client after logging out.
+
 # 1.1.0
 
 - OAuth2 `clientId` is now required.

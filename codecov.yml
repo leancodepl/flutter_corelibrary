@@ -17,8 +17,8 @@ comment:
 
 flags:
   cqrs:
-    paths: packages/cqrs
+    paths: [packages/cqrs]
     carryforward: true
   login_client:
-    paths: packages/login_client
+    paths: [packages/login_client]
     carryforward: true
