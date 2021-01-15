@@ -24,10 +24,6 @@ import 'refresh_exception.dart';
 import 'strategies/authorization_strategy.dart';
 import 'utils.dart';
 
-/// Signature for callbacks that report that the underlying credentials have
-/// changed.
-typedef CredentialsChangedCallback = void Function(oauth2.Credentials?);
-
 typedef _LoggerCallback = void Function(String);
 
 // ignore: avoid_print
@@ -48,11 +44,6 @@ class LoginClient extends http.BaseClient {
   /// authorized HTTP client. It is also used for sending unauthorized requests.
   /// Defaults to [http.Client].
   ///
-  /// The `credentialsChangedCallback` is where you can listen for changes
-  /// to the credentials, e.g. for updating the displayed permissions in
-  /// the app or showing when the user will be logged out.
-  /// THIS PARAMETER IS DEPRECATED! Use [onCredentialsChanged] instead.
-  ///
   /// The `logger` is a simple callback used for logging debug information
   /// that may be helpful. Defaults to printing with a `[LoginClient]` prefix.
   ///
@@ -65,18 +56,11 @@ class LoginClient extends http.BaseClient {
     required OAuthSettings oAuthSettings,
     required CredentialsStorage credentialsStorage,
     http.Client? httpClient,
-    @Deprecated('Use onCredentialsChanged instead.')
-        CredentialsChangedCallback? credentialsChangedCallback,
     _LoggerCallback logger = _defaultPrintLogger,
   })  : _oAuthSettings = oAuthSettings,
         _httpClient = httpClient ?? http.Client(),
         _credentialsStorage = credentialsStorage,
-        _logger = logger {
-    // TODO: Remove once the `credentialsChangedCallback` was deleted.
-    onCredentialsChanged.listen((event) {
-      credentialsChangedCallback?.call(event);
-    });
-  }
+        _logger = logger;
 
   final OAuthSettings _oAuthSettings;
   final CredentialsStorage _credentialsStorage;
@@ -91,6 +75,10 @@ class LoginClient extends http.BaseClient {
   /// Whether this [LoginClient] is authorized or not.
   bool get loggedIn => _oAuthClient != null;
 
+  /// Stream that emits the [oauth2.Credentials] everytime they change.
+  ///
+  /// You can listen to this stream to log out the user
+  /// once his session expired.
   Stream<oauth2.Credentials?> get onCredentialsChanged =>
       _onCredentialsChanged.stream;
 

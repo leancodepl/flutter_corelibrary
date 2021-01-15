@@ -2,6 +2,7 @@
 
 - **Breaking:** Migrate to null-safety.
 - **Breaking:** Bump minimum Dart version to 2.12 prerelease.
+- **Breaking**: Remove deprecated `credentialsChangedCallback` parameter from `LoginClient` constructor.
 
 # 1.1.1
 
