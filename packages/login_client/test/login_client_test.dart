@@ -1,6 +1,5 @@
 import 'package:http/http.dart' show BaseRequest;
 import 'package:mockito/mockito.dart';
-import 'package:oauth2/oauth2.dart';
 import 'package:test/test.dart';
 
 import 'package:login_client/login_client.dart';

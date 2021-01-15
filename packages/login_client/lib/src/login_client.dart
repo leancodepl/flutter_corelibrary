@@ -84,14 +84,14 @@ class LoginClient extends http.BaseClient {
   final _LoggerCallback _logger;
 
   final _onCredentialsChanged =
-      StreamController<oauth2.Credentials>.broadcast();
+      StreamController<oauth2.Credentials?>.broadcast();
 
   oauth2.Client? _oAuthClient;
 
   /// Whether this [LoginClient] is authorized or not.
   bool get loggedIn => _oAuthClient != null;
 
-  Stream<oauth2.Credentials> get onCredentialsChanged =>
+  Stream<oauth2.Credentials?> get onCredentialsChanged =>
       _onCredentialsChanged.stream;
 
   /// Restores saved credentials from the credentials storage.
@@ -127,7 +127,7 @@ class LoginClient extends http.BaseClient {
         _onCredentialsRefreshed,
       );
 
-      _onCredentialsChanged.add(_oAuthClient.credentials);
+      _onCredentialsChanged.add(_oAuthClient!.credentials);
       await _credentialsStorage.save(_oAuthClient!.credentials);
 
       _logger('Successfully logged in and saved the credentials.');
