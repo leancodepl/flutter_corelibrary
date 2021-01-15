@@ -67,7 +67,7 @@ class CQRS {
 
         // Fix for https://github.com/leancodepl/corelibrary/issues/193
         if (json == null) {
-          return null;
+          return null as T;
         }
 
         return query.resultFactory(json);

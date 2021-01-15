@@ -1,7 +1,8 @@
 # 5.0.0-nullsafety.0
 
-- Migration to null-safety.
-- Minimum Dart version bumped to 2.12 prerelease.
+- **Breaking:** Migrate to null-safety.
+- **Breaking:** Bump minimum Dart version to 2.12 prerelease.
+- **Breaking:** Remove deprecated `success` parameter from `CommandResult` constructor.
 
 # 4.1.1
 
