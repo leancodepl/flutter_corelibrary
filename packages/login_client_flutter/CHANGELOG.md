@@ -1,8 +1,8 @@
-# 2.0.0
+# 2.0.0-nullsafety.0
 
-- Migrate to null-safety.
-- Bump minimum Dart version to 2.12.
-- Bump minimum Flutter version to 1.24.
+- **Breaking:** Migrate to null-safety.
+- **Breaking:** Bump minimum Dart version to 2.12 prerelease.
+- **Breaking:** Bump minimum Flutter version to 1.24 prerelease.
 
 # 1.0.1
 
