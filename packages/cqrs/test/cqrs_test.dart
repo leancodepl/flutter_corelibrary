@@ -112,6 +112,23 @@ void main() {
         )).called(1);
       });
 
+      test('throws CQRSException on json decoding failure', () async {
+        mockClientPost(client, Response('this is not a valid json', 200));
+
+        final result = cqrs.run(ExampleCommand());
+
+        expect(
+          result,
+          throwsA(
+            isA<CQRSException>().having(
+              (e) => e.message,
+              'message',
+              startsWith('An error occured while decoding response body JSON:'),
+            ),
+          ),
+        );
+      });
+
       test('throws CQRSException when response code is other than 200 and 422',
           () {
         mockClientPost(client, Response('', 500));
