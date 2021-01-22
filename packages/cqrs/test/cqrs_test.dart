@@ -3,12 +3,16 @@ import 'package:cqrs/src/cqrs.dart';
 import 'package:cqrs/src/cqrs_exception.dart';
 import 'package:cqrs/src/transport_types.dart';
 import 'package:http/http.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'cqrs_test.mocks.dart';
+
+@GenerateMocks([Client])
 void main() {
   group('CQRS', () {
-    late Client client;
+    late MockClient client;
     late CQRS cqrs;
     setUp(() {
       client = MockClient();
@@ -130,7 +134,7 @@ void main() {
   });
 }
 
-void mockClientPost(Client client, Response response) {
+void mockClientPost(MockClient client, Response response) {
   when(client.post(
     any,
     body: anyNamed('body'),
@@ -138,14 +142,12 @@ void mockClientPost(Client client, Response response) {
   )).thenAnswer((_) async => response);
 }
 
-class MockClient extends Mock implements Client {}
-
-class ExampleQuery extends Query<bool> {
+class ExampleQuery extends Query<bool?> {
   @override
   String getFullName() => 'ExampleQuery';
 
   @override
-  bool resultFactory(dynamic json) => json as bool;
+  bool? resultFactory(dynamic json) => json as bool?;
 
   @override
   Map<String, dynamic> toJson() => {};

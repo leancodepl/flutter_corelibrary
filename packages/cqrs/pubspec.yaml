@@ -13,7 +13,13 @@ dependencies:
   http: ^0.12.2
 
 dev_dependencies:
+  build_runner: ^1.10.13
   lint: ^1.5.1
-  mockito: ^5.0.0-nullsafety.1
+  mockito: ^5.0.0-nullsafety.4
   test: ^1.16.0-nullsafety.13
   test_coverage: ^0.5.0
+
+dependency_overrides:
+  http:
+    git: git://github.com/dart-lang/http.git
+  http_parser: ^4.0.0-nullsafety
