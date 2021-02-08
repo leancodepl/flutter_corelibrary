@@ -16,7 +16,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:meta/meta.dart';
 
 import 'command_result.dart';
 import 'cqrs_exception.dart';
@@ -41,11 +40,7 @@ class CQRS {
     this._apiUri, {
     Duration timeout = const Duration(seconds: 30),
     Map<String, String> headers = const {},
-  })  : assert(_client != null),
-        assert(_apiUri != null),
-        assert(timeout != null),
-        assert(headers != null),
-        _timeout = timeout,
+  })  : _timeout = timeout,
         _headers = headers;
 
   final http.Client _client;
@@ -64,9 +59,6 @@ class CQRS {
     Query<T> query, {
     Map<String, String> headers = const {},
   }) async {
-    assert(query != null);
-    assert(headers != null);
-
     final response = await _send(query, pathPrefix: 'query', headers: headers);
 
     if (response.statusCode == 200) {
@@ -75,7 +67,7 @@ class CQRS {
 
         // Fix for https://github.com/leancodepl/corelibrary/issues/193
         if (json == null) {
-          return null;
+          return null as T;
         }
 
         return query.resultFactory(json);
@@ -105,9 +97,6 @@ class CQRS {
     Command command, {
     Map<String, String> headers = const {},
   }) async {
-    assert(command != null);
-    assert(headers != null);
-
     final response = await _send(
       command,
       pathPrefix: 'command',
@@ -136,13 +125,9 @@ class CQRS {
 
   Future<http.Response> _send(
     CQRSMethod cqrsMethod, {
-    @required String pathPrefix,
+    required String pathPrefix,
     Map<String, String> headers = const {},
   }) async {
-    assert(cqrsMethod != null);
-    assert(pathPrefix != null);
-    assert(headers != null);
-
     return _client.post(
       _apiUri.resolve('$pathPrefix/${cqrsMethod.getFullName()}'),
       body: jsonEncode(cqrsMethod),

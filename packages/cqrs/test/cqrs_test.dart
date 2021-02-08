@@ -3,13 +3,17 @@ import 'package:cqrs/src/cqrs.dart';
 import 'package:cqrs/src/cqrs_exception.dart';
 import 'package:cqrs/src/transport_types.dart';
 import 'package:http/http.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'cqrs_test.mocks.dart';
+
+@GenerateMocks([Client])
 void main() {
   group('CQRS', () {
-    Client client;
-    CQRS cqrs;
+    late MockClient client;
+    late CQRS cqrs;
     setUp(() {
       client = MockClient();
       cqrs = CQRS(client, Uri.parse('https://example.org/api/'));
@@ -108,6 +112,23 @@ void main() {
         )).called(1);
       });
 
+      test('throws CQRSException on json decoding failure', () async {
+        mockClientPost(client, Response('this is not a valid json', 200));
+
+        final result = cqrs.run(ExampleCommand());
+
+        expect(
+          result,
+          throwsA(
+            isA<CQRSException>().having(
+              (e) => e.message,
+              'message',
+              startsWith('An error occured while decoding response body JSON:'),
+            ),
+          ),
+        );
+      });
+
       test('throws CQRSException when response code is other than 200 and 422',
           () {
         mockClientPost(client, Response('', 500));
@@ -130,7 +151,7 @@ void main() {
   });
 }
 
-void mockClientPost(Client client, Response response) {
+void mockClientPost(MockClient client, Response response) {
   when(client.post(
     any,
     body: anyNamed('body'),
@@ -138,14 +159,12 @@ void mockClientPost(Client client, Response response) {
   )).thenAnswer((_) async => response);
 }
 
-class MockClient extends Mock implements Client {}
-
-class ExampleQuery extends Query<bool> {
+class ExampleQuery extends Query<bool?> {
   @override
   String getFullName() => 'ExampleQuery';
 
   @override
-  bool resultFactory(dynamic json) => json as bool;
+  bool? resultFactory(dynamic json) => json as bool?;
 
   @override
   Map<String, dynamic> toJson() => {};

@@ -16,17 +16,13 @@ import 'transport_types.dart';
 
 /// The result of running a [Command].
 class CommandResult {
-  const CommandResult(
-    this.errors, {
-    @Deprecated("Success is derived from the `errors` emptiness.") bool success,
-  }) : assert(errors != null);
+  const CommandResult(this.errors);
 
   /// Creates a success [CommandResult] without any errors.
   const CommandResult.success() : errors = const [];
 
   /// Creates a failed [CommandResult] and ensures it has errors.
-  CommandResult.failed(this.errors)
-      : assert(errors != null && errors.isNotEmpty);
+  CommandResult.failed(this.errors) : assert(errors.isNotEmpty);
 
   CommandResult.fromJson(Map<String, dynamic> json)
       : errors = (json['ValidationErrors'] as List)
@@ -50,9 +46,7 @@ class CommandResult {
 
 /// A validation error.
 class ValidationError {
-  const ValidationError(this.code, this.message)
-      : assert(code != null),
-        assert(message != null);
+  const ValidationError(this.code, this.message);
 
   ValidationError.fromJson(Map<String, dynamic> json)
       : code = json['ErrorCode'] as int,
