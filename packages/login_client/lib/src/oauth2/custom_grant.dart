@@ -31,7 +31,7 @@ Future<Client> customGrant(
   CredentialsRefreshedCallback? onCredentialsRefreshed,
   http.Client? httpClient,
   String delimiter = ' ',
-  Map<String, dynamic> Function(MediaType contentType, String body)?
+  Map<String, dynamic> Function(MediaType? contentType, String body)?
       getParameters,
 }) async {
   httpClient ??= http.Client();
@@ -42,7 +42,7 @@ Future<Client> customGrant(
 
   if (identifier != null) {
     if (basicAuth) {
-      headers['Authorization'] = basicAuthHeader(identifier, secret);
+      headers['Authorization'] = basicAuthHeader(identifier, secret!);
     } else {
       body['client_id'] = identifier;
       if (secret != null) {
