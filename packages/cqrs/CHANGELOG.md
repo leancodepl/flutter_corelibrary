@@ -1,3 +1,7 @@
+# 5.0.0
+
+- **Breaking:** Add `propertyName` field in `ValidationError`.
+
 # 4.1.1
 
 - Fix exception thrown when the query result is `null`.
