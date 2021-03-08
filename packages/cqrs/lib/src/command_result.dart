@@ -42,6 +42,11 @@ class CommandResult {
   /// Checks whether this [CommandResult] contains a provided error `code` in
   /// its validation errors.
   bool hasError(int code) => errors.any((error) => error.code == code);
+
+  /// Checks whether this [CommandResult] contains a provided error `code` in
+  /// its validation errors related to the `propertyName`.
+  bool hasErrorForProperty(int code, String propertyName) => errors
+      .any((error) => error.code == code && error.propertyName == propertyName);
 }
 
 /// A validation error.
