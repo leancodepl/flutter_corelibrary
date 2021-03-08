@@ -46,11 +46,12 @@ class CommandResult {
 
 /// A validation error.
 class ValidationError {
-  const ValidationError(this.code, this.message);
+  const ValidationError(this.code, this.message, this.propertyName);
 
   ValidationError.fromJson(Map<String, dynamic> json)
       : code = json['ErrorCode'] as int,
-        message = json['ErrorMessage'] as String;
+        message = json['ErrorMessage'] as String,
+        propertyName = json['PropertyName'] as String;
 
   /// Code of the validation error.
   final int code;
@@ -58,6 +59,9 @@ class ValidationError {
   /// Message describing the validation error.
   final String message;
 
+  /// Path to the property which caused the error.
+  final String propertyName;
+
   @override
-  String toString() => '$code: $message';
+  String toString() => '[$propertyName] $code: $message';
 }

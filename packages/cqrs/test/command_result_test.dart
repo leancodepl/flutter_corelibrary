@@ -3,8 +3,8 @@ import 'package:test/test.dart';
 
 void main() {
   group('CommandResult', () {
-    const error1 = ValidationError(1, 'First error');
-    const error2 = ValidationError(2, 'Second error');
+    const error1 = ValidationError(1, 'First error', 'Property1');
+    const error2 = ValidationError(2, 'Second error', 'Property2');
 
     group('fields values are correct', () {
       test('when constructed without errors', () {
@@ -66,6 +66,7 @@ void main() {
             {
               'ErrorCode': 12,
               'ErrorMessage': 'This is an error.',
+              'PropertyName': 'Property',
             },
           ],
         });
@@ -77,11 +78,11 @@ void main() {
               .having(
                 (r) => r.errors,
                 'errors',
-                contains(
-                  isA<ValidationError>()
-                      .having((e) => e.code, 'code', 12)
-                      .having((e) => e.message, 'message', 'This is an error.'),
-                ),
+                contains(isA<ValidationError>()
+                    .having((e) => e.code, 'code', 12)
+                    .having((e) => e.message, 'message', 'This is an error.')
+                    .having(
+                        (e) => e.propertyName, 'propertyNamme', 'Property')),
               ),
         );
       });
