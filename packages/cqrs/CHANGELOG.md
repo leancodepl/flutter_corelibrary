@@ -1,3 +1,7 @@
+# 5.0.0-nullsafety.1
+
+- Add `propertyName` field in `ValidationError`.
+
 # 5.0.0-nullsafety.0
 
 - **Breaking:** Migrate to null-safety.
