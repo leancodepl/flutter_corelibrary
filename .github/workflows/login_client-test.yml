@@ -19,10 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dart_release: ['2.12-beta']
-      
-    container:
-      image: google/dart:${{ matrix.dart_release }}
+        dart_release: ['2.12.0']
 
     defaults:
       run:
@@ -31,6 +28,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.dart_release }}
 
       - name: Dart version
         run: dart --version
@@ -49,7 +51,7 @@ jobs:
         run: dart analyze
 
       - name: Run tests with coverage
-        run: dart pub run test_coverage --no-badge --print-test-output
+        run: dart run test_coverage --no-badge --print-test-output
 
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
