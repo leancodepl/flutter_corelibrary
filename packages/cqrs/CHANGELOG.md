@@ -1,6 +1,6 @@
-# 5.0.1-nullsafety.0
+# 5.0.0-nullsafety.1
 
-- Add `propertyName` field in `ValidationError`
+- Add `propertyName` field in `ValidationError`.
 
 # 5.0.0-nullsafety.0
 
