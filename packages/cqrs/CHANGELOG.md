@@ -1,6 +1,7 @@
 # 5.0.0
 
 - **Breaking:** Add `propertyName` field in `ValidationError`.
+- **Breaking:** Remove deprecated `success` parameter from `CommandResult` constructor.
 
 # 5.0.0-nullsafety.1
 

@@ -16,10 +16,7 @@ import 'transport_types.dart';
 
 /// The result of running a [Command].
 class CommandResult {
-  const CommandResult(
-    this.errors, {
-    @Deprecated("Success is derived from the `errors` emptiness.") bool success,
-  }) : assert(errors != null);
+  const CommandResult(this.errors) : assert(errors != null);
 
   /// Creates a success [CommandResult] without any errors.
   const CommandResult.success() : errors = const [];
