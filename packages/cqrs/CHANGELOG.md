@@ -1,3 +1,19 @@
+# 5.0.0
+
+- Revert to 4.1.1
+- **Breaking:** Add `propertyName` field in `ValidationError`.
+- **Breaking:** Remove deprecated `success` parameter from `CommandResult` constructor.
+
+# 5.0.0-nullsafety.1
+
+- Add `propertyName` field in `ValidationError`.
+
+# 5.0.0-nullsafety.0
+
+- **Breaking:** Migrate to null-safety.
+- **Breaking:** Bump minimum Dart version to 2.12 prerelease.
+- **Breaking:** Remove deprecated `success` parameter from `CommandResult` constructor.
+
 # 4.1.1
 
 - Fix exception thrown when the query result is `null`.
