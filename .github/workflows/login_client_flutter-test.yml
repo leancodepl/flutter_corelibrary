@@ -20,7 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-            - version: '1.24.x'
+            - version: '2.0.6'
+            - version: '2.2.1'
             - channel: stable
             - channel: beta
             - channel: dev

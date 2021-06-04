@@ -7,14 +7,14 @@ description: >-
   for the login_client package.
 
 environment:
-  sdk: '>=2.12.0-0 <3.0.0'
-  flutter: '>=1.24.0-0 <2.0.0'
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: '>=2.0.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_secure_storage: ^3.3.5
+  flutter_secure_storage: ^4.2.0
   login_client: ^1.1.1
 
 dev_dependencies:
-  lint: ^1.5.1
+  lint: ^1.5.3
