@@ -20,8 +20,7 @@ class OAuthSettings {
     required this.clientId,
     this.clientSecret = '',
     this.scopes = const [],
-  })  : assert(clientId != null),
-        assert(clientSecret != null);
+  });
 
   /// The [`authorization endpoint`](https://tools.ietf.org/html/rfc6749#section-3.1)
   /// from the RFC 6749.
@@ -29,11 +28,11 @@ class OAuthSettings {
 
   /// The [`client_id`](https://tools.ietf.org/html/rfc6749#appendix-A.1)
   /// from the RFC 6749.
-  final String? clientId;
+  final String clientId;
 
   /// The [`client_secret`](https://tools.ietf.org/html/rfc6749#appendix-A.2)
   /// from the RFC 6749.
-  final String? clientSecret;
+  final String clientSecret;
 
   /// The [`scope`](https://tools.ietf.org/html/rfc6749#appendix-A.4)
   /// from the RFC 6749.
