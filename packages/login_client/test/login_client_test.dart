@@ -1,14 +1,18 @@
 import 'package:http/http.dart' show BaseRequest;
+import 'package:login_client/login_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:test/test.dart';
 
-import 'package:login_client/login_client.dart';
-
 import 'login_client_test.mocks.dart';
 
-@GenerateMocks([AuthorizationStrategy, CredentialsStorage, Client])
+@GenerateMocks([
+  AuthorizationStrategy,
+  CredentialsStorage,
+  Client,
+  OAuthSettings,
+])
 void main() {
   group('LoginClient', () {
     late OAuthSettings oAuthSettings;
@@ -17,6 +21,8 @@ void main() {
     late LoginClient loginClient;
     setUp(() {
       oAuthSettings = MockOAuthSettings();
+      when(oAuthSettings.clientId).thenReturn('client id');
+      when(oAuthSettings.clientSecret).thenReturn('client secret');
       credentialsStorage = MockCredentialsStorage();
       logger = MockLogger();
       loginClient = LoginClient(
@@ -155,8 +161,6 @@ void main() {
     );
   });
 }
-
-class MockOAuthSettings extends Mock implements OAuthSettings {}
 
 class MockLogger extends Mock {
   void call(String log) => noSuchMethod(Invocation.method(#call, [log]));
