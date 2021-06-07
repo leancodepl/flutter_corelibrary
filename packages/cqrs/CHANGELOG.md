@@ -1,3 +1,14 @@
+# 6.0.0
+
+- Stable null-safe release.
+- **Breaking:** Bump minimum Dart version to 2.12.
+
+# 5.0.0
+
+- Revert to 4.1.1
+- **Breaking:** Add `propertyName` field in `ValidationError`.
+- **Breaking:** Remove deprecated `success` parameter from `CommandResult` constructor.
+
 # 5.0.0-nullsafety.1
 
 - Add `propertyName` field in `ValidationError`.
