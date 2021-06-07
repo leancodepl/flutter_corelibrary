@@ -5,7 +5,7 @@ import 'package:login_client/src/oauth_settings.dart';
 void main() {
   group('OAuthSettings', () {
     final authorizationUri = Uri.parse('https://api.example.com/auth');
-    OAuthSettings settings;
+    late OAuthSettings settings;
     setUp(() {
       settings = OAuthSettings(
         authorizationUri: authorizationUri,

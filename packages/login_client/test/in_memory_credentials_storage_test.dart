@@ -5,7 +5,7 @@ import 'package:login_client/src/credentials_storage/in_memory_credentials_stora
 
 void main() {
   group('InMemoryCredentialsStorage', () {
-    InMemoryCredentialsStorage storage;
+    late InMemoryCredentialsStorage storage;
     setUp(() => storage = InMemoryCredentialsStorage());
 
     test('reads null initially', () {

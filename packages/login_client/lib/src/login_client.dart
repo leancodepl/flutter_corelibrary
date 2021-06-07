@@ -24,10 +24,6 @@ import 'refresh_exception.dart';
 import 'strategies/authorization_strategy.dart';
 import 'utils.dart';
 
-/// Signature for callbacks that report that the underlying credentials have
-/// changed.
-typedef CredentialsChangedCallback = void Function(oauth2.Credentials);
-
 typedef _LoggerCallback = void Function(String);
 
 // ignore: avoid_print
@@ -48,11 +44,6 @@ class LoginClient extends http.BaseClient {
   /// authorized HTTP client. It is also used for sending unauthorized requests.
   /// Defaults to [http.Client].
   ///
-  /// The `credentialsChangedCallback` is where you can listen for changes
-  /// to the credentials, e.g. for updating the displayed permissions in
-  /// the app or showing when the user will be logged out.
-  /// THIS PARAMETER IS DEPRECATED! Use [onCredentialsChanged] instead.
-  ///
   /// The `logger` is a simple callback used for logging debug information
   /// that may be helpful. Defaults to printing with a `[LoginClient]` prefix.
   ///
@@ -62,24 +53,14 @@ class LoginClient extends http.BaseClient {
   /// See also:
   /// - [InMemoryCredentialsStorage]
   LoginClient({
-    @required OAuthSettings oAuthSettings,
-    @required CredentialsStorage credentialsStorage,
-    http.Client httpClient,
-    @Deprecated('Use onCredentialsChanged instead.')
-        CredentialsChangedCallback credentialsChangedCallback,
+    required OAuthSettings oAuthSettings,
+    required CredentialsStorage credentialsStorage,
+    http.Client? httpClient,
     _LoggerCallback logger = _defaultPrintLogger,
-  })  : assert(oAuthSettings != null),
-        assert(credentialsStorage != null),
-        assert(logger != null),
-        _oAuthSettings = oAuthSettings,
+  })  : _oAuthSettings = oAuthSettings,
         _httpClient = httpClient ?? http.Client(),
         _credentialsStorage = credentialsStorage,
-        _logger = logger {
-    // TODO: Remove once the `credentialsChangedCallback` was deleted.
-    onCredentialsChanged.listen((event) {
-      credentialsChangedCallback?.call(event);
-    });
-  }
+        _logger = logger;
 
   final OAuthSettings _oAuthSettings;
   final CredentialsStorage _credentialsStorage;
@@ -87,14 +68,18 @@ class LoginClient extends http.BaseClient {
   final _LoggerCallback _logger;
 
   final _onCredentialsChanged =
-      StreamController<oauth2.Credentials>.broadcast();
+      StreamController<oauth2.Credentials?>.broadcast();
 
-  oauth2.Client _oAuthClient;
+  oauth2.Client? _oAuthClient;
 
   /// Whether this [LoginClient] is authorized or not.
   bool get loggedIn => _oAuthClient != null;
 
-  Stream<oauth2.Credentials> get onCredentialsChanged =>
+  /// Stream that emits the [oauth2.Credentials] everytime they change.
+  ///
+  /// You can listen to this stream to log out the user
+  /// once his session expired.
+  Stream<oauth2.Credentials?> get onCredentialsChanged =>
       _onCredentialsChanged.stream;
 
   /// Restores saved credentials from the credentials storage.
@@ -130,8 +115,8 @@ class LoginClient extends http.BaseClient {
         _onCredentialsRefreshed,
       );
 
-      _onCredentialsChanged.add(_oAuthClient.credentials);
-      await _credentialsStorage.save(_oAuthClient.credentials);
+      _onCredentialsChanged.add(_oAuthClient!.credentials);
+      await _credentialsStorage.save(_oAuthClient!.credentials);
 
       _logger('Successfully logged in and saved the credentials.');
     } on oauth2.AuthorizationException {
@@ -151,7 +136,7 @@ class LoginClient extends http.BaseClient {
   ///
   /// See also:
   /// - https://tools.ietf.org/html/rfc6749#section-6
-  Future<void> refresh([List<String> newScopes]) async {
+  Future<void> refresh([List<String>? newScopes]) async {
     if (_oAuthClient == null) {
       throw const RefreshException(
         'Cannot refresh unauthorized client. Login first.',
@@ -159,7 +144,7 @@ class LoginClient extends http.BaseClient {
     }
 
     try {
-      _oAuthClient = await _oAuthClient.refreshCredentials(newScopes);
+      _oAuthClient = await _oAuthClient!.refreshCredentials(newScopes);
     } on oauth2.AuthorizationException {
       await _logOutInternal();
       _logger('An error while force refreshing occured, '

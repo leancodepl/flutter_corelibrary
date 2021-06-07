@@ -24,14 +24,14 @@ Future<Client> customGrant(
   Uri authorizationEndpoint,
   String grantName,
   Map<String, String> grantFields, {
-  String identifier,
-  String secret,
-  Iterable<String> scopes,
+  String? identifier,
+  String? secret,
+  Iterable<String>? scopes,
   bool basicAuth = true,
-  CredentialsRefreshedCallback onCredentialsRefreshed,
-  http.Client httpClient,
+  CredentialsRefreshedCallback? onCredentialsRefreshed,
+  http.Client? httpClient,
   String delimiter = ' ',
-  Map<String, dynamic> Function(MediaType contentType, String body)
+  Map<String, dynamic> Function(MediaType? contentType, String body)?
       getParameters,
 }) async {
   httpClient ??= http.Client();
@@ -42,7 +42,7 @@ Future<Client> customGrant(
 
   if (identifier != null) {
     if (basicAuth) {
-      headers['Authorization'] = basicAuthHeader(identifier, secret);
+      headers['Authorization'] = basicAuthHeader(identifier, secret!);
     } else {
       body['client_id'] = identifier;
       if (secret != null) {
@@ -65,7 +65,7 @@ Future<Client> customGrant(
     response,
     authorizationEndpoint,
     startTime,
-    scopes.toList(),
+    scopes?.toList(),
     delimiter,
     getParameters: getParameters,
   );

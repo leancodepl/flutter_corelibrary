@@ -17,7 +17,7 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 /// An interface describing the storage for [oauth2.Credentials].
 abstract class CredentialsStorage {
   /// Get saved [oauth2.Credentials] or null when none could be found.
-  Future<oauth2.Credentials> read();
+  Future<oauth2.Credentials?> read();
 
   /// Save `credentials` to the storage.
   Future<void> save(oauth2.Credentials credentials);

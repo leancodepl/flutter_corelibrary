@@ -19,9 +19,9 @@ import 'oauth_settings.dart';
 
 oauth2.Client buildOAuth2ClientFromCredentials(
   oauth2.Credentials credentials, {
-  OAuthSettings oAuthSettings,
-  http.Client httpClient,
-  oauth2.CredentialsRefreshedCallback onCredentialsRefreshed,
+  OAuthSettings? oAuthSettings,
+  http.Client? httpClient,
+  oauth2.CredentialsRefreshedCallback? onCredentialsRefreshed,
 }) {
   return oauth2.Client(
     credentials,

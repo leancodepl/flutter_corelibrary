@@ -1,18 +1,28 @@
 import 'package:http/http.dart' show BaseRequest;
+import 'package:login_client/login_client.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:test/test.dart';
 
-import 'package:login_client/login_client.dart';
+import 'login_client_test.mocks.dart';
 
+@GenerateMocks([
+  AuthorizationStrategy,
+  CredentialsStorage,
+  Client,
+  OAuthSettings,
+])
 void main() {
   group('LoginClient', () {
-    OAuthSettings oAuthSettings;
-    CredentialsStorage credentialsStorage;
-    void Function(String) logger;
-    LoginClient loginClient;
+    late OAuthSettings oAuthSettings;
+    late CredentialsStorage credentialsStorage;
+    late void Function(String) logger;
+    late LoginClient loginClient;
     setUp(() {
       oAuthSettings = MockOAuthSettings();
+      when(oAuthSettings.clientId).thenReturn('client id');
+      when(oAuthSettings.clientSecret).thenReturn('client secret');
       credentialsStorage = MockCredentialsStorage();
       logger = MockLogger();
       loginClient = LoginClient(
@@ -43,20 +53,22 @@ void main() {
     test(
       'logIn() calls callbacks, saves credentials and logs on success',
       () async {
-        final client = MockOAuthClient();
+        final client = MockClient();
+        final credentials = Credentials('access token');
+        when(client.credentials).thenReturn(credentials);
         final strategy = MockAuthorizationStrategy();
         when(strategy.execute(any, any, any)).thenAnswer((_) async => client);
 
         expectLater(
           loginClient.onCredentialsChanged,
-          emits(client.credentials),
+          emits(credentials),
         );
 
         await loginClient.logIn(strategy);
 
         expect(loginClient.loggedIn, true);
 
-        verify(credentialsStorage.save(client.credentials)).called(1);
+        verify(credentialsStorage.save(credentials)).called(1);
         verify(logger('Successfully logged in and saved the credentials.'))
             .called(1);
       },
@@ -96,8 +108,8 @@ void main() {
     });
 
     test('refresh() calls the refresh credentials', () async {
-      final authorizedClient = MockOAuthClient();
-      final refreshedClient = MockOAuthClient();
+      final authorizedClient = MockClient();
+      final refreshedClient = MockClient();
       when(authorizedClient.refreshCredentials(any))
           .thenAnswer((_) async => refreshedClient);
 
@@ -125,7 +137,7 @@ void main() {
       'send() logs out, logs and rethrows on AuthorizationException',
       () async {
         final request = FakeRequest();
-        final mockOauthClient = MockOAuthClient();
+        final mockOauthClient = MockClient();
         when(mockOauthClient.send(request))
             .thenThrow(AuthorizationException('Error', 'Description', Uri()));
 
@@ -150,19 +162,8 @@ void main() {
   });
 }
 
-class MockOAuthSettings extends Mock implements OAuthSettings {}
-
-class MockCredentialsStorage extends Mock implements CredentialsStorage {}
-
 class MockLogger extends Mock {
   void call(String log) => noSuchMethod(Invocation.method(#call, [log]));
-}
-
-class MockAuthorizationStrategy extends Mock implements AuthorizationStrategy {}
-
-class MockOAuthClient extends Mock implements Client {
-  @override
-  final credentials = Credentials('fake access token');
 }
 
 class FakeRequest extends Fake implements BaseRequest {}
