@@ -4,8 +4,8 @@ homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
   This package is prepared so that backend developers can override api endpoint
-  fo some local one without the need to compiling the app. Desired behavior is
-  realized with deeplinks. The override url is persisted until new deeplink
+  for some local one without the need to compile the app. The desired behavior is
+  realized with deeplinks. The override URL is persisted until a new deeplink
   is used.
 
 environment:
