@@ -1,6 +1,19 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 
+/// Overrides and persists API endpoint for the test environment
+///
+/// The `deeplinkOverrideSegment` is the part of deeplink that uniquely
+/// identifies deepling that is used to override API endpoint
+/// eg. `override` in `app://app/override?apiAddress=https%3A%2F%2Fexample.com`
+///
+/// The `deeplinkQueryParameter` is the query parameter of the override API
+/// endpoint deeplink that contains url encoded API endpoint to be used
+/// eg. `apiAddress` in `app://app/override?apiAddress=https%3A%2F%2Fexample.com`
+///
+/// The `defaultEndpoint` is fallback url that should be used if app does not
+/// have any endpoint introduced via deeplink or if `deeplinkQueryParameter` is
+/// not provided
 Future<Uri> overrideApiEndpoint(
   String deeplinkOverrideSegment,
   String deeplinkQueryParameter,
