@@ -4,7 +4,7 @@
 [![][build-badge]][build-badge-link]
 [![][codecov-badge]][codecov-badge-link]
 
-Overrides and persists default api endpoint for test environment.
+Overrides and persists default API endpoint for the test environment.
 
 ## Usage
 
@@ -21,5 +21,4 @@ final apiEndpoint = await overrideApiEndpoint(
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22override_api_endpoint+test%22
 [codecov-badge]: https://img.shields.io/codecov/c/gh/leancodepl/flutter_corelibrary?flag=override_api_endpoint
 [codecov-badge-link]: https://codecov.io/gh/leancodepl/flutter_corelibrary
-[snippet]: assets/snippet.png
 [override_api_endpoint_flutter]: https://pub.dev/packages/override_api_endpoint_flutter
