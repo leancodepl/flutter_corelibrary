@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uni_links/uni_links.dart';
 
 /// Overrides and persists API endpoint for the test environment
 ///
@@ -14,34 +13,42 @@ import 'package:uni_links/uni_links.dart';
 /// The `defaultEndpoint` is fallback url that should be used if app does not
 /// have any endpoint introduced via deeplink or if `deeplinkQueryParameter` is
 /// not provided
-Future<Uri> overrideApiEndpoint(
-  String deeplinkOverrideSegment,
-  String deeplinkQueryParameter,
-  Uri defaultEndpoint,
-) async {
-  const apiEndpointKey = 'apiAddress';
 
-  final sharedPreferences = await SharedPreferences.getInstance();
+typedef GetUri = Future<Uri?> Function();
 
-  var apiEndpoint = defaultEndpoint;
+class ApiEndpointOverrider {
+  const ApiEndpointOverrider(this._sharedPreferences, this._getInitialUri);
 
-  if (sharedPreferences.containsKey(apiEndpointKey)) {
-    apiEndpoint = Uri.parse(sharedPreferences.getString(apiEndpointKey)!);
-  }
+  final SharedPreferences _sharedPreferences;
+  final GetUri _getInitialUri;
 
-  final initial = await getInitialUri();
+  Future<Uri> overrideApiEndpoint(
+    String deeplinkOverrideSegment,
+    String deeplinkQueryParameter,
+    Uri defaultEndpoint,
+  ) async {
+    const apiEndpointKey = 'apiAddress';
 
-  if (initial != null && initial.path.contains(deeplinkOverrideSegment)) {
-    final endpointFromDeeplink =
-        initial.queryParameters[deeplinkQueryParameter];
-    if (endpointFromDeeplink?.isEmpty ?? true) {
-      sharedPreferences.remove(apiEndpointKey);
-      apiEndpoint = defaultEndpoint;
-    } else {
-      apiEndpoint = Uri.parse(endpointFromDeeplink!);
-      sharedPreferences.setString(apiEndpointKey, apiEndpoint.toString());
+    var apiEndpoint = defaultEndpoint;
+
+    if (_sharedPreferences.containsKey(apiEndpointKey)) {
+      apiEndpoint = Uri.parse(_sharedPreferences.getString(apiEndpointKey)!);
     }
-  }
 
-  return apiEndpoint;
+    final initial = await _getInitialUri();
+
+    if (initial != null && initial.path.contains(deeplinkOverrideSegment)) {
+      final endpointFromDeeplink =
+          initial.queryParameters[deeplinkQueryParameter];
+      if (endpointFromDeeplink?.isEmpty ?? true) {
+        _sharedPreferences.remove(apiEndpointKey);
+        apiEndpoint = defaultEndpoint;
+      } else {
+        apiEndpoint = Uri.parse(endpointFromDeeplink!);
+        _sharedPreferences.setString(apiEndpointKey, apiEndpoint.toString());
+      }
+    }
+
+    return apiEndpoint;
+  }
 }
