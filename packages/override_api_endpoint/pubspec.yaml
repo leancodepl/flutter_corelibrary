@@ -9,12 +9,11 @@ description: >-
   is used.
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-  flutter: '>=2.0.0'
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0"
 
 dependencies:
   shared_preferences: ^2.0.6
-  uni_links: ^0.5.1
 
 dev_dependencies:
   lint: ^1.5.3
