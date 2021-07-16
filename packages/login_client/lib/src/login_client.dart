@@ -108,7 +108,6 @@ class LoginClient extends http.BaseClient {
   /// This method will log the [LoginClient] out on the authorization failure.
   Future<void> logIn(AuthorizationStrategy strategy) async {
     try {
-      _oAuthClient?.close();
       _oAuthClient = await strategy.execute(
         _oAuthSettings,
         _httpClient,

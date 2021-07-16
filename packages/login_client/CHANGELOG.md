@@ -1,3 +1,7 @@
+# 2.0.2
+
+- Fix closing default HTTP client after logging out.
+
 # 2.0.1
 
 - Downgrade `meta` dependency from `1.4.0` to `1.3.0`.
