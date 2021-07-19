@@ -1,5 +1,10 @@
 import 'package:http/http.dart'
-    show BaseRequest, MultipartRequest, Request, StreamedResponse;
+    show
+        BaseRequest,
+        MultipartRequest,
+        Request,
+        StreamedRequest,
+        StreamedResponse;
 import 'package:login_client/login_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -164,7 +169,7 @@ void main() {
     test(
       'send() refreshes credentials on 401 response',
       () async {
-        final request = Request('POST', Uri.parse('www.example.com'));
+        final request = Request('POST', Uri.parse('http://www.example.com'));
         final mockOauthClient = MockClient();
 
         when(mockOauthClient.send(any))
@@ -194,7 +199,7 @@ void main() {
     test(
       'send() throws exception when response is 401 and second response is also 401',
       () async {
-        final request = Request('POST', Uri.parse('www.example.com'));
+        final request = Request('POST', Uri.parse('http://www.example.com'));
         final mockOauthClient = MockClient();
 
         when(mockOauthClient.send(any))
@@ -215,7 +220,7 @@ void main() {
     test(
       'copyRequest copies http.Request objects properly',
       () {
-        final request = Request('post', Uri.parse('http://www.example.com'));
+        final request = Request('POST', Uri.parse('http://www.example.com'));
         final copy = LoginClient.copyRequest(request) as Request;
 
         expect(copy.headers.entries, containsAll(request.headers.entries));
@@ -252,6 +257,16 @@ void main() {
         expect(copy.maxRedirects, request.maxRedirects);
 
         expect(copy.finalized, false);
+      },
+    );
+
+    test(
+      'copyRequest throws exception on unsupported request type',
+      () {
+        final request =
+            StreamedRequest('POST', Uri.parse('http://www.example.com'));
+
+        expect(() => LoginClient.copyRequest(request), throwsException);
       },
     );
   });
