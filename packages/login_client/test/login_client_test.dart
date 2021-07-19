@@ -168,13 +168,13 @@ void main() {
 
         when(mockOauthClient.send(any))
             .thenAnswer((_) async => StreamedResponse(
-                  Stream.fromIterable([]),
+                  const Stream.empty(),
                   200,
                 ));
 
         when(mockOauthClient.send(request))
             .thenAnswer((_) async => StreamedResponse(
-                  Stream.fromIterable([]),
+                  const Stream.empty(),
                   401,
                   request: request,
                 ));
@@ -198,7 +198,7 @@ void main() {
 
         when(mockOauthClient.send(any))
             .thenAnswer((_) async => StreamedResponse(
-                  Stream.fromIterable([]),
+                  const Stream.empty(),
                   401,
                 ));
 
@@ -217,4 +217,4 @@ class MockLogger extends Mock {
   void call(String log) => noSuchMethod(Invocation.method(#call, [log]));
 }
 
-class FakeRequest extends Fake implements Request {}
+class FakeRequest extends Fake implements BaseRequest {}
