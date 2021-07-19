@@ -1,4 +1,5 @@
-import 'package:http/http.dart' show BaseRequest, Request, StreamedResponse;
+import 'package:http/http.dart'
+    show BaseRequest, MultipartRequest, Request, StreamedResponse;
 import 'package:login_client/login_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -208,6 +209,49 @@ void main() {
         loginClient.setAuthorizedClient(mockOauthClient);
 
         expectLater(loginClient.send(request), throwsException);
+      },
+    );
+
+    test(
+      'copyRequest copies http.Request objects properly',
+      () {
+        final request = Request('post', Uri.parse('http://www.example.com'));
+        final copy = LoginClient.copyRequest(request) as Request;
+
+        expect(copy.headers.entries, containsAll(request.headers.entries));
+        expect(copy.headers.length, request.headers.length);
+        expect(copy.bodyBytes, request.bodyBytes);
+        expect(copy.encoding, request.encoding);
+        expect(copy.method, request.method);
+        expect(copy.url, request.url);
+        expect(copy.persistentConnection, request.persistentConnection);
+        expect(copy.followRedirects, request.followRedirects);
+        expect(copy.maxRedirects, request.maxRedirects);
+
+        expect(copy.finalized, false);
+      },
+    );
+
+    test(
+      'copyRequest copies http.MultipartRequest objects properly',
+      () {
+        final request =
+            MultipartRequest('post', Uri.parse('http://www.example.com'));
+        final copy = LoginClient.copyRequest(request) as MultipartRequest;
+
+        expect(copy.headers.entries, containsAll(request.headers.entries));
+        expect(copy.headers.length, request.headers.length);
+        expect(copy.fields.entries, containsAll(request.fields.entries));
+        expect(copy.fields.length, request.fields.length);
+        expect(copy.files, containsAll(request.files));
+        expect(copy.files.length, request.files.length);
+        expect(copy.method, request.method);
+        expect(copy.url, request.url);
+        expect(copy.persistentConnection, request.persistentConnection);
+        expect(copy.followRedirects, request.followRedirects);
+        expect(copy.maxRedirects, request.maxRedirects);
+
+        expect(copy.finalized, false);
       },
     );
   });

@@ -186,7 +186,7 @@ class LoginClient extends http.BaseClient {
         _logger('401 response received, trying to refresh credentials');
         await refresh();
 
-        final secondResponse = await client.send(_copyRequest(request));
+        final secondResponse = await client.send(copyRequest(request));
         if (secondResponse.statusCode == 401) {
           throw oauth2.AuthorizationException('Unauthorized', '', request.url);
         } else {
@@ -210,7 +210,8 @@ class LoginClient extends http.BaseClient {
   @visibleForTesting
   void setAuthorizedClient(oauth2.Client client) => _oAuthClient = client;
 
-  http.BaseRequest _copyRequest(http.BaseRequest request) {
+  @internal
+  static http.BaseRequest copyRequest(http.BaseRequest request) {
     http.BaseRequest newRequest;
 
     if (request is http.Request) {
@@ -222,7 +223,7 @@ class LoginClient extends http.BaseClient {
         ..fields.addAll(request.fields)
         ..files.addAll(request.files);
     } else {
-      throw Exception('Request type is unknown, cannot copy');
+      throw Exception('Request type is unsupported, cannot perform a copy');
     }
 
     newRequest
