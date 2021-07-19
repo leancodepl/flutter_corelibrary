@@ -1,4 +1,4 @@
-import 'package:http/http.dart' show BaseRequest;
+import 'package:http/http.dart' show BaseRequest, Request, StreamedResponse;
 import 'package:login_client/login_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -159,6 +159,57 @@ void main() {
         )).called(1);
       },
     );
+
+    test(
+      'send() refreshes credentials on 401 response',
+      () async {
+        final request = Request('POST', Uri.parse('www.example.com'));
+        final mockOauthClient = MockClient();
+
+        when(mockOauthClient.send(any))
+            .thenAnswer((_) async => StreamedResponse(
+                  Stream.fromIterable([]),
+                  200,
+                ));
+
+        when(mockOauthClient.send(request))
+            .thenAnswer((_) async => StreamedResponse(
+                  Stream.fromIterable([]),
+                  401,
+                  request: request,
+                ));
+
+        when(mockOauthClient.refreshCredentials(any))
+            .thenAnswer((_) async => mockOauthClient);
+
+        loginClient.setAuthorizedClient(mockOauthClient);
+
+        await loginClient.send(request);
+
+        verify(mockOauthClient.refreshCredentials(any)).called(1);
+      },
+    );
+
+    test(
+      'send() throws exception when response is 401 and second response is also 401',
+      () async {
+        final request = Request('POST', Uri.parse('www.example.com'));
+        final mockOauthClient = MockClient();
+
+        when(mockOauthClient.send(any))
+            .thenAnswer((_) async => StreamedResponse(
+                  Stream.fromIterable([]),
+                  401,
+                ));
+
+        when(mockOauthClient.refreshCredentials(any))
+            .thenAnswer((_) async => mockOauthClient);
+
+        loginClient.setAuthorizedClient(mockOauthClient);
+
+        expectLater(loginClient.send(request), throwsException);
+      },
+    );
   });
 }
 
@@ -166,4 +217,4 @@ class MockLogger extends Mock {
   void call(String log) => noSuchMethod(Invocation.method(#call, [log]));
 }
 
-class FakeRequest extends Fake implements BaseRequest {}
+class FakeRequest extends Fake implements Request {}

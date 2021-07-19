@@ -108,6 +108,7 @@ class LoginClient extends http.BaseClient {
   /// This method will log the [LoginClient] out on the authorization failure.
   Future<void> logIn(AuthorizationStrategy strategy) async {
     try {
+      _oAuthClient?.close();
       _oAuthClient = await strategy.execute(
         _oAuthSettings,
         _httpClient,
@@ -144,6 +145,7 @@ class LoginClient extends http.BaseClient {
 
     try {
       _oAuthClient = await _oAuthClient!.refreshCredentials(newScopes);
+      _logger('Refreshed credentials with success');
     } on oauth2.AuthorizationException {
       await _logOutInternal();
       _logger('An error while force refreshing occured, '
@@ -180,6 +182,18 @@ class LoginClient extends http.BaseClient {
     http.StreamedResponse response;
     try {
       response = await client.send(request);
+
+      if (response.statusCode == 401) {
+        _logger('401 response received, trying to refresh credentials');
+        await refresh();
+
+        final secondResponse = await client.send(_copyRequest(request));
+        if (secondResponse.statusCode == 401) {
+          throw oauth2.AuthorizationException('Unauthorized', '', request.url);
+        } else {
+          return secondResponse;
+        }
+      }
     } on oauth2.AuthorizationException {
       await _logOutInternal();
       _logger('An error while sending a request occured, '
@@ -196,4 +210,28 @@ class LoginClient extends http.BaseClient {
   // ignore: use_setters_to_change_properties
   @visibleForTesting
   void setAuthorizedClient(oauth2.Client client) => _oAuthClient = client;
+
+  http.BaseRequest _copyRequest(http.BaseRequest request) {
+    http.BaseRequest newRequest;
+
+    if (request is http.Request) {
+      newRequest = http.Request(request.method, request.url)
+        ..encoding = request.encoding
+        ..bodyBytes = request.bodyBytes;
+    } else if (request is http.MultipartRequest) {
+      newRequest = http.MultipartRequest(request.method, request.url)
+        ..fields.addAll(request.fields)
+        ..files.addAll(request.files);
+    } else {
+      throw Exception('Request type is unknown, cannot copy');
+    }
+
+    newRequest
+      ..persistentConnection = request.persistentConnection
+      ..followRedirects = request.followRedirects
+      ..maxRedirects = request.maxRedirects
+      ..headers.addAll(request.headers);
+
+    return newRequest;
+  }
 }
