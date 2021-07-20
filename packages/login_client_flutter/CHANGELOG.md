@@ -1,7 +1,3 @@
-# 2.0.1
-
-- Update login_client to 2.0.3
-
 # 2.0.0
 
 - **Breaking:** Migrate to null-safety.
