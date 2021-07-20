@@ -1,3 +1,7 @@
+# 1.1.2
+
+- Try refreshing the token on `401 Unauthorized` response
+
 # 1.1.1
 
 - Fix closing default HTTP client after logging out.
