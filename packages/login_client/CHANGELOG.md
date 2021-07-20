@@ -1,5 +1,6 @@
 # 2.0.3
-- Try refreshing tokens on 401 responses
+
+- Try refreshing the token on `401 Unauthorized` response
 
 # 2.0.2
 
