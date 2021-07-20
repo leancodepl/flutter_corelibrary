@@ -225,7 +225,7 @@ class LoginClient extends http.BaseClient {
   @visibleForTesting
   void setAuthorizedClient(oauth2.Client client) => _oAuthClient = client;
 
-  @internal
+  @visibleForTesting
   static http.BaseRequest copyRequest(http.BaseRequest request) {
     http.BaseRequest newRequest;
 
