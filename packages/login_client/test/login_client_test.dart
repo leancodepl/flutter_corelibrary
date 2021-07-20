@@ -1,4 +1,10 @@
-import 'package:http/http.dart' show BaseRequest;
+import 'package:http/http.dart'
+    show
+        BaseRequest,
+        MultipartRequest,
+        Request,
+        StreamedRequest,
+        StreamedResponse;
 import 'package:login_client/login_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -157,6 +163,110 @@ void main() {
           'An error while sending a request occured, '
           'successfully logged out and cleared credentials.',
         )).called(1);
+      },
+    );
+
+    test(
+      'send() refreshes credentials on 401 response',
+      () async {
+        final request = Request('POST', Uri.parse('http://www.example.com'));
+        final mockOauthClient = MockClient();
+
+        when(mockOauthClient.send(any))
+            .thenAnswer((_) async => StreamedResponse(
+                  const Stream.empty(),
+                  200,
+                ));
+
+        when(mockOauthClient.send(request))
+            .thenAnswer((_) async => StreamedResponse(
+                  const Stream.empty(),
+                  401,
+                  request: request,
+                ));
+
+        when(mockOauthClient.refreshCredentials(any))
+            .thenAnswer((_) async => mockOauthClient);
+
+        loginClient.setAuthorizedClient(mockOauthClient);
+
+        await loginClient.send(request);
+
+        verify(mockOauthClient.refreshCredentials(any)).called(1);
+      },
+    );
+
+    test(
+      'send() throws exception when response is 401 and second response is also 401',
+      () async {
+        final request = Request('POST', Uri.parse('http://www.example.com'));
+        final mockOauthClient = MockClient();
+
+        when(mockOauthClient.send(any))
+            .thenAnswer((_) async => StreamedResponse(
+                  const Stream.empty(),
+                  401,
+                ));
+
+        when(mockOauthClient.refreshCredentials(any))
+            .thenAnswer((_) async => mockOauthClient);
+
+        loginClient.setAuthorizedClient(mockOauthClient);
+
+        expectLater(loginClient.send(request), throwsException);
+      },
+    );
+
+    test(
+      'copyRequest copies http.Request objects properly',
+      () {
+        final request = Request('POST', Uri.parse('http://www.example.com'));
+        final copy = LoginClient.copyRequest(request) as Request;
+
+        expect(copy.headers.entries, containsAll(request.headers.entries));
+        expect(copy.headers.length, request.headers.length);
+        expect(copy.bodyBytes, request.bodyBytes);
+        expect(copy.encoding, request.encoding);
+        expect(copy.method, request.method);
+        expect(copy.url, request.url);
+        expect(copy.persistentConnection, request.persistentConnection);
+        expect(copy.followRedirects, request.followRedirects);
+        expect(copy.maxRedirects, request.maxRedirects);
+
+        expect(copy.finalized, false);
+      },
+    );
+
+    test(
+      'copyRequest copies http.MultipartRequest objects properly',
+      () {
+        final request =
+            MultipartRequest('post', Uri.parse('http://www.example.com'));
+        final copy = LoginClient.copyRequest(request) as MultipartRequest;
+
+        expect(copy.headers.entries, containsAll(request.headers.entries));
+        expect(copy.headers.length, request.headers.length);
+        expect(copy.fields.entries, containsAll(request.fields.entries));
+        expect(copy.fields.length, request.fields.length);
+        expect(copy.files, containsAll(request.files));
+        expect(copy.files.length, request.files.length);
+        expect(copy.method, request.method);
+        expect(copy.url, request.url);
+        expect(copy.persistentConnection, request.persistentConnection);
+        expect(copy.followRedirects, request.followRedirects);
+        expect(copy.maxRedirects, request.maxRedirects);
+
+        expect(copy.finalized, false);
+      },
+    );
+
+    test(
+      'copyRequest throws exception on unsupported request type',
+      () {
+        final request =
+            StreamedRequest('POST', Uri.parse('http://www.example.com'));
+
+        expect(() => LoginClient.copyRequest(request), throwsException);
       },
     );
   });
