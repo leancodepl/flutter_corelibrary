@@ -1,3 +1,6 @@
+# 2.0.3
+- Try refreshing tokens on 401 responses
+
 # 2.0.2
 
 - Fix closing default HTTP client after logging out.
