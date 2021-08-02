@@ -18,6 +18,5 @@
 /// - https://github.com/mogol/flutter_secure_storage
 library login_client_flutter;
 
-export 'src/flutter_stub_secure_credentials_storage.dart'
-    if (dart.library.io) 'src/flutter_mobile_secure_credentials_storage.dart'
+export 'src/flutter_mobile_secure_credentials_storage.dart'
     if (dart.library.js) 'src/flutter_web_secure_credentials_storage.dart';
