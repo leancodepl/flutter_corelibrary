@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// flutter_secure_storage implementation of the credentials storage.
-///
-/// See also:
-/// - https://github.com/mogol/flutter_secure_storage
-library login_client_flutter;
+import 'package:login_client/login_client.dart';
+import 'package:login_client_flutter/login_client_flutter.dart';
 
-export 'src/flutter_secure_credentials_storage_stub.dart'
-    if (dart.library.io) 'src/flutter_secure_credentials_storage.dart';
-
-export 'src/mobile_web_credentials_storage_stub.dart'
-    if (dart.library.js) 'src/mobile_web_credentials_storage_js.dart'
-    if (dart.library.io) 'src/mobile_web_credentials_storage_io.dart';
+/// A `flutter_secure_storage` implementation of the [CredentialsStorage].
+class MobileWebCredentialsStorage extends FlutterSecureCredentialsStorage
+    implements CredentialsStorage {
+  /// Creates the [MobileWebCredentialsStorage].
+  const MobileWebCredentialsStorage();
+}

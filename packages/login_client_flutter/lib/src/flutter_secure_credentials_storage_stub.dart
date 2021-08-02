@@ -12,38 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
-
 import 'package:login_client/login_client.dart';
 
-/// A `flutter_secure_storage` implementation of the [CredentialsStorage].
+/// A stub implementation of the [CredentialsStorage].
+@Deprecated('Use MobileWebCredentialsStorage instead.')
 class FlutterSecureCredentialsStorage implements CredentialsStorage {
-  /// Creates the [CredentialsStorage].
+  /// Creates the [FlutterSecureCredentialsStorage].
   const FlutterSecureCredentialsStorage();
 
   @override
-  Future<void> clear() async {
-    window.localStorage.remove('credentials');
-  }
-
-  @override
   Future<Credentials?> read() async {
-    try {
-      final json = window.localStorage['credentials'];
-      if (json != null) {
-        return Credentials.fromJson(json);
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
+    throw UnsupportedError('Unsupported platform');
   }
 
   @override
-  Future<void> save(Credentials credentials) async {
-    final json = credentials.toJson();
-    window.localStorage['credentials'] = json;
+  Future<void> save(Credentials credentials) {
+    throw UnsupportedError('Unsupported platform');
+  }
+
+  @override
+  Future<void> clear() {
+    throw UnsupportedError('Unsupported platform');
   }
 }

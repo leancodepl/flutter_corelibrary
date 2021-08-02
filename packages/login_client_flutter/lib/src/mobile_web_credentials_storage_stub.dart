@@ -12,38 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_client/login_client.dart';
 
-/// A `flutter_secure_storage` implementation of the [CredentialsStorage].
-class FlutterSecureCredentialsStorage implements CredentialsStorage {
-  /// Creates the [CredentialsStorage].
-  const FlutterSecureCredentialsStorage();
-
-  static const _key = 'login_client_flutter_credentials';
-  FlutterSecureStorage get _storage => const FlutterSecureStorage();
+/// A stub implementation of the [CredentialsStorage].
+///
+/// Proper implementations reside in `mobile_web_credentials_storage_io.dart`
+/// and `mobile_web_credentials_storage_js.dart`.
+class MobileWebCredentialsStorage implements CredentialsStorage {
+  /// Creates the [MobileWebCredentialsStorage].
+  const MobileWebCredentialsStorage();
 
   @override
   Future<Credentials?> read() async {
-    final json = await _storage.read(key: _key);
-    if (json == null) {
-      return null;
-    }
-
-    try {
-      return Credentials.fromJson(json);
-    } on FormatException {
-      return null;
-    }
+    throw UnsupportedError('Unsupported platform');
   }
 
   @override
   Future<void> save(Credentials credentials) {
-    return _storage.write(key: _key, value: credentials.toJson());
+    throw UnsupportedError('Unsupported platform');
   }
 
   @override
   Future<void> clear() {
-    return _storage.delete(key: _key);
+    throw UnsupportedError('Unsupported platform');
   }
 }
