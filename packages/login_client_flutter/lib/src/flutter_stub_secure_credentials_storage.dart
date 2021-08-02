@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_client/login_client.dart';
 
 /// A `flutter_secure_storage` implementation of the [CredentialsStorage].
 class FlutterSecureCredentialsStorage implements CredentialsStorage {
   /// Creates the [CredentialsStorage].
   const FlutterSecureCredentialsStorage();
-
-  FlutterSecureStorage get _storage =>
-      throw UnsupportedError('Cannot create credentials storage');
 
   @override
   Future<Credentials?> read() async {
