@@ -15,31 +15,31 @@ typedef GetUri = Future<Uri?> Function();
 /// The `defaultEndpoint` is fallback url that should be used if app does not
 /// have any endpoint introduced via deeplink or if `deeplinkQueryParameter` is
 /// not provided
-Future<Uri> overrideApiEndpoint(
-  SharedPreferences _sharedPreferences,
-  GetUri _getInitialUri,
-  String deeplinkOverrideSegment,
-  String deeplinkQueryParameter,
-  Uri defaultEndpoint, {
+Future<Uri> overrideApiEndpoint({
+  required SharedPreferences sharedPreferences,
+  required GetUri getInitialUri,
+  required String deeplinkOverrideSegment,
+  required String deeplinkQueryParameter,
+  required Uri defaultEndpoint,
   String apiEndpointKey = 'apiAddress',
 }) async {
   var apiEndpoint = defaultEndpoint;
 
-  if (_sharedPreferences.containsKey(apiEndpointKey)) {
-    apiEndpoint = Uri.parse(_sharedPreferences.getString(apiEndpointKey)!);
+  if (sharedPreferences.containsKey(apiEndpointKey)) {
+    apiEndpoint = Uri.parse(sharedPreferences.getString(apiEndpointKey)!);
   }
 
-  final initial = await _getInitialUri();
+  final initial = await getInitialUri();
 
   if (initial != null && initial.path.contains(deeplinkOverrideSegment)) {
     final endpointFromDeeplink =
         initial.queryParameters[deeplinkQueryParameter];
     if (endpointFromDeeplink?.isEmpty ?? true) {
-      _sharedPreferences.remove(apiEndpointKey);
+      sharedPreferences.remove(apiEndpointKey);
       apiEndpoint = defaultEndpoint;
     } else {
       apiEndpoint = Uri.parse(endpointFromDeeplink!);
-      _sharedPreferences.setString(apiEndpointKey, apiEndpoint.toString());
+      sharedPreferences.setString(apiEndpointKey, apiEndpoint.toString());
     }
   }
 
