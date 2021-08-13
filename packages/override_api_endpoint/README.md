@@ -7,7 +7,7 @@
 Overrides and persists default API endpoint for the test environment.
 
 The `deeplinkOverrideSegment` is the part of deeplink that uniquely
-identifies deepling that is used to override API endpoint
+identifies deeplink that is used to override API endpoint
 eg. `override` in `app://app/override?apiAddress=https%3A%2F%2Fexample.com`
 
 The `deeplinkQueryParameter` is the query parameter of the override API

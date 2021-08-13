@@ -1,6 +1,6 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
-typedef GetUri = Future<Uri?> Function();
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Overrides and persists API endpoint for the test environment
 ///
@@ -17,7 +17,7 @@ typedef GetUri = Future<Uri?> Function();
 /// not provided
 Future<Uri> overrideApiEndpoint({
   required SharedPreferences sharedPreferences,
-  required GetUri getInitialUri,
+  required FutureOr<Uri?> Function() getInitialUri,
   required String deeplinkOverrideSegment,
   required String deeplinkQueryParameter,
   required Uri defaultEndpoint,
