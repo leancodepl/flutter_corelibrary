@@ -1,0 +1,25 @@
+name: LeanCode Flutter Core Library
+
+packages:
+  - packages/**
+
+scripts:
+  get:
+    run: melos exec flutter pub get
+
+  analyze:
+    run: melos exec flutter analyze
+
+  test:
+    run: melos exec flutter test
+    select-package:
+      dir-exists:
+        - test
+
+  generate:
+    run: melos exec -c 1 -- exec flutter pub run build_runner build --delete-conflicting-outputs
+    select-package:
+      depends-on: build_runner
+
+  clean:
+    run: melos exec flutter clean
