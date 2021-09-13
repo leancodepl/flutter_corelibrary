@@ -1,3 +1,7 @@
+# 6.1.0
+
+- `CommandResult` and `ValidationError` now implement the `toJson()` method
+
 # 6.0.0
 
 - Stable null-safe release.

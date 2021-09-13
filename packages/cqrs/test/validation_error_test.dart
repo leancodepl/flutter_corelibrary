@@ -28,5 +28,17 @@ void main() {
       expect(error.message, 'Some other message');
       expect(error.propertyName, 'Property');
     });
+
+    test('is correctly serialized to JSON', () {
+      final json = ValidationError.fromJson({
+        'ErrorCode': 128,
+        'ErrorMessage': 'Some other message',
+        'PropertyName': 'Property',
+      }).toJson();
+
+      expect(json['ErrorCode'], 128);
+      expect(json['ErrorMessage'], 'Some other message');
+      expect(json['PropertyName'], 'Property');
+    });
   });
 }
