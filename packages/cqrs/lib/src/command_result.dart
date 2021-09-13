@@ -47,6 +47,11 @@ class CommandResult {
   /// its validation errors related to the `propertyName`.
   bool hasErrorForProperty(int code, String propertyName) => errors
       .any((error) => error.code == code && error.propertyName == propertyName);
+
+  Map<String, dynamic> toJson() => {
+        'WasSuccessful': success,
+        'ValidationErrors': errors.map((error) => error.toJson()).toList(),
+      };
 }
 
 /// A validation error.
@@ -66,6 +71,12 @@ class ValidationError {
 
   /// Path to the property which caused the error.
   final String propertyName;
+
+  Map<String, dynamic> toJson() => {
+        'ErrorCode': code,
+        'ErrorMessage': message,
+        'PropertyName': propertyName
+      };
 
   @override
   String toString() => '[$propertyName] $code: $message';

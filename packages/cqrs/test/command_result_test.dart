@@ -126,5 +126,42 @@ void main() {
         );
       });
     });
+
+    group('is correctly serialized to JSON', () {
+      test('with some validation errors', () {
+        final json = CommandResult.fromJson({
+          'WasSuccessful': false,
+          'ValidationErrors': [
+            {
+              'ErrorCode': 12,
+              'ErrorMessage': 'This is an error.',
+              'PropertyName': 'Property',
+            },
+          ],
+        }).toJson();
+
+        expect(json['WasSuccessful'], false);
+        expect(
+          json['ValidationErrors'],
+          contains(
+            isA<Map<String, dynamic>>()
+                .having((e) => e['ErrorCode'], 'code', 12)
+                .having(
+                    (e) => e['ErrorMessage'], 'message', 'This is an error.')
+                .having((e) => e['PropertyName'], 'propertyNamme', 'Property'),
+          ),
+        );
+      });
+
+      test('without validation errors, with success', () {
+        final json = CommandResult.fromJson({
+          'WasSuccessful': true,
+          'ValidationErrors': [],
+        }).toJson();
+
+        expect(json['WasSuccessful'], true);
+        expect(json['ValidationErrors'], isEmpty);
+      });
+    });
   });
 }
