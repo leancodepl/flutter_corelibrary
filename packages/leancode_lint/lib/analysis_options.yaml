@@ -17,7 +17,8 @@ linter:
 
     # - always_specify_types
 
-    - always_use_package_imports
+    # - always_use_package_imports
+
     # Included in lints recommended
     # - annotate_overrides
 
@@ -52,7 +53,8 @@ linter:
     # - avoid_init_to_null
 
     - avoid_js_rounded_ints
-    - avoid_multiple_declarations_per_line
+
+    # - avoid_multiple_declarations_per_line
 
     # Included in lints recommended
     # - avoid_null_checks_in_equality_operators
@@ -62,7 +64,8 @@ linter:
     # Included in flutter_lints
     # - avoid_print
 
-    - avoid_private_typedef_functions
+    # - avoid_private_typedef_functions
+
     - avoid_redundant_argument_values
 
     # Included in lints core
@@ -217,7 +220,9 @@ linter:
     # - null_closures
 
     - omit_local_variable_types
-    - one_member_abstracts
+
+    # - one_member_abstracts
+
     - only_throw_errors
 
     # Included in lints recommended
@@ -434,7 +439,8 @@ linter:
     # Included in lints recommended
     # - use_rethrow_when_possible
 
-    - use_setters_to_change_properties
+    # - use_setters_to_change_properties
+
     - use_string_buffers
     - use_test_throws_matchers
     - use_to_and_as_if_applicable
