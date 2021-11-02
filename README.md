@@ -1,5 +1,5 @@
 | Package | Documentation | pub | CI |
-| - | - | - | - |
+| - | :-: | :-: | :-: |
 | [`cqrs`][cqrs-link] | [Documentation][cqrs-documentation] | [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link] | [![][cqrs-build-badge]][cqrs-build-badge-link] |
 | [`login_client`][login_client-link] | [Documentation][login_client-documentation] | [![login_client pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link] | [![][login_client-build-badge]][login_client-build-badge-link] |
 | [`leancode_lint`][leancode_lint-link] | [Documentation][leancode_lint-documentation] | [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link] | n/a |
