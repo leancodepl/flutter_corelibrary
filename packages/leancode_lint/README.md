@@ -18,7 +18,7 @@ dependencies:
 Add `include: package:leancode_lint/analysis_options.yaml` to `analysis_options.yaml` in your project.
 If necessary you can exclude some files from analysis.
 
-```dart
+```yaml
 include: package:leancode_lint/analysis_options.yaml
 
 # Optional
@@ -31,7 +31,7 @@ analyzer:
 
 For packages add `include: package:leancode_lint/analysis_options.yaml` to `analysis_options.yaml`.
 
-```dart
+```yaml
 include: package:leancode_lint/analysis_options_package.yaml
 
 # Optional
