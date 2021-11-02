@@ -2,7 +2,7 @@
 | - | - | - | - |
 | [`cqrs`][cqrs-link] | [Documentation][cqrs-documentation] | [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link] | [![][cqrs-build-badge]][cqrs-build-badge-link] |
 | [`login_client`][login_client-link] | [Documentation][login_client-documentation] | [![login_client pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link] | [![][login_client-build-badge]][login_client-build-badge-link] |
-| [`leancode_lint`][leancode_lint-link] | [Documentation][leancode_lint-documentation] | [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link] | |
+| [`leancode_lint`][leancode_lint-link] | [Documentation][leancode_lint-documentation] | [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link] | n/a |
 | [`login_client_flutter`][login_client_flutter-link] | [Documentation][login_client_flutter-documentation] | [![login_client_flutter pub.dev badge][login_client_flutter-pub-badge]][login_client_flutter-pub-badge-link] | [![][login_client_flutter-build-badge]][login_client_flutter-build-badge-link] |
 | [`override_api_endpoint`][override_api_endpoint-link] | [Documentation][override_api_endpoint-documentation] | [![override_api_endpoint pub.dev badge][override_api_endpoint-pub-badge]][override_api_endpoint-pub-badge-link] | [![][override_api_endpoint-build-badge]][override_api_endpoint-build-badge-link] |
 
