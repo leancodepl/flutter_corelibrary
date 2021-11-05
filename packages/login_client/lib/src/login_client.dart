@@ -57,8 +57,7 @@ class LoginClient extends http.BaseClient {
     required CredentialsStorage credentialsStorage,
     http.Client? httpClient,
     _LoggerCallback logger = _defaultPrintLogger,
-  })
-      : _oAuthSettings = oAuthSettings,
+  })  : _oAuthSettings = oAuthSettings,
         _httpClient = httpClient ?? http.Client(),
         _credentialsStorage = credentialsStorage,
         _logger = logger;
@@ -69,7 +68,7 @@ class LoginClient extends http.BaseClient {
   final _LoggerCallback _logger;
 
   final _onCredentialsChanged =
-  StreamController<oauth2.Credentials?>.broadcast();
+      StreamController<oauth2.Credentials?>.broadcast();
 
   oauth2.Client? _oAuthClient;
 
