@@ -57,7 +57,8 @@ class LoginClient extends http.BaseClient {
     required CredentialsStorage credentialsStorage,
     http.Client? httpClient,
     _LoggerCallback logger = _defaultPrintLogger,
-  })  : _oAuthSettings = oAuthSettings,
+  })
+      : _oAuthSettings = oAuthSettings,
         _httpClient = httpClient ?? http.Client(),
         _credentialsStorage = credentialsStorage,
         _logger = logger;
