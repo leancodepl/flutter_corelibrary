@@ -114,8 +114,8 @@ class LoginClient extends http.BaseClient {
         _onCredentialsRefreshed,
       );
 
-      _onCredentialsChanged.add(_oAuthClient!.credentials);
       await _credentialsStorage.save(_oAuthClient!.credentials);
+      _onCredentialsChanged.add(_oAuthClient!.credentials);
 
       _logger('Successfully logged in and saved the credentials.');
     } on oauth2.AuthorizationException {
@@ -161,15 +161,15 @@ class LoginClient extends http.BaseClient {
   }
 
   Future<void> _logOutInternal() async {
-    _onCredentialsChanged.add(null);
     await _credentialsStorage.clear();
-
     _oAuthClient = null;
+
+    _onCredentialsChanged.add(null);
   }
 
   Future<void> _onCredentialsRefreshed(oauth2.Credentials credentials) async {
-    _onCredentialsChanged.add(credentials);
     await _credentialsStorage.save(credentials);
+    _onCredentialsChanged.add(credentials);
 
     _logger('Successfully refreshed and saved the new credentials.');
   }
