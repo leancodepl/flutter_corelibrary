@@ -1,6 +1,6 @@
 # 2.0.4
 
-- `onCredentialsChanged` now yields events after they have completed.
+- `onCredentialsChanged` now yields **after** the credentials have changed (in the storage).
 
 # 2.0.3
 
