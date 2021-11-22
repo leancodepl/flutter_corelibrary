@@ -282,7 +282,7 @@ linter:
     - prefer_final_in_for_each
     - prefer_final_locals
 
-    # Not useful and annoyinsg
+    # Not useful and annoying
     # - prefer_final_parameters
 
     # Included in lints recommended
