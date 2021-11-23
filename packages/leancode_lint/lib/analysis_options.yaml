@@ -186,9 +186,6 @@ linter:
     # Included in lints recommended
     # - library_prefixes
 
-    # Is angry at private StatefulWidget's state
-    # - library_private_types_in_public_api
-
     # - lines_longer_than_80_chars
 
     # Included in lints core
