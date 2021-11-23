@@ -282,9 +282,6 @@ linter:
     - prefer_final_in_for_each
     - prefer_final_locals
 
-    # Not useful and annoying
-    # - prefer_final_parameters
-
     # Included in lints recommended
     # - prefer_for_elements_to_map_fromIterable
 
