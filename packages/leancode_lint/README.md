@@ -4,7 +4,7 @@
 
 Lint rules used internally in LeanCode projects.
 
-## Usage
+## Installation
 
 Add `leancode_lint` as a dev dependency.
 
@@ -13,18 +13,23 @@ dev_dependencies:
   leancode_lint: ^1.0.1+1
 ```
 
-When using Dart < 2.14, consider instead adding `leancode_lint` as a normal dependency
-to access the [`unawaited`](https://api.dart.dev/stable/2.14.0/dart-async/unawaited.html) function.
+### Dart <2.14
+
+When using Dart <2.14, consider adding `leancode_lint` as a normal dependency
+instead to access the
+[`unawaited`](https://api.dart.dev/stable/2.14.0/dart-async/unawaited.html)
+function.
 
 ```yaml
 dependencies:
   leancode_lint: ^1.0.1+1
 ```
 
-### Apps
+## Usage
 
-Add `include: package:leancode_lint/analysis_options.yaml` to `analysis_options.yaml` in your project.
-If necessary you can exclude some files from analysis.
+Add `include: package:leancode_lint/analysis_options.yaml` to
+`analysis_options.yaml` in your project. You might want to exclude some files
+(e.g generated frezeed models) from analysis.
 
 ```yaml
 include: package:leancode_lint/analysis_options.yaml
@@ -32,20 +37,8 @@ include: package:leancode_lint/analysis_options.yaml
 # Optional
 analyzer:
   exclude:
-    - '**/*.g.dart'
-```
-
-### Packages
-
-For packages add `include: package:leancode_lint/analysis_options.yaml` to `analysis_options.yaml`.
-
-```yaml
-include: package:leancode_lint/analysis_options_package.yaml
-
-# Optional
-analyzer:
-  exclude:
-    - '**/*.g.dart'
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
 ```
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
