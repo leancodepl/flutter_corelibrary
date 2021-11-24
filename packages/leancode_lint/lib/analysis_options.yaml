@@ -186,7 +186,7 @@ linter:
     # Included in lints recommended
     # - library_prefixes
 
-    - library_private_types_in_public_api
+    # - library_private_types_in_public_api
 
     # - lines_longer_than_80_chars
 
@@ -280,7 +280,8 @@ linter:
 
     - prefer_final_in_for_each
     - prefer_final_locals
-    - prefer_final_parameters
+
+    # - prefer_final_parameters
 
     # Included in lints recommended
     # - prefer_for_elements_to_map_fromIterable
