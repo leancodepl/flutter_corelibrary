@@ -25,10 +25,13 @@ void main() {
     test('correctly converts to String', () {
       final exception1 = CQRSException(response, 'This is a message.');
 
-      expect(exception1.toString(), '''
+      expect(
+        exception1.toString(),
+        '''
 This is a message.
 Server returned a 401 Unauthorized status. Response body:
-''');
+''',
+      );
     });
   });
 }

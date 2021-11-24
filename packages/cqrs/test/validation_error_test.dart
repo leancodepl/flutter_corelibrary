@@ -18,7 +18,7 @@ void main() {
     });
 
     test('is correctly deserialized from JSON', () {
-      final error = ValidationError.fromJson({
+      final error = ValidationError.fromJson(<String, dynamic>{
         'ErrorCode': 128,
         'ErrorMessage': 'Some other message',
         'PropertyName': 'Property',
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('is correctly serialized to JSON', () {
-      final json = ValidationError.fromJson({
+      final json = ValidationError.fromJson(<String, dynamic>{
         'ErrorCode': 128,
         'ErrorMessage': 'Some other message',
         'PropertyName': 'Property',

@@ -85,7 +85,7 @@ void main() {
 
     group('is correctly deserialized from JSON', () {
       test('with some validation errors', () {
-        final result = CommandResult.fromJson({
+        final result = CommandResult.fromJson(<String, dynamic>{
           'WasSuccessful': false,
           'ValidationErrors': [
             {
@@ -103,19 +103,24 @@ void main() {
               .having(
                 (r) => r.errors,
                 'errors',
-                contains(isA<ValidationError>()
-                    .having((e) => e.code, 'code', 12)
-                    .having((e) => e.message, 'message', 'This is an error.')
-                    .having(
-                        (e) => e.propertyName, 'propertyNamme', 'Property')),
+                contains(
+                  isA<ValidationError>()
+                      .having((e) => e.code, 'code', 12)
+                      .having((e) => e.message, 'message', 'This is an error.')
+                      .having(
+                        (e) => e.propertyName,
+                        'propertyNamme',
+                        'Property',
+                      ),
+                ),
               ),
         );
       });
 
       test('without validation errors, with success', () {
-        final result = CommandResult.fromJson({
+        final result = CommandResult.fromJson(<String, dynamic>{
           'WasSuccessful': true,
-          'ValidationErrors': [],
+          'ValidationErrors': <Map<String, dynamic>>[],
         });
 
         expect(
@@ -129,7 +134,7 @@ void main() {
 
     group('is correctly serialized to JSON', () {
       test('with some validation errors', () {
-        final json = CommandResult.fromJson({
+        final json = CommandResult.fromJson(<String, dynamic>{
           'WasSuccessful': false,
           'ValidationErrors': [
             {
@@ -147,16 +152,19 @@ void main() {
             isA<Map<String, dynamic>>()
                 .having((e) => e['ErrorCode'], 'code', 12)
                 .having(
-                    (e) => e['ErrorMessage'], 'message', 'This is an error.')
+                  (e) => e['ErrorMessage'],
+                  'message',
+                  'This is an error.',
+                )
                 .having((e) => e['PropertyName'], 'propertyNamme', 'Property'),
           ),
         );
       });
 
       test('without validation errors, with success', () {
-        final json = CommandResult.fromJson({
+        final json = CommandResult.fromJson(<String, dynamic>{
           'WasSuccessful': true,
-          'ValidationErrors': [],
+          'ValidationErrors': <Map<String, dynamic>>[],
         }).toJson();
 
         expect(json['WasSuccessful'], true);

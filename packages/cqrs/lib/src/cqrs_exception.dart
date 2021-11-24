@@ -28,11 +28,12 @@ class CQRSException implements Exception {
       builder.writeln(message);
     }
 
-    builder.writeln(
-      'Server returned a ${response.statusCode} ${response.reasonPhrase} '
-      'status. Response body:',
-    );
-    builder.write(response.body);
+    builder
+      ..writeln(
+        'Server returned a ${response.statusCode} ${response.reasonPhrase} '
+        'status. Response body:',
+      )
+      ..write(response.body);
 
     return builder.toString();
   }

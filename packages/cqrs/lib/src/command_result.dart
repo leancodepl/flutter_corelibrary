@@ -26,8 +26,10 @@ class CommandResult {
 
   CommandResult.fromJson(Map<String, dynamic> json)
       : errors = (json['ValidationErrors'] as List)
-            .map((error) =>
-                ValidationError.fromJson(error as Map<String, dynamic>))
+            .map(
+              (dynamic error) =>
+                  ValidationError.fromJson(error as Map<String, dynamic>),
+            )
             .toList();
 
   /// Whether the command has succeeded.
@@ -48,7 +50,7 @@ class CommandResult {
   bool hasErrorForProperty(int code, String propertyName) => errors
       .any((error) => error.code == code && error.propertyName == propertyName);
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'WasSuccessful': success,
         'ValidationErrors': errors.map((error) => error.toJson()).toList(),
       };
@@ -72,7 +74,7 @@ class ValidationError {
   /// Path to the property which caused the error.
   final String propertyName;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'ErrorCode': code,
         'ErrorMessage': message,
         'PropertyName': propertyName
