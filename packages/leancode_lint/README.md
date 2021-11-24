@@ -10,7 +10,7 @@ Add `leancode_lint` as a dev dependency.
 
 ```yaml
 dev_dependencies:
-  leancode_lint: ^1.0.2
+  leancode_lint: ^1.0.1+1
 ```
 
 When using Dart < 2.14, consider instead adding `leancode_lint` as a normal dependency
@@ -18,7 +18,7 @@ to access the [`unawaited`](https://api.dart.dev/stable/2.14.0/dart-async/unawai
 
 ```yaml
 dependencies:
-  leancode_lint: ^1.0.2
+  leancode_lint: ^1.0.1+1
 ```
 
 ### Apps

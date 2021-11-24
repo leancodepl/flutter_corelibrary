@@ -1,7 +1,7 @@
-# 1.0.2
+# 1.0.1+1
 
-- Improve explanation on why one might want to add `leancode_lint` as a normal
-  dependency instead of dev dependency when using Dart version < 2.14
+- Improve explanation in README on why one might want to add `leancode_lint` as
+  a normal dependency instead of dev dependency when using Dart version < 2.14
 
 # 1.0.1
 
