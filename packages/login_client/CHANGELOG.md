@@ -1,3 +1,7 @@
+# 2.0.4
+
+- `onCredentialsChanged` now yields **after** the credentials have changed (in the storage).
+
 # 2.0.3
 
 - Try refreshing the token on `401 Unauthorized` response
@@ -69,7 +73,7 @@
 
 - Reimplement authentication
 - `leancode_login_manager` has been replaced with `leancode_login_client`.
-Right now it only supports logging in with credentials.
+  Right now it only supports logging in with credentials.
 
 # 0.3.4
 
