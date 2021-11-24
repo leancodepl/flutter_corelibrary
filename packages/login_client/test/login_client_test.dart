@@ -45,7 +45,7 @@ void main() {
 
         when(credentialsStorage.read()).thenAnswer((_) async => credentials);
 
-        expectLater(loginClient.onCredentialsChanged, emits(credentials));
+        await expectLater(loginClient.onCredentialsChanged, emits(credentials));
 
         await loginClient.initialize();
 
@@ -65,7 +65,7 @@ void main() {
         final strategy = MockAuthorizationStrategy();
         when(strategy.execute(any, any, any)).thenAnswer((_) async => client);
 
-        expectLater(
+        await expectLater(
           loginClient.onCredentialsChanged,
           emits(credentials),
         );
@@ -89,7 +89,7 @@ void main() {
         final strategy = MockAuthorizationStrategy();
         when(strategy.execute(any, any, any)).thenThrow(authorizationException);
 
-        expectLater(loginClient.onCredentialsChanged, emits(null));
+        await expectLater(loginClient.onCredentialsChanged, emits(null));
 
         await expectLater(
           loginClient.logIn(strategy),
@@ -99,15 +99,17 @@ void main() {
         expect(loginClient.loggedIn, false);
 
         verify(credentialsStorage.clear()).called(1);
-        verify(logger(
-          'An error while logging in occured, '
-          'successfully logged out and cleared credentials.',
-        )).called(1);
+        verify(
+          logger(
+            'An error while logging in occured, '
+            'successfully logged out and cleared credentials.',
+          ),
+        ).called(1);
       },
     );
 
     test('refresh() throws on unauthorized client', () async {
-      expectLater(
+      await expectLater(
         loginClient.refresh(),
         throwsA(isA<RefreshException>()),
       );
@@ -128,7 +130,7 @@ void main() {
     });
 
     test('logOut() logs out, calls callback and logs', () async {
-      expectLater(loginClient.onCredentialsChanged, emits(null));
+      await expectLater(loginClient.onCredentialsChanged, emits(null));
 
       await loginClient.logOut();
 
@@ -149,7 +151,7 @@ void main() {
 
         loginClient.setAuthorizedClient(mockOauthClient);
 
-        expectLater(loginClient.onCredentialsChanged, emits(null));
+        await expectLater(loginClient.onCredentialsChanged, emits(null));
 
         await expectLater(
           loginClient.send(request),
@@ -159,10 +161,12 @@ void main() {
         expect(loginClient.loggedIn, false);
 
         verify(credentialsStorage.clear()).called(1);
-        verify(logger(
-          'An error while sending a request occured, '
-          'successfully logged out and cleared credentials.',
-        )).called(1);
+        verify(
+          logger(
+            'An error while sending a request occured, '
+            'successfully logged out and cleared credentials.',
+          ),
+        ).called(1);
       },
     );
 
@@ -172,18 +176,20 @@ void main() {
         final request = Request('POST', Uri.parse('http://www.example.com'));
         final mockOauthClient = MockClient();
 
-        when(mockOauthClient.send(any))
-            .thenAnswer((_) async => StreamedResponse(
-                  const Stream.empty(),
-                  200,
-                ));
+        when(mockOauthClient.send(any)).thenAnswer(
+          (_) async => StreamedResponse(
+            const Stream.empty(),
+            200,
+          ),
+        );
 
-        when(mockOauthClient.send(request))
-            .thenAnswer((_) async => StreamedResponse(
-                  const Stream.empty(),
-                  401,
-                  request: request,
-                ));
+        when(mockOauthClient.send(request)).thenAnswer(
+          (_) async => StreamedResponse(
+            const Stream.empty(),
+            401,
+            request: request,
+          ),
+        );
 
         when(mockOauthClient.refreshCredentials(any))
             .thenAnswer((_) async => mockOauthClient);
@@ -202,18 +208,19 @@ void main() {
         final request = Request('POST', Uri.parse('http://www.example.com'));
         final mockOauthClient = MockClient();
 
-        when(mockOauthClient.send(any))
-            .thenAnswer((_) async => StreamedResponse(
-                  const Stream.empty(),
-                  401,
-                ));
+        when(mockOauthClient.send(any)).thenAnswer(
+          (_) async => StreamedResponse(
+            const Stream.empty(),
+            401,
+          ),
+        );
 
         when(mockOauthClient.refreshCredentials(any))
             .thenAnswer((_) async => mockOauthClient);
 
         loginClient.setAuthorizedClient(mockOauthClient);
 
-        expectLater(loginClient.send(request), throwsException);
+        await expectLater(loginClient.send(request), throwsException);
       },
     );
 

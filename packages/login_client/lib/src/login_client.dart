@@ -120,8 +120,10 @@ class LoginClient extends http.BaseClient {
       _logger('Successfully logged in and saved the credentials.');
     } on oauth2.AuthorizationException {
       await _logOutInternal();
-      _logger('An error while logging in occured, '
-          'successfully logged out and cleared credentials.');
+      _logger(
+        'An error while logging in occured, '
+        'successfully logged out and cleared credentials.',
+      );
       rethrow;
     }
   }
@@ -147,8 +149,10 @@ class LoginClient extends http.BaseClient {
       _logger('Refreshed credentials with success');
     } on oauth2.AuthorizationException {
       await _logOutInternal();
-      _logger('An error while force refreshing occured, '
-          'successfully logged out and cleared credentials.');
+      _logger(
+        'An error while force refreshing occured, '
+        'successfully logged out and cleared credentials.',
+      );
       rethrow;
     }
   }
@@ -195,8 +199,10 @@ class LoginClient extends http.BaseClient {
       }
     } on oauth2.AuthorizationException {
       await _logOutInternal();
-      _logger('An error while sending a request occured, '
-          'successfully logged out and cleared credentials.');
+      _logger(
+        'An error while sending a request occured, '
+        'successfully logged out and cleared credentials.',
+      );
       rethrow;
     }
 

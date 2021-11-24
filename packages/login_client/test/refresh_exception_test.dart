@@ -1,6 +1,5 @@
-import 'package:test/test.dart';
-
 import 'package:login_client/src/refresh_exception.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('RefreshException', () {

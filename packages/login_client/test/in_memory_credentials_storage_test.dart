@@ -1,7 +1,6 @@
+import 'package:login_client/src/credentials_storage/in_memory_credentials_storage.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:test/test.dart';
-
-import 'package:login_client/src/credentials_storage/in_memory_credentials_storage.dart';
 
 void main() {
   group('InMemoryCredentialsStorage', () {

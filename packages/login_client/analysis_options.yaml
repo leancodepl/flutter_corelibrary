@@ -1,9 +1,6 @@
-include: package:lint/analysis_options_package.yaml
+include: package:leancode_lint/analysis_options.yaml
 
 analyzer:
   exclude:
     - test/.test_coverage.dart
-
-linter:
-  rules:
-    - sort_constructors_first
+    - test/*.mocks.dart
