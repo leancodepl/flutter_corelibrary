@@ -27,6 +27,8 @@ dependencies:
 
 ## Usage
 
+### App
+
 Add `include: package:leancode_lint/analysis_options.yaml` to
 `analysis_options.yaml` in your project. You might want to exclude some files
 (e.g generated frezeed models) from analysis.
@@ -37,8 +39,25 @@ include: package:leancode_lint/analysis_options.yaml
 # Optional
 analyzer:
   exclude:
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+```
+
+### Package
+
+Add `include: package:leancode_lint/analysis_options_package.yaml` to
+`analysis_options.yaml` in your project. It includes additional lints for
+packages. You might want to exclude some files (e.g generated frezeed models)
+from analysis.
+
+```yaml
+include: package:leancode_lint/analysis_options_package.yaml
+
+# Optional
+analyzer:
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
 ```
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
