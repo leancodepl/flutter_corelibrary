@@ -19,6 +19,7 @@ import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 
 import 'credentials_storage/credentials_storage.dart';
+import 'credentials_storage/in_memory_credentials_storage.dart';
 import 'oauth_settings.dart';
 import 'refresh_exception.dart';
 import 'strategies/authorization_strategy.dart';
@@ -51,7 +52,7 @@ class LoginClient extends http.BaseClient {
   /// to correctly restore saved credentials from the `credentialsStorage`.
   ///
   /// See also:
-  /// - InMemoryCredentialsStorage
+  /// - [InMemoryCredentialsStorage]
   LoginClient({
     required OAuthSettings oAuthSettings,
     required CredentialsStorage credentialsStorage,
