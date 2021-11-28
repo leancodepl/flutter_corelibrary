@@ -47,7 +47,7 @@ analyzer:
 
 Add `include: package:leancode_lint/analysis_options_package.yaml` to
 `analysis_options.yaml` in your project. It includes additional lints for
-packages. You might want to exclude some files (e.g generated frezeed models)
+packages. You might want to exclude some files (e.g generated freezed models)
 from analysis.
 
 ```yaml
