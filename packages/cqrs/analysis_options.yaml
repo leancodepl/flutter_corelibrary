@@ -1,4 +1,4 @@
-include: package:leancode_lint/analysis_options.yaml
+include: package:leancode_lint/analysis_options_package.yaml
 
 analyzer:
   exclude:
