@@ -17,6 +17,10 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 
 import 'oauth_settings.dart';
 
+/// Creates a new client from [oauth2.Credentials] and [OAuthSettings].
+///
+/// [httpClient] is the underlying client that this forwards requests to after
+/// adding authorization credentials to them.
 oauth2.Client buildOAuth2ClientFromCredentials(
   oauth2.Credentials credentials, {
   OAuthSettings? oAuthSettings,
