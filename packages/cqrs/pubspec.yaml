@@ -11,11 +11,10 @@ environment:
 
 dependencies:
   http: ^0.13.3
-  leancode_lint: ^1.0.1
 
 dev_dependencies:
   build_runner: ^2.0.4
   coverage: ^1.0.3
-  lint: ^1.5.3
+  leancode_lint: ^1.0.1+1
   mockito: ^5.0.9
   test: ^1.17.5

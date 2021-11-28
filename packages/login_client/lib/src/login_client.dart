@@ -51,7 +51,7 @@ class LoginClient extends http.BaseClient {
   /// to correctly restore saved credentials from the `credentialsStorage`.
   ///
   /// See also:
-  /// - [InMemoryCredentialsStorage]
+  /// - InMemoryCredentialsStorage
   LoginClient({
     required OAuthSettings oAuthSettings,
     required CredentialsStorage credentialsStorage,
