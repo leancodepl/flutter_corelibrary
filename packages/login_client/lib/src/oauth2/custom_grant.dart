@@ -20,6 +20,7 @@ import 'package:oauth2/oauth2.dart';
 import 'package:oauth2/src/handle_access_token_response.dart';
 import 'package:oauth2/src/utils.dart';
 
+/// Creates a OAuth2 [Client] with a custom grant.
 Future<Client> customGrant(
   Uri authorizationEndpoint,
   String grantName,
