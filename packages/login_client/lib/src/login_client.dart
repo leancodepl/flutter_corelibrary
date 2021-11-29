@@ -214,7 +214,7 @@ class LoginClient extends http.BaseClient {
   Future<void> dispose() => _onCredentialsChanged.close();
 
   @visibleForTesting
-  // ignore: use_setters_to_change_properties, public_member_api_docs
+  // ignore: public_member_api_docs
   void setAuthorizedClient(oauth2.Client client) => _oAuthClient = client;
 
   @internal
