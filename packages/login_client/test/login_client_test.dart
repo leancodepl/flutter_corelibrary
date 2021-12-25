@@ -5,6 +5,7 @@ import 'package:http/http.dart'
         Request,
         StreamedRequest,
         StreamedResponse;
+import 'package:leancode_lint/leancode_lint.dart';
 import 'package:login_client/login_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -45,7 +46,9 @@ void main() {
 
         when(credentialsStorage.read()).thenAnswer((_) async => credentials);
 
-        await expectLater(loginClient.onCredentialsChanged, emits(credentials));
+        unawaited(
+          expectLater(loginClient.onCredentialsChanged, emits(credentials)),
+        );
 
         await loginClient.initialize();
 
@@ -65,9 +68,11 @@ void main() {
         final strategy = MockAuthorizationStrategy();
         when(strategy.execute(any, any, any)).thenAnswer((_) async => client);
 
-        await expectLater(
-          loginClient.onCredentialsChanged,
-          emits(credentials),
+        unawaited(
+          expectLater(
+            loginClient.onCredentialsChanged,
+            emits(credentials),
+          ),
         );
 
         await loginClient.logIn(strategy);
@@ -89,7 +94,7 @@ void main() {
         final strategy = MockAuthorizationStrategy();
         when(strategy.execute(any, any, any)).thenThrow(authorizationException);
 
-        await expectLater(loginClient.onCredentialsChanged, emits(null));
+        unawaited(expectLater(loginClient.onCredentialsChanged, emits(null)));
 
         await expectLater(
           loginClient.logIn(strategy),
@@ -130,7 +135,7 @@ void main() {
     });
 
     test('logOut() logs out, calls callback and logs', () async {
-      await expectLater(loginClient.onCredentialsChanged, emits(null));
+      unawaited(expectLater(loginClient.onCredentialsChanged, emits(null)));
 
       await loginClient.logOut();
 
@@ -151,7 +156,7 @@ void main() {
 
         loginClient.setAuthorizedClient(mockOauthClient);
 
-        await expectLater(loginClient.onCredentialsChanged, emits(null));
+        unawaited(expectLater(loginClient.onCredentialsChanged, emits(null)));
 
         await expectLater(
           loginClient.send(request),
