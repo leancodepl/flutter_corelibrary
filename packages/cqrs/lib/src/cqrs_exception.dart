@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:cqrs/cqrs.dart';
 import 'package:http/http.dart';
 
+/// Usually thrown by [CQRS.get] or [CQRS.run].
 class CQRSException implements Exception {
+  /// Creates a [CQRSException] with [response] and [message].
   const CQRSException(this.response, [this.message]);
 
+  /// Server's response to the request that triggered this exception.
   final Response response;
+
+  /// Server's message.
   final String? message;
 
   @override
@@ -28,11 +34,12 @@ class CQRSException implements Exception {
       builder.writeln(message);
     }
 
-    builder.writeln(
-      'Server returned a ${response.statusCode} ${response.reasonPhrase} '
-      'status. Response body:',
-    );
-    builder.write(response.body);
+    builder
+      ..writeln(
+        'Server returned a ${response.statusCode} ${response.reasonPhrase} '
+        'status. Response body:',
+      )
+      ..write(response.body);
 
     return builder.toString();
   }

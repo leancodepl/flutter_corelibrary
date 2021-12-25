@@ -16,6 +16,7 @@ import 'transport_types.dart';
 
 /// The result of running a [Command].
 class CommandResult {
+  /// Creates a [CommandResult] with [errors];
   const CommandResult(this.errors);
 
   /// Creates a success [CommandResult] without any errors.
@@ -24,10 +25,13 @@ class CommandResult {
   /// Creates a failed [CommandResult] and ensures it has errors.
   CommandResult.failed(this.errors) : assert(errors.isNotEmpty);
 
+  /// Creates a [CommandResult] from JSON.
   CommandResult.fromJson(Map<String, dynamic> json)
       : errors = (json['ValidationErrors'] as List)
-            .map((error) =>
-                ValidationError.fromJson(error as Map<String, dynamic>))
+            .map(
+              (dynamic error) =>
+                  ValidationError.fromJson(error as Map<String, dynamic>),
+            )
             .toList();
 
   /// Whether the command has succeeded.
@@ -48,7 +52,8 @@ class CommandResult {
   bool hasErrorForProperty(int code, String propertyName) => errors
       .any((error) => error.code == code && error.propertyName == propertyName);
 
-  Map<String, dynamic> toJson() => {
+  /// Serializes this [CommandResult] to JSON.
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'WasSuccessful': success,
         'ValidationErrors': errors.map((error) => error.toJson()).toList(),
       };
@@ -56,8 +61,10 @@ class CommandResult {
 
 /// A validation error.
 class ValidationError {
+  /// Creates a [ValidationError] from [code], [message], and [propertyName].
   const ValidationError(this.code, this.message, this.propertyName);
 
+  /// Creates a [ValidationError] from JSON.
   ValidationError.fromJson(Map<String, dynamic> json)
       : code = json['ErrorCode'] as int,
         message = json['ErrorMessage'] as String,
@@ -72,7 +79,8 @@ class ValidationError {
   /// Path to the property which caused the error.
   final String propertyName;
 
-  Map<String, dynamic> toJson() => {
+  /// Serializes this [ValidationError] to JSON.
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'ErrorCode': code,
         'ErrorMessage': message,
         'PropertyName': propertyName

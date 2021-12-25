@@ -22,7 +22,7 @@ void main() {
     group('get', () {
       test(
           "correctly serializes query, calls client's send and"
-          " deserializes result", () async {
+          ' deserializes result', () async {
         mockClientPost(client, Response('true', 200));
 
         final result = await cqrs.get(
@@ -32,17 +32,22 @@ void main() {
 
         expect(result, true);
 
-        verify(client.post(
-          Uri.parse('https://example.org/api/query/ExampleQuery'),
-          body: anyNamed('body'),
-          headers: argThat(
-            isA<Map<String, String>>()
-                .having((h) => h['X-Test'], 'X-Test', 'foobar')
-                .having((h) => h['Content-Type'], 'Content-Type',
-                    'application/json'),
-            named: 'headers',
+        verify(
+          client.post(
+            Uri.parse('https://example.org/api/query/ExampleQuery'),
+            body: anyNamed('body'),
+            headers: argThat(
+              isA<Map<String, String>>()
+                  .having((h) => h['X-Test'], 'X-Test', 'foobar')
+                  .having(
+                    (h) => h['Content-Type'],
+                    'Content-Type',
+                    'application/json',
+                  ),
+              named: 'headers',
+            ),
           ),
-        )).called(1);
+        ).called(1);
       });
 
       test('correctly deserializes null query result', () async {
@@ -92,7 +97,7 @@ void main() {
     group('run', () {
       test(
           "correctly serializes command, calls client's send and deserializes "
-          "command results", () async {
+          'command results', () async {
         mockClientPost(
           client,
           Response('{"WasSuccessful":true,"ValidationErrors":[]}', 200),
@@ -105,11 +110,13 @@ void main() {
           isA<CommandResult>().having((r) => r.success, 'success', true),
         );
 
-        verify(client.post(
-          Uri.parse('https://example.org/api/command/ExampleCommand'),
-          body: anyNamed('body'),
-          headers: anyNamed('headers'),
-        )).called(1);
+        verify(
+          client.post(
+            Uri.parse('https://example.org/api/command/ExampleCommand'),
+            body: anyNamed('body'),
+            headers: anyNamed('headers'),
+          ),
+        ).called(1);
       });
 
       test('throws CQRSException on json decoding failure', () async {
@@ -152,11 +159,13 @@ void main() {
 }
 
 void mockClientPost(MockClient client, Response response) {
-  when(client.post(
-    any,
-    body: anyNamed('body'),
-    headers: anyNamed('headers'),
-  )).thenAnswer((_) async => response);
+  when(
+    client.post(
+      any,
+      body: anyNamed('body'),
+      headers: anyNamed('headers'),
+    ),
+  ).thenAnswer((_) async => response);
 }
 
 class ExampleQuery extends Query<bool?> {
@@ -167,7 +176,7 @@ class ExampleQuery extends Query<bool?> {
   bool? resultFactory(dynamic json) => json as bool?;
 
   @override
-  Map<String, dynamic> toJson() => {};
+  Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
 class ExampleQueryFailingResultFactory extends Query<bool> {
@@ -178,7 +187,7 @@ class ExampleQueryFailingResultFactory extends Query<bool> {
   bool resultFactory(dynamic json) => throw Exception('This is error.');
 
   @override
-  Map<String, dynamic> toJson() => {};
+  Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
 class ExampleCommand extends Command {
@@ -186,5 +195,5 @@ class ExampleCommand extends Command {
   String getFullName() => 'ExampleCommand';
 
   @override
-  Map<String, dynamic> toJson() => {};
+  Map<String, dynamic> toJson() => <String, dynamic>{};
 }

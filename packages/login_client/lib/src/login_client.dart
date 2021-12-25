@@ -19,6 +19,7 @@ import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 
 import 'credentials_storage/credentials_storage.dart';
+import 'credentials_storage/in_memory_credentials_storage.dart';
 import 'oauth_settings.dart';
 import 'refresh_exception.dart';
 import 'strategies/authorization_strategy.dart';
@@ -120,8 +121,10 @@ class LoginClient extends http.BaseClient {
       _logger('Successfully logged in and saved the credentials.');
     } on oauth2.AuthorizationException {
       await _logOutInternal();
-      _logger('An error while logging in occured, '
-          'successfully logged out and cleared credentials.');
+      _logger(
+        'An error while logging in occured, '
+        'successfully logged out and cleared credentials.',
+      );
       rethrow;
     }
   }
@@ -147,8 +150,10 @@ class LoginClient extends http.BaseClient {
       _logger('Refreshed credentials with success');
     } on oauth2.AuthorizationException {
       await _logOutInternal();
-      _logger('An error while force refreshing occured, '
-          'successfully logged out and cleared credentials.');
+      _logger(
+        'An error while force refreshing occured, '
+        'successfully logged out and cleared credentials.',
+      );
       rethrow;
     }
   }
@@ -195,8 +200,10 @@ class LoginClient extends http.BaseClient {
       }
     } on oauth2.AuthorizationException {
       await _logOutInternal();
-      _logger('An error while sending a request occured, '
-          'successfully logged out and cleared credentials.');
+      _logger(
+        'An error while sending a request occured, '
+        'successfully logged out and cleared credentials.',
+      );
       rethrow;
     }
 
@@ -206,11 +213,12 @@ class LoginClient extends http.BaseClient {
   /// Disposes the [LoginClient].
   Future<void> dispose() => _onCredentialsChanged.close();
 
-  // ignore: use_setters_to_change_properties
   @visibleForTesting
+  // ignore: public_member_api_docs
   void setAuthorizedClient(oauth2.Client client) => _oAuthClient = client;
 
   @internal
+  // ignore: public_member_api_docs
   static http.BaseRequest copyRequest(http.BaseRequest request) {
     http.BaseRequest newRequest;
 

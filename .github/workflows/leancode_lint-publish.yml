@@ -2,7 +2,7 @@ name: leancode_lint publish
 
 on:
   push:
-    tags: ["leancode_lint-v*"]
+    tags: ['leancode_lint-v*']
 
 jobs:
   publish:

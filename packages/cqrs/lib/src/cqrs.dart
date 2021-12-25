@@ -63,7 +63,7 @@ class CQRS {
 
     if (response.statusCode == 200) {
       try {
-        final json = jsonDecode(response.body);
+        final dynamic json = jsonDecode(response.body);
 
         // Fix for https://github.com/leancodepl/corelibrary/issues/193
         if (json == null) {

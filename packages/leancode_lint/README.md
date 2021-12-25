@@ -10,7 +10,7 @@ Add `leancode_lint` as a dev dependency.
 
 ```yaml
 dev_dependencies:
-  leancode_lint: ^1.0.1+1
+  leancode_lint: ^1.0.2
 ```
 
 ### Dart <2.14
@@ -22,7 +22,7 @@ function.
 
 ```yaml
 dependencies:
-  leancode_lint: ^1.0.1+1
+  leancode_lint: ^1.0.2
 ```
 
 ## Usage

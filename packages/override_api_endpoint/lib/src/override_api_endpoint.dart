@@ -35,11 +35,11 @@ Future<Uri> overrideApiEndpoint({
     final endpointFromDeeplink =
         initial.queryParameters[deeplinkQueryParameter];
     if (endpointFromDeeplink?.isEmpty ?? true) {
-      sharedPreferences.remove(apiEndpointKey);
+      await sharedPreferences.remove(apiEndpointKey);
       apiEndpoint = defaultEndpoint;
     } else {
       apiEndpoint = Uri.parse(endpointFromDeeplink!);
-      sharedPreferences.setString(apiEndpointKey, apiEndpoint.toString());
+      await sharedPreferences.setString(apiEndpointKey, apiEndpoint.toString());
     }
   }
 
