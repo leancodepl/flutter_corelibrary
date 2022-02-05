@@ -22,4 +22,5 @@
 /// ```
 library contracts;
 
+export 'src/command_result.dart';
 export 'src/contract_types.dart';

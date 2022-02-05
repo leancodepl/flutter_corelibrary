@@ -1,3 +1,7 @@
+# 6.2.0
+
+- Export `CommandResult` from `/contracts.dart`
+
 # 6.1.0
 
 - `CommandResult` and `ValidationError` now implement the `toJson()` method
