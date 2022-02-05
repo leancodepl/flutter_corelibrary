@@ -66,6 +66,8 @@ class CQRS {
         final dynamic json = jsonDecode(response.body);
 
         // Fix for https://github.com/leancodepl/corelibrary/issues/193
+        // Left for backwards compatibility since it is no longer a problem
+        // in the new contracts generator
         if (json == null) {
           return null as T;
         }
