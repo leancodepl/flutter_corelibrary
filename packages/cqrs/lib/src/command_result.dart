@@ -57,6 +57,9 @@ class CommandResult {
         'WasSuccessful': success,
         'ValidationErrors': errors.map((error) => error.toJson()).toList(),
       };
+
+  @override
+  String toString() => 'CommandResult($errors)';
 }
 
 /// A validation error.
