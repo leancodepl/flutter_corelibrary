@@ -171,5 +171,25 @@ void main() {
         expect(json['ValidationErrors'], isEmpty);
       });
     });
+
+    group('returns correct string value', () {
+      test('for success', () {
+        const error = CommandResult.success();
+
+        expect(error.toString(), 'CommandResult([])');
+      });
+
+      test('for errors', () {
+        final error = CommandResult.failed(const [
+          ValidationError(23, 'message', 'propertyName'),
+          ValidationError(29, 'message2', 'propertyName2'),
+        ]);
+
+        expect(
+          error.toString(),
+          'CommandResult([[propertyName] 23: message, [propertyName2] 29: message2])',
+        );
+      });
+    });
   });
 }
