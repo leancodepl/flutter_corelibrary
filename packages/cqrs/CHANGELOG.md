@@ -1,3 +1,7 @@
+# 6.2.1
+
+- Add human-readable `toString` method for `CommandResult`
+
 # 6.2.0
 
 - Export `CommandResult` from `/contracts.dart`
