@@ -45,6 +45,8 @@ linter:
     # - avoid_field_initializers_in_const_classes
     # Included in lints recommended
 
+    - avoid_final_parameters
+
     # - avoid_function_literals_in_foreach_calls
 
     - avoid_implementing_value_types
@@ -127,6 +129,7 @@ linter:
     # - close_sinks
 
     - comment_references
+    - conditional_uri_does_not_exist
 
     # Included in lints recommended
     # - constant_identifier_names
@@ -193,7 +196,7 @@ linter:
     # Included in lints core
     # - list_remove_unrelated_type
 
-    # - literal_only_boolean_expressions
+    - literal_only_boolean_expressions
 
     # - missing_whitespace_between_adjacent_strings
 
@@ -206,6 +209,9 @@ linter:
 
     # Included in flutter_lints
     # - no_logic_in_create_state
+
+    - no_leading_underscores_for_library_prefixes
+    - no_leading_underscores_for_local_identifiers
 
     - no_runtimeType_toString
 
@@ -349,8 +355,12 @@ linter:
 
     - require_trailing_commas
 
+    - secure_pubspec_urls
+
     # Included in flutter_lints
     # - sized_box_for_whitespace
+
+    - sized_box_shrink_expand
 
     # Included in lints recommended
     # - slash_for_doc_comments
@@ -376,8 +386,7 @@ linter:
     # Included in lints recommended
     # - unnecessary_const
 
-    # Included in lints recommended
-    # - unnecessary_constructor_name
+    - unnecessary_constructor_name
 
     # - unnecessary_final
 
@@ -385,6 +394,7 @@ linter:
     # - unnecessary_getters_setters
 
     - unnecessary_lambdas
+    - unnecessary_late
 
     # Included in lints recommended
     # - unnecessary_new

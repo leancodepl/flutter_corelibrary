@@ -1,3 +1,7 @@
+# 2.1.0
+
+- Bumped `build_runner` dependency to `2.0.0`
+
 # 2.0.4
 
 - `onCredentialsChanged` now yields **after** the credentials have changed (in the storage).
