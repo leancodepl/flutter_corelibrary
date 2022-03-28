@@ -1,5 +1,5 @@
 name: override_api_endpoint
-version: 1.0.0
+version: 1.0.0+1
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/override_api_endpoint
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
@@ -16,4 +16,4 @@ dependencies:
   shared_preferences: ^2.0.6
 
 dev_dependencies:
-  leancode_lint: ^1.0.2
+  leancode_lint: 1.0.2
