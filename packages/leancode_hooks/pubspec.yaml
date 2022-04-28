@@ -10,6 +10,7 @@ environment:
   flutter: '>=2.10.0 <3.0.0'
 
 dependencies:
+  bloc: ^8.0.3
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.3
