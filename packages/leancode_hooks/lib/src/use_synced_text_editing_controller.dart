@@ -7,10 +7,10 @@ TextEditingController useSyncedTextEditingController(
 }) {
   final controller = useTextEditingController(text: initialText);
 
-  void listener() => onChanged(controller.value);
-
   useEffect(
     () {
+      void listener() => onChanged(controller.value);
+
       controller.addListener(listener);
       return () => controller.removeListener(listener);
     },
