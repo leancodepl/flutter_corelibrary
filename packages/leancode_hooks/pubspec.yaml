@@ -3,7 +3,7 @@ version: 0.0.1
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_hooks
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
-  TODO
+  Hooks we often use, all gathered in one place.
 
 environment:
   sdk: '>=2.16.0 <3.0.0'

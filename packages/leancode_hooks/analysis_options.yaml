@@ -1,6 +1,1 @@
 include: package:leancode_lint/analysis_options_package.yaml
-
-analyzer:
-  exclude:
-    - test/.test_coverage.dart
-    - test/*.mocks.dart
