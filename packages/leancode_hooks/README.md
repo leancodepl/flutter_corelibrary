@@ -1,6 +1,6 @@
 # leancode_hooks
 
-Hooks we often use, all gathered in one place for better discoveralibity and
+Hooks we often use, all gathered in one place for better discoverability and
 consistent versioning.
 
 [![leancode_hooks pub.dev badge][pub-badge]][pub-badge-link]
