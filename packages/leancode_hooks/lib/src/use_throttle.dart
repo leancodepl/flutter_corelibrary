@@ -24,10 +24,10 @@ class _Throttler {
 
   bool _locked = false;
 
-  Future<void> run(VoidCallback fun) async {
+  Future<void> run(VoidCallback callback) async {
     if (!_locked) {
       _locked = true;
-      fun();
+      callback();
       await Future<void>.delayed(duration);
       _locked = false;
     }
