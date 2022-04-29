@@ -8,11 +8,8 @@ typedef ThrottledFunc = void Function(VoidCallback callback);
 ///
 /// When [ThrottledFunc] that this hook returns is called, a cooldown of
 /// [duration] is started. During it, any calls to [ThrottledFunc] are ignored.
-ThrottledFunc useThrottle(
-  Duration duration, [
-  List<Object?> keys = const <Object>[],
-]) {
-  final throttler = useMemoized(() => _Throttler(duration), keys);
+ThrottledFunc useThrottle(Duration duration) {
+  final throttler = useMemoized(() => _Throttler(duration), [duration]);
   return throttler.run;
 }
 
