@@ -27,12 +27,7 @@ Completer<GoogleMapController> useGoogleMapController({
 
   useEffect(
     () {
-      var ready = false;
-      if (lightStyleSnapshot.hasData && darkStyleSnapshot.hasData) {
-        ready = true;
-      }
-
-      if (!ready) {
+      if (!lightStyleSnapshot.hasData || !darkStyleSnapshot.hasData) {
         return null;
       }
 
