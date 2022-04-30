@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 export 'package:flutter/gestures.dart' show TapGestureRecognizer;
 
-/// Creates a [TapGestureRecognizer] that will be dispose automatically.
+/// Creates a [TapGestureRecognizer] that will be disposed automatically.
 TapGestureRecognizer useTapGestureRecognizer(
   TapGestureRecognizer Function() builder, [
   List<Object?> keys = const [],
