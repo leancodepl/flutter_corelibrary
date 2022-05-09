@@ -4,10 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// Signature of function that is returned by [useThrottle].
 typedef ThrottledCallback = void Function(VoidCallback callback);
 
-/// Returns a function that can be called only once per [duration].
-///
-/// When the returned function is called, a cooldown of [duration] is started.
-/// During its duration, any calls to the returned function are ignored.
+/// Returns a function that is throttled for [duration] after being called.
 ///
 /// See also:
 ///
