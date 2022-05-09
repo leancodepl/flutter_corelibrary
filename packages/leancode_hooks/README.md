@@ -23,7 +23,6 @@ so you won't have to depend on it.
 - [useDebounce](lib/src/use_debounce.dart)
 - [useDeclarativeTextEditingController](lib/src/use_decarative_text_editing_controller.dart)
 - [useFocused](lib/src/use_focused.dart)
-- [useGoogleMapController](lib/src/use_google_map_controller.dart)
 - [usePostFrameEffect](lib/src/use_post_frame_effect.dart)
 - [useStreamListener](lib/src/use_stream_listener.dart)
 - [useSyncedTextEditingController](lib/src/use_synced_text_editing_controller.dart)
