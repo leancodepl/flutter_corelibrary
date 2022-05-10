@@ -13,13 +13,17 @@ on:
 
 jobs:
   test:
-    name: Dart ${{ matrix.dart_release }}
+    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        dart_release: ['2.16.0']
+        include:
+          - version: '2.5.0'
+          - channel: stable
+          - channel: beta
+          - channel: dev
 
     defaults:
       run:
@@ -29,31 +33,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
         with:
-          sdk: ${{ matrix.dart_release }}
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
 
-      - name: Dart version
-        run: dart --version
+      - name: Flutter version
+        run: flutter --version
 
       - name: Cache pub dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.pub-cache
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
       - name: Download pub dependencies
-        run: dart pub get
+        run: flutter pub get
 
       - name: Run analyzer
-        run: dart analyze
+        run: flutter analyze
 
       - name: Run tests with coverage
-        run: |
-          dart test --coverage=coverage
-          dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.packages --report-on=lib
+        run: flutter test --coverage
 
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
