@@ -33,40 +33,42 @@ class UseThrottleTestWidget extends HookWidget {
 }
 
 void main() {
-  testWidgets('blocks calls to debounce while throttle is in progress',
-      (tester) async {
-    await tester.runAsync<void>(() async {
-      await tester.pumpWidget(const UseThrottleTestWidget());
+  testWidgets(
+    'blocks calls to debounce while throttle is in progress',
+    (tester) async {
+      await tester.runAsync<void>(() async {
+        await tester.pumpWidget(const UseThrottleTestWidget());
 
-      final text = find.byType(GestureDetector);
-      expect(find.text(textA), findsOneWidget);
+        final text = find.byType(GestureDetector);
+        expect(find.text(textA), findsOneWidget);
 
-      await tester.tap(text);
-      await tester.pump();
+        await tester.tap(text);
+        await tester.pump();
 
-      expect(find.text(textB), findsOneWidget);
+        expect(find.text(textB), findsOneWidget);
 
-      await tester.tap(text);
-      await tester.pump();
-      expect(find.text(textB), findsOneWidget);
+        await tester.tap(text);
+        await tester.pump();
+        expect(find.text(textB), findsOneWidget);
 
-      await tester.tap(text);
-      await tester.pump();
-      expect(find.text(textB), findsOneWidget);
+        await tester.tap(text);
+        await tester.pump();
+        expect(find.text(textB), findsOneWidget);
 
-      await tester.tap(text);
-      await tester.pump();
-      expect(find.text(textB), findsOneWidget);
+        await tester.tap(text);
+        await tester.pump();
+        expect(find.text(textB), findsOneWidget);
 
-      expect(find.text(textB), findsOneWidget);
+        expect(find.text(textB), findsOneWidget);
 
-      await tester.pumpAndSettle(duration);
-      await Future<void>.delayed(duration);
+        await tester.pumpAndSettle(duration);
+        await Future<void>.delayed(duration);
 
-      await tester.tap(text);
-      await tester.pump();
+        await tester.tap(text);
+        await tester.pump();
 
-      expect(find.text(textC), findsOneWidget);
-    });
-  });
+        expect(find.text(textC), findsOneWidget);
+      });
+    },
+  );
 }
