@@ -22,7 +22,6 @@ jobs:
         include:
           - channel: stable
           - channel: beta
-          - channel: dev
 
     defaults:
       run:
