@@ -13,7 +13,7 @@ TextEditingController useDeclarativeTextEditingController({
   useEffect(
     () {
       if (controller.text != text) {
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
           controller.text = text;
         });
       }
