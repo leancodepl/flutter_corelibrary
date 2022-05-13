@@ -461,3 +461,7 @@ linter:
 
     # Included in lints core
     # - void_checks
+
+    - use_super_parameters
+    - use_enums
+    - null_check_on_nullable_type_parameter
