@@ -21,7 +21,6 @@ jobs:
       matrix:
         include:
           - channel: stable
-          - channel: beta
 
     defaults:
       run:
