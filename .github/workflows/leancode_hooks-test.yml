@@ -1,15 +1,15 @@
-name: override_api_endpoint test
+name: leancode_hooks test
 
 on:
   push:
     branches: [master]
-    ignore-tags: ['override_api_endpoint-v*']
+    ignore-tags: ['leancode_hooks-v*']
     paths:
-      - 'packages/override_api_endpoint/**'
+      - 'packages/leancode_hooks/**'
   pull_request:
     branches: [master]
     paths:
-      - 'packages/override_api_endpoint/**'
+      - 'packages/leancode_hooks/**'
 
 jobs:
   test:
@@ -20,13 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: '2.5.0'
           - channel: stable
-          - channel: beta
 
     defaults:
       run:
-        working-directory: packages/override_api_endpoint
+        working-directory: packages/leancode_hooks
 
     steps:
       - name: Checkout
@@ -54,6 +52,13 @@ jobs:
       - name: Run analyzer
         run: flutter analyze
 
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
-        run: dart pub publish --dry-run || true
+        run: flutter pub publish --dry-run || true
+
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: leancode_hooks
