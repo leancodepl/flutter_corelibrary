@@ -7,7 +7,7 @@
 
 - Improve README.
 - Delete `useGoogleMapController` hook. You can view it
-  [here](https://gist.github.com/bartekpacia/3cac94d29f8e6e438e57b366a742f73e).
+  [here](https://github.com/leancodepl/flutter_corelibrary/blob/leancode_hooks-v0.0.1/packages/leancode_hooks/lib/src/use_google_map_controller.dart).
 
 # 0.0.1
 
