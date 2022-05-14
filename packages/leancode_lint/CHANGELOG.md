@@ -4,6 +4,7 @@
   - [use_super_parameters](https://dart-lang.github.io/linter/lints/use_super_parameters)
   - [use_enums](https://dart-lang.github.io/linter/lints/use_enums)
   - [null_check_on_nullable_type_parameter](https://dart-lang.github.io/linter/lints/null_check_on_nullable_type_parameter.html)
+- - **Breaking:** Bump minimum Dart version to 2.17.
 
 # 1.1.0
 
