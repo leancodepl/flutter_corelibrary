@@ -1,11 +1,11 @@
 name: leancode_lint
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint
 repository: https://github.com/leancodepl/flutter_corelibrary
-description: Lint rules used internally at LeanCode.
+description: Lint rules used at LeanCode.
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1

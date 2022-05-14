@@ -1,15 +1,23 @@
+# 1.2.0
+
+- Enable the following lints:
+  - [use_super_parameters](https://dart-lang.github.io/linter/lints/use_super_parameters)
+  - [use_enums](https://dart-lang.github.io/linter/lints/use_enums)
+  - [null_check_on_nullable_type_parameter](https://dart-lang.github.io/linter/lints/null_check_on_nullable_type_parameter.html)
+- Bump minimum Dart version to 2.17.
+
 # 1.1.0
 
 - Enable the following lints:
-  - `avoid_final_parameters`
-  - `conditional_uri_does_not_exist`
-  - `literal_only_boolean_expressions`
-  - `no_leading_underscores_for_library_prefixes`
-  - `no_leading_underscores_for_local_identifiers`
-  - `secure_pubspec_urls`
-  - `sized_box_shrink_expand`
-  - `unnecessary_constructor_name`
-  - `unnecessary_late`
+  - [avoid_final_parameters](https://dart-lang.github.io/linter/lints/avoid_final_parameters)
+  - [conditional_uri_does_not_exist](https://dart-lang.github.io/linter/lints/conditional_uri_does_not_exist)
+  - [literal_only_boolean_expressions](https://dart-lang.github.io/linter/lints/literal_only_boolean_expressions)
+  - [no_leading_underscores_for_library_prefixes](https://dart-lang.github.io/linter/lints/no_leading_underscores_for_library_prefixes)
+  - [no_leading_underscores_for_local_identifiers](https://dart-lang.github.io/linter/lints/no_leading_underscores_for_local_identifiers)
+  - [secure_pubspec_urls](https://dart-lang.github.io/linter/lints/secure_pubspec_urls)
+  - [sized_box_shrink_expand](https://dart-lang.github.io/linter/lints/sized_box_shrink_expand)
+  - [unnecessary_constructor_name](https://dart-lang.github.io/linter/lints/unnecessary_constructor_name)
+  - [unnecessary_late](https://dart-lang.github.io/linter/lints/unnecessary_late)
 
 # 1.0.2
 
@@ -23,8 +31,9 @@
 
 # 1.0.1
 
-- Disable `prefer_final_parameters` and `library_private_types_in_public_api`
-  lints
+- Disable the following lints:
+  - [prefer_final_parameters](https://dart-lang.github.io/linter/lints/prefer_final_parameters)
+  - [library_private_types_in_public_api](https://dart-lang.github.io/linter/lints/library_private_types_in_public_api)
 - Fix warning with `package:flutter_lints/flutter.yaml` not being found
 
 # 1.0.0
