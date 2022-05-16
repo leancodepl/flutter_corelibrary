@@ -1,3 +1,9 @@
+# 1.2.1
+
+- Disable the following lints:
+  - [use_build_context_synchronously](https://dart-lang.github.io/linter/lints/use_build_context_synchronously)
+  - [library_private_types_in_public_api](https://dart-lang.github.io/linter/lints/library_private_types_in_public_api)
+
 # 1.2.0
 
 - Enable the following lints:

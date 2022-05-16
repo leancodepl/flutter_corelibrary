@@ -10,7 +10,7 @@ Add `leancode_lint` as a dev dependency.
 
 ```yaml
 dev_dependencies:
-  leancode_lint: ^1.3.1
+  leancode_lint: ^1.2.1
 ```
 
 ## Usage
