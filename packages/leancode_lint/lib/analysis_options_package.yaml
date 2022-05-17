@@ -4,4 +4,3 @@ linter:
   rules:
     package_api_docs: true
     public_member_api_docs: true
-    library_private_types_in_public_api: true
