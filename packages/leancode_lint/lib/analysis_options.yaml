@@ -7,461 +7,87 @@ analyzer:
 
 linter:
   rules:
-    - always_declare_return_types
-    - always_put_control_body_on_new_line
-
-    # - always_put_required_named_parameters_first
-
-    # Included in lints recommended
-    # - always_require_non_null_named_parameters
-
-    # - always_specify_types
-
-    # - always_use_package_imports
-
-    # Included in lints recommended
-    # - annotate_overrides
-
-    # - avoid_annotating_with_dynamic
-
-    - avoid_bool_literals_in_conditional_expressions
-
-    # - avoid_catches_without_on_clauses
-
-    - avoid_catching_errors
-
-    # - avoid_classes_with_only_static_members
-
-    - avoid_double_and_int_checks
-    - avoid_dynamic_calls
-
-    # Included in lints core
-    # - avoid_empty_else
-
-    # - avoid_equals_and_hash_code_on_mutable_classes
-
-    - avoid_escaping_inner_quotes
-
-    # - avoid_field_initializers_in_const_classes
-    # Included in lints recommended
-
-    - avoid_final_parameters
-
-    # - avoid_function_literals_in_foreach_calls
-
-    - avoid_implementing_value_types
-
-    # Included in lints recommended
-    # - avoid_init_to_null
-
-    - avoid_js_rounded_ints
-
-    # - avoid_multiple_declarations_per_line
-
-    # Included in lints recommended
-    # - avoid_null_checks_in_equality_operators
-
-    - avoid_positional_boolean_parameters
-
-    # Included in flutter_lints
-    # - avoid_print
-
-    # - avoid_private_typedef_functions
-
-    - avoid_redundant_argument_values
-
-    # Included in lints core
-    # - avoid_relative_lib_imports
-
-    # Included in lints recommended
-    # - avoid_renaming_method_parameters
-
-    # Included in lints recommended
-    # - avoid_return_types_on_setters
-
-    - avoid_returning_null
-    - avoid_returning_null_for_future
-
-    # Included in lints recommended
-    # - avoid_returning_null_for_void
-
-    - avoid_returning_this
-
-    # - avoid_setters_without_getters
-    # Included in lints core
-
-    # - avoid_shadowing_type_parameters
-
-    # Included in lints recommended
-    # - avoid_single_cascade_in_expression_statements
-
-    - avoid_slow_async_io
-    - avoid_type_to_string
-
-    # Included in flutter_lints
-    # - avoid_types_as_parameter_names
-
-    - avoid_types_on_closure_parameters
-
-    # Included in flutter_lints
-    # - avoid_unnecessary_containers
-
-    - avoid_unused_constructor_parameters
-    - avoid_void_async
-
-    # Included in flutter_lints
-    # - avoid_web_libraries_in_flutter
-
-    # Included in lints core
-    # - await_only_futures
-
-    # Included in lints core
-    # - camel_case_extensions
-
-    # Included in lints core
-    # - camel_case_types
-
-    # - cancel_subscriptions
-
-    - cascade_invocations
-    - cast_nullable_to_non_nullable
-
-    # - close_sinks
-
-    - comment_references
-    - conditional_uri_does_not_exist
-
-    # Included in lints recommended
-    # - constant_identifier_names
-
-    # Included in lints recommended
-    # - control_flow_in_finally
-
-    # Included in lints core
-    # - curly_braces_in_flow_control_structures
-
-    - depend_on_referenced_packages
-    - deprecated_consistency
-
-    # - diagnostic_describe_all_properties
-
-    - directives_ordering
-
-    # - do_not_use_environment
-
-    # Included in lints core
-    # - empty_catches
-
-    # Included in lints recommended
-    # - empty_constructor_bodies
-
-    # Included in lints recommended
-    # - empty_statements
-
-    - eol_at_end_of_file
-
-    # Included in lints recommended
-    # - exhaustive_cases
-
-    # Included in lints core
-    # - file_names
-
-    # - flutter_style_todos
-
-    # Included in lints core
-    # - hash_and_equals
-
-    # Included in lints recommended
-    # - implementation_imports
-
-    - invariant_booleans
-
-    # Included in lints core
-    # - iterable_contains_unrelated_type
-
-    # - join_return_with_assignment
-
-    - leading_newlines_in_multiline_strings
-
-    # Included in lints recommended
-    # - library_names
-
-    # Included in lints recommended
-    # - library_prefixes
-
-    - library_private_types_in_public_api: false
-
-    # - lines_longer_than_80_chars
-
-    # Included in lints core
-    # - list_remove_unrelated_type
-
-    - literal_only_boolean_expressions
-
-    # - missing_whitespace_between_adjacent_strings
-
-    - no_adjacent_strings_in_list
-
-    # - no_default_cases
-
-    # Included in lints core
-    # - no_duplicate_case_values
-
-    # Included in flutter_lints
-    # - no_logic_in_create_state
-
-    - no_leading_underscores_for_library_prefixes
-    - no_leading_underscores_for_local_identifiers
-
-    - no_runtimeType_toString
-
-    # Included in lints recommended
-    # - non_constant_identifier_names
-
-    - noop_primitive_operations
-
-    # - null_check_on_nullable_type_parameter
-
-    # Included in lints recommended
-    # - null_closures
-
-    - omit_local_variable_types
-
-    # - one_member_abstracts
-
-    - only_throw_errors
-
-    # Included in lints recommended
-    # - overridden_fields
-
-    # - package_api_docs
-
-    # Included in lints recommended
-    # - package_names
-
-    # Included in lints core
-    # - package_prefixed_library_names
-
-    - parameter_assignments
-
-    # Included in lints recommended
-    # - prefer_adjacent_string_concatenation
-
-    - prefer_asserts_in_initializer_lists
-
-    # - prefer_asserts_with_message
-
-    # Included in lints recommended
-    # - prefer_collection_literals
-
-    # Included in lints recommended
-    # - prefer_conditional_assignment
-
-    # Included in flutter_lints
-    # - prefer_const_constructors
-
-    # Included in flutter_lints
-    # - prefer_const_constructors_in_immutables
-
-    # Included in flutter_lints
-    # - prefer_const_declarations
-
-    # Included in flutter_lints
-    # - prefer_const_literals_to_create_immutables
-
-    - prefer_constructors_over_static_methods
-
-    # Included in lints recommended
-    # - prefer_contains
-
-    # - prefer_double_quotes
-
-    # Included in lints recommended
-    # - prefer_equal_for_default_values
-
-    # - prefer_expression_function_bodies
-
-    # Included in lints recommended
-    # - prefer_final_fields
-
-    - prefer_final_in_for_each
-    - prefer_final_locals
-
-    # - prefer_final_parameters
-
-    # Included in lints recommended
-    # - prefer_for_elements_to_map_fromIterable
-
-    - prefer_foreach
-
-    # Included in lints recommended
-    # - prefer_function_declarations_over_variables
-
-    # Included in lints core
-    # - prefer_generic_function_type_aliases
-
-    - prefer_if_elements_to_conditional_expressions
-
-    # Included in lints recommended
-    # - prefer_if_null_operators
-
-    # Included in lints recommended
-    # - prefer_initializing_formals
-
-    # Included in lints recommended
-    # - prefer_inlined_adds
-
-    - prefer_int_literals
-    - prefer_interpolation_to_compose_strings
-
-    # Included in lints core
-    # - prefer_is_empty
-
-    # Included in lints core
-    # - prefer_is_not_empty
-
-    # Included in lints recommended
-    # - prefer_is_not_operator
-
-    # Included in lints core
-    # - prefer_iterable_whereType
-
-    # - prefer_mixin
-
-    - prefer_null_aware_method_calls
-
-    # Included in lints recommended
-    # - prefer_null_aware_operators
-
-    # - prefer_relative_imports
-
-    - prefer_single_quotes
-    # Included in lints recommended
-    # - prefer_spread_collections
-
-    # Included in lints core
-    # - prefer_typing_uninitialized_variables
-
-    # Included in lints recommended
-    # - prefer_void_to_null
-
-    # Included in lints core
-    # - provide_deprecation_message
-
-    # - public_member_api_docs
-
-    # Included in lints recommended
-    # - recursive_getters
-
-    - require_trailing_commas
-
-    - secure_pubspec_urls
-
-    # Included in flutter_lints
-    # - sized_box_for_whitespace
-
-    - sized_box_shrink_expand
-
-    # Included in lints recommended
-    # - slash_for_doc_comments
-
-    - sort_child_properties_last
-    - sort_constructors_first
-    - sort_pub_dependencies
-    - sort_unnamed_constructors_first
-    - test_types_in_equals
-    - throw_in_finally
-    - tighten_type_of_initializing_formals
-    - type_annotate_public_apis
-
-    # Included in lints recommended
-    # - type_init_formals
-
-    - unawaited_futures
-    - unnecessary_await_in_return
-
-    # Included in lints recommended
-    # - unnecessary_brace_in_string_interps
-
-    # Included in lints recommended
-    # - unnecessary_const
-
-    - unnecessary_constructor_name
-
-    # - unnecessary_final
-
-    # Included in lints recommended
-    # - unnecessary_getters_setters
-
-    - unnecessary_lambdas
-    - unnecessary_late
-
-    # Included in lints recommended
-    # - unnecessary_new
-
-    - unnecessary_null_aware_assignments
-    - unnecessary_null_checks
-
-    # Included in lints recommended
-    # - unnecessary_null_in_if_null_operators
-
-    - unnecessary_nullable_for_final_variable_declarations
-
-    # Included in lints core
-    # - unnecessary_overrides
-
-    - unnecessary_parenthesis
-    - unnecessary_raw_strings
-    - unnecessary_statements
-
-    # Included in lints recommended
-    # - unnecessary_string_escapes
-
-    # Included in lints recommended
-    # - unnecessary_string_interpolations
-
-    # Included in lints recommended
-    # - unnecessary_this
-
-    # Included in lints core
-    # - unrelated_type_equality_checks
-
-    - unsafe_html
-
-    - use_build_context_synchronously: false
-
-    # Included in flutter_lints
-    # - use_full_hex_values_for_flutter_colors
-
-    # Included in lints recommended
-    # - use_function_type_syntax_for_parameters
-
-    - use_if_null_to_convert_nulls_to_bools
-    - use_is_even_rather_than_modulo
-
-    # Included in flutter_lints
-    # - use_key_in_widget_constructors
-
-    # - use_late_for_private_fields_and_variables
-
-    - use_named_constants
-    - use_raw_strings
-
-    # Included in lints recommended
-    # - use_rethrow_when_possible
-
-    # - use_setters_to_change_properties
-
-    - use_string_buffers
-    - use_test_throws_matchers
-    - use_to_and_as_if_applicable
-
-    # Included in lints core
-    # - valid_regexps
-
-    # Included in lints core
-    # - void_checks
-
-    - use_super_parameters
-    - use_enums
-    - null_check_on_nullable_type_parameter
+    always_declare_return_types: true
+    always_put_control_body_on_new_line: true
+    avoid_bool_literals_in_conditional_expressions: true
+    avoid_catching_errors: true
+    avoid_double_and_int_checks: true
+    avoid_dynamic_calls: true
+    avoid_escaping_inner_quotes: true
+    avoid_final_parameters: true
+    avoid_implementing_value_types: true
+    avoid_js_rounded_ints: true
+    avoid_positional_boolean_parameters: true
+    avoid_redundant_argument_values: true
+    avoid_returning_null: true
+    avoid_returning_null_for_future: true
+    avoid_returning_this: true
+    avoid_slow_async_io: true
+    avoid_type_to_string: true
+    avoid_types_on_closure_parameters: true
+    avoid_unused_constructor_parameters: true
+    avoid_void_async: true
+    cascade_invocations: true
+    cast_nullable_to_non_nullable: true
+    comment_references: true
+    conditional_uri_does_not_exist: true
+    depend_on_referenced_packages: true
+    deprecated_consistency: true
+    directives_ordering: true
+    eol_at_end_of_file: true
+    invariant_booleans: true
+    leading_newlines_in_multiline_strings: true
+    library_private_types_in_public_api: false
+    literal_only_boolean_expressions: true
+    no_adjacent_strings_in_list: true
+    no_leading_underscores_for_library_prefixes: true
+    no_leading_underscores_for_local_identifiers: true
+    no_runtimeType_toString: true
+    noop_primitive_operations: true
+    omit_local_variable_types: true
+    only_throw_errors: true
+    parameter_assignments: true
+    prefer_asserts_in_initializer_lists: true
+    prefer_constructors_over_static_methods: true
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    prefer_foreach: true
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_int_literals: true
+    prefer_interpolation_to_compose_strings: true
+    prefer_null_aware_method_calls: true
+    prefer_single_quotes: true
+    require_trailing_commas: true
+    secure_pubspec_urls: true
+    sized_box_shrink_expand: true
+    sort_child_properties_last: true
+    sort_constructors_first: true
+    sort_pub_dependencies: true
+    sort_unnamed_constructors_first: true
+    test_types_in_equals: true
+    throw_in_finally: true
+    tighten_type_of_initializing_formals: true
+    type_annotate_public_apis: true
+    unawaited_futures: true
+    unnecessary_await_in_return: true
+    unnecessary_constructor_name: true
+    unnecessary_lambdas: true
+    unnecessary_late: true
+    unnecessary_null_aware_assignments: true
+    unnecessary_null_checks: true
+    unnecessary_nullable_for_final_variable_declarations: true
+    unnecessary_parenthesis: true
+    unnecessary_raw_strings: true
+    unnecessary_statements: true
+    unsafe_html: true
+    use_build_context_synchronously: false
+    use_if_null_to_convert_nulls_to_bools: true
+    use_is_even_rather_than_modulo: true
+    use_named_constants: true
+    use_raw_strings: true
+    use_string_buffers: true
+    use_test_throws_matchers: true
+    use_to_and_as_if_applicable: true
+    use_super_parameters: true
+    use_enums: true
+    null_check_on_nullable_type_parameter: true
