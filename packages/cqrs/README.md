@@ -51,7 +51,7 @@ final apiUri = Uri.parse('https://flowers.garden/api/');
 // Then construct a CQRS instance using the just created Uri
 // and an HTTP client which in most cases will be probably handling
 // refreshment of the tokens and their rotation.
-final cqrs = CQRS(loginClient, apiUri);
+final cqrs = Cqrs(loginClient, apiUri);
 
 // Fetch first page of the all flowers query from the CQRS server.
 final flowers = await cqrs.get(AllFlowers()..page = 1);

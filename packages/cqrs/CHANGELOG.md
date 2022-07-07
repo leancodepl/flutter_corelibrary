@@ -1,3 +1,7 @@
+# 7.0.0
+
+- **Breaking:** Rename `CQRS` and similar to `Cqrs` per [_Effective Dart_](https://dart.dev/guides/language/effective-dart/style#do-capitalize-acronyms-and-abbreviations-longer-than-two-letters-like-words).
+
 # 6.2.1
 
 - Add human-readable `toString` method for `CommandResult`

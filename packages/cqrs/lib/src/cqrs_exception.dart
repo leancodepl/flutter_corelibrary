@@ -1,4 +1,4 @@
-// Copyright 2021 LeanCode Sp. z o.o.
+// Copyright 2022 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
 import 'package:cqrs/cqrs.dart';
 import 'package:http/http.dart';
 
-/// Usually thrown by [CQRS.get] or [CQRS.run].
-class CQRSException implements Exception {
-  /// Creates a [CQRSException] with [response] and [message].
-  const CQRSException(this.response, [this.message]);
+/// Usually thrown by [Cqrs.get] or [Cqrs.run].
+class CqrsException implements Exception {
+  /// Creates a [CqrsException] with [response] and [message].
+  const CqrsException(this.response, [this.message]);
 
   /// Server's response to the request that triggered this exception.
   final Response response;
