@@ -1,4 +1,4 @@
-// Copyright 2021 LeanCode Sp. z o.o.
+// Copyright 2022 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 /// ```dart
 /// final apiUri = Uri.parse('https://flowers.garden/api/');
 ///
-/// final cqrs = CQRS(
+/// final cqrs = Cqrs(
 ///   loginClient,
 ///   apiUri,
 /// );

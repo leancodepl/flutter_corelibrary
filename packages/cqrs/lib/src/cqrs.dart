@@ -1,4 +1,4 @@
-// Copyright 2021 LeanCode Sp. z o.o.
+// Copyright 2022 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import 'cqrs_exception.dart';
 import 'transport_types.dart';
 
 /// Class used for communicating with the backend via queries and commands.
-class CQRS {
-  /// Creates a [CQRS] class.
+class Cqrs {
+  /// Creates a [Cqrs] class.
   ///
   /// `_client` is an [http.Client] client to be used for sending requests. It
   /// should handle authentication and renewing the token when it is neccessary.
@@ -35,7 +35,7 @@ class CQRS {
   /// The `timeout` defaults to 30 seconds. `headers` have lesser priority than
   /// those provided directly into [get] or [run] methods and will be overrided
   /// by those in case of some headers sharing the same key.
-  CQRS(
+  Cqrs(
     this._client,
     this._apiUri, {
     Duration timeout = const Duration(seconds: 30),
@@ -50,11 +50,11 @@ class CQRS {
 
   /// Send a query to the backend and expect a result of the type `T`.
   ///
-  /// Headers provided in `headers` are on top of the `headers` from the [CQRS]
+  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// A [CQRSException] will be thrown in case of an error.
+  /// A [CqrsException] will be thrown in case of an error.
   Future<T> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -74,14 +74,14 @@ class CQRS {
 
         return query.resultFactory(json);
       } catch (e) {
-        throw CQRSException(
+        throw CqrsException(
           response,
           'An error occured while decoding response body JSON:\n$e',
         );
       }
     }
 
-    throw CQRSException(
+    throw CqrsException(
       response,
       'Invalid, non 200 status code returned by ${query.getFullName()} query.',
     );
@@ -90,11 +90,11 @@ class CQRS {
   /// Send a command to the backend and get the results of running it, that is
   /// whether it was successful and validation errors if there were any.
   ///
-  /// Headers provided in `headers` are on top of the `headers` from the [CQRS]
+  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// A [CQRSException] will be thrown in case of an error.
+  /// A [CqrsException] will be thrown in case of an error.
   Future<CommandResult> run(
     Command command, {
     Map<String, String> headers = const {},
@@ -111,14 +111,14 @@ class CQRS {
 
         return CommandResult.fromJson(json);
       } catch (e) {
-        throw CQRSException(
+        throw CqrsException(
           response,
           'An error occured while decoding response body JSON:\n$e',
         );
       }
     }
 
-    throw CQRSException(
+    throw CqrsException(
       response,
       'Invalid, non 200 or 422 status code returned '
       'by ${command.getFullName()} command.',
@@ -126,7 +126,7 @@ class CQRS {
   }
 
   Future<http.Response> _send(
-    CQRSMethod cqrsMethod, {
+    CqrsMethod cqrsMethod, {
     required String pathPrefix,
     Map<String, String> headers = const {},
   }) async {

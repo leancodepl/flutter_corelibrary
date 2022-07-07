@@ -8,14 +8,14 @@ void main() {
 
     group('has correct fields values', () {
       test('with message present', () {
-        final exception1 = CQRSException(response, 'This is a message.');
+        final exception1 = CqrsException(response, 'This is a message.');
 
         expect(exception1.response, response);
         expect(exception1.message, 'This is a message.');
       });
 
       test('with message absent', () {
-        final exception2 = CQRSException(response);
+        final exception2 = CqrsException(response);
 
         expect(exception2.response, response);
         expect(exception2.message, isNull);
@@ -23,7 +23,7 @@ void main() {
     });
 
     test('correctly converts to String', () {
-      final exception1 = CQRSException(response, 'This is a message.');
+      final exception1 = CqrsException(response, 'This is a message.');
 
       expect(
         exception1.toString(),

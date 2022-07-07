@@ -1,4 +1,4 @@
-// Copyright 2021 LeanCode Sp. z o.o.
+// Copyright 2022 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Base class for contracts that can be serialized and sent to the backend.
-abstract class CQRSMethod {
+abstract class CqrsMethod {
   /// Returns a JSON-encoded representation of the data this class carries.
   Map<String, dynamic> toJson();
 
@@ -23,10 +23,10 @@ abstract class CQRSMethod {
 }
 
 /// Query describing a criteria for a query and the results it returns.
-abstract class Query<T> implements CQRSMethod {
+abstract class Query<T> implements CqrsMethod {
   /// Returns a result of type `T` deserialzied from the `json`.
   T resultFactory(dynamic json);
 }
 
 /// Command carrying data related to performing a certain action on the backend.
-abstract class Command implements CQRSMethod {}
+abstract class Command implements CqrsMethod {}

@@ -13,10 +13,10 @@ import 'cqrs_test.mocks.dart';
 void main() {
   group('CQRS', () {
     late MockClient client;
-    late CQRS cqrs;
+    late Cqrs cqrs;
     setUp(() {
       client = MockClient();
-      cqrs = CQRS(client, Uri.parse('https://example.org/api/'));
+      cqrs = Cqrs(client, Uri.parse('https://example.org/api/'));
     });
 
     group('get', () {
@@ -66,7 +66,7 @@ void main() {
         expect(
           result,
           throwsA(
-            isA<CQRSException>().having(
+            isA<CqrsException>().having(
               (e) => e.message,
               'message',
               'An error occured while decoding response body JSON:\n'
@@ -84,7 +84,7 @@ void main() {
         expect(
           result,
           throwsA(
-            isA<CQRSException>().having(
+            isA<CqrsException>().having(
               (e) => e.message,
               'message',
               'Invalid, non 200 status code returned by ExampleQuery query.',
@@ -127,7 +127,7 @@ void main() {
         expect(
           result,
           throwsA(
-            isA<CQRSException>().having(
+            isA<CqrsException>().having(
               (e) => e.message,
               'message',
               startsWith('An error occured while decoding response body JSON:'),
@@ -145,7 +145,7 @@ void main() {
         expect(
           result,
           throwsA(
-            isA<CQRSException>().having(
+            isA<CqrsException>().having(
               (e) => e.message,
               'message',
               'Invalid, non 200 or 422 status code returned '
