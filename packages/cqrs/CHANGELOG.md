@@ -6,15 +6,15 @@
 
 # 6.2.1
 
-- Add human-readable `toString` method for `CommandResult`
+- Add human-readable `toString` method for `CommandResult`.
 
 # 6.2.0
 
-- Export `CommandResult` from `/contracts.dart`
+- Export `CommandResult` from `/contracts.dart`.
 
 # 6.1.0
 
-- `CommandResult` and `ValidationError` now implement the `toJson()` method
+- `CommandResult` and `ValidationError` now implement the `toJson()` method.
 
 # 6.0.0
 
