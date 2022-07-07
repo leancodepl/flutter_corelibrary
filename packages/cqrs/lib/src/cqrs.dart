@@ -125,6 +125,39 @@ class Cqrs {
     );
   }
 
+  /// Send a operation to the backend and expect a result of the type `T`.
+  ///
+  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
+  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
+  /// will be ignored.
+  ///
+  /// A [CqrsException] will be thrown in case of an error.
+  Future<T> perform<T>(
+    Operation<T> operation, {
+    Map<String, String> headers = const {},
+  }) async {
+    final response =
+        await _send(operation, pathPrefix: 'operation', headers: headers);
+
+    if (response.statusCode == 200) {
+      try {
+        final dynamic json = jsonDecode(response.body);
+
+        return operation.resultFactory(json);
+      } catch (e) {
+        throw CqrsException(
+          response,
+          'An error occured while decoding response body JSON:\n$e',
+        );
+      }
+    }
+
+    throw CqrsException(
+      response,
+      'Invalid, non 200 status code returned by ${operation.getFullName()} query.',
+    );
+  }
+
   Future<http.Response> _send(
     CqrsMethod cqrsMethod, {
     required String pathPrefix,
