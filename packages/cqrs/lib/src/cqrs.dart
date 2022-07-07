@@ -154,7 +154,7 @@ class Cqrs {
 
     throw CqrsException(
       response,
-      'Invalid, non 200 status code returned by ${operation.getFullName()} query.',
+      'Invalid, non 200 status code returned by ${operation.getFullName()} operation.',
     );
   }
 
