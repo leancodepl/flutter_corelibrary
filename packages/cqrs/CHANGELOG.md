@@ -2,6 +2,7 @@
 
 - **Breaking:** Rename `CQRS` and similar to `Cqrs` per [_Effective Dart_](https://dart.dev/guides/language/effective-dart/style#do-capitalize-acronyms-and-abbreviations-longer-than-two-letters-like-words).
 - **Breaking:** Bump minimum Dart version to 2.17.
+- **Breaking:** Remove `IRemoteQuery` and `IRemoteCommand`. Use their equivalents `Query` and `Command` respectively.
 
 # 6.2.1
 
