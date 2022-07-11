@@ -30,3 +30,9 @@ abstract class Query<T> implements CqrsMethod {
 
 /// Command carrying data related to performing a certain action on the backend.
 abstract class Command implements CqrsMethod {}
+
+/// Operation describing a criteria for a query, a command, and the results it returns.
+abstract class Operation<T> implements CqrsMethod {
+  /// Returns a result of type `T` deserialzied from the `json`.
+  T resultFactory(dynamic json);
+}

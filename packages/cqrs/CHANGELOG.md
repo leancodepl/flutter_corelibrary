@@ -3,18 +3,19 @@
 - **Breaking:** Rename `CQRS` and similar to `Cqrs` per [_Effective Dart_](https://dart.dev/guides/language/effective-dart/style#do-capitalize-acronyms-and-abbreviations-longer-than-two-letters-like-words).
 - **Breaking:** Bump minimum Dart version to 2.17.
 - **Breaking:** Remove `IRemoteQuery` and `IRemoteCommand`. Use their equivalents `Query` and `Command` respectively.
+- Add new transport type `Operation` which is a `Query` with side effects of a `Command`.
 
 # 6.2.1
 
-- Add human-readable `toString` method for `CommandResult`
+- Add human-readable `toString` method for `CommandResult`.
 
 # 6.2.0
 
-- Export `CommandResult` from `/contracts.dart`
+- Export `CommandResult` from `/contracts.dart`.
 
 # 6.1.0
 
-- `CommandResult` and `ValidationError` now implement the `toJson()` method
+- `CommandResult` and `ValidationError` now implement the `toJson()` method.
 
 # 6.0.0
 
