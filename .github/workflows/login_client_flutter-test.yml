@@ -3,7 +3,7 @@ name: login_client_flutter test
 on:
   push:
     branches: [master]
-    ignore-tags: ['login_client_flutter-v*']
+    tags-ignore: ['login_client_flutter-v*']
     paths:
       - 'packages/login_client_flutter/**'
   pull_request:

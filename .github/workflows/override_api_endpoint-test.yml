@@ -3,7 +3,7 @@ name: override_api_endpoint test
 on:
   push:
     branches: [master]
-    ignore-tags: ['override_api_endpoint-v*']
+    tags-ignore: ['override_api_endpoint-v*']
     paths:
       - 'packages/override_api_endpoint/**'
   pull_request:

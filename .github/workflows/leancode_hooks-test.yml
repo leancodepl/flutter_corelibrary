@@ -3,7 +3,7 @@ name: leancode_hooks test
 on:
   push:
     branches: [master]
-    ignore-tags: ['leancode_hooks-v*']
+    tags-ignore: ['leancode_hooks-v*']
     paths:
       - 'packages/leancode_hooks/**'
   pull_request:
