@@ -3,7 +3,7 @@ name: login_client test
 on:
   push:
     branches: [master]
-    ignore-tags: ['login_client-v*']
+    tags-ignore: ['login_client-v*']
     paths:
       - 'packages/login_client/**'
   pull_request:
