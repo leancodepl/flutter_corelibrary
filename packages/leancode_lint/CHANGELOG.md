@@ -1,3 +1,10 @@
+# 1.3.0
+
+- Enable the following lints:
+  - [`discarded_futures`](https://dart-lang.github.io/linter/lints/discarded_futures.html)
+  - [`unnecessary_to_list_in_spreads`](https://dart-lang.github.io/linter/lints/unnecessary_to_list_in_spreads.html)
+  - [`unnecessary_null_aware_operator_on_extension_on_nullable`](https://dart-lang.github.io/linter/lints/unnecessary_null_aware_operator_on_extension_on_nullable.html)
+
 # 1.2.1
 
 - Disable the following lints:
