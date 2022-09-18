@@ -91,3 +91,6 @@ linter:
     use_super_parameters: true
     use_enums: true
     null_check_on_nullable_type_parameter: true
+    unnecessary_null_aware_operator_on_extension_on_nullable: true
+    unnecessary_to_list_in_spreads: true
+    discarded_futures: true
