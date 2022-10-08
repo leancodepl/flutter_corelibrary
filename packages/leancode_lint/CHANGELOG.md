@@ -1,3 +1,7 @@
+# Unreleased
+
+- Disable the deprecated `invariant_booleans` lint (#86)
+
 # 1.3.0
 
 - Enable the following lints:
