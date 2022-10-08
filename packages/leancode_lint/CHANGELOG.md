@@ -1,3 +1,7 @@
+# Unreleased
+
+- Remove the `unawaited()` function which is provided by Dart since 2.14 (#88)
+
 # 1.3.0
 
 - Enable the following lints:
