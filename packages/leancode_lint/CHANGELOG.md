@@ -1,3 +1,7 @@
+## Unreleased
+
+- Disable the `discarded_futures` lint (#87)
+
 # 1.3.0
 
 - Enable the following lints:
