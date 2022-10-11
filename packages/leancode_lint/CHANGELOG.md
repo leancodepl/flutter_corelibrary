@@ -1,4 +1,8 @@
-## 2.0.0
+# 2.0.0+1
+
+- Fix broken changelog (#90)
+
+# 2.0.0
 
 - **Breaking:** Remove the `unawaited()` function which is provided by Dart
   since 2.14 (#88)
