@@ -1,6 +1,8 @@
 ## Unreleased
 
 - Disable the `discarded_futures` lint (#87)
+- Remove the `unawaited()` function which is provided by Dart since 2.14 (#88)
+- Disable the deprecated `invariant_booleans` lint (#86)
 
 # 1.3.0
 

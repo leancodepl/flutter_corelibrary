@@ -35,7 +35,6 @@ linter:
     deprecated_consistency: true
     directives_ordering: true
     eol_at_end_of_file: true
-    invariant_booleans: true
     leading_newlines_in_multiline_strings: true
     library_private_types_in_public_api: false
     literal_only_boolean_expressions: true
