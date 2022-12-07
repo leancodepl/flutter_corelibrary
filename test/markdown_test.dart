@@ -48,15 +48,6 @@ void main() {
   group('Parser parses tokens', () {
     final parser = MarkdownParser();
 
-    test('compate two italics', () {
-      const int1 = Italic();
-      const int2 = Italic();
-
-      final areEqual = int1 == int2;
-
-      expect(areEqual, true);
-    });
-
     test('with simple tag', () {
       const text = '[b]Bold, text[/b]';
       final lexerResult = lexer.parse(text);

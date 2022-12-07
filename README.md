@@ -1,39 +1,49 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Tag-parser
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+Simple package that allows you parse text with predefined tags, and returns styled Flutter text.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## What's done so far
 
-## Features
+- Lexer (lexer.dart) - parses input text and converts it to list of `TextToken()` and `OpenAndCloseToken()`.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- MarkDownParser (markdown_parser.dart) - takes `List<Token>` returns structure `TextWithAttributes` containing 'Text' and set of `Attributes` like `Bold(), Italic()` etc.
 
-## Getting started
+- Tests (markdown_tests.dart): contains two test groups: lexer tests, and parser tests.
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
 
-## Usage
+## Avaliable tags
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+- Bold [b] Bolded text [/b]
 
-```dart
-const like = 'sample';
-```
+- Italic [i] Italicized text [/i]
 
-## Additional information
+- Underlined [u] Underlined text [/u]
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+- Strikethrough [s] Strikethrough text [/s]
+
+
+## TODOs:
+
+1. To avoid defining `OpenClosedTokens` and `Attributes` (twice for same tag) and mapping one to another, lexer should return only `TextAttribute` + `OpenClosedToken` containing specific tag lettes e.x. `OpenCloseToken([b])`.
+Parser should accept list of acceptable tags as input.
+Each tag should have defined how is reflected in LNCDText class.
+
+2. Parser should be able to identify closing and opening tokens and return `TextWithAttributes`.
+
+3. After changing how lexer and parser work, rewrite tests:
+
+<img width="441" alt="image" src="https://user-images.githubusercontent.com/114619093/206199389-95564764-6733-4cd8-851c-59b0b4081724.png">
+
+3. Add parsing URL tag with:
+- Text same as href
+- Text other than href
+
+4. Map `TextWithAttributes` to LNCDText class, and allow defining set of TextStyles per project.
+
+### Internal conflu docs:
+- "Text styling syntax in Flutter brainstorm"
+- "Text styling syntax research"
+
+
+
