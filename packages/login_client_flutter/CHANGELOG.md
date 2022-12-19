@@ -1,3 +1,7 @@
+# 2.0.1+1
+
+- Fix build badge in README.
+
 # 2.0.1
 
 - Increase `flutter_secure_storage` version range to `>=4.2.0 <6.0.0`.
