@@ -4,9 +4,7 @@
 discoverability and consistent versioning.
 
 [![leancode_hooks pub.dev badge][pub-badge]][pub-badge-link]
-
-[pub-badge]: https://img.shields.io/pub/v/leancode_hooks
-[pub-badge-link]: https://pub.dev/packages/leancode_hooks
+[![][build-badge]][build-badge-link]
 
 ## Usage
 
@@ -30,3 +28,7 @@ so you won't have to depend on it.
 - [useThrottle](lib/src/use_throttle.dart)
 
 [flutter_hooks]: https://pub.dev/packages/flutter_hooks
+[pub-badge]: https://img.shields.io/pub/v/leancode_hooks
+[pub-badge-link]: https://pub.dev/packages/leancode_hooks
+[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_hooks-test.yml?branch=master
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_hooks-test.yml
