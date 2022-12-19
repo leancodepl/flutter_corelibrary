@@ -21,8 +21,7 @@ jobs:
       matrix:
         include:
           - version: '2.5.0'
-          - channel: stable
-          - channel: beta
+          - version: '3.3'
 
     defaults:
       run:
