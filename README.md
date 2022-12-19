@@ -15,8 +15,8 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [cqrs-documentation]: https://pub.dev/documentation/cqrs/latest/
 [cqrs-pub-badge]: https://img.shields.io/pub/v/cqrs
 [cqrs-pub-badge-link]: https://pub.dev/packages/cqrs
-[cqrs-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
-[cqrs-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22
+[cqrs-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/cqrs-test.yml?branch=master
+[cqrs-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/cqrs-test.yml
 [leancode_lint-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint
 [leancode_lint-documentation]: https://pub.dev/documentation/leancode_lint/latest/
 [leancode_lint-pub-badge]: https://img.shields.io/pub/v/leancode_lint
