@@ -33,8 +33,8 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [login_client-documentation]: https://pub.dev/documentation/login_client/latest/
 [login_client-pub-badge]: https://img.shields.io/pub/v/login_client
 [login_client-pub-badge-link]: https://pub.dev/packages/login_client
-[login_client-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%20test
-[login_client-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client+test%22
+[login_client-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/login_client-test.yml?branch=master
+[login_client-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/login_client-test.yml
 [login_client_flutter-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client_flutter
 [login_client_flutter-documentation]: https://pub.dev/documentation/login_client_flutter/latest/
 [login_client_flutter-pub-badge]: https://img.shields.io/pub/v/login_client_flutter
