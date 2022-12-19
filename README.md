@@ -45,5 +45,5 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [override_api_endpoint-documentation]: https://pub.dev/documentation/override_api_endpoint/latest/
 [override_api_endpoint-pub-badge]: https://img.shields.io/pub/v/override_api_endpoint
 [override_api_endpoint-pub-badge-link]: https://pub.dev/packages/override_api_endpoint
-[override_api_endpoint-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint%20test
-[override_api_endpoint-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22override_api_endpoint+test%22
+[override_api_endpoint-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint-test.yml?branch=master
+[override_api_endpoint-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/override_api_endpoint-test.yml

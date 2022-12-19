@@ -31,6 +31,6 @@ final apiEndpoint = await overrideApiEndpoint(
 ```
 [pub-badge]: https://img.shields.io/pub/v/override_api_endpoint
 [pub-badge-link]: https://pub.dev/packages/override_api_endpoint
-[build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint%20test
-[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22override_api_endpoint+test%22
+[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint-test.yml?branch=master
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/override_api_endpoint-test.yml
 [override_api_endpoint_flutter]: https://pub.dev/packages/override_api_endpoint_flutter
