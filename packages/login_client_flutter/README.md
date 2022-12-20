@@ -1,7 +1,7 @@
 # login_client_flutter
 
-[![login_client_flutter pub.dev badge][login_client_flutter-pub-badge]][login_client_flutter-pub-badge-link]
-[![login_client_flutter continuous integration badge][login_client_flutter-build-badge]][login_client_flutter-build-badge-link]
+[![login_client_flutter pub.dev badge][pub-badge]][pub-badge-link]
+[![login_client_flutter continuous integration badge][build-badge]][build-badge-link]
 
 [flutter_secure_storage] implementation of a `CredentialsStorage` for the [login_client] package.
 
@@ -35,9 +35,9 @@ Exclude Flutter Secure Storage from Android full backup.
 </full-backup-content>
 ```
 
-[login_client_flutter-pub-badge]: https://img.shields.io/pub/v/login_client_flutter
-[login_client_flutter-pub-badge-link]: https://pub.dev/packages/login_client_flutter
-[login_client_flutter-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client_flutter%20test
-[login_client_flutter-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client_flutter+test%22
+[pub-badge]: https://img.shields.io/pub/v/login_client_flutter
+[pub-badge-link]: https://pub.dev/packages/login_client_flutter
+[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/login_client_flutter-test.yml?branch=master
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/login_client_flutter-test.yml
 [flutter_secure_storage]: https://github.com/mogol/flutter_secure_storage
 [login_client]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client

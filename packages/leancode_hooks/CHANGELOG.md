@@ -1,3 +1,7 @@
+# 0.0.3+1
+
+- Fix build badge in README.
+
 # 0.0.3
 
 - Add tests for `useThrottle`

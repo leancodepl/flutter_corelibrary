@@ -1,3 +1,7 @@
+# 2.1.0+1
+
+- Fix build badge in README.
+
 # 2.1.0
 
 - Bumped `build_runner` dependency to `2.0.0`

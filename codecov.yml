@@ -3,14 +3,16 @@ coverage:
     project:
       default:
         target: auto
+        informational: true
       cqrs:
-        target: auto
         flags:
           - cqrs
       login_client:
-        target: auto
         flags:
           - login_client
+      leancode_hooks:
+        flags:
+          - leancode_hooks
 
 comment:
   branches: null
@@ -21,4 +23,7 @@ flags:
     carryforward: true
   login_client:
     paths: ['packages/login_client']
+    carryforward: true
+  leancode_hooks:
+    paths: ['packages/leancode_hooks']
     carryforward: true

@@ -1,5 +1,5 @@
 name: leancode_hooks
-version: 0.0.3
+version: 0.0.3+1
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_hooks
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
@@ -19,4 +19,4 @@ dev_dependencies:
   coverage: ^1.2.0
   flutter_test:
     sdk: flutter
-  leancode_lint: ^1.1.0
+  leancode_lint: '>=1.0.2 <1.1.0'

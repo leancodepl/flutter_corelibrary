@@ -1,3 +1,7 @@
+# 8.0.0+1
+
+- Fix build badge in README.
+
 # 8.0.0
 
 - **Breaking:** Bump minimum Dart version to 2.17.

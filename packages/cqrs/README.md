@@ -72,7 +72,7 @@ if (result.success) {
 
 [pub-badge]: https://img.shields.io/pub/v/cqrs
 [pub-badge-link]: https://pub.dev/packages/cqrs
-[build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
-[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22
+[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/cqrs-test.yml?branch=master
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/cqrs-test.yml
 [codecov-badge]: https://img.shields.io/codecov/c/gh/leancodepl/flutter_corelibrary?flag=cqrs
 [codecov-badge-link]: https://codecov.io/gh/leancodepl/flutter_corelibrary

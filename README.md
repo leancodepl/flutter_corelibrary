@@ -15,8 +15,8 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [cqrs-documentation]: https://pub.dev/documentation/cqrs/latest/
 [cqrs-pub-badge]: https://img.shields.io/pub/v/cqrs
 [cqrs-pub-badge-link]: https://pub.dev/packages/cqrs
-[cqrs-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/cqrs%20test
-[cqrs-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22cqrs+test%22
+[cqrs-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/cqrs-test.yml?branch=master
+[cqrs-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/cqrs-test.yml
 [leancode_lint-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint
 [leancode_lint-documentation]: https://pub.dev/documentation/leancode_lint/latest/
 [leancode_lint-pub-badge]: https://img.shields.io/pub/v/leancode_lint
@@ -26,24 +26,24 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [leancode_hooks-pub-badge]: https://img.shields.io/pub/v/leancode_hooks
 [leancode_hooks-pub-badge-link]: https://pub.dev/packages/leancode_hooks
 
-[leancode_hooks-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/leancode_hooks%20test
-[leancode_hooks-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22leancode_hooks+test%22
+[leancode_hooks-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_hooks-test.yml?branch=master
+[leancode_hooks-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_hooks-test.yml
 
 [login_client-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client
 [login_client-documentation]: https://pub.dev/documentation/login_client/latest/
 [login_client-pub-badge]: https://img.shields.io/pub/v/login_client
 [login_client-pub-badge-link]: https://pub.dev/packages/login_client
-[login_client-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client%20test
-[login_client-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client+test%22
+[login_client-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/login_client-test.yml?branch=master
+[login_client-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/login_client-test.yml
 [login_client_flutter-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client_flutter
 [login_client_flutter-documentation]: https://pub.dev/documentation/login_client_flutter/latest/
 [login_client_flutter-pub-badge]: https://img.shields.io/pub/v/login_client_flutter
 [login_client_flutter-pub-badge-link]: https://pub.dev/packages/login_client_flutter
-[login_client_flutter-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/login_client_flutter%20test
-[login_client_flutter-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22login_client_flutter+test%22
+[login_client_flutter-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/login_client_flutter-test.yml?branch=master
+[login_client_flutter-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/login_client_flutter-test.yml
 [override_api_endpoint-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/override_api_endpoint
 [override_api_endpoint-documentation]: https://pub.dev/documentation/override_api_endpoint/latest/
 [override_api_endpoint-pub-badge]: https://img.shields.io/pub/v/override_api_endpoint
 [override_api_endpoint-pub-badge-link]: https://pub.dev/packages/override_api_endpoint
-[override_api_endpoint-build-badge]: https://img.shields.io/github/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint%20test
-[override_api_endpoint-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions?query=workflow%3A%22override_api_endpoint+test%22
+[override_api_endpoint-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint-test.yml?branch=master
+[override_api_endpoint-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/override_api_endpoint-test.yml

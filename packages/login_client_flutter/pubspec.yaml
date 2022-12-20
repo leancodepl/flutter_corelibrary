@@ -1,5 +1,5 @@
 name: login_client_flutter
-version: 2.0.1
+version: 2.0.1+1
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client_flutter
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
@@ -17,4 +17,4 @@ dependencies:
   login_client: ^2.0.1
 
 dev_dependencies:
-  leancode_lint: ^1.0.2
+  leancode_lint: '>=1.0.2 <1.1.0'
