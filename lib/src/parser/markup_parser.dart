@@ -13,16 +13,16 @@ Iterable<TaggedText> parseMarkup(String markup) {
 @visibleForTesting
 Iterable<TaggedText> parseTokens(Tokens tokens, String source) sync* {
   // stack with tag names
-  final tagStack = <String>[];
+  final tagStack = <MarkupTag>[];
 
   for (final token in tokens) {
     final content = token.when(
-      tagOpen: (name) {
-        tagStack.add(name);
+      tagOpen: (name, parameter) {
+        tagStack.add(MarkupTag(name, parameter));
         return null;
       },
       tagClose: (name) {
-        if (tagStack.isEmpty || tagStack.last != name) {
+        if (tagStack.isEmpty || tagStack.last.name != name) {
           throw MarkupParsingException(
             'Found a closing tag without a matching opening one.',
             source,

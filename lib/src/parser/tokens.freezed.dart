@@ -18,21 +18,21 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Token {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name) tagOpen,
+    required TResult Function(String name, String? parameter) tagOpen,
     required TResult Function(String name) tagClose,
     required TResult Function(String content) text,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name)? tagOpen,
+    TResult? Function(String name, String? parameter)? tagOpen,
     TResult? Function(String name)? tagClose,
     TResult? Function(String content)? text,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name)? tagOpen,
+    TResult Function(String name, String? parameter)? tagOpen,
     TResult Function(String name)? tagClose,
     TResult Function(String content)? text,
     required TResult orElse(),
@@ -85,7 +85,7 @@ abstract class _$$_TokenTagOpenCopyWith<$Res> {
           _$_TokenTagOpen value, $Res Function(_$_TokenTagOpen) then) =
       __$$_TokenTagOpenCopyWithImpl<$Res>;
   @useResult
-  $Res call({String name});
+  $Res call({String name, String? parameter});
 }
 
 /// @nodoc
@@ -100,12 +100,17 @@ class __$$_TokenTagOpenCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
+    Object? parameter = freezed,
   }) {
     return _then(_$_TokenTagOpen(
       null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      freezed == parameter
+          ? _value.parameter
+          : parameter // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -113,14 +118,16 @@ class __$$_TokenTagOpenCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_TokenTagOpen implements _TokenTagOpen {
-  const _$_TokenTagOpen(this.name);
+  const _$_TokenTagOpen(this.name, [this.parameter]);
 
   @override
   final String name;
+  @override
+  final String? parameter;
 
   @override
   String toString() {
-    return 'Token.tagOpen(name: $name)';
+    return 'Token.tagOpen(name: $name, parameter: $parameter)';
   }
 
   @override
@@ -128,11 +135,13 @@ class _$_TokenTagOpen implements _TokenTagOpen {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_TokenTagOpen &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.parameter, parameter) ||
+                other.parameter == parameter));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name);
+  int get hashCode => Object.hash(runtimeType, name, parameter);
 
   @JsonKey(ignore: true)
   @override
@@ -143,33 +152,33 @@ class _$_TokenTagOpen implements _TokenTagOpen {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name) tagOpen,
+    required TResult Function(String name, String? parameter) tagOpen,
     required TResult Function(String name) tagClose,
     required TResult Function(String content) text,
   }) {
-    return tagOpen(name);
+    return tagOpen(name, parameter);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name)? tagOpen,
+    TResult? Function(String name, String? parameter)? tagOpen,
     TResult? Function(String name)? tagClose,
     TResult? Function(String content)? text,
   }) {
-    return tagOpen?.call(name);
+    return tagOpen?.call(name, parameter);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name)? tagOpen,
+    TResult Function(String name, String? parameter)? tagOpen,
     TResult Function(String name)? tagClose,
     TResult Function(String content)? text,
     required TResult orElse(),
   }) {
     if (tagOpen != null) {
-      return tagOpen(name);
+      return tagOpen(name, parameter);
     }
     return orElse();
   }
@@ -210,9 +219,11 @@ class _$_TokenTagOpen implements _TokenTagOpen {
 }
 
 abstract class _TokenTagOpen implements Token {
-  const factory _TokenTagOpen(final String name) = _$_TokenTagOpen;
+  const factory _TokenTagOpen(final String name, [final String? parameter]) =
+      _$_TokenTagOpen;
 
   String get name;
+  String? get parameter;
   @JsonKey(ignore: true)
   _$$_TokenTagOpenCopyWith<_$_TokenTagOpen> get copyWith =>
       throw _privateConstructorUsedError;
@@ -282,7 +293,7 @@ class _$_TokenTagClose implements _TokenTagClose {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name) tagOpen,
+    required TResult Function(String name, String? parameter) tagOpen,
     required TResult Function(String name) tagClose,
     required TResult Function(String content) text,
   }) {
@@ -292,7 +303,7 @@ class _$_TokenTagClose implements _TokenTagClose {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name)? tagOpen,
+    TResult? Function(String name, String? parameter)? tagOpen,
     TResult? Function(String name)? tagClose,
     TResult? Function(String content)? text,
   }) {
@@ -302,7 +313,7 @@ class _$_TokenTagClose implements _TokenTagClose {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name)? tagOpen,
+    TResult Function(String name, String? parameter)? tagOpen,
     TResult Function(String name)? tagClose,
     TResult Function(String content)? text,
     required TResult orElse(),
@@ -421,7 +432,7 @@ class _$_TokenTagText implements _TokenTagText {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name) tagOpen,
+    required TResult Function(String name, String? parameter) tagOpen,
     required TResult Function(String name) tagClose,
     required TResult Function(String content) text,
   }) {
@@ -431,7 +442,7 @@ class _$_TokenTagText implements _TokenTagText {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name)? tagOpen,
+    TResult? Function(String name, String? parameter)? tagOpen,
     TResult? Function(String name)? tagClose,
     TResult? Function(String content)? text,
   }) {
@@ -441,7 +452,7 @@ class _$_TokenTagText implements _TokenTagText {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name)? tagOpen,
+    TResult Function(String name, String? parameter)? tagOpen,
     TResult Function(String name)? tagClose,
     TResult Function(String content)? text,
     required TResult orElse(),

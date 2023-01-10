@@ -8,7 +8,7 @@ class TaggedText {
   });
 
   final String text;
-  final Set<String> tags;
+  final Set<MarkupTag> tags;
 
   @override
   String toString() => 'TaggedText($text, $tags)';
@@ -20,4 +20,24 @@ class TaggedText {
 
   @override
   int get hashCode => Object.hashAll([text, tags]);
+}
+
+/// A markup tag which decorates some piece of text.
+class MarkupTag {
+  const MarkupTag(this.name, [this.parameter]);
+
+  final String name;
+  final String? parameter;
+
+  @override
+  String toString() =>
+      'MarkupTag($name${parameter != null ? ', $parameter' : ''})';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MarkupTag && name == other.name && parameter == other.parameter;
+
+  @override
+  int get hashCode => Object.hashAll([name, parameter]);
 }

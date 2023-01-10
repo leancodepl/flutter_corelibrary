@@ -9,41 +9,41 @@ void main() {
     List<TaggedText> parse(Tokens tokens) => parseTokens(tokens, '').toList();
 
     test('with simple tag', () {
-      final parserResult = parse(const [
+      final result = parse(const [
         Token.tagOpen('b'),
         Token.text('Bold, text'),
         Token.tagClose('b'),
       ]);
 
-      const expected = [
+      final expected = [
         TaggedText(
           'Bold, text',
-          tags: {'b'},
+          tags: {const MarkupTag('b')},
         ),
       ];
-      expect(parserResult, expected);
+      expect(result, expected);
     });
 
     test('with simple tag, and text on the end', () {
-      final parserResult = parse(const [
+      final result = parse(const [
         Token.tagOpen('b'),
         Token.text('Bold, text'),
         Token.tagClose('b'),
         Token.text(' with text'),
       ]);
 
-      const expected = [
+      final expected = [
         TaggedText(
           'Bold, text',
-          tags: {'b'},
+          tags: {const MarkupTag('b')},
         ),
-        TaggedText(' with text'),
+        const TaggedText(' with text'),
       ];
-      expect(parserResult, expected);
+      expect(result, expected);
     });
 
     test('with nested tags', () {
-      final parserResult = parse(const [
+      final result = parse(const [
         Token.text('Start '),
         Token.tagOpen('i'),
         Token.tagOpen('b'),
@@ -52,15 +52,44 @@ void main() {
         Token.tagClose('i'),
       ]);
 
-      const expected = [
-        TaggedText('Start '),
-        TaggedText('Italic, bold text', tags: {'i', 'b'}),
+      final expected = [
+        const TaggedText('Start '),
+        TaggedText(
+          'Italic, bold text',
+          tags: {const MarkupTag('i'), const MarkupTag('b')},
+        ),
       ];
-      expect(parserResult, expected);
+      expect(result, expected);
+    });
+
+    test('with tags with a parameter', () {
+      final result = parse(const [
+        Token.text('Start '),
+        Token.tagOpen('i'),
+        Token.tagOpen('url', 'https://leancode.co'),
+        Token.tagOpen('b'),
+        Token.text('Italic, bold text'),
+        Token.tagClose('b'),
+        Token.tagClose('url'),
+        Token.tagClose('i'),
+      ]);
+
+      final expected = [
+        const TaggedText('Start '),
+        TaggedText(
+          'Italic, bold text',
+          tags: {
+            const MarkupTag('i'),
+            const MarkupTag('b'),
+            const MarkupTag('url', 'https://leancode.co')
+          },
+        ),
+      ];
+      expect(result, expected);
     });
 
     test('long text with nested tags, escape chars and new lines', () {
-      final parserResult = parse(const [
+      final result = parse(const [
         Token.text('Start '),
         Token.tagOpen('u'),
         Token.tagOpen('i'),
@@ -73,13 +102,20 @@ void main() {
         Token.text(r'\escapeChar end.'),
       ]);
 
-      const expected = [
-        TaggedText('Start '),
-        TaggedText('Italic, bold, underline text', tags: {'u', 'i', 'b'}),
-        TaggedText('solo underline', tags: {'u'}),
-        TaggedText(r'\escapeChar end.'),
+      final expected = [
+        const TaggedText('Start '),
+        TaggedText(
+          'Italic, bold, underline text',
+          tags: {
+            const MarkupTag('u'),
+            const MarkupTag('i'),
+            const MarkupTag('b')
+          },
+        ),
+        TaggedText('solo underline', tags: {const MarkupTag('u')}),
+        const TaggedText(r'\escapeChar end.'),
       ];
-      expect(parserResult, expected);
+      expect(result, expected);
     });
   });
 }
