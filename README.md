@@ -4,40 +4,21 @@ Simple package that allows you parse text with predefined tags, and returns styl
 
 ## What's done so far
 
-- Lexer (lexer.dart) - parses input text and converts it to list of `TextToken()` and `OpenAndCloseToken()`.
+- Lexer (`lexer.dart`) - parses input text and converts it to list of `Token`s: `text`, `tagOpen`, `tagOpen`.
 
-- MarkDownParser (markdown_parser.dart) - takes `List<Token>` returns structure `TextWithAttributes` containing 'Text' and set of `Attributes` like `Bold(), Italic()` etc.
+- Parser (`parser.dart`) - takes `Tokens` returns a list of `TaggedText`s containing 'text' and a set of `Tag`s (name of the tag and a possible parameter).
 
-- Tests (markdown_tests.dart): contains two test groups: lexer tests, and parser tests.
+- Tests: lexer and parser is tested
 
-## Avaliable tags
+## Available tags
 
-- Bold [b] Bolded text [/b]
-
-- Italic [i] Italicized text [/i]
-
-- Underlined [u] Underlined text [/u]
-
-- Strikethrough [s] Strikethrough text [/s]
+None. Dart part of this package is agnostic to any semantics of tags.
 
 ## TODOs:
 
-1. To avoid defining `OpenClosedTokens` and `Attributes` (twice for same tag) and mapping one to another, lexer should return only `TextAttribute` + `OpenClosedToken` containing specific tag lettes e.x. `OpenCloseToken([b])`.
-   Parser should accept list of acceptable tags as input.
-   Each tag should have defined how is reflected in LNCDText class.
+1. Add parsing tags with a parameter (for instance `[url=https://google.com]Google[/url]`)
 
-2. Parser should be able to identify closing and opening tokens and return `TextWithAttributes`.
-
-3. After changing how lexer and parser work, rewrite tests:
-
-<img width="441" alt="image" src="https://user-images.githubusercontent.com/114619093/206199389-95564764-6733-4cd8-851c-59b0b4081724.png">
-
-3. Add parsing URL tag with:
-
-- Text same as href
-- Text other than href
-
-4. Map `TextWithAttributes` to LNCDText class, and allow defining set of TextStyles per project.
+2. Flutter part: map list of `TaggedText` to UI together with some way of defining styles/semantics
 
 ### Internal conflu docs:
 
