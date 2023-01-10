@@ -1,7 +1,7 @@
-import 'package:leancode_markdown/lexer.dart';
-import 'package:leancode_markdown/src/text_with_attributes.dart';
+import 'package:leancode_markup/src/lexer.dart';
+import 'package:leancode_markup/src/text_with_attributes.dart';
 
-class MarkdownParser {
+class MarkupParser {
   List<TextWithAttributes> parse(List<Token> tokens) {
     final tokenMap = <OpenCloseToken, List<OpenCloseToken>>{};
     final result = <TextWithAttributes>[];

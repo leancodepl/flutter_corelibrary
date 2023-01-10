@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:leancode_markdown/lexer.dart';
-import 'package:leancode_markdown/src/markdown_parser.dart';
-import 'package:leancode_markdown/src/text_with_attributes.dart';
+import 'package:leancode_markup/src/lexer.dart';
+import 'package:leancode_markup/src/markup_parser.dart';
+import 'package:leancode_markup/src/text_with_attributes.dart';
 
 void main() {
-  final lexer = MarkdownDefinition().build<Markdown>();
+  final lexer = MarkupDefinition().build<Markup>();
 
   group('Lexer parses text', () {
     test('with one tag', () {
@@ -46,7 +46,7 @@ void main() {
   });
 
   group('Parser parses tokens', () {
-    final parser = MarkdownParser();
+    final parser = MarkupParser();
 
     test('with simple tag', () {
       const text = '[b]Bold, text[/b]';

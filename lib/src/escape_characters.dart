@@ -1,5 +1,5 @@
 /// Escape characters for Markdown strings.
-const Map<String, String> markdownEscapeStrings = {
+const Map<String, String> markupEscapeStrings = {
   '\\': '\\',
   '[': '[',
   'b': '\b',

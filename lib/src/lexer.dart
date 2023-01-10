@@ -1,11 +1,7 @@
-library leancode_markdown;
-
-import 'package:leancode_markdown/src/escape_characters.dart';
+import 'package:leancode_markup/src/escape_characters.dart';
 import 'package:petitparser/petitparser.dart';
 
-void main() {}
-
-class MarkdownDefinition extends GrammarDefinition {
+class MarkupDefinition extends GrammarDefinition {
   @override
   Parser<List<Token>> start() => ref0(value).end();
 
@@ -43,8 +39,8 @@ class MarkdownDefinition extends GrammarDefinition {
 
   Parser<String> characterEscape() => seq2(
         char('\\'),
-        anyOf(markdownEscapeStrings.keys.join()),
-      ).map2((_, char) => markdownEscapeStrings[char]!);
+        anyOf(markupEscapeStrings.keys.join()),
+      ).map2((_, char) => markupEscapeStrings[char]!);
 
   //eventually, put this switch into lexer
   Token mapOpeningTag(String tag) {
@@ -74,9 +70,9 @@ class MarkdownDefinition extends GrammarDefinition {
   }
 }
 
-typedef Markdown = Object?;
+typedef Markup = Object?;
 
-final lexer = MarkdownDefinition().build<Markdown>();
+final lexer = MarkupDefinition().build<Markup>();
 
 //Token holds information about text or opening
 //or closing token like [b] or [/b] that identify start + end of Bold text

@@ -1,4 +1,4 @@
-//Data structure that holds text + list of markdown attributes.
+//Data structure that holds text + list of markup attributes.
 class TextWithAttributes {
   const TextWithAttributes({
     required this.text,
