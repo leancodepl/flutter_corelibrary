@@ -74,6 +74,40 @@ void main() {
       expect(result.value, expected);
     });
 
+    test('with tags with a parameter', () {
+      const text = '[url="https://leancode.co"]cool site[/url]';
+      final result = lexer.parse(text);
+
+      const expected = [
+        Token.tagOpen('url', 'https://leancode.co'),
+        Token.text('cool site'),
+        Token.tagClose('url'),
+      ];
+      expect(result.value, expected);
+    });
+
+    test('with tags with a parameter which escapes quotes', () {
+      const text = r'[url="https://le\"ancode.co\""]cool site[/url]';
+      final result = lexer.parse(text);
+
+      const expected = [
+        Token.tagOpen('url', 'https://le"ancode.co"'),
+        Token.text('cool site'),
+        Token.tagClose('url'),
+      ];
+      expect(result.value, expected);
+    });
+
+    test('with escape chars', () {
+      const text = r'\b\f\n\r\t';
+      final result = lexer.parse(text);
+
+      const expected = [
+        Token.text('\b\f\n\r\t'),
+      ];
+      expect(result.value, expected);
+    });
+
     test('long text with nested tags, escape chars and new lines', () {
       const text =
           r'Start [u][i][b]Italic, bold, underline text[/b][/i]solo underline[/u]\\escapeChar end.';

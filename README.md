@@ -16,9 +16,7 @@ None. Dart part of this package is agnostic to any semantics of tags.
 
 ## TODOs:
 
-1. Add parsing tags with a parameter (for instance `[url=https://google.com]Google[/url]`)
-
-2. Flutter part: map list of `TaggedText` to UI together with some way of defining styles/semantics
+1. Flutter part: map list of `TaggedText` to UI together with some way of defining styles/semantics
 
 ### Internal conflu docs:
 
