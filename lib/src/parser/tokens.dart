@@ -2,6 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'tokens.freezed.dart';
 
+// TODO: store loc spans for tokens for better error reporting
+
 /// Token represents a single entity result from tokenizing (lexing).
 /// For example a tag like `[b]` or [/b] that identify start and end of tag with a name `'b'`.
 @freezed

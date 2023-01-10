@@ -1,9 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:leancode_markup/src/lexer.dart';
-import 'package:leancode_markup/src/tokens.dart';
+import 'package:leancode_markup/src/parser/lexer.dart';
+import 'package:leancode_markup/src/parser/tokens.dart';
+import 'package:petitparser/reflection.dart';
 
 void main() {
   group('Lexer tokenizes text', () {
+    test('detect common problems', () {
+      expect(linter(lexer), isEmpty);
+    });
+
     test('with one tag', () {
       const text = 'a[i]bba[/i]';
       final result = lexer.parse(text);
@@ -65,6 +70,26 @@ void main() {
         Token.text(' \n Italic, bold text  '),
         Token.tagClose('b'),
         Token.text(' \n'),
+      ];
+      expect(result.value, expected);
+    });
+
+    test('long text with nested tags, escape chars and new lines', () {
+      const text =
+          r'Start [u][i][b]Italic, bold, underline text[/b][/i]solo underline[/u]\\escapeChar end.';
+      final result = lexer.parse(text);
+
+      const expected = [
+        Token.text('Start '),
+        Token.tagOpen('u'),
+        Token.tagOpen('i'),
+        Token.tagOpen('b'),
+        Token.text('Italic, bold, underline text'),
+        Token.tagClose('b'),
+        Token.tagClose('i'),
+        Token.text('solo underline'),
+        Token.tagClose('u'),
+        Token.text(r'\escapeChar end.'),
       ];
       expect(result.value, expected);
     });

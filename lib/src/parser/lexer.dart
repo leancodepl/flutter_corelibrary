@@ -1,4 +1,4 @@
-import 'package:leancode_markup/src/tokens.dart';
+import 'package:leancode_markup/src/parser/tokens.dart';
 import 'package:petitparser/petitparser.dart' hide Token;
 
 typedef Tokens = List<Token>;

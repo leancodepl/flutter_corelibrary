@@ -1,5 +1,5 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:leancode_markup/src/lexer.dart';
+import 'package:leancode_markup/src/parser/lexer.dart';
 
 class LexerBench extends BenchmarkBase {
   const LexerBench() : super('Lexer');
