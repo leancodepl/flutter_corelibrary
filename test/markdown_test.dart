@@ -4,8 +4,6 @@ import 'package:leancode_markup/src/markup_parser.dart';
 import 'package:leancode_markup/src/text_with_attributes.dart';
 
 void main() {
-  final lexer = MarkupDefinition().build<Markup>();
-
   group('Lexer parses text', () {
     test('with one tag', () {
       const text = 'a[i]bba[/i]';
@@ -34,7 +32,7 @@ void main() {
     });
 
     test('with char escape', () {
-      const text = 'bb[b]Italic, bold text\\[/b]';
+      const text = r'bb[b]Italic, bold text\[/b]';
       final result = lexer.parse(text);
       final expected = <Token>[
         const TextToken('bb'),
@@ -53,7 +51,7 @@ void main() {
       final lexerResult = lexer.parse(text);
 
       if (lexerResult.isSuccess) {
-        final parserResult = parser.parse(lexerResult.value as List<Token>);
+        final parserResult = parser.parse(lexerResult.value);
         final expected = <TextWithAttributes>[
           const TextWithAttributes(
             text: 'Bold, text',
@@ -62,7 +60,7 @@ void main() {
         ];
         expect(parserResult, expected);
       } else {
-        throw (Exception('Lexer could not parse input text'));
+        throw Exception('Lexer could not parse input text');
       }
     });
 
@@ -71,7 +69,7 @@ void main() {
       final lexerResult = lexer.parse(text);
 
       if (lexerResult.isSuccess) {
-        final parserResult = parser.parse(lexerResult.value as List<Token>);
+        final parserResult = parser.parse(lexerResult.value);
         final expected = <TextWithAttributes>[
           const TextWithAttributes(
             text: 'Bold, text',
@@ -79,12 +77,11 @@ void main() {
           ),
           const TextWithAttributes(
             text: 'with text',
-            attributes: {},
           ),
         ];
         expect(parserResult, expected);
       } else {
-        throw (Exception('Lexer could not parse input text'));
+        throw Exception('Lexer could not parse input text');
       }
     });
 
@@ -93,11 +90,10 @@ void main() {
       final lexerResult = lexer.parse(text);
 
       if (lexerResult.isSuccess) {
-        final parserResult = parser.parse(lexerResult.value as List<Token>);
+        final parserResult = parser.parse(lexerResult.value);
         final expected = <TextWithAttributes>[
           const TextWithAttributes(
             text: 'Start ',
-            attributes: {},
           ),
           const TextWithAttributes(
             text: 'Italic, bold text',
@@ -109,23 +105,22 @@ void main() {
         ];
         expect(parserResult, expected);
       } else {
-        throw (Exception('Lexer could not parse input text'));
+        throw Exception('Lexer could not parse input text');
       }
     });
 
     test('long text with nested tags, escape chars and new lines', () {
       // const text = 'Start [u][b][i]Lorem ipsum[/b][/i]end[/u]';
       const text =
-          'Start [u][i][b]Italic, bold, underline text[/b][/i]solo underline[/u]\\escapeChar end.';
+          r'Start [u][i][b]Italic, bold, underline text[/b][/i]solo underline[/u]\escapeChar end.';
       final lexerResult = lexer.parse(text);
 
       if (lexerResult.isSuccess) {
-        final parserResult = parser.parse(lexerResult.value as List<Token>);
+        final parserResult = parser.parse(lexerResult.value);
 
         final expected = <TextWithAttributes>[
           const TextWithAttributes(
             text: 'Start ',
-            attributes: {},
           ),
           const TextWithAttributes(
             text: 'Italic, bold, underline text',
@@ -142,13 +137,12 @@ void main() {
             },
           ),
           const TextWithAttributes(
-            text: '\\escapeChar end.',
-            attributes: {},
+            text: r'\escapeChar end.',
           ),
         ];
         expect(parserResult, expected);
       } else {
-        throw (Exception('Lexer could not parse input text'));
+        throw Exception('Lexer could not parse input text');
       }
     });
   });

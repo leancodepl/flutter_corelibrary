@@ -1,11 +1,13 @@
 import 'package:leancode_markup/src/escape_characters.dart';
 import 'package:petitparser/petitparser.dart';
 
-class MarkupDefinition extends GrammarDefinition {
-  @override
-  Parser<List<Token>> start() => ref0(value).end();
+typedef Tokens = List<Token>;
 
-  Parser<List<Token>> value() => [
+class MarkupDefinition extends GrammarDefinition<Tokens> {
+  @override
+  Parser<Tokens> start() => ref0(value).end();
+
+  Parser<Tokens> value() => [
         tagOpeningToken(),
         tagClosingToken(),
         textToken(),
@@ -35,10 +37,10 @@ class MarkupDefinition extends GrammarDefinition {
         ref0(characterEscape),
       ].toChoiceParser();
 
-  Parser<String> characterNormal() => pattern('^[\\');
+  Parser<String> characterNormal() => pattern(r'^[\');
 
   Parser<String> characterEscape() => seq2(
-        char('\\'),
+        char(r'\'),
         anyOf(markupEscapeStrings.keys.join()),
       ).map2((_, char) => markupEscapeStrings[char]!);
 
@@ -70,9 +72,7 @@ class MarkupDefinition extends GrammarDefinition {
   }
 }
 
-typedef Markup = Object?;
-
-final lexer = MarkupDefinition().build<Markup>();
+final lexer = MarkupDefinition().build<Tokens>();
 
 //Token holds information about text or opening
 //or closing token like [b] or [/b] that identify start + end of Bold text
@@ -104,8 +104,8 @@ abstract class OpenCloseToken extends Token {
     this.type,
   );
 
-  OpenCloseToken.open() : type = (OpenCloseType.open);
-  OpenCloseToken.close() : type = (OpenCloseType.close);
+  OpenCloseToken.open() : type = OpenCloseType.open;
+  OpenCloseToken.close() : type = OpenCloseType.close;
 
   final OpenCloseType type;
 

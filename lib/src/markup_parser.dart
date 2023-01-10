@@ -30,7 +30,7 @@ class MarkupParser {
 
 extension TokenX on OpenCloseToken {
   bool get isOpeningToken => type == OpenCloseType.open;
-  bool get isClosingToken => type == OpenCloseType.open;
+  bool get isClosingToken => type == OpenCloseType.close;
 }
 
 extension TokenMapExt<T> on Map<T, List<T>> {
@@ -44,9 +44,9 @@ extension TokenMapExt<T> on Map<T, List<T>> {
 
   void removeTokenFromTokenMap(T token) {
     if (this[token] != null && this[token]!.isNotEmpty) {
-      this[token] = List.from(this[token]!).removeLast();
+      this[token] = List<T>.from(this[token]!)..removeLast();
     } else {
-      throw (Exception('More closing $token tokens, than opening ones.'));
+      throw Exception('More closing $token tokens, than opening ones.');
     }
   }
 }
@@ -67,10 +67,12 @@ extension AttributeX on OpenCloseToken {
 extension Attributes on Map<OpenCloseToken, List<OpenCloseToken>> {
   Set<Attribute> get getAttributesSet {
     final openCloseTokens = keys;
-    Set<Attribute> attributesSet = {};
-    for (var token in openCloseTokens) {
+    final attributesSet = <Attribute>{};
+    for (final token in openCloseTokens) {
       final attr = token.toAttribute();
-      if (attr != null) attributesSet.add(attr);
+      if (attr != null) {
+        attributesSet.add(attr);
+      }
     }
     return attributesSet;
   }

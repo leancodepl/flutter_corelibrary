@@ -1,6 +1,6 @@
 /// Escape characters for Markdown strings.
 const Map<String, String> markupEscapeStrings = {
-  '\\': '\\',
+  r'\': r'\',
   '[': '[',
   'b': '\b',
   'f': '\f',
