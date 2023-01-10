@@ -1,5 +1,5 @@
-import 'package:leancode_markup/src/lexer.dart';
 import 'package:leancode_markup/src/text_with_attributes.dart';
+import 'package:leancode_markup/src/tokens.dart';
 
 class MarkupParser {
   List<TextWithAttributes> parse(List<Token> tokens) {

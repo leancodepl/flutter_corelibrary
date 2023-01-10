@@ -4,45 +4,6 @@ import 'package:leancode_markup/src/markup_parser.dart';
 import 'package:leancode_markup/src/text_with_attributes.dart';
 
 void main() {
-  group('Lexer parses text', () {
-    test('with one tag', () {
-      const text = 'a[i]bba[/i]';
-      final result = lexer.parse(text);
-      final expected = <Token>[
-        const TextToken('a'),
-        ItalicA.open(),
-        const TextToken('bba'),
-        ItalicA.close(),
-      ];
-      expect(result.value, expected);
-    });
-
-    test('with nested tags', () {
-      const text = 'bb[i][b]Italic, bold text[/b][/i]';
-      final result = lexer.parse(text);
-      final expected = <Token>[
-        const TextToken('bb'),
-        ItalicA.open(),
-        BoldA.open(),
-        const TextToken('Italic, bold text'),
-        BoldA.close(),
-        ItalicA.close(),
-      ];
-      expect(result.value, expected);
-    });
-
-    test('with char escape', () {
-      const text = r'bb[b]Italic, bold text\[/b]';
-      final result = lexer.parse(text);
-      final expected = <Token>[
-        const TextToken('bb'),
-        BoldA.open(),
-        const TextToken('Italic, bold text[/b]'),
-      ];
-      expect(result.value, expected);
-    });
-  });
-
   group('Parser parses tokens', () {
     final parser = MarkupParser();
 
