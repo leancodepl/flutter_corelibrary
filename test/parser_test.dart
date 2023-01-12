@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leancode_markup/src/parser/lexer.dart';
 import 'package:leancode_markup/src/parser/markup_parser.dart';
@@ -15,10 +17,10 @@ void main() {
         Token.tagClose('b'),
       ]);
 
-      const expected = [
+      final expected = [
         TaggedText(
           'Bold, text',
-          tags: {'b': null},
+          tags: LinkedHashMap.from(<String, String?>{'b': null}),
         ),
       ];
       expect(result, expected);
@@ -32,10 +34,10 @@ void main() {
         Token.text(' with text'),
       ]);
 
-      const expected = [
+      final expected = [
         TaggedText(
           'Bold, text',
-          tags: {'b': null},
+          tags: LinkedHashMap.from(<String, String?>{'b': null}),
         ),
         TaggedText(' with text'),
       ];
@@ -52,11 +54,11 @@ void main() {
         Token.tagClose('i'),
       ]);
 
-      const expected = [
+      final expected = [
         TaggedText('Start '),
         TaggedText(
           'Italic, bold text',
-          tags: {'i': null, 'b': null},
+          tags: LinkedHashMap.from(<String, String?>{'i': null, 'b': null}),
         ),
       ];
       expect(result, expected);
@@ -74,14 +76,44 @@ void main() {
         Token.tagClose('i'),
       ]);
 
-      const expected = [
+      final expected = [
         TaggedText('Start '),
         TaggedText(
           'Italic, bold text',
-          tags: {'i': null, 'b': null, 'url': 'https://leancode.co'},
+          tags: LinkedHashMap.from(<String, String?>{
+            'i': null,
+            'url': 'https://leancode.co',
+            'b': null,
+          }),
         ),
       ];
       expect(result, expected);
+    });
+
+    test('with preserved order of tags', () {
+      final result = parse(const [
+        Token.text('Start '),
+        Token.tagOpen('i'),
+        Token.tagOpen('url', 'https://leancode.co'),
+        Token.tagOpen('b'),
+        Token.text('Italic, bold text'),
+        Token.tagClose('b'),
+        Token.tagClose('url'),
+        Token.tagClose('i'),
+      ]);
+
+      final expected = [
+        TaggedText('Start '),
+        TaggedText(
+          'Italic, bold text',
+          tags: LinkedHashMap.from(<String, String?>{
+            'url': 'https://leancode.co',
+            'i': null,
+            'b': null,
+          }),
+        ),
+      ];
+      expect(result, isNot(expected));
     });
 
     test('long text with nested tags, escape chars and new lines', () {
@@ -98,13 +130,18 @@ void main() {
         Token.text(r'\escapeChar end.'),
       ]);
 
-      const expected = [
+      final expected = [
         TaggedText('Start '),
         TaggedText(
           'Italic, bold, underline text',
-          tags: {'u': null, 'i': null, 'b': null},
+          tags: LinkedHashMap.from(
+            <String, String?>{'u': null, 'i': null, 'b': null},
+          ),
         ),
-        TaggedText('solo underline', tags: {'u': null}),
+        TaggedText(
+          'solo underline',
+          tags: LinkedHashMap.from(<String, String?>{'u': null}),
+        ),
         TaggedText(r'\escapeChar end.'),
       ];
       expect(result, expected);

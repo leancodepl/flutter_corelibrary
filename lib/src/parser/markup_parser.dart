@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:leancode_markup/src/parser/lexer.dart';
 import 'package:leancode_markup/src/parser/tagged_text.dart';
@@ -39,7 +41,7 @@ Iterable<TaggedText> parseTokens(Tokens tokens, String source) sync* {
     if (content != null) {
       yield TaggedText(
         content,
-        tags: Map.fromEntries(
+        tags: LinkedHashMap.fromEntries(
           tagStack.map((e) => MapEntry(e.name, e.parameter)),
         ),
       );
