@@ -8,7 +8,9 @@ Simple package that allows you parse text with predefined tags, and returns styl
 
 - Parser (`parser.dart`) - takes `Tokens` returns a list of `TaggedText`s containing 'text' and a set of `Tag`s (name of the tag and a possible parameter).
 
-- Tests: lexer and parser is tested
+- Flutter text renderer - given some supported tags and some markup text, it is rendered using the provided styles
+
+- Tests - lexer and parser is tested
 
 ## Available tags
 
@@ -16,7 +18,10 @@ None. Dart part of this package is agnostic to any semantics of tags.
 
 ## TODOs:
 
-1. Flutter part: map list of `TaggedText` to UI together with some way of defining styles/semantics
+1. Flutter tests
+2. Add some base supported tags (`i`, `b`, `u`, etc.)
+3. Optimize rendering. Some style computations can be cached/precomputed at `DefaultMarkupStyle` level
+4. Better error reporting
 
 ### Internal conflu docs:
 
