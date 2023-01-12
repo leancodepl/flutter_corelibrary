@@ -37,7 +37,12 @@ Iterable<TaggedText> parseTokens(Tokens tokens, String source) sync* {
     );
 
     if (content != null) {
-      yield TaggedText(content, tags: tagStack.toSet());
+      yield TaggedText(
+        content,
+        tags: Map.fromEntries(
+          tagStack.map((e) => MapEntry(e.name, e.parameter)),
+        ),
+      );
     }
   }
 }

@@ -8,7 +8,9 @@ class TaggedText {
   });
 
   final String text;
-  final Set<MarkupTag> tags;
+
+  /// tagName -> parameter
+  final Map<String, String?> tags;
 
   @override
   String toString() => 'TaggedText($text, $tags)';
@@ -16,7 +18,7 @@ class TaggedText {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TaggedText && text == other.text && setEquals(tags, other.tags);
+      other is TaggedText && text == other.text && mapEquals(tags, other.tags);
 
   @override
   int get hashCode => Object.hashAll([text, tags]);

@@ -15,10 +15,10 @@ void main() {
         Token.tagClose('b'),
       ]);
 
-      final expected = [
+      const expected = [
         TaggedText(
           'Bold, text',
-          tags: {const MarkupTag('b')},
+          tags: {'b': null},
         ),
       ];
       expect(result, expected);
@@ -32,12 +32,12 @@ void main() {
         Token.text(' with text'),
       ]);
 
-      final expected = [
+      const expected = [
         TaggedText(
           'Bold, text',
-          tags: {const MarkupTag('b')},
+          tags: {'b': null},
         ),
-        const TaggedText(' with text'),
+        TaggedText(' with text'),
       ];
       expect(result, expected);
     });
@@ -52,11 +52,11 @@ void main() {
         Token.tagClose('i'),
       ]);
 
-      final expected = [
-        const TaggedText('Start '),
+      const expected = [
+        TaggedText('Start '),
         TaggedText(
           'Italic, bold text',
-          tags: {const MarkupTag('i'), const MarkupTag('b')},
+          tags: {'i': null, 'b': null},
         ),
       ];
       expect(result, expected);
@@ -74,15 +74,11 @@ void main() {
         Token.tagClose('i'),
       ]);
 
-      final expected = [
-        const TaggedText('Start '),
+      const expected = [
+        TaggedText('Start '),
         TaggedText(
           'Italic, bold text',
-          tags: {
-            const MarkupTag('i'),
-            const MarkupTag('b'),
-            const MarkupTag('url', 'https://leancode.co')
-          },
+          tags: {'i': null, 'b': null, 'url': 'https://leancode.co'},
         ),
       ];
       expect(result, expected);
@@ -102,18 +98,14 @@ void main() {
         Token.text(r'\escapeChar end.'),
       ]);
 
-      final expected = [
-        const TaggedText('Start '),
+      const expected = [
+        TaggedText('Start '),
         TaggedText(
           'Italic, bold, underline text',
-          tags: {
-            const MarkupTag('u'),
-            const MarkupTag('i'),
-            const MarkupTag('b')
-          },
+          tags: {'u': null, 'i': null, 'b': null},
         ),
-        TaggedText('solo underline', tags: {const MarkupTag('u')}),
-        const TaggedText(r'\escapeChar end.'),
+        TaggedText('solo underline', tags: {'u': null}),
+        TaggedText(r'\escapeChar end.'),
       ];
       expect(result, expected);
     });
