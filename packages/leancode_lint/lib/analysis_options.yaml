@@ -29,13 +29,18 @@ linter:
     avoid_void_async: true
     cascade_invocations: true
     cast_nullable_to_non_nullable: true
+    collection_methods_unrelated_type: true
+    combinators_ordering: true
     comment_references: true
     conditional_uri_does_not_exist: true
+    dangling_library_doc_comments: true
     depend_on_referenced_packages: true
     deprecated_consistency: true
     directives_ordering: true
+    enable_null_safety: true
     eol_at_end_of_file: true
     leading_newlines_in_multiline_strings: true
+    library_annotations: true
     library_private_types_in_public_api: false
     literal_only_boolean_expressions: true
     no_adjacent_strings_in_list: true
@@ -72,6 +77,7 @@ linter:
     unnecessary_constructor_name: true
     unnecessary_lambdas: true
     unnecessary_late: true
+    unnecessary_library_directive: true
     unnecessary_null_aware_assignments: true
     unnecessary_null_checks: true
     unnecessary_nullable_for_final_variable_declarations: true
@@ -85,6 +91,7 @@ linter:
     use_named_constants: true
     use_raw_strings: true
     use_string_buffers: true
+    use_string_in_part_of_directives: true
     use_test_throws_matchers: true
     use_to_and_as_if_applicable: true
     use_super_parameters: true

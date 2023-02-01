@@ -1,3 +1,14 @@
+# 2.1.0
+
+- Enable the following lints:
+  - [`collection_methods_unrelated_type`](https://dart-lang.github.io/linter/lints/collection_methods_unrelated_type.html)
+  - [`combinators_ordering`](https://dart-lang.github.io/linter/lints/combinators_ordering.html)
+  - [`dangling_library_doc_comments`](https://dart-lang.github.io/linter/lints/dangling_library_doc_comments.html)
+  - [`enable_null_safety`](https://dart-lang.github.io/linter/lints/enable_null_safety.html)
+  - [`library_annotations`](https://dart-lang.github.io/linter/lints/library_annotations.html)
+  - [`unnecessary_library_directive`](https://dart-lang.github.io/linter/lints/unnecessary_library_directive.html)
+  - [`use_string_in_part_of_directives`](https://dart-lang.github.io/linter/lints/use_string_in_part_of_directives.html)
+
 # 2.0.0+1
 
 - Fix broken changelog (#90)
