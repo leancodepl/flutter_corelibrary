@@ -10,25 +10,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+
     defaults:
       run:
         working-directory: packages/leancode_hooks
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: 2.16.0
-
-      - name: Download pub.dev credentials
-        env:
-          CREDENTIALS: ${{ secrets.PUB_DEV_CREDENTIALS }}
-        run: |
-          mkdir -p ~/.pub-cache
-          echo $CREDENTIALS > ~/.pub-cache/credentials.json
+          sdk: 2.18.3
 
       - name: Publish
         run: dart pub publish -f
