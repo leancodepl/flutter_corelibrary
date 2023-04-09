@@ -1,3 +1,7 @@
+# 3.0.0
+
+- Migrate from `analyzer.strong-mode.{implicit-casts,implicit-dynamic}` to `analyzer.language.{strict-casts,strict-inference,strict-raw-types}` which might report new warnings
+
 # 2.1.0
 
 - Enable the following lints:
