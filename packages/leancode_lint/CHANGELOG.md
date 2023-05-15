@@ -1,3 +1,14 @@
+# 4.0.0
+
+- Enable the following lints:
+  - [`implicit_reopen`](https://dart-lang.github.io/linter/lints/implicit_reopen.html)
+  - [`unnecessary_breaks`](https://dart-lang.github.io/linter/lints/unnecessary_breaks.html)
+  - [`type_literal_in_constant_pattern`](https://dart-lang.github.io/linter/lints/type_literal_in_constant_pattern.html)
+  - [`invalid_case_patterns`](https://dart-lang.github.io/linter/lints/invalid_case_patterns.html)
+  - [`deprecated_member_use_from_same_package`](https://dart-lang.github.io/linter/lints/deprecated_member_use_from_same_package.html)
+- Remove the deprecated lint [`enable_null_safety`](https://dart-lang.github.io/linter/lints/enable_null_safety.html)
+- Bump minimum Dart version to 3.0
+
 # 3.0.0
 
 - Migrate from `analyzer.strong-mode.{implicit-casts,implicit-dynamic}` to `analyzer.language.{strict-casts,strict-inference,strict-raw-types}` which might report new warnings
