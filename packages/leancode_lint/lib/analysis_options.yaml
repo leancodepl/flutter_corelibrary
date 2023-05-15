@@ -37,9 +37,11 @@ linter:
     dangling_library_doc_comments: true
     depend_on_referenced_packages: true
     deprecated_consistency: true
+    deprecated_member_use_from_same_package: true
     directives_ordering: true
-    enable_null_safety: true
     eol_at_end_of_file: true
+    implicit_reopen: true
+    invalid_case_patterns: true
     leading_newlines_in_multiline_strings: true
     library_annotations: true
     library_private_types_in_public_api: false
@@ -73,8 +75,10 @@ linter:
     throw_in_finally: true
     tighten_type_of_initializing_formals: true
     type_annotate_public_apis: true
+    type_literal_in_constant_pattern: true
     unawaited_futures: true
     unnecessary_await_in_return: true
+    unnecessary_breaks: true
     unnecessary_constructor_name: true
     unnecessary_lambdas: true
     unnecessary_late: true
