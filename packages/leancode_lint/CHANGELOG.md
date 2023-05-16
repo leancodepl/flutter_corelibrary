@@ -8,6 +8,7 @@
   - [`deprecated_member_use_from_same_package`](https://dart-lang.github.io/linter/lints/deprecated_member_use_from_same_package.html)
 - Remove the deprecated lint [`enable_null_safety`](https://dart-lang.github.io/linter/lints/enable_null_safety.html)
 - Bump minimum Dart version to 3.0
+- Remove dependence on `flutter_lints`
 
 # 3.0.0
 
