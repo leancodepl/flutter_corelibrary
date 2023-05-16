@@ -2,5 +2,5 @@ include: package:leancode_lint/analysis_options.yaml
 
 linter:
   rules:
-    package_api_docs: true
-    public_member_api_docs: true
+    - package_api_docs
+    - public_member_api_docs

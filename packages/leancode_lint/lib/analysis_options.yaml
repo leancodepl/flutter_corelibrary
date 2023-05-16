@@ -73,7 +73,6 @@ linter:
     - library_annotations
     - library_names
     - library_prefixes
-    - library_private_types_in_public_api
     - list_remove_unrelated_type
     - literal_only_boolean_expressions
     - no_adjacent_strings_in_list
