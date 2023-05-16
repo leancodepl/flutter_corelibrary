@@ -1,3 +1,7 @@
+# 4.0.0+1
+
+- Remove lint [`library_private_types_in_public_api`](https://dart-lang.github.io/linter/lints/library_private_types_in_public_api.html) which was accidentally enabled
+
 # 4.0.0
 
 - Enable the following lints:
