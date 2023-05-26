@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// Registers [effect] to be run in
 /// WidgetsBinding.instance.addPostFrameCallback.
-void usePostFrameEffect(VoidCallback effect, [List<Object>? keys]) {
+void usePostFrameEffect(VoidCallback effect, [List<Object?>? keys]) {
   useEffect(
     () {
       WidgetsBinding.instance.addPostFrameCallback((_) => effect());
