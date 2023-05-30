@@ -1,3 +1,7 @@
+# 0.0.4
+
+- Make `usePostFrameEffect` accept nullable keys.
+
 # 0.0.3+1
 
 - Fix build badge in README.
