@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dart_release: ['2.14.0']
+        dart_release: ['3.0.1']
 
     defaults:
       run:
