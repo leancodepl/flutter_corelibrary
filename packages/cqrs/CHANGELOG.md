@@ -1,3 +1,7 @@
+# 9.0.0
+
+- Bumped `http` dependency to `1.0.0`.
+
 # 8.0.0+1
 
 - Fix build badge in README.
