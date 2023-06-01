@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:http/http.dart'
     show
         BaseRequest,
@@ -5,7 +7,6 @@ import 'package:http/http.dart'
         Request,
         StreamedRequest,
         StreamedResponse;
-import 'package:leancode_lint/leancode_lint.dart';
 import 'package:login_client/login_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';

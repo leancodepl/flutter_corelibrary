@@ -16,7 +16,7 @@
 library login_client;
 
 export 'package:oauth2/oauth2.dart'
-    show Credentials, AuthorizationException, ExpirationException;
+    show AuthorizationException, Credentials, ExpirationException;
 
 export 'src/credentials_storage/credentials_storage.dart';
 export 'src/credentials_storage/in_memory_credentials_storage.dart';
