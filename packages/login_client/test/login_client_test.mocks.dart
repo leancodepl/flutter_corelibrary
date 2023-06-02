@@ -28,8 +28,8 @@ class _FakeClient_0 extends _i1.Fake implements _i2.Client {}
 
 class _FakeCredentials_1 extends _i1.Fake implements _i2.Credentials {}
 
-class _FakeStreamedResponse_2 extends _i1.Fake implements _i3.StreamedResponse {
-}
+class _FakeStreamedResponse_2 extends _i1.Fake
+    implements _i3.StreamedResponse {}
 
 class _FakeResponse_3 extends _i1.Fake implements _i3.Response {}
 

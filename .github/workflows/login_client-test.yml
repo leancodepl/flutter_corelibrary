@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dart_release: ['2.14.0']
+        dart_release: ['3.0.1']
 
     defaults:
       run:
@@ -53,7 +53,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           dart test --coverage=coverage
-          dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.packages --report-on=lib
+          dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
 
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
