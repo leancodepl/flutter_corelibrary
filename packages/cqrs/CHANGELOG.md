@@ -2,6 +2,8 @@
 
 - Bumped `http` dependency to `1.0.0`. (#105)
 - **Breaking:** Bump minimum Dart version to 3.0. (#105)
+- Mark the following as `abstract interface`: `CqrsMethod`, `Query`, `Command`, `Operation`. (#107)
+  - To migrate simply implement them rather than extending.
 
 # 8.0.0+1
 
