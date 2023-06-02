@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Base class for contracts that can be serialized and sent to the backend.
-abstract class CqrsMethod {
+abstract interface class CqrsMethod {
   /// Returns a JSON-encoded representation of the data this class carries.
   Map<String, dynamic> toJson();
 
@@ -23,16 +23,16 @@ abstract class CqrsMethod {
 }
 
 /// Query describing a criteria for a query and the results it returns.
-abstract class Query<T> implements CqrsMethod {
+abstract interface class Query<T> implements CqrsMethod {
   /// Returns a result of type `T` deserialzied from the `json`.
   T resultFactory(dynamic json);
 }
 
 /// Command carrying data related to performing a certain action on the backend.
-abstract class Command implements CqrsMethod {}
+abstract interface class Command implements CqrsMethod {}
 
 /// Operation describing a criteria for a query, a command, and the results it returns.
-abstract class Operation<T> implements CqrsMethod {
+abstract interface class Operation<T> implements CqrsMethod {
   /// Returns a result of type `T` deserialzied from the `json`.
   T resultFactory(dynamic json);
 }

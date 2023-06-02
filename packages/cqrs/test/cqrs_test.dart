@@ -243,7 +243,7 @@ void mockClientPost(MockClient client, Response response) {
   ).thenAnswer((_) async => response);
 }
 
-class ExampleQuery extends Query<bool?> {
+class ExampleQuery implements Query<bool?> {
   @override
   String getFullName() => 'ExampleQuery';
 
@@ -254,7 +254,7 @@ class ExampleQuery extends Query<bool?> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleQueryFailingResultFactory extends Query<bool> {
+class ExampleQueryFailingResultFactory implements Query<bool> {
   @override
   String getFullName() => 'ExampleQuery';
 
@@ -265,7 +265,7 @@ class ExampleQueryFailingResultFactory extends Query<bool> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleOperation extends Operation<bool?> {
+class ExampleOperation implements Operation<bool?> {
   @override
   String getFullName() => 'ExampleOperation';
 
@@ -276,7 +276,7 @@ class ExampleOperation extends Operation<bool?> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleOperationFailingResultFactory extends Operation<bool> {
+class ExampleOperationFailingResultFactory implements Operation<bool> {
   @override
   String getFullName() => 'ExampleOperation';
 
@@ -287,7 +287,7 @@ class ExampleOperationFailingResultFactory extends Operation<bool> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleCommand extends Command {
+class ExampleCommand implements Command {
   @override
   String getFullName() => 'ExampleCommand';
 
