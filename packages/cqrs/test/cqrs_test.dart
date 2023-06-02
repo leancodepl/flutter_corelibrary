@@ -3,13 +3,11 @@ import 'package:cqrs/src/cqrs.dart';
 import 'package:cqrs/src/cqrs_exception.dart';
 import 'package:cqrs/src/transport_types.dart';
 import 'package:http/http.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import 'cqrs_test.mocks.dart';
+class MockClient extends Mock implements Client {}
 
-@GenerateMocks([Client])
 void main() {
   group('CQRS', () {
     late MockClient client;
@@ -33,11 +31,11 @@ void main() {
         expect(result, true);
 
         verify(
-          client.post(
+          () => client.post(
             Uri.parse('https://example.org/api/query/ExampleQuery'),
-            body: anyNamed('body'),
-            headers: argThat(
-              isA<Map<String, String>>()
+            body: any(named: 'body'),
+            headers: any(
+              that: isA<Map<String, String>>()
                   .having((h) => h['X-Test'], 'X-Test', 'foobar')
                   .having(
                     (h) => h['Content-Type'],
@@ -111,10 +109,10 @@ void main() {
         );
 
         verify(
-          client.post(
+          () => client.post(
             Uri.parse('https://example.org/api/command/ExampleCommand'),
-            body: anyNamed('body'),
-            headers: anyNamed('headers'),
+            body: any(named: 'body'),
+            headers: any(named: 'headers'),
           ),
         ).called(1);
       });
@@ -170,11 +168,11 @@ void main() {
         expect(result, true);
 
         verify(
-          client.post(
+          () => client.post(
             Uri.parse('https://example.org/api/operation/ExampleOperation'),
-            body: anyNamed('body'),
-            headers: argThat(
-              isA<Map<String, String>>()
+            body: any(named: 'body'),
+            headers: any(
+              that: isA<Map<String, String>>()
                   .having((h) => h['X-Test'], 'X-Test', 'foobar')
                   .having(
                     (h) => h['Content-Type'],
@@ -234,11 +232,12 @@ void main() {
 }
 
 void mockClientPost(MockClient client, Response response) {
+  registerFallbackValue(Uri());
   when(
-    client.post(
-      any,
-      body: anyNamed('body'),
-      headers: anyNamed('headers'),
+    () => client.post(
+      any(),
+      body: any(named: 'body'),
+      headers: any(named: 'headers'),
     ),
   ).thenAnswer((_) async => response);
 }
