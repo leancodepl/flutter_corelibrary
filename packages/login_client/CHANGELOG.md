@@ -1,7 +1,7 @@
 # 3.0.0
 
-- Bumped `http` dependency to `1.0.0`.
-- **Breaking:** Bump minimum Dart version to 3.0.
+- Bumped `http` dependency to `1.0.0`. (#105)
+- **Breaking:** Bump minimum Dart version to 3.0. (#105)
 
 # 2.1.0+2
 
