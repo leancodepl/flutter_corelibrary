@@ -13,7 +13,9 @@ import 'package:cqrs/cqrs.dart';
 
 // You may use json_serializable for cutting on boilerplate code for your queries...
 class AllFlowers implements Query<List<Flower>> {
-  int page;
+  const AllFlowers({required this.page});
+
+  final int page;
 
   @override
   String getFullName() => 'AllFlowers';
@@ -29,8 +31,13 @@ class AllFlowers implements Query<List<Flower>> {
 
 // ...as well as commands.
 class AddFlower implements Command {
-  String name;
-  bool pretty;
+  const AddFlower({
+    required this.name,
+    required this.pretty,
+  });
+
+  final String name;
+  final bool pretty;
 
   @override
   String getFullName() => 'AddFlower';
@@ -54,10 +61,10 @@ final apiUri = Uri.parse('https://flowers.garden/api/');
 final cqrs = Cqrs(loginClient, apiUri);
 
 // Fetch first page of the all flowers query from the CQRS server.
-final flowers = await cqrs.get(AllFlowers()..page = 1);
+final flowers = await cqrs.get(AllFlowers(page: 1));
 
 // Run a command called add flower which... adds a pretty Daisy.
-final result = await cqrs.run(AddFlower()..name = 'Daisy'..pretty = true);
+final result = await cqrs.run(AddFlower(name: 'Daisy', pretty: true));
 
 // You can check the command result for its status, whether it successfully ran.
 if (result.success) {

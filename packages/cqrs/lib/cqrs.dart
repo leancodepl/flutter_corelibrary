@@ -26,12 +26,15 @@
 /// );
 ///
 /// // Fetching first page of flowers
-/// final flowers = await cqrs.get(AllFlowers()..page = 1);
+/// final flowers = await cqrs.get(AllFlowers(page: 1));
 ///
 /// // Adding a new flower
-/// final result = await cqrs.run(AddFlower()
-///   ..name = 'Daisy'
-///   ..pretty = true);
+/// final result = await cqrs.run(
+///   AddFlower(
+///     name: 'Daisy',
+///     pretty: true,
+///   ),
+/// );
 ///
 /// print(result.success); // true
 /// ```
@@ -39,10 +42,12 @@
 /// See also:
 ///
 /// - https://github.com/leancodepl/corelibrary
-/// - https://www.nuget.org/packages/LeanCode.ContractsGenerator/ - code
+/// - https://github.com/leancodepl/contractsgenerator - code
 /// generation tool for easy contracts transpilation from C# to Dart and
 /// TypeScript.
-library cqrs;
+/// - https://github.com/leancodepl/contractsgenerator-dart - dart
+/// code contract generator.
+library;
 
 export 'src/command_result.dart';
 export 'src/cqrs.dart';
