@@ -12,6 +12,11 @@ void main() {
   group('CQRS', () {
     late MockClient client;
     late Cqrs cqrs;
+
+    setUpAll(() {
+      registerFallbackValue(Uri());
+    });
+
     setUp(() {
       client = MockClient();
       cqrs = Cqrs(client, Uri.parse('https://example.org/api/'));
@@ -232,7 +237,6 @@ void main() {
 }
 
 void mockClientPost(MockClient client, Response response) {
-  registerFallbackValue(Uri());
   when(
     () => client.post(
       any(),
