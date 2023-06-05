@@ -3,17 +3,20 @@ import 'package:cqrs/src/cqrs.dart';
 import 'package:cqrs/src/cqrs_exception.dart';
 import 'package:cqrs/src/transport_types.dart';
 import 'package:http/http.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import 'cqrs_test.mocks.dart';
+class MockClient extends Mock implements Client {}
 
-@GenerateMocks([Client])
 void main() {
   group('CQRS', () {
     late MockClient client;
     late Cqrs cqrs;
+
+    setUpAll(() {
+      registerFallbackValue(Uri());
+    });
+
     setUp(() {
       client = MockClient();
       cqrs = Cqrs(client, Uri.parse('https://example.org/api/'));
@@ -33,11 +36,11 @@ void main() {
         expect(result, true);
 
         verify(
-          client.post(
+          () => client.post(
             Uri.parse('https://example.org/api/query/ExampleQuery'),
-            body: anyNamed('body'),
-            headers: argThat(
-              isA<Map<String, String>>()
+            body: any(named: 'body'),
+            headers: any(
+              that: isA<Map<String, String>>()
                   .having((h) => h['X-Test'], 'X-Test', 'foobar')
                   .having(
                     (h) => h['Content-Type'],
@@ -111,10 +114,10 @@ void main() {
         );
 
         verify(
-          client.post(
+          () => client.post(
             Uri.parse('https://example.org/api/command/ExampleCommand'),
-            body: anyNamed('body'),
-            headers: anyNamed('headers'),
+            body: any(named: 'body'),
+            headers: any(named: 'headers'),
           ),
         ).called(1);
       });
@@ -170,11 +173,11 @@ void main() {
         expect(result, true);
 
         verify(
-          client.post(
+          () => client.post(
             Uri.parse('https://example.org/api/operation/ExampleOperation'),
-            body: anyNamed('body'),
-            headers: argThat(
-              isA<Map<String, String>>()
+            body: any(named: 'body'),
+            headers: any(
+              that: isA<Map<String, String>>()
                   .having((h) => h['X-Test'], 'X-Test', 'foobar')
                   .having(
                     (h) => h['Content-Type'],
@@ -235,15 +238,15 @@ void main() {
 
 void mockClientPost(MockClient client, Response response) {
   when(
-    client.post(
-      any,
-      body: anyNamed('body'),
-      headers: anyNamed('headers'),
+    () => client.post(
+      any(),
+      body: any(named: 'body'),
+      headers: any(named: 'headers'),
     ),
   ).thenAnswer((_) async => response);
 }
 
-class ExampleQuery extends Query<bool?> {
+class ExampleQuery implements Query<bool?> {
   @override
   String getFullName() => 'ExampleQuery';
 
@@ -254,7 +257,7 @@ class ExampleQuery extends Query<bool?> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleQueryFailingResultFactory extends Query<bool> {
+class ExampleQueryFailingResultFactory implements Query<bool> {
   @override
   String getFullName() => 'ExampleQuery';
 
@@ -265,7 +268,7 @@ class ExampleQueryFailingResultFactory extends Query<bool> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleOperation extends Operation<bool?> {
+class ExampleOperation implements Operation<bool?> {
   @override
   String getFullName() => 'ExampleOperation';
 
@@ -276,7 +279,7 @@ class ExampleOperation extends Operation<bool?> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleOperationFailingResultFactory extends Operation<bool> {
+class ExampleOperationFailingResultFactory implements Operation<bool> {
   @override
   String getFullName() => 'ExampleOperation';
 
@@ -287,7 +290,7 @@ class ExampleOperationFailingResultFactory extends Operation<bool> {
   Map<String, dynamic> toJson() => <String, dynamic>{};
 }
 
-class ExampleCommand extends Command {
+class ExampleCommand implements Command {
   @override
   String getFullName() => 'ExampleCommand';
 
