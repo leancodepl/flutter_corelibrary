@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// An OAuth2 compliant login client library.
-library login_client;
+library;
 
 export 'package:oauth2/oauth2.dart'
     show AuthorizationException, Credentials, ExpirationException;

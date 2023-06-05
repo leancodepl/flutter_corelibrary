@@ -19,7 +19,7 @@ import '../login_client.dart';
 import '../oauth_settings.dart';
 
 /// An interface describing a strategy of logging in to the [LoginClient].
-abstract class AuthorizationStrategy {
+abstract interface class AuthorizationStrategy {
   /// Execute this [AuthorizationStrategy] and create an [oauth2.Client] that
   /// is authorized.
   Future<oauth2.Client> execute(
