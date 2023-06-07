@@ -1,4 +1,4 @@
-// Copyright 2021 LeanCode Sp. z o.o.
+// Copyright 2023 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import 'package:oauth2/oauth2.dart' as oauth2;
 
 /// An interface describing the storage for [oauth2.Credentials].
-abstract class CredentialsStorage {
+abstract interface class CredentialsStorage {
   /// Get saved [oauth2.Credentials] or null when none could be found.
   Future<oauth2.Credentials?> read();
 

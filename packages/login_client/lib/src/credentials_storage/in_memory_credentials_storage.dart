@@ -1,4 +1,4 @@
-// Copyright 2021 LeanCode Sp. z o.o.
+// Copyright 2023 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import 'credentials_storage.dart';
 
 /// A [CredentialsStorage] implementation storing credentials in the memory.
-class InMemoryCredentialsStorage extends CredentialsStorage {
+class InMemoryCredentialsStorage implements CredentialsStorage {
   oauth2.Credentials? _credentials;
 
   @override

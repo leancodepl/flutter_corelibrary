@@ -17,8 +17,7 @@ dependencies:
   oauth2: ^2.0.0
 
 dev_dependencies:
-  build_runner: ^2.0.0
   coverage: ^1.6.3
   leancode_lint: ^4.0.0+1
-  mockito: ^5.0.0
+  mocktail: ^0.3.0
   test: ^1.16.4

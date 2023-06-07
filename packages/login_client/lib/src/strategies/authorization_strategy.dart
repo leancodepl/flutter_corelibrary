@@ -1,4 +1,4 @@
-// Copyright 2021 LeanCode Sp. z o.o.
+// Copyright 2023 LeanCode Sp. z o.o.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import '../login_client.dart';
 import '../oauth_settings.dart';
 
 /// An interface describing a strategy of logging in to the [LoginClient].
-abstract class AuthorizationStrategy {
+abstract interface class AuthorizationStrategy {
   /// Execute this [AuthorizationStrategy] and create an [oauth2.Client] that
   /// is authorized.
   Future<oauth2.Client> execute(
