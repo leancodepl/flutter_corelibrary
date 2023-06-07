@@ -3,7 +3,7 @@
 - Bumped `http` dependency to `1.0.0`. (#105)
 - **Breaking:** Bump minimum Dart version to 3.0. (#105)
 - Mark the following as `abstract interface`: `CredentialsStorage` and `AuthorizationStrategy`. (#107)
-  - To migrate simply implement them rather than extending.
+  - To migrate simply implement them rather than extend.
 
 # 2.1.0+2
 
