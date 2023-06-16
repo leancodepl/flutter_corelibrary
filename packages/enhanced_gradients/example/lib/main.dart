@@ -36,6 +36,8 @@ class _MainAppState extends State<MainApp> {
       if (useStops) {
         _stops = List<double>.generate(length, (index) => _random.nextDouble())
           ..sort();
+        _stops![0] = 0;
+        _stops![length - 1] = 1;
       } else {
         _stops = null;
       }
@@ -53,12 +55,11 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     final gradient = LinearGradient(colors: _colors, stops: _stops);
 
-    print('$_colors, $_stops');
-
     return MaterialApp(
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: _randomizeGradient,
+          child: const Icon(Icons.shuffle),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -19,7 +19,7 @@ void main() {
 
       final gradient = LinearGradient(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
       ).enhanced(
         approximationSubdivisions: subdivisions,
       );
@@ -49,7 +49,7 @@ void main() {
 
       final gradient = RadialGradient(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
       ).enhanced(
         approximationSubdivisions: subdivisions,
       );
@@ -79,7 +79,7 @@ void main() {
 
       final gradient = SweepGradient(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
       ).enhanced(
         approximationSubdivisions: subdivisions,
       );

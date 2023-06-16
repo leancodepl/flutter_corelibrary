@@ -19,13 +19,13 @@ void main() {
 
       final gradient = EnhancedLinearGradient(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
         approximationSubdivisions: subdivisions,
       );
 
       final (expectedColors, expectedStops) = approximateGradientLists(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
         lerp: lerpHct,
         subdivisions: subdivisions,
       );
@@ -48,13 +48,13 @@ void main() {
 
       final gradient = EnhancedRadialGradient(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
         approximationSubdivisions: subdivisions,
       );
 
       final (expectedColors, expectedStops) = approximateGradientLists(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
         lerp: lerpHct,
         subdivisions: subdivisions,
       );
@@ -77,13 +77,13 @@ void main() {
 
       final gradient = EnhancedSweepGradient(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
         approximationSubdivisions: subdivisions,
       );
 
       final (expectedColors, expectedStops) = approximateGradientLists(
         colors: colors,
-        stops: stops,
+        stops: stops.cast(),
         lerp: lerpHct,
         subdivisions: subdivisions,
       );

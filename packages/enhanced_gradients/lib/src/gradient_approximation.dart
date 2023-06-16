@@ -7,7 +7,7 @@ import 'package:enhanced_gradients/src/iterable_utils.dart';
 typedef LerpFunction<T> = T? Function(T? a, T? b, double t);
 
 /// Colorstop of a gradient.
-typedef Colorstop = ({Color color, double? stop});
+typedef Colorstop = ({Color color, num? stop});
 
 /// Approximates one part of a gradient defined by two colorstops in a custom
 /// color space using a custom color interpolation function `lerpColor`.
@@ -78,7 +78,7 @@ Iterable<Colorstop> approximateGradient({
 /// as [approximateGradient] but its colorstop API is closer to flutter's.
 (List<Color> colors, List<double>? stops) approximateGradientLists({
   required List<Color> colors,
-  required List<double>? stops,
+  required List<num>? stops,
   required LerpFunction<Color> lerp,
   required int subdivisions,
 }) {
@@ -91,7 +91,7 @@ Iterable<Colorstop> approximateGradient({
 
   final colorstops = zip2(
     colors,
-    stops ?? Iterable<double?>.generate(colors.length, (_) => null),
+    stops ?? Iterable<num?>.generate(colors.length, (_) => null),
   ).map(
     (colorstop) => (color: colorstop.$1, stop: colorstop.$2),
   );
@@ -109,6 +109,6 @@ Iterable<Colorstop> approximateGradient({
 
   return (
     approximated.map((e) => e.color).toList(),
-    stops == null ? null : approximated.map((e) => e.stop!).toList(),
+    stops == null ? null : approximated.map((e) => e.stop!.toDouble()).toList(),
   );
 }
