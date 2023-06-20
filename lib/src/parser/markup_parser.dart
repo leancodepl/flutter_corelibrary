@@ -1,8 +1,7 @@
-import 'dart:collection';
-
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:leancode_markup/src/parser/lexer.dart';
 import 'package:leancode_markup/src/parser/tagged_text.dart';
+import 'package:leancode_markup/src/parser/tokens.dart';
+import 'package:meta/meta.dart';
 
 Iterable<TaggedText> parseMarkup(String markup) {
   final tokens = lexer.parse(markup).value;
@@ -12,18 +11,16 @@ Iterable<TaggedText> parseMarkup(String markup) {
 
 /// Parses tokens into tagged texts.
 /// Assumes [tokens] were constructed from [source] with [lexer].
-@visibleForTesting
+@internal
 Iterable<TaggedText> parseTokens(Tokens tokens, String source) sync* {
   // stack with tag names
   final tagStack = <MarkupTag>[];
 
   for (final token in tokens) {
-    final content = token.when(
-      tagOpen: (name, parameter) {
+    switch (token) {
+      case TagOpenToken(:final name, :final parameter):
         tagStack.add(MarkupTag(name, parameter));
-        return null;
-      },
-      tagClose: (name) {
+      case TagCloseToken(:final name):
         if (tagStack.isEmpty || tagStack.last.name != name) {
           throw MarkupParsingException(
             'Found a closing tag without a matching opening one.',
@@ -32,20 +29,19 @@ Iterable<TaggedText> parseTokens(Tokens tokens, String source) sync* {
         } else {
           tagStack.removeLast();
         }
-
-        return null;
-      },
-      text: (content) => content,
-    );
-
-    if (content != null) {
-      yield TaggedText(
-        content,
-        tags: LinkedHashMap.fromEntries(
-          tagStack.map((e) => MapEntry(e.name, e.parameter)),
-        ),
-      );
+      case TextToken(:final content):
+        yield TaggedText(
+          content,
+          tags: [...tagStack],
+        );
     }
+  }
+
+  if (tagStack.isNotEmpty) {
+    throw MarkupParsingException(
+      'Not all opening tags have a matching closing one.',
+      source,
+    );
   }
 }
 

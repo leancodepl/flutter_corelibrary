@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leancode_markup/src/parser/lexer.dart';
 import 'package:leancode_markup/src/parser/markup_parser.dart';
@@ -12,15 +10,15 @@ void main() {
 
     test('with simple tag', () {
       final result = parse(const [
-        Token.tagOpen('b'),
-        Token.text('Bold, text'),
-        Token.tagClose('b'),
+        TagOpenToken('b'),
+        TextToken('Bold, text'),
+        TagCloseToken('b'),
       ]);
 
       final expected = [
         TaggedText(
           'Bold, text',
-          tags: LinkedHashMap.from(<String, String?>{'b': null}),
+          tags: const [MarkupTag('b')],
         ),
       ];
       expect(result, expected);
@@ -28,16 +26,16 @@ void main() {
 
     test('with simple tag, and text on the end', () {
       final result = parse(const [
-        Token.tagOpen('b'),
-        Token.text('Bold, text'),
-        Token.tagClose('b'),
-        Token.text(' with text'),
+        TagOpenToken('b'),
+        TextToken('Bold, text'),
+        TagCloseToken('b'),
+        TextToken(' with text'),
       ]);
 
       final expected = [
         TaggedText(
           'Bold, text',
-          tags: LinkedHashMap.from(<String, String?>{'b': null}),
+          tags: const [MarkupTag('b')],
         ),
         TaggedText(' with text'),
       ];
@@ -46,19 +44,19 @@ void main() {
 
     test('with nested tags', () {
       final result = parse(const [
-        Token.text('Start '),
-        Token.tagOpen('i'),
-        Token.tagOpen('b'),
-        Token.text('Italic, bold text'),
-        Token.tagClose('b'),
-        Token.tagClose('i'),
+        TextToken('Start '),
+        TagOpenToken('i'),
+        TagOpenToken('b'),
+        TextToken('Italic, bold text'),
+        TagCloseToken('b'),
+        TagCloseToken('i'),
       ]);
 
       final expected = [
         TaggedText('Start '),
         TaggedText(
           'Italic, bold text',
-          tags: LinkedHashMap.from(<String, String?>{'i': null, 'b': null}),
+          tags: [const MarkupTag('i'), const MarkupTag('b')],
         ),
       ];
       expect(result, expected);
@@ -66,25 +64,25 @@ void main() {
 
     test('with tags with a parameter', () {
       final result = parse(const [
-        Token.text('Start '),
-        Token.tagOpen('i'),
-        Token.tagOpen('url', 'https://leancode.co'),
-        Token.tagOpen('b'),
-        Token.text('Italic, bold text'),
-        Token.tagClose('b'),
-        Token.tagClose('url'),
-        Token.tagClose('i'),
+        TextToken('Start '),
+        TagOpenToken('i'),
+        TagOpenToken('url', 'https://leancode.co'),
+        TagOpenToken('b'),
+        TextToken('Italic, bold text'),
+        TagCloseToken('b'),
+        TagCloseToken('url'),
+        TagCloseToken('i'),
       ]);
 
       final expected = [
         TaggedText('Start '),
         TaggedText(
           'Italic, bold text',
-          tags: LinkedHashMap.from(<String, String?>{
-            'i': null,
-            'url': 'https://leancode.co',
-            'b': null,
-          }),
+          tags: [
+            const MarkupTag('i'),
+            const MarkupTag('url', 'https://leancode.co'),
+            const MarkupTag('b'),
+          ],
         ),
       ];
       expect(result, expected);
@@ -92,25 +90,25 @@ void main() {
 
     test('with preserved order of tags', () {
       final result = parse(const [
-        Token.text('Start '),
-        Token.tagOpen('i'),
-        Token.tagOpen('url', 'https://leancode.co'),
-        Token.tagOpen('b'),
-        Token.text('Italic, bold text'),
-        Token.tagClose('b'),
-        Token.tagClose('url'),
-        Token.tagClose('i'),
+        TextToken('Start '),
+        TagOpenToken('i'),
+        TagOpenToken('url', 'https://leancode.co'),
+        TagOpenToken('b'),
+        TextToken('Italic, bold text'),
+        TagCloseToken('b'),
+        TagCloseToken('url'),
+        TagCloseToken('i'),
       ]);
 
       final expected = [
         TaggedText('Start '),
         TaggedText(
           'Italic, bold text',
-          tags: LinkedHashMap.from(<String, String?>{
-            'url': 'https://leancode.co',
-            'i': null,
-            'b': null,
-          }),
+          tags: [
+            const MarkupTag('url', 'https://leancode.co'),
+            const MarkupTag('i'),
+            const MarkupTag('b'),
+          ],
         ),
       ];
       expect(result, isNot(expected));
@@ -118,33 +116,55 @@ void main() {
 
     test('long text with nested tags, escape chars and new lines', () {
       final result = parse(const [
-        Token.text('Start '),
-        Token.tagOpen('u'),
-        Token.tagOpen('i'),
-        Token.tagOpen('b'),
-        Token.text('Italic, bold, underline text'),
-        Token.tagClose('b'),
-        Token.tagClose('i'),
-        Token.text('solo underline'),
-        Token.tagClose('u'),
-        Token.text(r'\escapeChar end.'),
+        TextToken('Start '),
+        TagOpenToken('u'),
+        TagOpenToken('i'),
+        TagOpenToken('b'),
+        TextToken('Italic, bold, underline text'),
+        TagCloseToken('b'),
+        TagCloseToken('i'),
+        TextToken('solo underline'),
+        TagCloseToken('u'),
+        TextToken(r'\escapeChar end.'),
       ]);
 
       final expected = [
         TaggedText('Start '),
         TaggedText(
           'Italic, bold, underline text',
-          tags: LinkedHashMap.from(
-            <String, String?>{'u': null, 'i': null, 'b': null},
-          ),
+          tags: [
+            const MarkupTag('u'),
+            const MarkupTag('i'),
+            const MarkupTag('b'),
+          ],
         ),
         TaggedText(
           'solo underline',
-          tags: LinkedHashMap.from(<String, String?>{'u': null}),
+          tags: [
+            const MarkupTag('u'),
+          ],
         ),
         TaggedText(r'\escapeChar end.'),
       ];
       expect(result, expected);
+    });
+
+    test('fails for unclosed tags', () {
+      List<TaggedText> result() => parse(const [
+            TagOpenToken('u'),
+            TextToken('Start'),
+          ]);
+
+      expect(result, throwsA(isA<MarkupParsingException>()));
+    });
+
+    test('fails to close unopened tags', () {
+      List<TaggedText> result() => parse(const [
+            TextToken('Start'),
+            TagCloseToken('u'),
+          ]);
+
+      expect(result, throwsA(isA<MarkupParsingException>()));
     });
   });
 }

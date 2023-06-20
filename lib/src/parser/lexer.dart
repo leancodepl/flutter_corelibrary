@@ -13,11 +13,6 @@ class MarkupDefinition extends GrammarDefinition<Tokens> {
         textToken(),
       ].toChoiceParser().star();
 
-  Parser<Token> textToken() => [
-        characterNormal(),
-        characterPrimitive(),
-      ].toChoiceParser().plus().map((value) => Token.text(value.join()));
-
   Parser<Token> tagOpeningToken() => seq4(
         char('['),
         pattern('a-z').plus(),
@@ -25,13 +20,18 @@ class MarkupDefinition extends GrammarDefinition<Tokens> {
             .optional()
             .map((value) => value?.second),
         char(']'),
-      ).map4((_, tag, param, ___) => Token.tagOpen(tag.join(), param));
+      ).map4((_, tag, param, ___) => TagOpenToken(tag.join(), param));
 
   Parser<Token> tagClosingToken() => seq3(
         string('[/'),
         pattern('a-z').plus(),
         char(']'),
-      ).map3((_, tag, ___) => Token.tagClose(tag.join()));
+      ).map3((_, tag, ___) => TagCloseToken(tag.join()));
+
+  Parser<Token> textToken() => [
+        characterNormal(),
+        characterPrimitive(),
+      ].toChoiceParser().plus().map((value) => TextToken(value.join()));
 
   Parser<String> characterPrimitive() => [
         ref0(characterNormal),
@@ -72,6 +72,5 @@ class MarkupDefinition extends GrammarDefinition<Tokens> {
   };
 }
 
-// TODO: at this point its debetable whether this is a lexer
-
+/// A lossy lexer. Produces a tokens stream with stripped information.
 final lexer = MarkupDefinition().build<Tokens>();

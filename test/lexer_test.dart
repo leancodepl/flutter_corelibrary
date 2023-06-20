@@ -14,10 +14,10 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.text('a'),
-        Token.tagOpen('i'),
-        Token.text('bba'),
-        Token.tagClose('i'),
+        TextToken('a'),
+        TagOpenToken('i'),
+        TextToken('bba'),
+        TagCloseToken('i'),
       ];
       expect(result.value, expected);
     });
@@ -27,12 +27,12 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.text('bb'),
-        Token.tagOpen('i'),
-        Token.tagOpen('b'),
-        Token.text('Italic, bold text'),
-        Token.tagClose('b'),
-        Token.tagClose('i'),
+        TextToken('bb'),
+        TagOpenToken('i'),
+        TagOpenToken('b'),
+        TextToken('Italic, bold text'),
+        TagCloseToken('b'),
+        TagCloseToken('i'),
       ];
       expect(result.value, expected);
     });
@@ -42,8 +42,8 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.text('bb[b]Italic, bold text'),
-        Token.tagClose('b'),
+        TextToken('bb[b]Italic, bold text'),
+        TagCloseToken('b'),
       ];
       expect(result.value, expected);
     });
@@ -53,9 +53,9 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.text('bb'),
-        Token.tagOpen('b'),
-        Token.text('Italic, bold text[/b]'),
+        TextToken('bb'),
+        TagOpenToken('b'),
+        TextToken('Italic, bold text[/b]'),
       ];
       expect(result.value, expected);
     });
@@ -65,11 +65,11 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.text('  bb  \t '),
-        Token.tagOpen('b'),
-        Token.text(' \n Italic, bold text  '),
-        Token.tagClose('b'),
-        Token.text(' \n'),
+        TextToken('  bb  \t '),
+        TagOpenToken('b'),
+        TextToken(' \n Italic, bold text  '),
+        TagCloseToken('b'),
+        TextToken(' \n'),
       ];
       expect(result.value, expected);
     });
@@ -79,9 +79,9 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.tagOpen('url', 'https://leancode.co'),
-        Token.text('cool site'),
-        Token.tagClose('url'),
+        TagOpenToken('url', 'https://leancode.co'),
+        TextToken('cool site'),
+        TagCloseToken('url'),
       ];
       expect(result.value, expected);
     });
@@ -91,9 +91,9 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.tagOpen('url', 'https://le"ancode.co"'),
-        Token.text('cool site'),
-        Token.tagClose('url'),
+        TagOpenToken('url', 'https://le"ancode.co"'),
+        TextToken('cool site'),
+        TagCloseToken('url'),
       ];
       expect(result.value, expected);
     });
@@ -103,7 +103,7 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.text('\b\f\n\r\t'),
+        TextToken('\b\f\n\r\t'),
       ];
       expect(result.value, expected);
     });
@@ -114,16 +114,16 @@ void main() {
       final result = lexer.parse(text);
 
       const expected = [
-        Token.text('Start '),
-        Token.tagOpen('u'),
-        Token.tagOpen('i'),
-        Token.tagOpen('b'),
-        Token.text('Italic, bold, underline text'),
-        Token.tagClose('b'),
-        Token.tagClose('i'),
-        Token.text('solo underline'),
-        Token.tagClose('u'),
-        Token.text(r'\escapeChar end.'),
+        TextToken('Start '),
+        TagOpenToken('u'),
+        TagOpenToken('i'),
+        TagOpenToken('b'),
+        TextToken('Italic, bold, underline text'),
+        TagCloseToken('b'),
+        TagCloseToken('i'),
+        TextToken('solo underline'),
+        TagCloseToken('u'),
+        TextToken(r'\escapeChar end.'),
       ];
       expect(result.value, expected);
     });

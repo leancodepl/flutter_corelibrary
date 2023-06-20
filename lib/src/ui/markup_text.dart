@@ -54,7 +54,7 @@ class MarkupText extends StatelessWidget {
           style: _effectiveStyle(
             defaultMarkupStyle,
             tags,
-            taggedText.tags.entries.map((e) => MarkupTag(e.key, e.value)),
+            taggedText.tags,
           ),
         ),
     ];
