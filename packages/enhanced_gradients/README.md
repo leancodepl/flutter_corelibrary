@@ -1,6 +1,6 @@
 # enhanced_gradients
 
-This package adds an easy way to enhance your Flutter gradients by interpolating colors
+This package adds an easy way to enhance your Flutter gradients and color transitions by interpolating colors
 in the HCT color system provided by the [material_color_utilities package](https://pub.dev/packages/material_color_utilities).
 
 ## Usage
@@ -37,10 +37,13 @@ EnhancedLinearGradient(
 EnhancedRadialGradient(
   colors: const [Color(0xFF000000), Color(0xFFFFFFFF)],
   // ...
-).enhanced()
+)
 
 EnhancedSweepGradient(
   colors: const [Color(0xFF000000), Color(0xFFFFFFFF)],
   // ...
-).enhanced()
+)
 ```
+
+There is also a `HctColorTween` that can be used instead of the regular `ColorTween` to interpolate
+colors in the HCT color system in Flutter animations.
