@@ -54,6 +54,5 @@ extension on Any {
 
   Generator<double> get firstQuadrant => doubleInRange(0, 90);
   Generator<double> get fourthQuadrant => doubleInRange(270, 360);
-  Generator<double> get degree => doubleInRange(0, 360);
   Generator<double> get shift => any.int.map((multiplier) => multiplier * 360);
 }
