@@ -5,7 +5,7 @@ in the HCT color system provided by the [material_color_utilities package](https
 
 ## Usage
 
-The package exposes two ways to modify the builtin `LinearGradient`, `RadialGradient` and `SweepGradient` gradients:
+The package exposes two ways to modify the built-in `LinearGradient`, `RadialGradient` and `SweepGradient` gradients:
 
 ```dart
 // 1st way: extension method
