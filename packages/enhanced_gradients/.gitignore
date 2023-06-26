@@ -50,8 +50,4 @@ app.*.map.json
 ios/Flutter/
 local.properties
 
-# Generated empty plugin registrants by flutter pub get
-/ios
-/android
-/linux
-/macos
+/coverage
