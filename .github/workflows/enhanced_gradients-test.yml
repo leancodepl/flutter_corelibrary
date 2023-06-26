@@ -1,0 +1,51 @@
+name: enhanced_gradients test
+
+on:
+  push:
+    branches: [master]
+    tags-ignore: ["enhanced_gradients-v*"]
+    paths:
+      - "packages/enhanced_gradients/**"
+  pull_request:
+    branches: [master]
+    paths:
+      - "packages/enhanced_gradients/**"
+
+jobs:
+  test:
+    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: "3.10.0"
+
+    defaults:
+      run:
+        working-directory: packages/enhanced_gradients
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
+          cache: true
+
+      - name: Download pub dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Dry run pub publish
+        # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
+        run: dart pub publish --dry-run || true
