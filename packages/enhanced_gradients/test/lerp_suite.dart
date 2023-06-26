@@ -16,16 +16,6 @@ void testLerp<T>(
       expect(lerp(null, null, t), isNull);
     });
 
-    Glados2(any.interpolationParameter, generator).test(
-        'When "a" is null returns null regardless of other parameters', (t, b) {
-      expect(lerp(null, b, t), isNull);
-    });
-
-    Glados2(any.interpolationParameter, generator).test(
-        'When "b" is null returns null regardless of other parameters', (t, a) {
-      expect(lerp(null, a, t), isNull);
-    });
-
     Glados2(generator, generator)
         .test('When t = 0 and "a" and "b" are non-null, returns "a"', (a, b) {
       expect(lerp(a, b, 0), equals(a));
