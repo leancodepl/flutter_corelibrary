@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Dart
+      - name: Set up Dart
         uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.0.0
@@ -30,7 +30,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.10.0
+          flutter-version: 3.10.x
           cache: true
 
       - name: Publish and release
