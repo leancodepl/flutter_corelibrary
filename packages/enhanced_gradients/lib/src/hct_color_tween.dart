@@ -13,9 +13,7 @@ class HctColorTween extends Tween<Color?> {
   HctColorTween({super.begin, super.end});
 
   @override
-  Color? lerp(double t) {
-    return lerpHct(begin, end, t) ?? super.lerp(t);
-  }
+  Color? lerp(double t) => lerpHct(begin, end, t);
 }
 
 /// Linearly interpolates input [Color]s in [Hct] color system's coordinates,
