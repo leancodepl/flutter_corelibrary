@@ -1,11 +1,12 @@
-| Package | Documentation | pub | CI |
-| - | :-: | :-: | :-: |
-| [`cqrs`][cqrs-link] | [Documentation][cqrs-documentation] | [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link] | [![][cqrs-build-badge]][cqrs-build-badge-link] |
-| [`login_client`][login_client-link] | [Documentation][login_client-documentation] | [![login_client pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link] | [![][login_client-build-badge]][login_client-build-badge-link] |
-| [`leancode_lint`][leancode_lint-link] | [Documentation][leancode_lint-documentation] | [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link] | n/a |
-| [`login_client_flutter`][login_client_flutter-link] | [Documentation][login_client_flutter-documentation] | [![login_client_flutter pub.dev badge][login_client_flutter-pub-badge]][login_client_flutter-pub-badge-link] | [![][login_client_flutter-build-badge]][login_client_flutter-build-badge-link] |
-| [`override_api_endpoint`][override_api_endpoint-link] | [Documentation][override_api_endpoint-documentation] | [![override_api_endpoint pub.dev badge][override_api_endpoint-pub-badge]][override_api_endpoint-pub-badge-link] | [![][override_api_endpoint-build-badge]][override_api_endpoint-build-badge-link] | 
-| [`leancode_hooks`][leancode_hooks-link] | [Documentation][leancode_hooks-documentation] | [![leancode_hooks pub.dev badge][leancode_hooks-pub-badge]][leancode_hooks-pub-badge-link] | [![][leancode_hooks-build-badge]][leancode_hooks-build-badge-link]
+| Package                                               |                    Documentation                     |                                                       pub                                                       |                                        CI                                        |
+| ----------------------------------------------------- | :--------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
+| [`cqrs`][cqrs-link]                                   |         [Documentation][cqrs-documentation]          |                          [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link]                           |                  [![][cqrs-build-badge]][cqrs-build-badge-link]                  |
+| [`login_client`][login_client-link]                   |     [Documentation][login_client-documentation]      |              [![login_client pub.dev badge][login_client-pub-badge]][login_client-pub-badge-link]               |          [![][login_client-build-badge]][login_client-build-badge-link]          |
+| [`leancode_lint`][leancode_lint-link]                 |     [Documentation][leancode_lint-documentation]     |             [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link]             |                                       n/a                                        |
+| [`login_client_flutter`][login_client_flutter-link]   | [Documentation][login_client_flutter-documentation]  |  [![login_client_flutter pub.dev badge][login_client_flutter-pub-badge]][login_client_flutter-pub-badge-link]   |  [![][login_client_flutter-build-badge]][login_client_flutter-build-badge-link]  |
+| [`override_api_endpoint`][override_api_endpoint-link] | [Documentation][override_api_endpoint-documentation] | [![override_api_endpoint pub.dev badge][override_api_endpoint-pub-badge]][override_api_endpoint-pub-badge-link] | [![][override_api_endpoint-build-badge]][override_api_endpoint-build-badge-link] |
+| [`leancode_hooks`][leancode_hooks-link]               |    [Documentation][leancode_hooks-documentation]     |           [![leancode_hooks pub.dev badge][leancode_hooks-pub-badge]][leancode_hooks-pub-badge-link]            |        [![][leancode_hooks-build-badge]][leancode_hooks-build-badge-link]        |
+| [`enhanced_gradients`][enhanced_gradients-link]       |  [Documentation][enhanced_gradients-documentation]   |     [![enhanced_gradients pub.dev badge][enhanced_gradients-pub-badge]][enhanced_gradients-pub-badge-link]      |    [![][enhanced_gradients-build-badge]][enhanced_gradients-build-badge-link]    |
 
 ## pub.dev release process
 
@@ -25,10 +26,8 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [leancode_hooks-documentation]: https://pub.dev/documentation/leancode_hooks/latest/
 [leancode_hooks-pub-badge]: https://img.shields.io/pub/v/leancode_hooks
 [leancode_hooks-pub-badge-link]: https://pub.dev/packages/leancode_hooks
-
 [leancode_hooks-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_hooks-test.yml?branch=master
 [leancode_hooks-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_hooks-test.yml
-
 [login_client-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/login_client
 [login_client-documentation]: https://pub.dev/documentation/login_client/latest/
 [login_client-pub-badge]: https://img.shields.io/pub/v/login_client
@@ -47,3 +46,9 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [override_api_endpoint-pub-badge-link]: https://pub.dev/packages/override_api_endpoint
 [override_api_endpoint-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint-test.yml?branch=master
 [override_api_endpoint-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/override_api_endpoint-test.yml
+[enhanced_gradients-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/enhanced_gradients
+[enhanced_gradients-documentation]: https://pub.dev/documentation/enhanced_gradients/latest/
+[enhanced_gradients-pub-badge]: https://img.shields.io/pub/v/enhanced_gradients
+[enhanced_gradients-pub-badge-link]: https://pub.dev/packages/enhanced_gradients
+[enhanced_gradients-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/enhanced_gradients-test.yml?branch=master
+[enhanced_gradients-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/enhanced_gradients-test.yml

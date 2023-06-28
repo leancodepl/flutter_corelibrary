@@ -1,0 +1,23 @@
+name: enhanced_gradients
+version: 1.0.0
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/enhanced_gradients
+repository: https://github.com/leancodepl/flutter_corelibrary
+description: >-
+  Flutter gradient wrappers that interpolate colors in the HCT color system.
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  collection: ^1.17.1
+  flutter:
+    sdk: flutter
+  material_color_utilities: ^0.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  glados: ^1.1.6
+  leancode_lint: ^4.0.0
+  meta: ^1.9.1
