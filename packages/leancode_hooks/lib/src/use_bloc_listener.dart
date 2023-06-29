@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// Takes a [Bloc] or [Cubit] and invokes [listener] in response to state
