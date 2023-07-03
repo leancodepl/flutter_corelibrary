@@ -21,6 +21,29 @@ class LoggingHttpClient extends http.BaseClient {
     final response = await _httpClient.send(request);
     final endTime = DateTime.now();
 
+    final s = StreamController<List<int>>();
+    final s2 = StreamController<List<int>>();
+
+    StreamSubscription<List<int>>? subscription;
+    subscription = response.stream.listen(
+      (value) {
+        s.add(value);
+        s2.add(value);
+      },
+      onDone: () {
+        s.close();
+        s2.close();
+        subscription?.cancel();
+      },
+    );
+
+    final body = http.Response.fromStream(
+      http.StreamedResponse(
+        s2.stream,
+        response.statusCode,
+      ),
+    ).then((response) => response.body);
+
     _logsController.add(
       _logs
         ..add(
@@ -30,12 +53,15 @@ class LoggingHttpClient extends http.BaseClient {
             endTime: endTime,
             statusCode: response.statusCode,
             requestHeaders: request.headers,
-            response: response,
+            body: body,
             responseHeaders: response.headers,
           ),
         ),
     );
 
-    return response;
+    return http.StreamedResponse(
+      s.stream,
+      response.statusCode,
+    );
   }
 }

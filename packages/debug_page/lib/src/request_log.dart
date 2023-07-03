@@ -14,7 +14,7 @@ class RequestLog {
     required this.endTime,
     required this.statusCode,
     required this.requestHeaders,
-    required this.response,
+    required this.body,
     required this.responseHeaders,
   });
 
@@ -23,8 +23,7 @@ class RequestLog {
   final DateTime endTime;
   final int statusCode;
   final Map<String, String> requestHeaders;
-
-  final http.StreamedResponse response;
+  final Future<String> body;
   final Map<String, String> responseHeaders;
 
   Duration get duration => endTime.difference(startTime);

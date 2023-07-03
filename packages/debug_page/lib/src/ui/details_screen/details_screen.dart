@@ -2,6 +2,7 @@ import 'package:debug_page/src/request_log.dart';
 import 'package:debug_page/src/ui/details_screen/map_view.dart';
 import 'package:debug_page/src/ui/details_screen/overview_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class DetailsRoute extends MaterialPageRoute<void> {
   DetailsRoute(RequestLog requestLog)
@@ -17,6 +18,8 @@ class DetailsScreen extends StatelessWidget {
   });
 
   final RequestLog requestLog;
+
+  static const _headerTextStyle = TextStyle(fontSize: 20);
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +42,25 @@ class DetailsScreen extends StatelessWidget {
             child: TabBarView(
               children: [
                 OverviewTab(requestLog: requestLog),
-                Column(
-                  children: [
-                    const Text(
-                      'Headers',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 8),
-                    MapView(map: requestLog.requestHeaders),
-                  ],
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const Text('Headers', style: _headerTextStyle),
+                      const SizedBox(height: 8),
+                      MapView(map: requestLog.requestHeaders),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Body',
+                        style: _headerTextStyle,
+                      ),
+                      FutureBuilder(
+                        future: requestLog.body,
+                        builder: (context, snapshot) {
+                          return Text(snapshot.data ?? '');
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 MapView(map: requestLog.responseHeaders),
               ],
