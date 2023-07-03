@@ -19,8 +19,7 @@ class LogsInspector extends StatelessWidget {
         final logs = snapshot.data;
 
         if (logs == null) {
-          // TODO: Return empty list placeholder
-          return const SizedBox();
+          return const Center(child: Text('No requests yet'));
         }
 
         return ListView(

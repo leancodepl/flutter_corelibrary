@@ -13,6 +13,7 @@ class OverviewTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MapView(map: {
+      'Method': requestLog.method,
       'Host': requestLog.url.host,
       'Endpoint': requestLog.url.path,
       'Status code': requestLog.statusCode,

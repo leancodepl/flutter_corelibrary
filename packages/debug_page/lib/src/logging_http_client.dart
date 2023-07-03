@@ -44,16 +44,27 @@ class LoggingHttpClient extends http.BaseClient {
       ),
     ).then((response) => response.body);
 
+    final String requestBody;
+
+    if (request is http.Request) {
+      requestBody = request.body;
+    } else {
+      // TODO: Implement
+      requestBody = 'Multipart request';
+    }
+
     _logsController.add(
       _logs
         ..add(
           RequestLog(
+            method: request.method,
             url: request.url,
             startTime: startTime,
             endTime: endTime,
             statusCode: response.statusCode,
             requestHeaders: request.headers,
-            body: body,
+            requestBody: requestBody,
+            responseBody: body,
             responseHeaders: response.headers,
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:debug_page/src/request_log.dart';
 import 'package:debug_page/src/ui/details_screen/details_screen.dart';
+import 'package:debug_page/src/ui/details_screen/typography.dart';
 import 'package:flutter/material.dart';
 
 extension _ColorExtension on StatusType {
@@ -21,10 +22,26 @@ class LogTile extends StatelessWidget {
 
   final RequestLog log;
 
+  String _formatTime(DateTime time) =>
+      '${time.hour}:${time.minute}:${time.second}.${time.millisecond}';
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(log.url.toString()),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(log.url.toString()),
+          Row(
+            children: [
+              Text(
+                '${log.method}, ${_formatTime(log.startTime)}',
+                style: DebugPageTypography.small,
+              ),
+            ],
+          )
+        ],
+      ),
       trailing: Text(log.statusCode.toString()),
       tileColor: log.statusType.color,
       onTap: () => Navigator.of(context).push(DetailsRoute(log)),

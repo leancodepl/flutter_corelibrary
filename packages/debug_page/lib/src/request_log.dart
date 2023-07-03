@@ -1,5 +1,3 @@
-import 'package:http/http.dart' as http;
-
 enum StatusType {
   success,
   redirect,
@@ -9,24 +7,37 @@ enum StatusType {
 
 class RequestLog {
   const RequestLog({
+    required this.method,
     required this.url,
     required this.startTime,
     required this.endTime,
     required this.statusCode,
     required this.requestHeaders,
-    required this.body,
+    required this.requestBody,
     required this.responseHeaders,
+    required this.responseBody,
   });
 
+  final String method;
   final Uri url;
   final DateTime startTime;
   final DateTime endTime;
   final int statusCode;
   final Map<String, String> requestHeaders;
-  final Future<String> body;
+  final String requestBody;
   final Map<String, String> responseHeaders;
+  final Future<String> responseBody;
 
   Duration get duration => endTime.difference(startTime);
+
+  bool get isResponseJson {
+    if (responseHeaders['content-type']?.contains('application/json') ??
+        false) {
+      return true;
+    }
+
+    return false;
+  }
 
   StatusType get statusType {
     return switch (statusCode) {

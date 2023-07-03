@@ -1,5 +1,9 @@
+import 'dart:math';
+
+import 'package:example/util.dart';
 import 'package:flutter/material.dart';
 import 'package:debug_page/debug_page.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -30,14 +34,24 @@ class MyHomePage extends StatelessWidget {
   final String title;
   final LoggingHttpClient loggingHttpClient;
 
+  static final _requests = [
+    http.Request('GET', Uri.parse('https://leancode.co/manifest.json')),
+    http.Request('GET', Uri.parse('https://leancode.co/api/job-titles')),
+    http.Request(
+      'GET',
+      Uri.parse(
+        'https://leancodelanding2.cdn.prismic.io/api/v2',
+      ),
+    ),
+    http.Request('GET', Uri.parse('https://leancode.co')),
+    http.Request('POST', Uri.parse('https://leancode.co'))
+      ..body = {'some key': 'some value'}.toString(),
+  ];
+
   Future<void> _sendRequest() async {
-    await loggingHttpClient.get(
-      Uri.parse('https://leancode.co'),
-      headers: {
-        'User-Agent': 'Simulator',
-        'Authorization': 'Bearer ABC',
-      },
-    );
+    final random = Random();
+    final request = copyRequest(_requests[random.nextInt(_requests.length)]);
+    await loggingHttpClient.send(request);
   }
 
   @override
