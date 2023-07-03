@@ -32,22 +32,23 @@ class ResponseTab extends StatelessWidget {
             'Body',
             style: DebugPageTypography.large,
           ),
-          FutureBuilder(
-            future: requestLog.responseBody,
-            builder: (context, snapshot) {
-              final body = snapshot.data;
+          Text(utf8.decode(requestLog.responseBodyBytes)),
+          // FutureBuilder(
+          //   future: requestLog.responseBody,
+          //   builder: (context, snapshot) {
+          //     final body = snapshot.data;
 
-              if (body == null || body.isEmpty) {
-                return const Text('Empty body');
-              }
+          //     if (body == null || body.isEmpty) {
+          //       return const Text('Empty body');
+          //     }
 
-              if (requestLog.isResponseJson) {
-                return Text(_prettifyJson(body));
-              }
+          //     if (requestLog.isResponseJson) {
+          //       return Text(_prettifyJson(body));
+          //     }
 
-              return Text(body);
-            },
-          ),
+          //     return Text(body);
+          //   },
+          // ),
         ],
       ),
     );
