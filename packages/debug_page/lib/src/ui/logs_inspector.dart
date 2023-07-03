@@ -1,6 +1,6 @@
 import 'package:debug_page/debug_page.dart';
-import 'package:debug_page/src/log_tile.dart';
 import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/ui/log_tile.dart';
 import 'package:flutter/material.dart';
 
 class LogsInspector extends StatelessWidget {
@@ -26,7 +26,7 @@ class LogsInspector extends StatelessWidget {
         return ListView(
           children: ListTile.divideTiles(
             context: context,
-            tiles: logs.map(
+            tiles: logs.reversed.map(
               (log) => LogTile(log: log),
             ),
           ).toList(),

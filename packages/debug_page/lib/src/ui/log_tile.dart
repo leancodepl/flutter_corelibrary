@@ -1,4 +1,5 @@
 import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/ui/details_screen/details_screen.dart';
 import 'package:flutter/material.dart';
 
 extension _ColorExtension on StatusType {
@@ -26,6 +27,7 @@ class LogTile extends StatelessWidget {
       title: Text(log.url.toString()),
       trailing: Text(log.statusCode.toString()),
       tileColor: log.statusType.color,
+      onTap: () => Navigator.of(context).push(DetailsRoute(log)),
     );
   }
 }

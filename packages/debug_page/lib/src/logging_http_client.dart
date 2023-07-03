@@ -17,13 +17,17 @@ class LoggingHttpClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    final startTime = DateTime.now();
     final response = await _httpClient.send(request);
+    final endTime = DateTime.now();
 
     _logsController.add(
       _logs
         ..add(
           RequestLog(
             url: request.url,
+            startTime: startTime,
+            endTime: endTime,
             statusCode: response.statusCode,
             requestHeaders: request.headers,
             response: response,

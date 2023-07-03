@@ -10,6 +10,8 @@ enum StatusType {
 class RequestLog {
   const RequestLog({
     required this.url,
+    required this.startTime,
+    required this.endTime,
     required this.statusCode,
     required this.requestHeaders,
     required this.response,
@@ -17,11 +19,15 @@ class RequestLog {
   });
 
   final Uri url;
+  final DateTime startTime;
+  final DateTime endTime;
   final int statusCode;
   final Map<String, String> requestHeaders;
 
   final http.StreamedResponse response;
   final Map<String, String> responseHeaders;
+
+  Duration get duration => endTime.difference(startTime);
 
   StatusType get statusType {
     return switch (statusCode) {
