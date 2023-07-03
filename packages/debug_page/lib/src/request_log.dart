@@ -15,7 +15,7 @@ class RequestLog {
     required this.requestHeaders,
     required this.requestBody,
     required this.responseHeaders,
-    required this.responseBodyBytes,
+    required this.responseBody,
   });
 
   final String method;
@@ -26,7 +26,7 @@ class RequestLog {
   final Map<String, String> requestHeaders;
   final String requestBody;
   final Map<String, String> responseHeaders;
-  final List<int> responseBodyBytes;
+  final Future<String> responseBody;
 
   Duration get duration => endTime.difference(startTime);
 

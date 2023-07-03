@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:debug_page/src/request_log.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 
 class LoggingHttpClient extends http.BaseClient {
   LoggingHttpClient({http.Client? client})
@@ -23,14 +24,15 @@ class LoggingHttpClient extends http.BaseClient {
 
     final String requestBody;
 
+    var bodyBytes = <int>[];
+    final bodyCompleter = Completer<String>();
+
     if (request is http.Request) {
       requestBody = request.body;
     } else {
       // TODO: Implement
       requestBody = 'Multipart request';
     }
-
-    final bytes = <int>[];
 
     _logsController.add(
       _logs
@@ -43,16 +45,19 @@ class LoggingHttpClient extends http.BaseClient {
             statusCode: response.statusCode,
             requestHeaders: request.headers,
             requestBody: requestBody,
-            responseBodyBytes: bytes,
+            responseBody: bodyCompleter.future,
             responseHeaders: response.headers,
           ),
         ),
     );
 
     return http.StreamedResponse(
-      response.stream.map((event) {
-        bytes.addAll(event.skip(bytes.length));
-        return event;
+      response.stream.doOnData((event) {
+        bodyBytes = event;
+      }).doOnDone(() {
+        bodyCompleter.complete(
+          http.Response.bytes(bodyBytes, response.statusCode).body,
+        );
       }),
       response.statusCode,
     );
