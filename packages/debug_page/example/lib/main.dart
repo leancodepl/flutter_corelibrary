@@ -7,11 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 void main() {
-  Logger.root.level = Level.ALL; // defaults to Level.INFO
-  Logger.root.onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
-  });
-
   runApp(const MyApp());
 }
 
@@ -74,9 +69,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // to be done manually with `send`
     await http.Response.fromStream(response);
 
-    _logger.info(
-      'Received a response from remote server (${response.statusCode})',
-    );
+    if (response.statusCode < 400) {
+      _logger.info(
+        'Received a response from remote server (${response.statusCode})',
+      );
+    } else {
+      _logger.severe('Request failed with status code ${response.statusCode}');
+    }
   }
 
   @override
