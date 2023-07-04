@@ -7,6 +7,6 @@ void main() {
       () async {
     final client = LoggingHttpClient();
     await client.get(Uri.parse('https://leancode.co/'));
-    expect(client.logs, isNotEmpty);
+    expect(client.logStream, isNotEmpty);
   });
 }

@@ -21,36 +21,39 @@ class ResponseTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Headers', style: DebugPageTypography.large),
-          const SizedBox(height: 8),
-          MapView(map: requestLog.responseHeaders),
-          const SizedBox(height: 16),
-          Text(
-            'Body',
-            style: DebugPageTypography.large,
-          ),
-          FutureBuilder(
-            future: requestLog.responseBody,
-            builder: (context, snapshot) {
-              final body = snapshot.data;
+      child: DefaultTextStyle(
+        style: DebugPageTypography.medium,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Headers', style: DebugPageTypography.large),
+            const SizedBox(height: 8),
+            MapView(map: requestLog.responseHeaders),
+            const SizedBox(height: 16),
+            Text(
+              'Body',
+              style: DebugPageTypography.large,
+            ),
+            FutureBuilder(
+              future: requestLog.responseBody,
+              builder: (context, snapshot) {
+                final body = snapshot.data;
 
-              if (body == null || body.isEmpty) {
-                return const Text(
-                  'Body is either empty or has not been read yet.',
-                );
-              }
+                if (body == null || body.isEmpty) {
+                  return const Text(
+                    'Body is either empty or has not been read yet.',
+                  );
+                }
 
-              if (requestLog.isResponseJson) {
-                return Text(_prettifyJson(body));
-              }
+                if (requestLog.isResponseJson) {
+                  return Text(_prettifyJson(body));
+                }
 
-              return Text(body);
-            },
-          ),
-        ],
+                return Text(body);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

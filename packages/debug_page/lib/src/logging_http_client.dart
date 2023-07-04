@@ -14,7 +14,7 @@ class LoggingHttpClient extends http.BaseClient {
   final List<RequestLog> _logs;
   final StreamController<List<RequestLog>> _logsController;
 
-  Stream<List<RequestLog>> get logs => _logsController.stream;
+  Stream<List<RequestLog>> get logStream => _logsController.stream;
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -24,14 +24,14 @@ class LoggingHttpClient extends http.BaseClient {
 
     final String? requestBody;
 
-    var bodyBytes = <int>[];
-    final bodyCompleter = Completer<String>();
-
     if (request is http.Request) {
       requestBody = request.body;
     } else {
       requestBody = null;
     }
+
+    var responseBodyBytes = <int>[];
+    final responseBodyCompleter = Completer<String>();
 
     _logsController.add(
       _logs
@@ -44,7 +44,7 @@ class LoggingHttpClient extends http.BaseClient {
             statusCode: response.statusCode,
             requestHeaders: request.headers,
             requestBody: requestBody,
-            responseBody: bodyCompleter.future,
+            responseBody: responseBodyCompleter.future,
             responseHeaders: response.headers,
           ),
         ),
@@ -52,10 +52,10 @@ class LoggingHttpClient extends http.BaseClient {
 
     return http.StreamedResponse(
       response.stream.doOnData((event) {
-        bodyBytes = event;
+        responseBodyBytes = event;
       }).doOnDone(() {
-        bodyCompleter.complete(
-          http.Response.bytes(bodyBytes, response.statusCode).body,
+        responseBodyCompleter.complete(
+          http.Response.bytes(responseBodyBytes, response.statusCode).body,
         );
       }),
       response.statusCode,

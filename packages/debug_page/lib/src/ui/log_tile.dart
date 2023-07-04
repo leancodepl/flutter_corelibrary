@@ -3,13 +3,13 @@ import 'package:debug_page/src/ui/details_screen/details_screen.dart';
 import 'package:debug_page/src/ui/details_screen/typography.dart';
 import 'package:flutter/material.dart';
 
-extension _ColorExtension on StatusType {
+extension _ColorExtension on RequestStatus {
   Color get color {
     return switch (this) {
-      StatusType.success => Colors.green,
-      StatusType.redirect => Colors.orange,
-      StatusType.error => Colors.red,
-      StatusType.unknown => Colors.grey,
+      RequestStatus.success => Colors.green,
+      RequestStatus.redirect => Colors.orange,
+      RequestStatus.error => Colors.red,
+      RequestStatus.unknown => Colors.grey,
     };
   }
 }
@@ -31,7 +31,7 @@ class LogTile extends StatelessWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(log.url.toString()),
+          Text(log.url.toString(), style: DebugPageTypography.medium),
           Row(
             children: [
               Text(
@@ -42,8 +42,11 @@ class LogTile extends StatelessWidget {
           )
         ],
       ),
-      trailing: Text(log.statusCode.toString()),
-      tileColor: log.statusType.color,
+      trailing: Text(
+        log.statusCode.toString(),
+        style: DebugPageTypography.small,
+      ),
+      tileColor: log.status.color,
       onTap: () => Navigator.of(context).push(DetailsRoute(log)),
     );
   }

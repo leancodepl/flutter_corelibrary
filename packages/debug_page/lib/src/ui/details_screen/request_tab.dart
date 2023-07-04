@@ -17,27 +17,29 @@ class RequestTab extends StatelessWidget {
     final body = requestLog.requestBody;
 
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Headers', style: DebugPageTypography.large),
-          const SizedBox(height: 8),
-          if (headers.isNotEmpty)
-            MapView(map: requestLog.requestHeaders)
-          else
-            const Text('Empty headers'),
-          const SizedBox(height: 16),
-          Text(
-            'Body',
-            style: DebugPageTypography.large,
-          ),
-          if (body != null && body.isNotEmpty)
-            Text(body)
-          else
-            const Text(
-              'Body either empty or not logged due to request type',
+      child: DefaultTextStyle(
+        style: DebugPageTypography.medium,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Headers', style: DebugPageTypography.large),
+            const SizedBox(height: 8),
+            if (headers.isNotEmpty)
+              MapView(map: requestLog.requestHeaders)
+            else
+              const Text('Empty headers'),
+            const SizedBox(height: 16),
+            Text(
+              'Body',
+              style: DebugPageTypography.large,
             ),
-        ],
+            const SizedBox(height: 8),
+            if (body != null && body.isNotEmpty)
+              Text(body)
+            else
+              const Text('Body either empty or not logged due to request type'),
+          ],
+        ),
       ),
     );
   }

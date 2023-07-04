@@ -34,11 +34,11 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<StatefulWidget> createState() => MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
-  MyHomePageState() : loggingHttpClient = LoggingHttpClient();
+class _MyHomePageState extends State<MyHomePage> {
+  _MyHomePageState() : loggingHttpClient = LoggingHttpClient();
 
   final LoggingHttpClient loggingHttpClient;
 
@@ -83,7 +83,7 @@ class MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (_sendRequest),
+        onPressed: _sendRequest,
         tooltip: 'Send a request',
         child: const Icon(Icons.send),
       ),

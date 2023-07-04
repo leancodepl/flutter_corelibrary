@@ -1,4 +1,4 @@
-enum StatusType {
+enum RequestStatus {
   success,
   redirect,
   error,
@@ -39,12 +39,12 @@ class RequestLog {
     return false;
   }
 
-  StatusType get statusType {
+  RequestStatus get status {
     return switch (statusCode) {
-      (final code) when 200 <= code && code < 300 => StatusType.success,
-      (final code) when 300 <= code && code < 400 => StatusType.redirect,
-      (final code) when 400 <= code && code < 600 => StatusType.error,
-      _ => StatusType.unknown
+      (final code) when 200 <= code && code < 300 => RequestStatus.success,
+      (final code) when 300 <= code && code < 400 => RequestStatus.redirect,
+      (final code) when 400 <= code && code < 600 => RequestStatus.error,
+      _ => RequestStatus.unknown
     };
   }
 }
