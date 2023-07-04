@@ -8,37 +8,41 @@ class DebugPage {
       : _loggingHttpClient = loggingHttpClient {
     _shakeDetector = ShakeDetector.autoStart(
       shakeThresholdGravity: 1.5,
-      onPhoneShake: show,
+      onPhoneShake: () {
+        final context = debugPageOverlayState.currentContext;
+
+        if (context == null) {
+          return;
+        }
+
+        show(context);
+      },
     );
   }
-
-  final _navigatorKey = GlobalKey<NavigatorState>();
 
   final LoggingHttpClient _loggingHttpClient;
   final LoggerListener _loggerListener = LoggerListener();
   late ShakeDetector _shakeDetector;
 
-  bool shown = false;
+  OverlayEntry? _overlayEntry;
 
-  GlobalKey<NavigatorState> getNavigatorKey() => _navigatorKey;
-
-  Future<void> show() async {
-    if (shown) {
+  Future<void> show(BuildContext context) async {
+    if (_overlayEntry != null) {
       return;
     }
 
-    shown = true;
-
-    await _navigatorKey.currentState?.push<void>(
-      MaterialPageRoute(
-        builder: (context) => DebugScreen(
-          loggingHttpClient: _loggingHttpClient,
-          loggerListener: _loggerListener,
-        ),
+    _overlayEntry = OverlayEntry(
+      builder: (context) => DebugScreen(
+        loggingHttpClient: _loggingHttpClient,
+        loggerListener: _loggerListener,
+        onBackButtonClicked: () {
+          _overlayEntry?.remove();
+          _overlayEntry = null;
+        },
       ),
     );
 
-    shown = false;
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   void dispose() {

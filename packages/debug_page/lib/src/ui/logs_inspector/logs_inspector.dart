@@ -9,11 +9,14 @@ class LogsInspector extends StatelessWidget {
     super.key,
     required LoggingHttpClient loggingHttpClient,
     required LoggerListener loggerListener,
+    required VoidCallback onBackButtonClicked,
   })  : _loggingHttpClient = loggingHttpClient,
-        _loggerListener = loggerListener;
+        _loggerListener = loggerListener,
+        _onBackButtonClicked = onBackButtonClicked;
 
   final LoggingHttpClient _loggingHttpClient;
   final LoggerListener _loggerListener;
+  final VoidCallback _onBackButtonClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +24,7 @@ class LogsInspector extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          leading: BackButton(
-            onPressed: Navigator.of(context, rootNavigator: true).pop,
-          ),
+          leading: BackButton(onPressed: _onBackButtonClicked),
           title: const Text('Debug page'),
         ),
         body: Column(

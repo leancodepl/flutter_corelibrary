@@ -46,7 +46,8 @@ class _DebugPageOverlayState extends State<_DebugPageOverlay> {
     overlayEntry = OverlayEntry(
       builder: (context) {
         return Visibility(
-          visible: !widget.debugPage.shown,
+          visible: true,
+          // visible: !widget.debugPage.shown,
           child: Align(
             alignment: Alignment.bottomLeft,
             child: GestureDetector(
@@ -54,7 +55,7 @@ class _DebugPageOverlayState extends State<_DebugPageOverlay> {
                 // TODO: Figure out how to close all other overlays temporarily
                 // and insert them back after DebugPage is popped
 
-                await widget.debugPage.show();
+                await widget.debugPage.show(context);
               },
               child: Container(
                 width: 48,

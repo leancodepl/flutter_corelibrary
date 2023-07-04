@@ -8,11 +8,13 @@ class DebugScreen extends StatelessWidget {
     super.key,
     required LoggingHttpClient loggingHttpClient,
     required LoggerListener loggerListener,
+    required this.onBackButtonClicked,
   })  : _loggingHttpClient = loggingHttpClient,
         _loggerListener = loggerListener;
 
   final LoggingHttpClient _loggingHttpClient;
   final LoggerListener _loggerListener;
+  final VoidCallback onBackButtonClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class DebugScreen extends StatelessWidget {
         builder: (context) => LogsInspector(
           loggingHttpClient: _loggingHttpClient,
           loggerListener: _loggerListener,
+          onBackButtonClicked: onBackButtonClicked,
         ),
       ),
     );
