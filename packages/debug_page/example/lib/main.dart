@@ -133,6 +133,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       opaque: true,
                       builder: (context) => Container(
                         color: Colors.red,
+                        alignment: Alignment.center,
+                        child: const Material(
+                          color: Colors.transparent,
+                          child: Text(
+                            'Overlay',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     below: debugPageOverlayState.currentState?.overlayEntry,
