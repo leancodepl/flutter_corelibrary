@@ -4,38 +4,42 @@ import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 
 class DebugPage {
-  DebugPage({required LoggingHttpClient loggingHttpClient}) {
+  DebugPage({required LoggingHttpClient loggingHttpClient})
+      : _loggingHttpClient = loggingHttpClient {
     _shakeDetector = ShakeDetector.autoStart(
       shakeThresholdGravity: 1.5,
-      onPhoneShake: () async {
-        if (debugPageOn) {
-          return;
-        }
-
-        debugPageOn = true;
-
-        await _navigatorKey.currentState?.push(
-          MaterialPageRoute(
-            builder: (context) => DebugScreen(
-              loggingHttpClient: loggingHttpClient,
-              loggerListener: _loggerListener,
-            ),
-          ),
-        );
-
-        debugPageOn = false;
-      },
+      onPhoneShake: show,
     );
   }
 
   final _navigatorKey = GlobalKey<NavigatorState>();
 
+  final LoggingHttpClient _loggingHttpClient;
   final LoggerListener _loggerListener = LoggerListener();
   late ShakeDetector _shakeDetector;
 
-  bool debugPageOn = false;
+  bool shown = false;
 
   GlobalKey<NavigatorState> getNavigatorKey() => _navigatorKey;
+
+  Future<void> show() async {
+    if (shown) {
+      return;
+    }
+
+    shown = true;
+
+    await _navigatorKey.currentState?.push<void>(
+      MaterialPageRoute(
+        builder: (context) => DebugScreen(
+          loggingHttpClient: _loggingHttpClient,
+          loggerListener: _loggerListener,
+        ),
+      ),
+    );
+
+    shown = false;
+  }
 
   void dispose() {
     _loggerListener.dispose();

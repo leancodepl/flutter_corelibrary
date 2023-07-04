@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 void main() {
+  // This is necessary if you want to instantiate a DebugPage before calling
+  // runApp()
   WidgetsFlutterBinding.ensureInitialized();
 
   final loggingHttpClient = LoggingHttpClient();
@@ -38,9 +40,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MyHomePage(
-        title: 'Flutter Debug Page Demo Page',
-        loggingHttpClient: _loggingHttpClient,
+      home: DebugPageOverlay(
+        debugPage: _debugPage,
+        child: MyHomePage(
+          title: 'Flutter Debug Page Demo Page',
+          loggingHttpClient: _loggingHttpClient,
+        ),
       ),
     );
   }
@@ -102,12 +107,27 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const SafeArea(
+      body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Push the button to send a request'),
+              ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) => const Dialog(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text(
+                        'Debug page overlay button is still clickable even when dialogs are shown',
+                      ),
+                    ),
+                  ),
+                ),
+                child: const Text('Click to show a dialog'),
+              ),
+              const SizedBox(height: 16),
+              const Text('Push the floating button to send a request'),
             ],
           ),
         ),
