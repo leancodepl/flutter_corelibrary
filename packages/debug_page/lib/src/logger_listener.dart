@@ -17,7 +17,6 @@ class LoggerListener {
     });
   }
 
-  // TODO: Determine if will be ever used
   void dispose() {
     _subscription?.cancel();
   }

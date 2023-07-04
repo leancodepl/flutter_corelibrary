@@ -5,11 +5,12 @@ import 'package:debug_page/src/ui/logs_inspector/logs_inspector_requests_tab.dar
 import 'package:flutter/material.dart';
 
 class LogsInspector extends StatelessWidget {
-  LogsInspector({
+  const LogsInspector({
     super.key,
     required LoggingHttpClient loggingHttpClient,
+    required LoggerListener loggerListener,
   })  : _loggingHttpClient = loggingHttpClient,
-        _loggerListener = LoggerListener();
+        _loggerListener = loggerListener;
 
   final LoggingHttpClient _loggingHttpClient;
   final LoggerListener _loggerListener;
