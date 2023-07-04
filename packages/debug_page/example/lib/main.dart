@@ -127,6 +127,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text('Click to show a dialog'),
               ),
               const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Overlay.of(context).insert(
+                    OverlayEntry(
+                      opaque: true,
+                      builder: (context) => Container(
+                        color: Colors.red,
+                      ),
+                    ),
+                    below: debugPageOverlayState.currentState?.overlayEntry,
+                  );
+                },
+                child: const Text('Click to show an overlay'),
+              ),
+              const SizedBox(height: 16),
               const Text('Push the floating button to send a request'),
             ],
           ),
