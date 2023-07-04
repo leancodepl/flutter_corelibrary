@@ -1,4 +1,5 @@
 import 'package:debug_page/src/logger_listener.dart';
+import 'package:debug_page/src/ui/details_screen/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -22,6 +23,10 @@ class LogsInspectorLoggerTab extends StatelessWidget {
 
   final LoggerListener _loggerListener;
 
+  String _formatLog(LogRecord log) {
+    return '${log.loggerName} (${log.level}): ${log.message}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<LogRecord>>(
@@ -31,7 +36,12 @@ class LogsInspectorLoggerTab extends StatelessWidget {
         final logs = snapshot.data;
 
         if (logs == null || logs.isEmpty) {
-          return const Text('Empty');
+          return Center(
+            child: Text(
+              'No logs yet',
+              style: DebugPageTypography.medium,
+            ),
+          );
         }
 
         return ListView(
@@ -39,7 +49,10 @@ class LogsInspectorLoggerTab extends StatelessWidget {
             context: context,
             tiles: logs.reversed.map(
               (log) => ListTile(
-                title: Text(log.message),
+                title: Text(
+                  _formatLog(log),
+                  style: DebugPageTypography.medium,
+                ),
                 tileColor: log.level.color,
               ),
             ),
