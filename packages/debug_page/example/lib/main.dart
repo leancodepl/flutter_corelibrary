@@ -61,6 +61,10 @@ class _MyHomePageState extends State<MyHomePage> {
     final random = Random();
     final request = copyRequest(_requests[random.nextInt(_requests.length)]);
     final response = await loggingHttpClient.send(request);
+    // `http.Response.fromStream` has to be called in order to make response
+    // body appear in the LogsInspector. This is done automatically when using
+    // higher-level methods of `http.Client` such as `get` / `post`, but needs
+    // to be done manually with `send`
     await http.Response.fromStream(response);
   }
 
