@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-                child: const Text('Click to show a dialog'),
+                child: const Text('Show a dialog'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -138,18 +138,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     below: debugPageOverlayState.currentState?.overlayEntry,
                   );
                 },
-                child: const Text('Click to show an overlay'),
+                child: const Text('Show an overlay'),
               ),
-              const SizedBox(height: 16),
-              const Text('Push the floating button to send a request'),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _sendRequest,
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Send request'),
+        icon: const Icon(Icons.send),
         tooltip: 'Send a request',
-        child: const Icon(Icons.send),
+        onPressed: _sendRequest,
       ),
     );
   }
