@@ -31,10 +31,12 @@ class RequestTab extends StatelessWidget {
             'Body',
             style: DebugPageTypography.large,
           ),
-          if (body.isNotEmpty)
-            Text(requestLog.requestBody)
+          if (body != null && body.isNotEmpty)
+            Text(body)
           else
-            const Text('Empty body'),
+            const Text(
+              'Body either empty or not logged due to request type',
+            ),
         ],
       ),
     );

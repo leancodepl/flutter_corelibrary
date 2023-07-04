@@ -61,7 +61,6 @@ class MyHomePageState extends State<MyHomePage> {
     final random = Random();
     final request = copyRequest(_requests[random.nextInt(_requests.length)]);
     final response = await loggingHttpClient.send(request);
-    // TODO: Figure out why this is necessary for body in response tab to appear
     await http.Response.fromStream(response);
   }
 

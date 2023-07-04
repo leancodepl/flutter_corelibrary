@@ -38,7 +38,9 @@ class ResponseTab extends StatelessWidget {
               final body = snapshot.data;
 
               if (body == null || body.isEmpty) {
-                return const Text('Empty body');
+                return const Text(
+                  'Body is either empty or has not been read yet.',
+                );
               }
 
               if (requestLog.isResponseJson) {

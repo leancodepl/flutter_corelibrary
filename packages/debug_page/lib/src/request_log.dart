@@ -24,7 +24,7 @@ class RequestLog {
   final DateTime endTime;
   final int statusCode;
   final Map<String, String> requestHeaders;
-  final String requestBody;
+  final String? requestBody;
   final Map<String, String> responseHeaders;
   final Future<String> responseBody;
 

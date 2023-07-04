@@ -22,7 +22,7 @@ class LoggingHttpClient extends http.BaseClient {
     final response = await _httpClient.send(request);
     final endTime = DateTime.now();
 
-    final String requestBody;
+    final String? requestBody;
 
     var bodyBytes = <int>[];
     final bodyCompleter = Completer<String>();
@@ -30,8 +30,7 @@ class LoggingHttpClient extends http.BaseClient {
     if (request is http.Request) {
       requestBody = request.body;
     } else {
-      // TODO: Implement
-      requestBody = 'Multipart request';
+      requestBody = null;
     }
 
     _logsController.add(
