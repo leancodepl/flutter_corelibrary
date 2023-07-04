@@ -1,11 +1,10 @@
-import 'package:debug_page/debug_page.dart';
+import 'package:debug_page/src/logging_http_client.dart';
 import 'package:debug_page/src/request_log.dart';
-import 'package:debug_page/src/ui/details_screen/typography.dart';
 import 'package:debug_page/src/ui/log_tile.dart';
 import 'package:flutter/material.dart';
 
-class LogsInspector extends StatelessWidget {
-  const LogsInspector({
+class LogsInspectorRequestsTab extends StatelessWidget {
+  const LogsInspectorRequestsTab({
     super.key,
     required LoggingHttpClient loggingHttpClient,
   }) : _loggingHttpClient = loggingHttpClient;
@@ -20,13 +19,8 @@ class LogsInspector extends StatelessWidget {
       builder: (context, snapshot) {
         final logs = snapshot.data;
 
-        if (logs == null) {
-          return Center(
-            child: Text(
-              'No requests yet',
-              style: DebugPageTypography.medium,
-            ),
-          );
+        if (logs == null || logs.isEmpty) {
+          return const Center(child: Text('No requests yet'));
         }
 
         return ListView(

@@ -4,8 +4,14 @@ import 'package:example/util.dart';
 import 'package:flutter/material.dart';
 import 'package:debug_page/debug_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 void main() {
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+
   runApp(const MyApp());
 }
 
@@ -41,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState() : loggingHttpClient = LoggingHttpClient();
 
   final LoggingHttpClient loggingHttpClient;
+  final _logger = Logger('MyHomePage');
 
   static final _requests = [
     http.Request('GET', Uri.parse('https://leancode.co/manifest.json')),
@@ -66,6 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // higher-level methods of `http.Client` such as `get` / `post`, but needs
     // to be done manually with `send`
     await http.Response.fromStream(response);
+
+    _logger.info(
+      'Received a response from remote server (${response.statusCode})',
+    );
   }
 
   @override
