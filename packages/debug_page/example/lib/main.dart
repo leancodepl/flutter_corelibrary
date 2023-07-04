@@ -7,21 +7,41 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final loggingHttpClient = LoggingHttpClient();
+  final debugPage = DebugPage(loggingHttpClient: loggingHttpClient);
+
+  runApp(MyApp(
+    loggingHttpClient: loggingHttpClient,
+    debugPage: debugPage,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+    required LoggingHttpClient loggingHttpClient,
+    required DebugPage debugPage,
+  })  : _loggingHttpClient = loggingHttpClient,
+        _debugPage = debugPage;
+
+  final LoggingHttpClient _loggingHttpClient;
+  final DebugPage _debugPage;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _debugPage.getNavigatorKey(),
       title: 'Debug Page Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Debug Page Demo Page'),
+      home: MyHomePage(
+        title: 'Flutter Debug Page Demo Page',
+        loggingHttpClient: _loggingHttpClient,
+      ),
     );
   }
 }
@@ -30,18 +50,19 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({
     super.key,
     required this.title,
+    required this.loggingHttpClient,
   });
 
   final String title;
+  final LoggingHttpClient loggingHttpClient;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState() : loggingHttpClient = LoggingHttpClient();
+  _MyHomePageState();
 
-  final LoggingHttpClient loggingHttpClient;
   final _logger = Logger('MyHomePage');
 
   static final _requests = [
@@ -62,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _sendRequest() async {
     final random = Random();
     final request = copyRequest(_requests[random.nextInt(_requests.length)]);
-    final response = await loggingHttpClient.send(request);
+    final response = await widget.loggingHttpClient.send(request);
     // `http.Response.fromStream` has to be called in order to make response
     // body appear in the LogsInspector. This is done automatically when using
     // higher-level methods of `http.Client` such as `get` / `post`, but needs
@@ -81,15 +102,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: const SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Push the button to send a request'),
-              Expanded(
-                child: DebugPage(loggingHttpClient: loggingHttpClient),
-              ),
+              Text('Push the button to send a request'),
             ],
           ),
         ),

@@ -21,18 +21,28 @@ class LogsInspector extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Logs inspector'),
-          bottom: const TabBar(
-            tabs: [
-              Text('Requests'),
-              Text('Logs'),
-            ],
+          leading: BackButton(
+            onPressed: Navigator.of(context, rootNavigator: true).pop,
           ),
+          title: const Text('Debug page'),
         ),
-        body: TabBarView(
+        body: Column(
           children: [
-            LogsInspectorRequestsTab(loggingHttpClient: _loggingHttpClient),
-            LogsInspectorLoggerTab(loggerListener: _loggerListener),
+            const TabBar(
+              tabs: [
+                Text('Requests'),
+                Text('Logs'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  LogsInspectorRequestsTab(
+                      loggingHttpClient: _loggingHttpClient),
+                  LogsInspectorLoggerTab(loggerListener: _loggerListener),
+                ],
+              ),
+            ),
           ],
         ),
       ),
