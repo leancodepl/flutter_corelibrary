@@ -15,6 +15,7 @@ class LogsInspector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<RequestLog>>(
+      initialData: _loggingHttpClient.logs,
       stream: _loggingHttpClient.logStream,
       builder: (context, snapshot) {
         final logs = snapshot.data;

@@ -15,6 +15,7 @@ class LoggingHttpClient extends http.BaseClient {
   final StreamController<List<RequestLog>> _logsController;
 
   Stream<List<RequestLog>> get logStream => _logsController.stream;
+  List<RequestLog> get logs => List.unmodifiable(_logs);
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
