@@ -28,6 +28,12 @@ class LogTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      trailing: Text(
+        log.statusCode.toString(),
+        style: DebugPageTypography.small,
+      ),
+      tileColor: log.status.color,
+      onTap: () => Navigator.of(context).push(DetailsRoute(log)),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,12 +48,6 @@ class LogTile extends StatelessWidget {
           )
         ],
       ),
-      trailing: Text(
-        log.statusCode.toString(),
-        style: DebugPageTypography.small,
-      ),
-      tileColor: log.status.color,
-      onTap: () => Navigator.of(context).push(DetailsRoute(log)),
     );
   }
 }
