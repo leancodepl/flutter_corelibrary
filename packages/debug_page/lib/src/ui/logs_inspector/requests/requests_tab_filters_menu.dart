@@ -5,7 +5,7 @@ import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
 enum SearchType {
-  endpoints,
+  url,
   body,
   all,
 }
@@ -26,7 +26,7 @@ class RequestsTabFiltersMenu extends StatefulWidget {
 
 class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
   RequestStatus? requestStatus;
-  SearchType searchType = SearchType.endpoints;
+  SearchType searchType = SearchType.url;
   String? searchPhrase;
 
   void _updateFilters() {
@@ -77,7 +77,7 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
                 _updateFilters();
               },
               options: const [
-                (value: SearchType.endpoints, label: 'Endpoint'),
+                (value: SearchType.url, label: 'Url'),
                 (value: SearchType.body, label: 'Body'),
                 (value: SearchType.all, label: 'All'),
               ],

@@ -26,8 +26,21 @@ class RequestSearchFilter implements IRequestFilter {
 
   // TOOD: implement searching by body and other fields too
   @override
-  bool filter(RequestLogRecord requestLogRecord) =>
-      requestLogRecord.url.toString().contains(phrase);
+  bool filter(RequestLogRecord requestLogRecord) {
+    if ([SearchType.url, SearchType.all].contains(type)) {
+      final url = requestLogRecord.url.toString();
+
+      if (!url.contains(phrase)) {
+        return false;
+      }
+    }
+
+    if ([SearchType.body, SearchType.all].contains(type)) {
+      // TODO: What to do with the future?
+    }
+
+    return true;
+  }
 }
 
 class RequestsLog {
