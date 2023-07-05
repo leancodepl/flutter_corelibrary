@@ -10,7 +10,7 @@ enum SearchType {
 class FiltersMenu extends StatefulWidget implements PreferredSizeWidget {
   const FiltersMenu({super.key});
 
-  static const height = 100.0;
+  static const height = 250.0;
 
   @override
   State<StatefulWidget> createState() {
@@ -49,6 +49,13 @@ class _FiltersMenuState extends State<FiltersMenu> {
               (value: SearchType.body, label: 'Body'),
               (value: SearchType.all, label: 'All'),
             ],
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Szukaj',
+              icon: Icon(Icons.search),
+            ),
           ),
         ],
       ),

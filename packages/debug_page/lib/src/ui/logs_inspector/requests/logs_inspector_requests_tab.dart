@@ -1,5 +1,6 @@
 import 'package:debug_page/src/logging_http_client.dart';
 import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/ui/logs_inspector/filters_menu.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,30 @@ import 'package:flutter/material.dart';
 class LogsInspectorRequestsTab extends StatelessWidget {
   const LogsInspectorRequestsTab({
     super.key,
+    required LoggingHttpClient loggingHttpClient,
+    required this.showFilters,
+  }) : _loggingHttpClient = loggingHttpClient;
+
+  final LoggingHttpClient _loggingHttpClient;
+  final bool showFilters;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (showFilters) const FiltersMenu(),
+        Expanded(
+          child: _LogsInspectorRequestsTabContent(
+            loggingHttpClient: _loggingHttpClient,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LogsInspectorRequestsTabContent extends StatelessWidget {
+  const _LogsInspectorRequestsTabContent({
     required LoggingHttpClient loggingHttpClient,
   }) : _loggingHttpClient = loggingHttpClient;
 
