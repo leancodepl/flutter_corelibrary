@@ -1,4 +1,4 @@
-import 'package:debug_page/src/ui/details_screen/typography.dart';
+import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
 class MapView extends StatelessWidget {

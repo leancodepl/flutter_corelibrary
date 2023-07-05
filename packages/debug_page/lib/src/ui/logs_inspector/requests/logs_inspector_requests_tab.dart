@@ -1,6 +1,6 @@
 import 'package:debug_page/src/logging_http_client.dart';
 import 'package:debug_page/src/request_log.dart';
-import 'package:debug_page/src/ui/log_tile.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
 import 'package:flutter/material.dart';
 
 class LogsInspectorRequestsTab extends StatelessWidget {
@@ -27,7 +27,7 @@ class LogsInspectorRequestsTab extends StatelessWidget {
           children: ListTile.divideTiles(
             context: context,
             tiles: logs.reversed.map(
-              (log) => LogTile(log: log),
+              (log) => RequestLogTile(log: log),
             ),
           ).toList(),
         );

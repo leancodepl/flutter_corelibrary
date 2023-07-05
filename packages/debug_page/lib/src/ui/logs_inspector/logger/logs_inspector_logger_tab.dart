@@ -1,19 +1,8 @@
 import 'package:debug_page/src/logger_listener.dart';
-import 'package:debug_page/src/ui/details_screen/typography.dart';
+import 'package:debug_page/src/ui/logs_inspector/logger/logger_log_tile.dart';
+import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-
-extension ColorExtension on Level {
-  Color get color {
-    return switch (this) {
-      Level.FINE || Level.FINER || Level.FINEST => Colors.green,
-      Level.CONFIG || Level.INFO => Colors.lightGreen,
-      Level.WARNING => Colors.orange,
-      Level.SEVERE => Colors.red,
-      _ => Colors.grey,
-    };
-  }
-}
 
 class LogsInspectorLoggerTab extends StatelessWidget {
   const LogsInspectorLoggerTab({
@@ -22,10 +11,6 @@ class LogsInspectorLoggerTab extends StatelessWidget {
   }) : _loggerListener = loggerListener;
 
   final LoggerListener _loggerListener;
-
-  String _formatLog(LogRecord log) {
-    return '${log.loggerName} (${log.level}): ${log.message}';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +32,7 @@ class LogsInspectorLoggerTab extends StatelessWidget {
         return ListView(
           children: ListTile.divideTiles(
             context: context,
-            tiles: logs.reversed.map(
-              (log) => ListTile(
-                title: Text(
-                  _formatLog(log),
-                  style: DebugPageTypography.medium,
-                ),
-                tileColor: log.level.color,
-              ),
-            ),
+            tiles: logs.reversed.map((log) => LoggerLogTile(log: log)),
           ).toList(),
         );
       },
