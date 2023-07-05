@@ -47,4 +47,24 @@ class RequestLog {
       _ => RequestStatus.unknown
     };
   }
+
+  Future<String> toSummary(bool includeResponse) async {
+    final buffer = StringBuffer()
+      ..writeln('HTTP Request')
+      ..writeln('Method: $method')
+      ..writeln('Url: $url')
+      ..writeln('Status code: $statusCode')
+      ..writeln('Start time: $startTime')
+      ..writeln('End time: $endTime')
+      ..writeln('Request headers: $requestHeaders')
+      ..writeln('Request body: $requestBody')
+      ..writeln('Response headers: $responseHeaders');
+
+    if (includeResponse) {
+      final responseBody = await this.responseBody;
+      buffer.writeln('Respones body: $responseBody');
+    }
+
+    return buffer.toString();
+  }
 }

@@ -2,6 +2,8 @@ import 'package:debug_page/src/request_log.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/overview_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/response_tab.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
+import 'package:debug_page/src/ui/logs_inspector/share_button.dart';
 import 'package:flutter/material.dart';
 
 class RequestDetailsRoute extends MaterialPageRoute<void> {
@@ -24,6 +26,13 @@ class RequestDetailsScreen extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: ShareButton(
+          onPressed: () async => showDialog(
+            context: context,
+            builder: (context) => ShareRequestLogDialog(requestLog: requestLog),
+          ),
+        ),
         appBar: AppBar(
           title: const Text('Request details'),
           bottom: const TabBar(
