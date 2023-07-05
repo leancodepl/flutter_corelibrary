@@ -18,14 +18,10 @@ class DebugScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (_) => MaterialPageRoute(
-        builder: (context) => LogsInspector(
-          loggingHttpClient: _loggingHttpClient,
-          loggerListener: _loggerListener,
-          onBackButtonClicked: onBackButtonClicked,
-        ),
-      ),
+    return LogsInspector(
+      loggingHttpClient: _loggingHttpClient,
+      loggerListener: _loggerListener,
+      onBackButtonClicked: onBackButtonClicked,
     );
   }
 }

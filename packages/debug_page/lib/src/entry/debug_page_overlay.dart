@@ -1,36 +1,17 @@
-import 'package:debug_page/src/entry/debug_page.dart';
+import 'package:debug_page/debug_page.dart';
+import 'package:debug_page/src/logger_listener.dart';
+import 'package:debug_page/src/ui/debug_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shake/shake.dart';
 
-final debugPageOverlayState = GlobalKey<_DebugPageOverlayState>();
-
-class DebugPageOverlay extends StatelessWidget {
+class DebugPageOverlay extends StatefulWidget {
   const DebugPageOverlay({
     super.key,
-    required this.debugPage,
+    required this.loggingHttpClient,
     required this.child,
   });
 
-  final DebugPage debugPage;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return _DebugPageOverlay(
-      key: debugPageOverlayState,
-      debugPage: debugPage,
-      child: child,
-    );
-  }
-}
-
-class _DebugPageOverlay extends StatefulWidget {
-  const _DebugPageOverlay({
-    super.key,
-    required this.debugPage,
-    required this.child,
-  });
-
-  final DebugPage debugPage;
+  final LoggingHttpClient loggingHttpClient;
   final Widget child;
 
   @override
@@ -39,56 +20,73 @@ class _DebugPageOverlay extends StatefulWidget {
   }
 }
 
-class _DebugPageOverlayState extends State<_DebugPageOverlay> {
-  OverlayEntry? overlayEntry;
+class _DebugPageOverlayState extends State<DebugPageOverlay> {
+  _DebugPageOverlayState() : _loggerListener = LoggerListener();
 
-  void _createOverlayEntry() {
-    overlayEntry = OverlayEntry(
-      builder: (context) {
-        return Visibility(
-          visible: true,
-          // visible: !widget.debugPage.shown,
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: GestureDetector(
-              onTap: () async {
-                // TODO: Figure out how to close all other overlays temporarily
-                // and insert them back after DebugPage is popped
-
-                await widget.debugPage.show(context);
-              },
-              child: Container(
-                width: 48,
-                height: 48,
-                color: Colors.blue.withOpacity(0.2),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Overlay.of(context).insert(overlayEntry!);
-    });
-  }
+  final LoggerListener _loggerListener;
+  bool showDebugScreen = false;
+  ShakeDetector? _shakeDetector;
 
   @override
   void initState() {
     super.initState();
-    _createOverlayEntry();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
+    _shakeDetector = ShakeDetector.autoStart(
+      shakeThresholdGravity: 4,
+      onPhoneShake: () {
+        setState(() {
+          showDebugScreen = true;
+        });
+      },
+    );
   }
 
   @override
   void dispose() {
-    overlayEntry?.remove();
-    overlayEntry = null;
-
     super.dispose();
+    _loggerListener.dispose();
+    _shakeDetector?.stopListening();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      // The default value for alignment is AlignmentDirectional.topStart, which
+      // needs a Directionality ancestor, which we do not want, hence
+      // Alignment.center
+      alignment: Alignment.center,
+      children: [
+        widget.child,
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: GestureDetector(
+            onTap: () => setState(() {
+              showDebugScreen = true;
+            }),
+            child: Container(
+              width: 48,
+              height: 48,
+              color: Colors.blue.withOpacity(0.2),
+            ),
+          ),
+        ),
+        if (showDebugScreen)
+          MaterialApp(
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            home: DebugScreen(
+              loggingHttpClient: widget.loggingHttpClient,
+              loggerListener: _loggerListener,
+              onBackButtonClicked: () {
+                setState(() {
+                  showDebugScreen = false;
+                });
+              },
+            ),
+          ),
+      ],
+    );
   }
 }

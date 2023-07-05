@@ -12,36 +12,29 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   final loggingHttpClient = LoggingHttpClient();
-  final debugPage = DebugPage(loggingHttpClient: loggingHttpClient);
 
-  runApp(MyApp(
-    loggingHttpClient: loggingHttpClient,
-    debugPage: debugPage,
-  ));
+  runApp(MyApp(loggingHttpClient: loggingHttpClient));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
     required LoggingHttpClient loggingHttpClient,
-    required DebugPage debugPage,
-  })  : _loggingHttpClient = loggingHttpClient,
-        _debugPage = debugPage;
+  }) : _loggingHttpClient = loggingHttpClient;
 
   final LoggingHttpClient _loggingHttpClient;
-  final DebugPage _debugPage;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Debug Page Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: DebugPageOverlay(
-        debugPage: _debugPage,
-        child: MyHomePage(
+    return DebugPageOverlay(
+      loggingHttpClient: _loggingHttpClient,
+      child: MaterialApp(
+        title: 'Debug Page Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: MyHomePage(
           title: 'Flutter Debug Page Demo Page',
           loggingHttpClient: _loggingHttpClient,
         ),
@@ -117,9 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   builder: (context) => const Dialog(
                     child: Padding(
                       padding: EdgeInsets.all(24),
-                      child: Text(
-                        'Debug page overlay button is still clickable even when dialogs are shown',
-                      ),
+                      child: Text('Some dialog'),
                     ),
                   ),
                 ),
@@ -146,7 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    below: debugPageOverlayState.currentState?.overlayEntry,
                   );
                 },
                 child: const Text('Show an overlay'),
