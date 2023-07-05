@@ -46,14 +46,17 @@ class _LogsInspectorState extends State<LogsInspector> {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            LogsInspectorRequestsTab(
-              loggingHttpClient: widget._loggingHttpClient,
-              showFilters: showFilters,
-            ),
-            LogsInspectorLoggerTab(loggerListener: widget._loggerListener),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: TabBarView(
+            children: [
+              LogsInspectorRequestsTab(
+                loggingHttpClient: widget._loggingHttpClient,
+                showFilters: showFilters,
+              ),
+              LogsInspectorLoggerTab(loggerListener: widget._loggerListener),
+            ],
+          ),
         ),
       ),
     );

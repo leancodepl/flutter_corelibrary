@@ -50,7 +50,7 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
       child: DefaultTextStyle(
         style: DebugPageTypography.medium,
         child: Column(
