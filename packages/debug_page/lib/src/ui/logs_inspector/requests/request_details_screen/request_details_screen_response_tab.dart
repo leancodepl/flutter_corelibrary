@@ -11,7 +11,7 @@ class RequestDetailsScreenResponseTab extends StatelessWidget {
     required this.requestLog,
   });
 
-  final RequestLog requestLog;
+  final RequestLogRecord requestLog;
 
   String _prettifyJson(String json) {
     const encoder = JsonEncoder.withIndent('    ');

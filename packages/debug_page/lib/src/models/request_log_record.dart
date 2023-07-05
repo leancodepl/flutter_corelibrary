@@ -5,8 +5,8 @@ enum RequestStatus {
   unknown;
 }
 
-class RequestLog {
-  const RequestLog({
+class RequestLogRecord {
+  const RequestLogRecord({
     required this.method,
     required this.url,
     required this.startTime,

@@ -8,7 +8,7 @@ class ShareRequestLogDialog extends StatefulWidget {
     required this.requestLog,
   });
 
-  final RequestLog requestLog;
+  final RequestLogRecord requestLog;
 
   @override
   State<StatefulWidget> createState() {

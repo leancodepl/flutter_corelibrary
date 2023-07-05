@@ -20,7 +20,7 @@ class RequestLogTile extends StatelessWidget {
     required this.log,
   });
 
-  final RequestLog log;
+  final RequestLogRecord log;
 
   String _formatTime(DateTime time) =>
       '${time.hour}:${time.minute}:${time.second}.${time.millisecond}';

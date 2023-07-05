@@ -8,7 +8,7 @@ class RequestDetailsScreenOverviewTab extends StatelessWidget {
     required this.requestLog,
   });
 
-  final RequestLog requestLog;
+  final RequestLogRecord requestLog;
 
   @override
   Widget build(BuildContext context) {

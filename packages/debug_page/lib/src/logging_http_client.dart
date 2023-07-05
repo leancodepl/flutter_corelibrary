@@ -11,11 +11,11 @@ class LoggingHttpClient extends http.BaseClient {
         _logsController = StreamController.broadcast();
 
   final http.Client _httpClient;
-  final List<RequestLog> _logs;
-  final StreamController<List<RequestLog>> _logsController;
+  final List<RequestLogRecord> _logs;
+  final StreamController<List<RequestLogRecord>> _logsController;
 
-  Stream<List<RequestLog>> get logStream => _logsController.stream;
-  List<RequestLog> get logs => List.unmodifiable(_logs);
+  Stream<List<RequestLogRecord>> get logStream => _logsController.stream;
+  List<RequestLogRecord> get logs => List.unmodifiable(_logs);
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -37,7 +37,7 @@ class LoggingHttpClient extends http.BaseClient {
     _logsController.add(
       _logs
         ..add(
-          RequestLog(
+          RequestLogRecord(
             method: request.method,
             url: request.url,
             startTime: startTime,

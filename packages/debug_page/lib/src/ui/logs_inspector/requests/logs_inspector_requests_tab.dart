@@ -39,7 +39,7 @@ class _LogsInspectorRequestsTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<RequestLog>>(
+    return StreamBuilder<List<RequestLogRecord>>(
       initialData: _loggingHttpClient.logs,
       stream: _loggingHttpClient.logStream,
       builder: (context, snapshot) {

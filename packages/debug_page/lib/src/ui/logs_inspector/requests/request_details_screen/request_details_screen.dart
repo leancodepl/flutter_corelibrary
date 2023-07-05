@@ -7,7 +7,7 @@ import 'package:debug_page/src/ui/logs_inspector/share_button.dart';
 import 'package:flutter/material.dart';
 
 class RequestDetailsRoute extends MaterialPageRoute<void> {
-  RequestDetailsRoute(RequestLog requestLog)
+  RequestDetailsRoute(RequestLogRecord requestLog)
       : super(
           builder: (context) => RequestDetailsScreen(requestLog: requestLog),
         );
@@ -19,7 +19,7 @@ class RequestDetailsScreen extends StatelessWidget {
     required this.requestLog,
   });
 
-  final RequestLog requestLog;
+  final RequestLogRecord requestLog;
 
   @override
   Widget build(BuildContext context) {
