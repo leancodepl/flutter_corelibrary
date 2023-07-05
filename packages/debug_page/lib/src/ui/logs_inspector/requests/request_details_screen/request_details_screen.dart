@@ -1,4 +1,4 @@
-import 'package:debug_page/src/models/request_log.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_overview_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_request_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_response_tab.dart';

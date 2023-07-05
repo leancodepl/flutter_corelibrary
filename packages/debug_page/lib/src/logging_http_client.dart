@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:debug_page/src/models/request_log.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
+import 'package:debug_page/src/models/requests_log.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
@@ -12,9 +13,9 @@ class LoggingHttpClient extends http.BaseClient {
 
   final http.Client _httpClient;
   final List<RequestLogRecord> _logs;
-  final StreamController<List<RequestLogRecord>> _logsController;
+  final StreamController<RequestsLog> _logsController;
 
-  Stream<List<RequestLogRecord>> get logStream => _logsController.stream;
+  Stream<RequestsLog> get logStream => _logsController.stream;
   List<RequestLogRecord> get logs => List.unmodifiable(_logs);
 
   @override
@@ -35,20 +36,22 @@ class LoggingHttpClient extends http.BaseClient {
     final responseBodyCompleter = Completer<String>();
 
     _logsController.add(
-      _logs
-        ..add(
-          RequestLogRecord(
-            method: request.method,
-            url: request.url,
-            startTime: startTime,
-            endTime: endTime,
-            statusCode: response.statusCode,
-            requestHeaders: request.headers,
-            requestBody: requestBody,
-            responseBody: responseBodyCompleter.future,
-            responseHeaders: response.headers,
+      RequestsLog(
+        logs: _logs
+          ..add(
+            RequestLogRecord(
+              method: request.method,
+              url: request.url,
+              startTime: startTime,
+              endTime: endTime,
+              statusCode: response.statusCode,
+              requestHeaders: request.headers,
+              requestBody: requestBody,
+              responseBody: responseBodyCompleter.future,
+              responseHeaders: response.headers,
+            ),
           ),
-        ),
+      ),
     );
 
     return http.StreamedResponse(

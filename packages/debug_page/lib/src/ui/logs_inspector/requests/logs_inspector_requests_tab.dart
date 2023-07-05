@@ -1,11 +1,11 @@
 import 'package:debug_page/src/logging_http_client.dart';
-import 'package:debug_page/src/models/request_log.dart';
+import 'package:debug_page/src/models/requests_log.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
-class LogsInspectorRequestsTab extends StatelessWidget {
+class LogsInspectorRequestsTab extends StatefulWidget {
   const LogsInspectorRequestsTab({
     super.key,
     required LoggingHttpClient loggingHttpClient,
@@ -16,13 +16,31 @@ class LogsInspectorRequestsTab extends StatelessWidget {
   final bool showFilters;
 
   @override
+  State<LogsInspectorRequestsTab> createState() =>
+      _LogsInspectorRequestsTabState();
+}
+
+class _LogsInspectorRequestsTabState extends State<LogsInspectorRequestsTab> {
+  final _filters = ValueNotifier<List<IRequestFilter>>([]);
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (showFilters) const RequestsTabFiltersMenu(),
+        if (widget.showFilters)
+          RequestsTabFiltersMenu(
+            onFiltersChanged: (value) {
+              _filters.value = value;
+            },
+          ),
         Expanded(
-          child: _LogsInspectorRequestsTabContent(
-            loggingHttpClient: _loggingHttpClient,
+          child: ValueListenableBuilder(
+            valueListenable: _filters,
+            builder: (context, filters, child) =>
+                _LogsInspectorRequestsTabContent(
+              loggingHttpClient: widget._loggingHttpClient,
+              filters: filters,
+            ),
           ),
         ),
       ],
@@ -33,19 +51,22 @@ class LogsInspectorRequestsTab extends StatelessWidget {
 class _LogsInspectorRequestsTabContent extends StatelessWidget {
   const _LogsInspectorRequestsTabContent({
     required LoggingHttpClient loggingHttpClient,
+    required this.filters,
   }) : _loggingHttpClient = loggingHttpClient;
 
   final LoggingHttpClient _loggingHttpClient;
+  final List<IRequestFilter> filters;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<RequestLogRecord>>(
-      initialData: _loggingHttpClient.logs,
+    return StreamBuilder<RequestsLog>(
+      initialData: RequestsLog(logs: _loggingHttpClient.logs),
       stream: _loggingHttpClient.logStream,
       builder: (context, snapshot) {
-        final logs = snapshot.data;
+        final requestsLog = snapshot.data;
+        final filteredLogs = requestsLog?.getFilteredLogs(filters: filters);
 
-        if (logs == null || logs.isEmpty) {
+        if (filteredLogs == null || filteredLogs.isEmpty) {
           return Center(
             child: Text(
               'No requests yet',
@@ -57,7 +78,7 @@ class _LogsInspectorRequestsTabContent extends StatelessWidget {
         return ListView(
           children: ListTile.divideTiles(
             context: context,
-            tiles: logs.reversed.map(
+            tiles: filteredLogs.reversed.map(
               (log) => RequestLogTile(log: log),
             ),
           ).toList(),

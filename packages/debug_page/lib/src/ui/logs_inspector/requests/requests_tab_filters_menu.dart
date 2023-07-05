@@ -1,4 +1,5 @@
-import 'package:debug_page/src/models/request_log.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
+import 'package:debug_page/src/models/requests_log.dart';
 import 'package:debug_page/src/ui/logs_inspector/search_field.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,12 @@ enum SearchType {
 }
 
 class RequestsTabFiltersMenu extends StatefulWidget {
-  const RequestsTabFiltersMenu({super.key});
+  const RequestsTabFiltersMenu({
+    super.key,
+    required this.onFiltersChanged,
+  });
+
+  final ValueChanged<List<IRequestFilter>> onFiltersChanged;
 
   @override
   State<StatefulWidget> createState() {
@@ -20,8 +26,26 @@ class RequestsTabFiltersMenu extends StatefulWidget {
 
 class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
   RequestStatus? requestStatus;
-  SearchType? searchType;
+  SearchType searchType = SearchType.endpoints;
   String? searchPhrase;
+
+  void _updateFilters() {
+    final requestStatus = this.requestStatus;
+    final searchType = this.searchType;
+    final searchPhrase = this.searchPhrase;
+
+    final filters = [
+      if (requestStatus != null)
+        RequestStatusFilter(desiredStatus: requestStatus),
+      if (searchPhrase != null)
+        RequestSearchFilter(
+          type: searchType,
+          phrase: searchPhrase,
+        ),
+    ];
+
+    widget.onFiltersChanged(filters);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +58,12 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
           children: [
             _LabeledDropdown<RequestStatus>(
               title: const Text('Type'),
-              onChanged: (value) => setState(() => requestStatus = value),
+              onChanged: (value) {
+                setState(() => requestStatus = value);
+                _updateFilters();
+              },
               options: const [
+                (value: null, label: 'Any'),
                 (value: RequestStatus.success, label: '200'),
                 (value: RequestStatus.redirect, label: '300'),
                 (value: RequestStatus.error, label: '400'),
@@ -43,14 +71,21 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
             ),
             _LabeledDropdown<SearchType>(
               title: const Text('Search by'),
-              onChanged: (value) => setState(() => searchType = value),
+              initialValue: searchType,
+              onChanged: (value) {
+                setState(() => searchType = value!);
+                _updateFilters();
+              },
               options: const [
                 (value: SearchType.endpoints, label: 'Endpoint'),
                 (value: SearchType.body, label: 'Body'),
                 (value: SearchType.all, label: 'All'),
               ],
             ),
-            SearchField(onChanged: (value) => searchPhrase = value),
+            SearchField(onChanged: (value) {
+              searchPhrase = value;
+              _updateFilters();
+            }),
           ],
         ),
       ),
@@ -63,11 +98,13 @@ class _LabeledDropdown<T> extends StatefulWidget {
     required this.title,
     required this.options,
     required this.onChanged,
+    this.initialValue,
   });
 
   final Widget title;
-  final List<({T value, String label})> options;
+  final List<({T? value, String label})> options;
   final ValueChanged<T?> onChanged;
+  final T? initialValue;
 
   @override
   State<StatefulWidget> createState() {
@@ -77,6 +114,12 @@ class _LabeledDropdown<T> extends StatefulWidget {
 
 class _LabeledDropdownState<T> extends State<_LabeledDropdown<T>> {
   T? _selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {

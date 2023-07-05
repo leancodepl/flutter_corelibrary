@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:debug_page/src/models/request_log.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/map_view.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
