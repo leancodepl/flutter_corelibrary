@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/models/request_log.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/map_view.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
-class ResponseTab extends StatelessWidget {
-  const ResponseTab({
+class RequestDetailsScreenResponseTab extends StatelessWidget {
+  const RequestDetailsScreenResponseTab({
     super.key,
     required this.requestLog,
   });

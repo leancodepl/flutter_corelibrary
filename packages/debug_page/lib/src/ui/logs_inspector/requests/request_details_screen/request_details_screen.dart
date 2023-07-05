@@ -1,7 +1,7 @@
-import 'package:debug_page/src/request_log.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/overview_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/response_tab.dart';
+import 'package:debug_page/src/models/request_log.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_overview_tab.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_request_tab.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_response_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
 import 'package:debug_page/src/ui/logs_inspector/share_button.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +48,9 @@ class RequestDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: TabBarView(
               children: [
-                OverviewTab(requestLog: requestLog),
-                RequestTab(requestLog: requestLog),
-                ResponseTab(requestLog: requestLog),
+                RequestDetailsScreenOverviewTab(requestLog: requestLog),
+                RequestDetailsScreenRequestTab(requestLog: requestLog),
+                RequestDetailsScreenResponseTab(requestLog: requestLog),
               ],
             ),
           ),

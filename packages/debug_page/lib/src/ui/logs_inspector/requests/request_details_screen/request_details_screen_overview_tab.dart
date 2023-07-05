@@ -1,9 +1,9 @@
-import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/models/request_log.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/map_view.dart';
 import 'package:flutter/material.dart';
 
-class OverviewTab extends StatelessWidget {
-  const OverviewTab({
+class RequestDetailsScreenOverviewTab extends StatelessWidget {
+  const RequestDetailsScreenOverviewTab({
     super.key,
     required this.requestLog,
   });
