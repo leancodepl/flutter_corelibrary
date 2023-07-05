@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (randomIndex % 3 == 0) {
-      _logger.info('Some very long log' * 10);
+      _logger.info('Some very long log' * 100);
     }
   }
 

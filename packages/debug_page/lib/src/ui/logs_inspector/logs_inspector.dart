@@ -2,6 +2,7 @@ import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/logger_listener.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
+import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
 class LogsInspector extends StatelessWidget {
@@ -22,8 +23,9 @@ class LogsInspector extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Logs inspector'),
-          bottom: const TabBar(
-            tabs: [
+          bottom: TabBar(
+            labelStyle: DebugPageTypography.medium,
+            tabs: const [
               Text('Requests'),
               Text('Logs'),
             ],

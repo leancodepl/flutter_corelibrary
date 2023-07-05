@@ -19,10 +19,10 @@ class LoggerLogTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: log.level.color,
       onTap: () => Navigator.of(context).push(
         LoggerLogDetailsRoute(logRecord: log),
       ),
-      tileColor: log.level.color,
       title: Text(
         _formatLog(log),
         style: DebugPageTypography.medium,
