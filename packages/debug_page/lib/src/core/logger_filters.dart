@@ -31,12 +31,14 @@ class LoggerSearchFilter implements Filter<LogRecord> {
     bool? loggerName;
     bool? message;
 
+    final lowercasePhrase = phrase.toLowerCase();
+
     if ([LogSearchType.loggerName, LogSearchType.all].contains(type)) {
-      loggerName = logRecord.loggerName.contains(phrase);
+      loggerName = logRecord.loggerName.toLowerCase().contains(lowercasePhrase);
     }
 
     if ([LogSearchType.logMessage, LogSearchType.all].contains(type)) {
-      message = logRecord.message.contains(phrase);
+      message = logRecord.message.toLowerCase().contains(lowercasePhrase);
     }
 
     return switch (type) {

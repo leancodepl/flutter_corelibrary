@@ -26,14 +26,20 @@ class RequestSearchFilter implements Filter<RequestLogRecord> {
     bool? url;
     bool? body;
 
+    final lowercasePhrase = phrase.toLowerCase();
+
     if ([RequestSearchType.url, RequestSearchType.all].contains(type)) {
-      url = requestLogRecord.url.toString().contains(phrase);
+      url = requestLogRecord.url
+          .toString()
+          .toLowerCase()
+          .contains(lowercasePhrase);
     }
 
     if ([RequestSearchType.body, RequestSearchType.all].contains(type)) {
       if (requestLogRecord.responseBodyCompleter.isCompleted) {
         body = (await requestLogRecord.responseBodyCompleter.future)
-            .contains(phrase);
+            .toLowerCase()
+            .contains(lowercasePhrase);
       }
     }
 
