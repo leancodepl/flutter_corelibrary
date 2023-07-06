@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:debug_page/src/core/log_gatherer.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/models/requests_log.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
-class LoggingHttpClient extends http.BaseClient {
+class LoggingHttpClient extends http.BaseClient
+    implements LogGatherer<RequestLogRecord, RequestSharingConfiguration> {
   LoggingHttpClient({http.Client? client})
       : _httpClient = client ?? http.Client(),
         _logs = [],
@@ -13,9 +15,11 @@ class LoggingHttpClient extends http.BaseClient {
 
   final http.Client _httpClient;
   final List<RequestLogRecord> _logs;
-  final StreamController<RequestsLog> _logsController;
+  final StreamController<List<RequestLogRecord>> _logsController;
 
-  Stream<RequestsLog> get logStream => _logsController.stream;
+  @override
+  Stream<List<RequestLogRecord>> get logStream => _logsController.stream;
+  @override
   List<RequestLogRecord> get logs => List.unmodifiable(_logs);
 
   @override
@@ -36,22 +40,20 @@ class LoggingHttpClient extends http.BaseClient {
     final responseBodyCompleter = Completer<String>();
 
     _logsController.add(
-      RequestsLog(
-        logs: _logs
-          ..add(
-            RequestLogRecord(
-              method: request.method,
-              url: request.url,
-              startTime: startTime,
-              endTime: endTime,
-              statusCode: response.statusCode,
-              requestHeaders: request.headers,
-              requestBody: requestBody,
-              responseBodyCompleter: responseBodyCompleter,
-              responseHeaders: response.headers,
-            ),
+      _logs
+        ..add(
+          RequestLogRecord(
+            method: request.method,
+            url: request.url,
+            startTime: startTime,
+            endTime: endTime,
+            statusCode: response.statusCode,
+            requestHeaders: request.headers,
+            requestBody: requestBody,
+            responseBodyCompleter: responseBodyCompleter,
+            responseHeaders: response.headers,
           ),
-      ),
+        ),
     );
 
     return http.StreamedResponse(
@@ -64,5 +66,18 @@ class LoggingHttpClient extends http.BaseClient {
       }),
       response.statusCode,
     );
+  }
+
+  @override
+  Future<String> getSummary(RequestSharingConfiguration configuration) async {
+    final buffer = StringBuffer();
+
+    for (final log in logs) {
+      buffer.writeln(await log.toSummary(configuration));
+      // TODO: handle
+      buffer.writeln('_' * 50);
+    }
+
+    return buffer.toString();
   }
 }

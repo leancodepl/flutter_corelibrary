@@ -1,7 +1,6 @@
 import 'package:debug_page/src/core/logging_http_client.dart';
 import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/models/requests_log.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
 import 'package:debug_page/src/ui/typography.dart';
@@ -63,17 +62,17 @@ class _LogsInspectorRequestsTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<RequestsLog>(
-      initialData: RequestsLog(logs: _loggingHttpClient.logs),
+    return StreamBuilder<List<RequestLogRecord>>(
+      initialData: _loggingHttpClient.logs,
       stream: _loggingHttpClient.logStream,
       builder: (context, snapshot) {
-        final requestsLog = snapshot.data;
+        final logs = snapshot.data;
 
-        if (requestsLog == null) {
+        if (logs == null) {
           return _EmptyPlaceholder();
         }
 
-        final filterLogs = _filters.apply(requestsLog.logs);
+        final filterLogs = _filters.apply(logs);
 
         return FutureBuilder(
           future: filterLogs,

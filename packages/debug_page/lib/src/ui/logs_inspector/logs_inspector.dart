@@ -2,8 +2,14 @@ import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/core/logger_listener.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
+import 'package:debug_page/src/ui/logs_inspector/widgets/logs_inspector_share_button.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
+
+enum LogsInspectorTab {
+  requests,
+  logs,
+}
 
 class LogsInspector extends StatefulWidget {
   const LogsInspector({
@@ -30,6 +36,11 @@ class _LogsInspectorState extends State<LogsInspector> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: LogsInspectorShareButton(
+          loggingHttpClient: widget._loggingHttpClient,
+          loggerListener: widget._loggerListener,
+        ),
         appBar: AppBar(
           title: const Text('Logs inspector'),
           actions: [

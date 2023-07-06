@@ -1,14 +1,22 @@
-import 'package:debug_page/src/models/request_log_record.dart';
+import 'package:debug_page/src/core/log_gatherer.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 
-class ShareRequestLogDialog extends StatefulWidget {
-  const ShareRequestLogDialog({
-    super.key,
-    required this.requestLog,
-  });
+class RequestSharingConfiguration implements SummaryConfiguration {
+  const RequestSharingConfiguration({required this.includeResponse});
 
-  final RequestLogRecord requestLog;
+  final bool includeResponse;
+}
+
+Future<RequestSharingConfiguration?> showShareRequestLogDialog(
+    BuildContext context) {
+  return showDialog<RequestSharingConfiguration>(
+    context: context,
+    builder: (context) => const _ShareRequestLogDialog(),
+  );
+}
+
+class _ShareRequestLogDialog extends StatefulWidget {
+  const _ShareRequestLogDialog();
 
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +24,7 @@ class ShareRequestLogDialog extends StatefulWidget {
   }
 }
 
-class _ShareRequestLogDialogState extends State<ShareRequestLogDialog> {
+class _ShareRequestLogDialogState extends State<_ShareRequestLogDialog> {
   _ShareRequestLogDialogState();
 
   bool includeResponse = false;
@@ -42,15 +50,12 @@ class _ShareRequestLogDialogState extends State<ShareRequestLogDialog> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  final summary = await widget.requestLog.toSummary(
-                    includeResponse,
+                  Navigator.pop(
+                    context,
+                    RequestSharingConfiguration(
+                      includeResponse: includeResponse,
+                    ),
                   );
-
-                  await Share.share(summary);
-
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
                 },
                 child: const Text('Share'),
               ),

@@ -13,10 +13,6 @@ extension ApplyExtension<T> on List<Filter<T>> {
         .where((e) => criteriaMet[e.$1])
         .map((e) => e.$2)
         .toList();
-
-    // return source
-    //     .where((item) => every((filter) => filter.filter(item)))
-    //     .toList();
   }
 }
 

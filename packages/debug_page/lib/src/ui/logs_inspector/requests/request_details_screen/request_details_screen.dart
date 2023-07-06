@@ -5,6 +5,7 @@ import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/share_button.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class RequestDetailsRoute extends MaterialPageRoute<void> {
   RequestDetailsRoute(RequestLogRecord requestLog)
@@ -28,10 +29,14 @@ class RequestDetailsScreen extends StatelessWidget {
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: ShareButton(
-          onPressed: () async => showDialog(
-            context: context,
-            builder: (context) => ShareRequestLogDialog(requestLog: requestLog),
-          ),
+          onPressed: () async {
+            // TODO: extract
+            final summary = await requestLog.toSummary(
+              const RequestSharingConfiguration(includeResponse: true),
+            );
+
+            Share.share(summary);
+          },
         ),
         appBar: AppBar(
           title: const Text('Request details'),

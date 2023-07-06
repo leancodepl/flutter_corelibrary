@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
+
 enum RequestStatus {
   success,
   redirect,
@@ -52,7 +54,7 @@ class RequestLogRecord {
     };
   }
 
-  Future<String> toSummary(bool includeResponse) async {
+  Future<String> toSummary(RequestSharingConfiguration configuration) async {
     final buffer = StringBuffer()
       ..writeln('HTTP Request')
       ..writeln('Method: $method')
@@ -64,7 +66,7 @@ class RequestLogRecord {
       ..writeln('Request body: $requestBody')
       ..writeln('Response headers: $responseHeaders');
 
-    if (includeResponse) {
+    if (configuration.includeResponse) {
       final responseBody = await responseBodyCompleter.future;
       buffer.writeln('Response body: $responseBody');
     }
