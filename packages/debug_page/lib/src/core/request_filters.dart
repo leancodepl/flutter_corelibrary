@@ -8,7 +8,7 @@ class RequestStatusFilter implements Filter<RequestLogRecord> {
   final RequestStatus desiredStatus;
 
   @override
-  bool filter(RequestLogRecord requestLogRecord) =>
+  Future<bool> filter(RequestLogRecord requestLogRecord) async =>
       requestLogRecord.status == desiredStatus;
 }
 
@@ -21,9 +21,8 @@ class RequestSearchFilter implements Filter<RequestLogRecord> {
   final RequestSearchType type;
   final String phrase;
 
-  // TOOD: implement searching by body and other fields too
   @override
-  bool filter(RequestLogRecord requestLogRecord) {
+  Future<bool> filter(RequestLogRecord requestLogRecord) async {
     bool? url;
     bool? body;
 
@@ -32,9 +31,17 @@ class RequestSearchFilter implements Filter<RequestLogRecord> {
     }
 
     if ([RequestSearchType.body, RequestSearchType.all].contains(type)) {
-      // TODO: What to do with the future?
+      if (requestLogRecord.responseBodyCompleter.isCompleted) {
+        body = (await requestLogRecord.responseBodyCompleter.future)
+            .contains(phrase);
+      }
     }
 
-    return true;
+    return switch (type) {
+      RequestSearchType.url when url == true => true,
+      RequestSearchType.body when body == true => true,
+      RequestSearchType.all when url == true || body == true => true,
+      _ => false,
+    };
   }
 }

@@ -8,7 +8,7 @@ class LoggerLevelFilter implements Filter<LogRecord> {
   final Level desiredLevel;
 
   @override
-  bool filter(LogRecord logRecord) {
+  Future<bool> filter(LogRecord logRecord) async {
     if (desiredLevel == Level.FINE) {
       return [Level.FINE, Level.FINER, Level.FINEST].contains(logRecord.level);
     }
@@ -27,7 +27,7 @@ class LoggerSearchFilter implements Filter<LogRecord> {
   final String phrase;
 
   @override
-  bool filter(LogRecord logRecord) {
+  Future<bool> filter(LogRecord logRecord) async {
     bool? loggerName;
     bool? message;
 

@@ -73,19 +73,26 @@ class _LogsInspectorRequestsTabContent extends StatelessWidget {
           return _EmptyPlaceholder();
         }
 
-        final filteredLogs = _filters.apply(requestsLog.logs);
+        final filterLogs = _filters.apply(requestsLog.logs);
 
-        if (filteredLogs.isEmpty) {
-          return _EmptyPlaceholder();
-        }
+        return FutureBuilder(
+          future: filterLogs,
+          builder: (context, snapshot) {
+            final filteredLogs = snapshot.data;
 
-        return ListView(
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: filteredLogs.reversed.map(
-              (log) => RequestLogTile(log: log),
-            ),
-          ).toList(),
+            if (filteredLogs == null || filteredLogs.isEmpty == true) {
+              return _EmptyPlaceholder();
+            }
+
+            return ListView(
+              children: ListTile.divideTiles(
+                context: context,
+                tiles: filteredLogs.reversed.map(
+                  (log) => RequestLogTile(log: log),
+                ),
+              ).toList(),
+            );
+          },
         );
       },
     );

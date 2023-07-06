@@ -71,17 +71,29 @@ class _LogsInspectorLoggerTabContent extends StatelessWidget {
           return const _EmptyPlaceholder();
         }
 
-        final filteredLogs = _filters.apply(logs);
+        final filterLogs = _filters.apply(logs);
 
-        if (filteredLogs.isEmpty) {
-          return const _EmptyPlaceholder();
-        }
+        return FutureBuilder(
+          future: filterLogs,
+          builder: (context, snapshot) {
+            final filteredLogs = snapshot.data;
 
-        return ListView(
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: filteredLogs.reversed.map((log) => LoggerLogTile(log: log)),
-          ).toList(),
+            if (filteredLogs == null) {
+              return const CircularProgressIndicator();
+            }
+
+            if (filteredLogs.isEmpty) {
+              return const _EmptyPlaceholder();
+            }
+
+            return ListView(
+              children: ListTile.divideTiles(
+                context: context,
+                tiles:
+                    filteredLogs.reversed.map((log) => LoggerLogTile(log: log)),
+              ).toList(),
+            );
+          },
         );
       },
     );
