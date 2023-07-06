@@ -35,7 +35,7 @@ class RequestDetailsScreenResponseTab extends StatelessWidget {
               style: DebugPageTypography.large,
             ),
             FutureBuilder(
-              future: requestLog.responseBody,
+              future: requestLog.responseBodyCompleter.future,
               builder: (context, snapshot) {
                 final body = snapshot.data;
 

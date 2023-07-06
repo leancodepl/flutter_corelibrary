@@ -1,3 +1,5 @@
+import 'dart:async';
+
 enum RequestStatus {
   success,
   redirect,
@@ -16,7 +18,7 @@ class RequestLogRecord {
     required this.requestHeaders,
     required this.requestBody,
     required this.responseHeaders,
-    required this.responseBody,
+    required this.responseBodyCompleter,
   });
 
   final String method;
@@ -27,7 +29,7 @@ class RequestLogRecord {
   final Map<String, String> requestHeaders;
   final String? requestBody;
   final Map<String, String> responseHeaders;
-  final Future<String> responseBody;
+  final Completer<String> responseBodyCompleter;
 
   Duration get duration => endTime.difference(startTime);
 
@@ -63,8 +65,8 @@ class RequestLogRecord {
       ..writeln('Response headers: $responseHeaders');
 
     if (includeResponse) {
-      final responseBody = await this.responseBody;
-      buffer.writeln('Respones body: $responseBody');
+      final responseBody = await responseBodyCompleter.future;
+      buffer.writeln('Response body: $responseBody');
     }
 
     return buffer.toString();

@@ -47,7 +47,7 @@ class LoggingHttpClient extends http.BaseClient {
               statusCode: response.statusCode,
               requestHeaders: request.headers,
               requestBody: requestBody,
-              responseBody: responseBodyCompleter.future,
+              responseBodyCompleter: responseBodyCompleter,
               responseHeaders: response.headers,
             ),
           ),

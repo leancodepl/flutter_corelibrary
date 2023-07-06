@@ -24,12 +24,11 @@ class RequestSearchFilter implements Filter<RequestLogRecord> {
   // TOOD: implement searching by body and other fields too
   @override
   bool filter(RequestLogRecord requestLogRecord) {
-    if ([RequestSearchType.url, RequestSearchType.all].contains(type)) {
-      final url = requestLogRecord.url.toString();
+    bool? url;
+    bool? body;
 
-      if (!url.contains(phrase)) {
-        return false;
-      }
+    if ([RequestSearchType.url, RequestSearchType.all].contains(type)) {
+      url = requestLogRecord.url.toString().contains(phrase);
     }
 
     if ([RequestSearchType.body, RequestSearchType.all].contains(type)) {
