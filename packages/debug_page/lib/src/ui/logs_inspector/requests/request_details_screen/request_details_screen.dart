@@ -3,7 +3,7 @@ import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_request_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_response_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
-import 'package:debug_page/src/ui/logs_inspector/share_button.dart';
+import 'package:debug_page/src/ui/logs_inspector/widgets/share_button.dart';
 import 'package:flutter/material.dart';
 
 class RequestDetailsRoute extends MaterialPageRoute<void> {

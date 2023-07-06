@@ -8,7 +8,8 @@ extension _ColorExtension on RequestStatus {
     return switch (this) {
       RequestStatus.success => Colors.green,
       RequestStatus.redirect => Colors.orange,
-      RequestStatus.error => Colors.red,
+      RequestStatus.clientError => Colors.red.shade400,
+      RequestStatus.serverError => Colors.red,
       RequestStatus.unknown => Colors.grey,
     };
   }

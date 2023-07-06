@@ -1,10 +1,12 @@
+import 'package:debug_page/src/core/request_filters.dart';
+import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/models/requests_log.dart';
-import 'package:debug_page/src/ui/logs_inspector/search_field.dart';
+import 'package:debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
+import 'package:debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
-enum SearchType {
+enum RequestSearchType {
   url,
   body,
   all,
@@ -16,7 +18,7 @@ class RequestsTabFiltersMenu extends StatefulWidget {
     required this.onFiltersChanged,
   });
 
-  final ValueChanged<List<IRequestFilter>> onFiltersChanged;
+  final ValueChanged<List<Filter<RequestLogRecord>>> onFiltersChanged;
 
   @override
   State<StatefulWidget> createState() {
@@ -26,7 +28,7 @@ class RequestsTabFiltersMenu extends StatefulWidget {
 
 class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
   RequestStatus? requestStatus;
-  SearchType searchType = SearchType.url;
+  var searchType = RequestSearchType.url;
   String? searchPhrase;
 
   void _updateFilters() {
@@ -56,7 +58,7 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _LabeledDropdown<RequestStatus>(
+            LabeledDropdown<RequestStatus>(
               title: const Text('Type'),
               onChanged: (value) {
                 setState(() => requestStatus = value);
@@ -66,86 +68,29 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
                 (value: null, label: 'Any'),
                 (value: RequestStatus.success, label: '200'),
                 (value: RequestStatus.redirect, label: '300'),
-                (value: RequestStatus.error, label: '400'),
+                (value: RequestStatus.clientError, label: '400'),
+                (value: RequestStatus.serverError, label: '500'),
               ],
             ),
-            _LabeledDropdown<SearchType>(
-              title: const Text('Search by'),
-              initialValue: searchType,
-              onChanged: (value) {
+            FilteredSearchField(
+              onPhraseChanged: (value) {
+                searchPhrase = value;
+                _updateFilters();
+              },
+              initialFilterValue: searchType,
+              filterOptions: const [
+                (value: RequestSearchType.url, label: 'Url'),
+                (value: RequestSearchType.body, label: 'Body'),
+                (value: RequestSearchType.all, label: 'All'),
+              ],
+              onFilterChanged: (value) {
                 setState(() => searchType = value!);
                 _updateFilters();
               },
-              options: const [
-                (value: SearchType.url, label: 'Url'),
-                (value: SearchType.body, label: 'Body'),
-                (value: SearchType.all, label: 'All'),
-              ],
             ),
-            SearchField(onChanged: (value) {
-              searchPhrase = value;
-              _updateFilters();
-            }),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _LabeledDropdown<T> extends StatefulWidget {
-  const _LabeledDropdown({
-    required this.title,
-    required this.options,
-    required this.onChanged,
-    this.initialValue,
-  });
-
-  final Widget title;
-  final List<({T? value, String label})> options;
-  final ValueChanged<T?> onChanged;
-  final T? initialValue;
-
-  @override
-  State<StatefulWidget> createState() {
-    return _LabeledDropdownState<T>();
-  }
-}
-
-class _LabeledDropdownState<T> extends State<_LabeledDropdown<T>> {
-  T? _selectedValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedValue = widget.initialValue;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        widget.title,
-        const SizedBox(width: 20),
-        Expanded(
-          child: DropdownButton<T>(
-            isExpanded: true,
-            value: _selectedValue,
-            onChanged: (value) {
-              setState(() => _selectedValue = value);
-              widget.onChanged(value);
-            },
-            items: widget.options
-                .map(
-                  (item) => DropdownMenuItem<T>(
-                    value: item.value,
-                    child: Text(item.label),
-                  ),
-                )
-                .toList(),
-          ),
-        )
-      ],
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:debug_page/debug_page.dart';
-import 'package:debug_page/src/logger_listener.dart';
+import 'package:debug_page/src/core/logger_listener.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
 import 'package:debug_page/src/ui/typography.dart';
@@ -54,7 +54,10 @@ class _LogsInspectorState extends State<LogsInspector> {
                 loggingHttpClient: widget._loggingHttpClient,
                 showFilters: showFilters,
               ),
-              LogsInspectorLoggerTab(loggerListener: widget._loggerListener),
+              LogsInspectorLoggerTab(
+                loggerListener: widget._loggerListener,
+                showFilters: showFilters,
+              ),
             ],
           ),
         ),

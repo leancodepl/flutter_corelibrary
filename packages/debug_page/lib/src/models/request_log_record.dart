@@ -1,7 +1,8 @@
 enum RequestStatus {
   success,
   redirect,
-  error,
+  clientError,
+  serverError,
   unknown;
 }
 
@@ -43,7 +44,8 @@ class RequestLogRecord {
     return switch (statusCode) {
       (final code) when 200 <= code && code < 300 => RequestStatus.success,
       (final code) when 300 <= code && code < 400 => RequestStatus.redirect,
-      (final code) when 400 <= code && code < 600 => RequestStatus.error,
+      (final code) when 400 <= code && code < 500 => RequestStatus.clientError,
+      (final code) when 500 <= code && code < 600 => RequestStatus.clientError,
       _ => RequestStatus.unknown
     };
   }

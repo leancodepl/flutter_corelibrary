@@ -1,16 +1,63 @@
-import 'package:debug_page/src/logger_listener.dart';
+import 'package:debug_page/src/core/logger_listener.dart';
+import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logger_log_tile.dart';
+import 'package:debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-class LogsInspectorLoggerTab extends StatelessWidget {
+class LogsInspectorLoggerTab extends StatefulWidget {
   const LogsInspectorLoggerTab({
     super.key,
     required LoggerListener loggerListener,
-  }) : _loggerListener = loggerListener;
+    required bool showFilters,
+  })  : _loggerListener = loggerListener,
+        _showFilters = showFilters;
 
   final LoggerListener _loggerListener;
+  final bool _showFilters;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _LogsInspectorLoggerTabState();
+  }
+}
+
+class _LogsInspectorLoggerTabState extends State<LogsInspectorLoggerTab> {
+  final _filters = ValueNotifier<List<Filter<LogRecord>>>([]);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (widget._showFilters)
+          LoggerTabFiltersMenu(
+            onFiltersChanged: (value) => _filters.value = value,
+          ),
+        Expanded(
+          child: ValueListenableBuilder(
+            valueListenable: _filters,
+            builder: (context, filters, child) =>
+                _LogsInspectorLoggerTabContent(
+              loggerListener: widget._loggerListener,
+              filters: filters,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LogsInspectorLoggerTabContent extends StatelessWidget {
+  const _LogsInspectorLoggerTabContent({
+    required LoggerListener loggerListener,
+    required List<Filter<LogRecord>> filters,
+  })  : _loggerListener = loggerListener,
+        _filters = filters;
+
+  final LoggerListener _loggerListener;
+  final List<Filter<LogRecord>> _filters;
 
   @override
   Widget build(BuildContext context) {
@@ -20,22 +67,37 @@ class LogsInspectorLoggerTab extends StatelessWidget {
       builder: (context, snapshot) {
         final logs = snapshot.data;
 
-        if (logs == null || logs.isEmpty) {
-          return Center(
-            child: Text(
-              'No logs yet',
-              style: DebugPageTypography.medium,
-            ),
-          );
+        if (logs == null) {
+          return const _EmptyPlaceholder();
+        }
+
+        final filteredLogs = _filters.apply(logs);
+
+        if (filteredLogs.isEmpty) {
+          return const _EmptyPlaceholder();
         }
 
         return ListView(
           children: ListTile.divideTiles(
             context: context,
-            tiles: logs.reversed.map((log) => LoggerLogTile(log: log)),
+            tiles: filteredLogs.reversed.map((log) => LoggerLogTile(log: log)),
           ).toList(),
         );
       },
+    );
+  }
+}
+
+class _EmptyPlaceholder extends StatelessWidget {
+  const _EmptyPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'No logs yet',
+        style: DebugPageTypography.medium,
+      ),
     );
   }
 }

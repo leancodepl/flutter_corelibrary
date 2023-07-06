@@ -1,6 +1,6 @@
 import 'package:debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/map_view.dart';
-import 'package:debug_page/src/ui/logs_inspector/share_button.dart';
+import 'package:debug_page/src/ui/logs_inspector/widgets/share_button.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:share_plus/share_plus.dart';

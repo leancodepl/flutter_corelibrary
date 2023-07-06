@@ -1,4 +1,6 @@
-import 'package:debug_page/src/logging_http_client.dart';
+import 'package:debug_page/src/core/logging_http_client.dart';
+import 'package:debug_page/src/models/filter.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/models/requests_log.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
@@ -9,11 +11,12 @@ class LogsInspectorRequestsTab extends StatefulWidget {
   const LogsInspectorRequestsTab({
     super.key,
     required LoggingHttpClient loggingHttpClient,
-    required this.showFilters,
-  }) : _loggingHttpClient = loggingHttpClient;
+    required bool showFilters,
+  })  : _loggingHttpClient = loggingHttpClient,
+        _showFilters = showFilters;
 
   final LoggingHttpClient _loggingHttpClient;
-  final bool showFilters;
+  final bool _showFilters;
 
   @override
   State<LogsInspectorRequestsTab> createState() =>
@@ -21,13 +24,13 @@ class LogsInspectorRequestsTab extends StatefulWidget {
 }
 
 class _LogsInspectorRequestsTabState extends State<LogsInspectorRequestsTab> {
-  final _filters = ValueNotifier<List<IRequestFilter>>([]);
+  final _filters = ValueNotifier<List<Filter<RequestLogRecord>>>([]);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (widget.showFilters)
+        if (widget._showFilters)
           RequestsTabFiltersMenu(
             onFiltersChanged: (value) {
               _filters.value = value;
@@ -51,11 +54,12 @@ class _LogsInspectorRequestsTabState extends State<LogsInspectorRequestsTab> {
 class _LogsInspectorRequestsTabContent extends StatelessWidget {
   const _LogsInspectorRequestsTabContent({
     required LoggingHttpClient loggingHttpClient,
-    required this.filters,
-  }) : _loggingHttpClient = loggingHttpClient;
+    required List<Filter<RequestLogRecord>> filters,
+  })  : _loggingHttpClient = loggingHttpClient,
+        _filters = filters;
 
   final LoggingHttpClient _loggingHttpClient;
-  final List<IRequestFilter> filters;
+  final List<Filter<RequestLogRecord>> _filters;
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +68,15 @@ class _LogsInspectorRequestsTabContent extends StatelessWidget {
       stream: _loggingHttpClient.logStream,
       builder: (context, snapshot) {
         final requestsLog = snapshot.data;
-        final filteredLogs = requestsLog?.getFilteredLogs(filters: filters);
 
-        if (filteredLogs == null || filteredLogs.isEmpty) {
-          return Center(
-            child: Text(
-              'No requests yet',
-              style: DebugPageTypography.medium,
-            ),
-          );
+        if (requestsLog == null) {
+          return _EmptyPlaceholder();
+        }
+
+        final filteredLogs = _filters.apply(requestsLog.logs);
+
+        if (filteredLogs.isEmpty) {
+          return _EmptyPlaceholder();
         }
 
         return ListView(
@@ -84,6 +88,18 @@ class _LogsInspectorRequestsTabContent extends StatelessWidget {
           ).toList(),
         );
       },
+    );
+  }
+}
+
+class _EmptyPlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'No requests yet',
+        style: DebugPageTypography.medium,
+      ),
     );
   }
 }

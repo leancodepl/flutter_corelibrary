@@ -1,5 +1,5 @@
 import 'package:debug_page/debug_page.dart';
-import 'package:debug_page/src/logger_listener.dart';
+import 'package:debug_page/src/core/logger_listener.dart';
 import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:flutter/material.dart';
 
