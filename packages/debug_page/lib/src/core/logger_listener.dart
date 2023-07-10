@@ -2,23 +2,23 @@ import 'dart:async';
 
 import 'package:debug_page/src/core/log_gatherer.dart';
 import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 
 class LoggerListener implements LogGatherer<LogRecord> {
   LoggerListener() {
     _subscription = Logger.root.onRecord.listen(
       (record) {
-        _logsController.add(_logs..add(record));
+        _logsController.add(logs..add(record));
       },
     );
   }
 
-  final _logsController = StreamController<List<LogRecord>>.broadcast();
-  final List<LogRecord> _logs = [];
+  final _logsController = BehaviorSubject<List<LogRecord>>.seeded([]);
 
   @override
   Stream<List<LogRecord>> get logStream => _logsController.stream;
   @override
-  List<LogRecord> get logs => List.unmodifiable(_logs);
+  List<LogRecord> get logs => _logsController.value;
 
   StreamSubscription<LogRecord>? _subscription;
 

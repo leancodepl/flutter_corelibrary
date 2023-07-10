@@ -1,5 +1,4 @@
 import 'package:debug_page/src/core/debug_page_controller.dart';
-import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logger_log_tile.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.dart';
 import 'package:debug_page/src/ui/typography.dart';
@@ -24,25 +23,17 @@ class LogsInspectorLoggerTab extends StatefulWidget {
 }
 
 class _LogsInspectorLoggerTabState extends State<LogsInspectorLoggerTab> {
-  final _filters = ValueNotifier<List<Filter<LogRecord>>>([]);
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         if (widget._showFilters)
           LoggerTabFiltersMenu(
-            onFiltersChanged: (value) => _filters.value = value,
+            onFiltersChanged: (value) =>
+                widget._controller.loggerFilters.value = value,
           ),
         Expanded(
-          child: ValueListenableBuilder(
-            valueListenable: _filters,
-            builder: (context, filters, child) =>
-                _LogsInspectorLoggerTabContent(
-              controller: widget._controller,
-              filters: filters,
-            ),
-          ),
+          child: _LogsInspectorLoggerTabContent(controller: widget._controller),
         ),
       ],
     );
@@ -52,12 +43,9 @@ class _LogsInspectorLoggerTabState extends State<LogsInspectorLoggerTab> {
 class _LogsInspectorLoggerTabContent extends StatelessWidget {
   const _LogsInspectorLoggerTabContent({
     required DebugPageController controller,
-    required List<Filter<LogRecord>> filters,
-  })  : _controller = controller,
-        _filters = filters;
+  }) : _controller = controller;
 
   final DebugPageController _controller;
-  final List<Filter<LogRecord>> _filters;
 
   @override
   Widget build(BuildContext context) {
@@ -67,33 +55,15 @@ class _LogsInspectorLoggerTabContent extends StatelessWidget {
       builder: (context, snapshot) {
         final logs = snapshot.data;
 
-        if (logs == null) {
+        if (logs == null || logs.isEmpty) {
           return const _EmptyPlaceholder();
         }
 
-        final filterLogs = _filters.apply(logs);
-
-        return FutureBuilder(
-          future: filterLogs,
-          builder: (context, snapshot) {
-            final filteredLogs = snapshot.data;
-
-            if (filteredLogs == null) {
-              return const CircularProgressIndicator();
-            }
-
-            if (filteredLogs.isEmpty) {
-              return const _EmptyPlaceholder();
-            }
-
-            return ListView(
-              children: ListTile.divideTiles(
-                context: context,
-                tiles:
-                    filteredLogs.reversed.map((log) => LoggerLogTile(log: log)),
-              ).toList(),
-            );
-          },
+        return ListView(
+          children: ListTile.divideTiles(
+            context: context,
+            tiles: logs.reversed.map((log) => LoggerLogTile(log: log)),
+          ).toList(),
         );
       },
     );

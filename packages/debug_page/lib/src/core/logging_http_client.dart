@@ -9,17 +9,15 @@ class LoggingHttpClient extends http.BaseClient
     implements LogGatherer<RequestLogRecord> {
   LoggingHttpClient({http.Client? client})
       : _httpClient = client ?? http.Client(),
-        _logs = [],
-        _logsController = StreamController.broadcast();
+        _logsController = BehaviorSubject.seeded([]);
 
   final http.Client _httpClient;
-  final List<RequestLogRecord> _logs;
-  final StreamController<List<RequestLogRecord>> _logsController;
+  final BehaviorSubject<List<RequestLogRecord>> _logsController;
 
   @override
   Stream<List<RequestLogRecord>> get logStream => _logsController.stream;
   @override
-  List<RequestLogRecord> get logs => List.unmodifiable(_logs);
+  List<RequestLogRecord> get logs => _logsController.value;
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -39,7 +37,7 @@ class LoggingHttpClient extends http.BaseClient
     final responseBodyCompleter = Completer<String>();
 
     _logsController.add(
-      _logs
+      logs
         ..add(
           RequestLogRecord(
             method: request.method,

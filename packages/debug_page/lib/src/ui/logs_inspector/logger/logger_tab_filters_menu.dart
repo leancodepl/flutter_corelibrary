@@ -1,4 +1,4 @@
-import 'package:debug_page/src/core/logger_filters.dart';
+import 'package:debug_page/src/core/filters/logger_filters.dart';
 import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
