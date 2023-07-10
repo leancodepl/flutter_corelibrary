@@ -1,11 +1,11 @@
-import 'package:debug_page/debug_page.dart';
+import 'package:debug_page/src/logging_http_client.dart';
 import 'package:debug_page/src/request_log.dart';
-import 'package:debug_page/src/ui/details_screen/typography.dart';
-import 'package:debug_page/src/ui/log_tile.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
+import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
-class LogsInspector extends StatelessWidget {
-  const LogsInspector({
+class LogsInspectorRequestsTab extends StatelessWidget {
+  const LogsInspectorRequestsTab({
     super.key,
     required LoggingHttpClient loggingHttpClient,
   }) : _loggingHttpClient = loggingHttpClient;
@@ -20,7 +20,7 @@ class LogsInspector extends StatelessWidget {
       builder: (context, snapshot) {
         final logs = snapshot.data;
 
-        if (logs == null) {
+        if (logs == null || logs.isEmpty) {
           return Center(
             child: Text(
               'No requests yet',
@@ -33,7 +33,7 @@ class LogsInspector extends StatelessWidget {
           children: ListTile.divideTiles(
             context: context,
             tiles: logs.reversed.map(
-              (log) => LogTile(log: log),
+              (log) => RequestLogTile(log: log),
             ),
           ).toList(),
         );

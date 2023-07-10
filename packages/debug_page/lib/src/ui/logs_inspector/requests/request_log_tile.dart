@@ -1,6 +1,6 @@
 import 'package:debug_page/src/request_log.dart';
-import 'package:debug_page/src/ui/details_screen/details_screen.dart';
-import 'package:debug_page/src/ui/details_screen/typography.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen.dart';
+import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
 extension _ColorExtension on RequestStatus {
@@ -14,8 +14,8 @@ extension _ColorExtension on RequestStatus {
   }
 }
 
-class LogTile extends StatelessWidget {
-  const LogTile({
+class RequestLogTile extends StatelessWidget {
+  const RequestLogTile({
     super.key,
     required this.log,
   });
@@ -33,7 +33,7 @@ class LogTile extends StatelessWidget {
         style: DebugPageTypography.small,
       ),
       tileColor: log.status.color,
-      onTap: () => Navigator.of(context).push(DetailsRoute(log)),
+      onTap: () => Navigator.of(context).push(RequestDetailsRoute(log)),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

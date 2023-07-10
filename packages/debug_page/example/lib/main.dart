@@ -4,6 +4,7 @@ import 'package:example/util.dart';
 import 'package:flutter/material.dart';
 import 'package:debug_page/debug_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState() : loggingHttpClient = LoggingHttpClient();
 
   final LoggingHttpClient loggingHttpClient;
+  final _logger = Logger('MyHomePage');
 
   static final _requests = [
     http.Request('GET', Uri.parse('https://leancode.co/manifest.json')),
@@ -58,14 +60,27 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   Future<void> _sendRequest() async {
-    final random = Random();
-    final request = copyRequest(_requests[random.nextInt(_requests.length)]);
+    final randomIndex = Random().nextInt(_requests.length);
+    final request = copyRequest(_requests[randomIndex]);
+
     final response = await loggingHttpClient.send(request);
     // `http.Response.fromStream` has to be called in order to make response
     // body appear in the LogsInspector. This is done automatically when using
     // higher-level methods of `http.Client` such as `get` / `post`, but needs
     // to be done manually with `send`
     await http.Response.fromStream(response);
+
+    if (response.statusCode < 400) {
+      _logger.info(
+        'Received a response from remote server (${response.statusCode})',
+      );
+    } else {
+      _logger.severe('Request failed with status code ${response.statusCode}');
+    }
+
+    if (randomIndex % 3 == 0) {
+      _logger.info('Some very long log' * 100);
+    }
   }
 
   @override
