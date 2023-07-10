@@ -53,6 +53,7 @@ class _DebugPageOverlayState extends State<DebugPageOverlay> {
       // needs a Directionality ancestor, which we do not want, hence
       // Alignment.center
       alignment: Alignment.center,
+      fit: StackFit.passthrough,
       children: [
         widget.child,
         Align(
