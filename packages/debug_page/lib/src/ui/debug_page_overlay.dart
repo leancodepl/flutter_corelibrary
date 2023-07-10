@@ -1,10 +1,8 @@
 import 'package:debug_page/debug_page.dart';
-import 'package:debug_page/src/logger_listener.dart';
 import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:flutter/material.dart';
-import 'package:shake/shake.dart';
 
-class DebugPageOverlay extends StatefulWidget {
+class DebugPageOverlay extends StatelessWidget {
   const DebugPageOverlay({
     super.key,
     required DebugPageController controller,
@@ -15,38 +13,6 @@ class DebugPageOverlay extends StatefulWidget {
   final Widget child;
 
   @override
-  State<StatefulWidget> createState() => _DebugPageOverlayState();
-}
-
-class _DebugPageOverlayState extends State<DebugPageOverlay> {
-  _DebugPageOverlayState() : _loggerListener = LoggerListener();
-
-  final LoggerListener _loggerListener;
-  bool showDebugScreen = false;
-  ShakeDetector? _shakeDetector;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _shakeDetector = ShakeDetector.autoStart(
-      shakeThresholdGravity: 4,
-      onPhoneShake: () {
-        setState(() {
-          showDebugScreen = true;
-        });
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _loggerListener.dispose();
-    _shakeDetector?.stopListening();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Stack(
       // The default value for alignment is AlignmentDirectional.topStart, which
@@ -55,13 +21,11 @@ class _DebugPageOverlayState extends State<DebugPageOverlay> {
       alignment: Alignment.center,
       fit: StackFit.passthrough,
       children: [
-        widget.child,
+        child,
         Align(
           alignment: Alignment.bottomLeft,
           child: GestureDetector(
-            onTap: () => setState(() {
-              showDebugScreen = true;
-            }),
+            onTap: () => _controller.visible.value = true,
             child: Container(
               width: 48,
               height: 48,
@@ -69,21 +33,26 @@ class _DebugPageOverlayState extends State<DebugPageOverlay> {
             ),
           ),
         ),
-        if (showDebugScreen)
-          MaterialApp(
+        ValueListenableBuilder(
+          valueListenable: _controller.visible,
+          builder: (context, visible, child) {
+            if (!visible || child == null) {
+              return const SizedBox();
+            }
+
+            return child;
+          },
+          child: MaterialApp(
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
             home: LogsInspector(
-              controller: widget._controller,
-              onBackButtonClicked: () {
-                setState(() {
-                  showDebugScreen = false;
-                });
-              },
+              controller: _controller,
+              onBackButtonClicked: () => _controller.visible.value = false,
             ),
           ),
+        ),
       ],
     );
   }
