@@ -62,8 +62,10 @@ class RequestLogRecord {
       ..writeln('Status code: $statusCode')
       ..writeln('Start time: $startTime')
       ..writeln('End time: $endTime')
+      ..writeln()
       ..writeln('Request headers: $requestHeaders')
       ..writeln('Request body: $requestBody')
+      ..writeln()
       ..writeln('Response headers: $responseHeaders');
 
     if (configuration.includeResponse) {
