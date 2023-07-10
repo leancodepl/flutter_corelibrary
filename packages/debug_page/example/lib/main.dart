@@ -32,13 +32,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   _MyAppState();
 
-  late DebugPageController debugPageController;
+  late DebugPageController _debugPageController;
 
   @override
   void initState() {
     super.initState();
 
-    debugPageController = DebugPageController(
+    _debugPageController = DebugPageController(
       loggingHttpClient: widget._loggingHttpClient,
     );
   }
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return DebugPageOverlay(
-      controller: debugPageController,
+      controller: _debugPageController,
       child: MaterialApp(
         title: 'Debug Page Demo',
         theme: ThemeData(
@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
   void dispose() {
     super.dispose();
 
-    debugPageController.dispose();
+    _debugPageController.dispose();
   }
 }
 

@@ -22,6 +22,7 @@ class DebugPageController {
 
   final LoggingHttpClient loggingHttpClient;
   final LoggerListener loggerListener;
+
   ShakeDetector? _shakeDetector;
 
   final visible = ValueNotifier(false);
