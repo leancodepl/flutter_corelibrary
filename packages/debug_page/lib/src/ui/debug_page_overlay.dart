@@ -22,17 +22,18 @@ class DebugPageOverlay extends StatelessWidget {
       fit: StackFit.passthrough,
       children: [
         child,
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: GestureDetector(
-            onTap: () => _controller.visible.value = true,
-            child: Container(
-              width: 48,
-              height: 48,
-              color: Colors.blue.withOpacity(0.2),
+        if (_controller.showEntryButton)
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: GestureDetector(
+              onTap: () => _controller.visible.value = true,
+              child: Container(
+                width: 48,
+                height: 48,
+                color: Colors.blue.withOpacity(0.2),
+              ),
             ),
           ),
-        ),
         ValueListenableBuilder(
           valueListenable: _controller.visible,
           builder: (context, visible, child) {
