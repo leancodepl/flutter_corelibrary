@@ -1,5 +1,5 @@
 import 'package:debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/map_view.dart';
+import 'package:debug_page/src/ui/logs_inspector/map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 

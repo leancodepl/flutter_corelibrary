@@ -30,14 +30,8 @@ class RequestLog {
 
   Duration get duration => endTime.difference(startTime);
 
-  bool get isResponseJson {
-    if (responseHeaders['content-type']?.contains('application/json') ??
-        false) {
-      return true;
-    }
-
-    return false;
-  }
+  bool get isResponseJson =>
+      responseHeaders['content-type']?.contains('application/json') ?? false;
 
   RequestStatus get status {
     return switch (statusCode) {
