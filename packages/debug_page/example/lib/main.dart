@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:example/util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:debug_page/debug_page.dart';
 import 'package:http/http.dart' as http;
@@ -78,8 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   Future<void> _sendRequest() async {
-    final random = Random();
-    final request = copyRequest(_requests[random.nextInt(_requests.length)]);
+    final randomIndex = Random().nextInt(_requests.length);
+    final request = copyRequest(_requests[randomIndex]);
     final response = await widget.loggingHttpClient.send(request);
     // `http.Response.fromStream` has to be called in order to make response
     // body appear in the LogsInspector. This is done automatically when using
@@ -93,6 +94,10 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     } else {
       _logger.severe('Request failed with status code ${response.statusCode}');
+    }
+
+    if (randomIndex % 3 == 0) {
+      _logger.info('Some very long log' * 100);
     }
   }
 

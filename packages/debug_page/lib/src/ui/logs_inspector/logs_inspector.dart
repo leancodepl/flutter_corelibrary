@@ -1,7 +1,7 @@
 import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/logger_listener.dart';
-import 'package:debug_page/src/ui/logs_inspector/logs_inspector_logger_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/logs_inspector_requests_tab.dart';
+import 'package:debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
 import 'package:flutter/material.dart';
 
 class LogsInspector extends StatelessWidget {

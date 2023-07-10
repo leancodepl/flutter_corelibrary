@@ -1,6 +1,7 @@
 import 'package:debug_page/src/logging_http_client.dart';
 import 'package:debug_page/src/request_log.dart';
-import 'package:debug_page/src/ui/log_tile.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
+import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
 class LogsInspectorRequestsTab extends StatelessWidget {
@@ -20,14 +21,19 @@ class LogsInspectorRequestsTab extends StatelessWidget {
         final logs = snapshot.data;
 
         if (logs == null || logs.isEmpty) {
-          return const Center(child: Text('No requests yet'));
+          return Center(
+            child: Text(
+              'No requests yet',
+              style: DebugPageTypography.medium,
+            ),
+          );
         }
 
         return ListView(
           children: ListTile.divideTiles(
             context: context,
             tiles: logs.reversed.map(
-              (log) => LogTile(log: log),
+              (log) => RequestLogTile(log: log),
             ),
           ).toList(),
         );
