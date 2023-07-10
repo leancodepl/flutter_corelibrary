@@ -76,7 +76,10 @@ class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
                 searchPhrase = value;
                 _updateFilters();
               },
-              onFilterChanged: (value) {},
+              onFilterChanged: (value) {
+                setState(() => searchType = value!);
+                _updateFilters();
+              },
               initialFilterValue: LogSearchType.all,
               filterOptions: const [
                 (label: 'All', value: LogSearchType.all),

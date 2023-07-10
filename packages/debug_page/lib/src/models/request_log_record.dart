@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
 
 enum RequestStatus {
   success,
