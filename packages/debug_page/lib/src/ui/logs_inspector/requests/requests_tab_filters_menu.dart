@@ -1,6 +1,7 @@
 import 'package:debug_page/src/core/filters/request_filters.dart';
 import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
+import 'package:debug_page/src/ui/colors.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
 import 'package:debug_page/src/ui/typography.dart';
@@ -51,8 +52,9 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+      color: DebugPageColors.background,
       child: DefaultTextStyle(
         style: DebugPageTypography.medium,
         child: Column(

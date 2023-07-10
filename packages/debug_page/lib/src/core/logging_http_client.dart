@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:debug_page/src/core/log_gatherer.dart';
+import 'package:debug_page/src/models/log_gatherer.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';

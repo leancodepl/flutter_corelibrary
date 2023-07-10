@@ -1,4 +1,5 @@
 import 'package:debug_page/src/core/debug_page_controller.dart';
+import 'package:debug_page/src/ui/colors.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/logs_inspector_share_button.dart';
@@ -56,18 +57,28 @@ class _LogsInspectorState extends State<LogsInspector> {
             ],
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: TabBarView(
-            children: [
-              LogsInspectorRequestsTab(
-                controller: widget._controller,
-                showFilters: showFilters,
+        body: Column(
+          children: [
+            Container(
+              color: DebugPageColors.background,
+              width: double.infinity,
+              height: 16,
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  LogsInspectorRequestsTab(
+                    controller: widget._controller,
+                    showFilters: showFilters,
+                  ),
+                  LogsInspectorLoggerTab(
+                    controller: widget._controller,
+                    showFilters: showFilters,
+                  ),
+                ],
               ),
-              LogsInspectorLoggerTab(
-                  controller: widget._controller, showFilters: showFilters),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
