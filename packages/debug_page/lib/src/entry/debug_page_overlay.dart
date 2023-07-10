@@ -1,6 +1,6 @@
 import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/logger_listener.dart';
-import 'package:debug_page/src/ui/debug_screen.dart';
+import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 
@@ -15,9 +15,7 @@ class DebugPageOverlay extends StatefulWidget {
   final Widget child;
 
   @override
-  State<StatefulWidget> createState() {
-    return _DebugPageOverlayState();
-  }
+  State<StatefulWidget> createState() => _DebugPageOverlayState();
 }
 
 class _DebugPageOverlayState extends State<DebugPageOverlay> {
@@ -76,7 +74,7 @@ class _DebugPageOverlayState extends State<DebugPageOverlay> {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: DebugScreen(
+            home: LogsInspector(
               loggingHttpClient: widget.loggingHttpClient,
               loggerListener: _loggerListener,
               onBackButtonClicked: () {
