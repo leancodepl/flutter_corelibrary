@@ -5,7 +5,7 @@ import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-class LogsInspectorLoggerTab extends StatefulWidget {
+class LogsInspectorLoggerTab extends StatelessWidget {
   const LogsInspectorLoggerTab({
     super.key,
     required DebugPageController controller,
@@ -17,23 +17,16 @@ class LogsInspectorLoggerTab extends StatefulWidget {
   final bool _showFilters;
 
   @override
-  State<StatefulWidget> createState() {
-    return _LogsInspectorLoggerTabState();
-  }
-}
-
-class _LogsInspectorLoggerTabState extends State<LogsInspectorLoggerTab> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (widget._showFilters)
+        if (_showFilters)
           LoggerTabFiltersMenu(
             onFiltersChanged: (value) =>
-                widget._controller.loggerFilters.value = value,
+                _controller.loggerFilters.value = value,
           ),
         Expanded(
-          child: _LogsInspectorLoggerTabContent(controller: widget._controller),
+          child: _LogsInspectorLoggerTabContent(controller: _controller),
         ),
       ],
     );

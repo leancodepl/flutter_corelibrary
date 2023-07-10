@@ -5,7 +5,7 @@ import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart'
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
-class LogsInspectorRequestsTab extends StatefulWidget {
+class LogsInspectorRequestsTab extends StatelessWidget {
   const LogsInspectorRequestsTab({
     super.key,
     required DebugPageController controller,
@@ -17,23 +17,17 @@ class LogsInspectorRequestsTab extends StatefulWidget {
   final bool _showFilters;
 
   @override
-  State<LogsInspectorRequestsTab> createState() =>
-      _LogsInspectorRequestsTabState();
-}
-
-class _LogsInspectorRequestsTabState extends State<LogsInspectorRequestsTab> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (widget._showFilters)
+        if (_showFilters)
           RequestsTabFiltersMenu(
             onFiltersChanged: (value) =>
-                widget._controller.requestsFilters.value = value,
+                _controller.requestsFilters.value = value,
           ),
         Expanded(
           child: _LogsInspectorRequestsTabContent(
-            controller: widget._controller,
+            controller: _controller,
           ),
         ),
       ],
