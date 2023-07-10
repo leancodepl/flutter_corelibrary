@@ -14,9 +14,12 @@ class LogsInspector extends StatefulWidget {
   const LogsInspector({
     super.key,
     required DebugPageController controller,
-  }) : _controller = controller;
+    required VoidCallback onBackButtonClicked,
+  })  : _controller = controller,
+        _onBackButtonClicked = onBackButtonClicked;
 
   final DebugPageController _controller;
+  final VoidCallback _onBackButtonClicked;
 
   @override
   State<StatefulWidget> createState() {
@@ -37,6 +40,7 @@ class _LogsInspectorState extends State<LogsInspector> {
           controller: widget._controller,
         ),
         appBar: AppBar(
+          leading: BackButton(onPressed: widget._onBackButtonClicked),
           title: const Text('Logs inspector'),
           actions: [
             IconButton(

@@ -1,28 +1,70 @@
 import 'dart:math';
 
 import 'package:example/util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:debug_page/debug_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 void main() {
-  runApp(const MyApp());
+  // This is necessary if you want to instantiate a DebugPage before calling
+  // runApp()
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final loggingHttpClient = LoggingHttpClient();
+
+  runApp(MyApp(loggingHttpClient: loggingHttpClient));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({
+    super.key,
+    required LoggingHttpClient loggingHttpClient,
+  }) : _loggingHttpClient = loggingHttpClient;
+
+  final LoggingHttpClient _loggingHttpClient;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  _MyAppState();
+
+  late DebugPageController debugPageController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    debugPageController = DebugPageController(
+      loggingHttpClient: widget._loggingHttpClient,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Debug Page Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return DebugPageOverlay(
+      controller: debugPageController,
+      child: MaterialApp(
+        title: 'Debug Page Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: MyHomePage(
+          title: 'Flutter Debug Page Demo Page',
+          loggingHttpClient: widget._loggingHttpClient,
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Debug Page Demo Page'),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    debugPageController.dispose();
   }
 }
 
@@ -30,9 +72,11 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({
     super.key,
     required this.title,
+    required this.loggingHttpClient,
   });
 
   final String title;
+  final LoggingHttpClient loggingHttpClient;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -67,8 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _sendRequest() async {
     final randomIndex = Random().nextInt(_requests.length);
     final request = copyRequest(_requests[randomIndex]);
-
-    final response = await loggingHttpClient.send(request);
+    final response = await widget.loggingHttpClient.send(request);
     // `http.Response.fromStream` has to be called in order to make response
     // body appear in the LogsInspector. This is done automatically when using
     // higher-level methods of `http.Client` such as `get` / `post`, but needs
@@ -96,16 +139,52 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Push the button to send a request'),
-              Expanded(child: DebugPage(controller: debugPageController)),
+              ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) => const Dialog(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text('Some dialog'),
+                    ),
+                  ),
+                ),
+                child: const Text('Show a dialog'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Overlay.of(context).insert(
+                    OverlayEntry(
+                      opaque: true,
+                      builder: (context) => Container(
+                        color: Colors.red,
+                        alignment: Alignment.center,
+                        child: const Material(
+                          color: Colors.transparent,
+                          child: Text(
+                            'Overlay',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Show an overlay'),
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _sendRequest,
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Send request'),
+        icon: const Icon(Icons.send),
         tooltip: 'Send a request',
-        child: const Icon(Icons.send),
+        onPressed: _sendRequest,
       ),
     );
   }

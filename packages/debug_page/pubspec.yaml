@@ -13,6 +13,7 @@ dependencies:
   http: ^1.1.0
   logging: ^1.2.0
   rxdart: ^0.27.7
+  shake: ^2.2.0
   share_plus: ^7.0.2
 
 dev_dependencies:
