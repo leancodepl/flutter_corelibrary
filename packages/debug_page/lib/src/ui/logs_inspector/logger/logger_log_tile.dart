@@ -1,4 +1,4 @@
-import 'package:debug_page/src/core/logger_listener.dart';
+import 'package:debug_page/src/models/log_record_format_extension.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logger_log_details_screen/logger_log_details_screen.dart';
 import 'package:debug_page/src/ui/typography.dart';

@@ -1,13 +1,4 @@
-import 'package:flutter/foundation.dart';
-
-@immutable
-abstract class SummaryConfiguration {}
-
-abstract class LogGatherer<T, S extends SummaryConfiguration> {
+abstract class LogGatherer<T> {
   Stream<List<T>> get logStream;
   List<T> get logs;
-
-  Future<String> getSummary(S configuration);
-
-  static final recordsSeparator = '-' * 50;
 }

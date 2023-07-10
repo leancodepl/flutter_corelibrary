@@ -1,5 +1,5 @@
 import 'package:debug_page/src/core/debug_page_controller.dart';
-import 'package:debug_page/src/core/logger_listener.dart';
+import 'package:debug_page/src/models/logs_summarizer.dart';
 import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/share_button.dart';
@@ -27,13 +27,14 @@ class LogsInspectorShareButton extends StatelessWidget {
             return;
           }
 
-          sharedData = await _controller.loggingHttpClient.getSummary(
-            sharingConfiguration,
-          );
+          final logs = await _controller.filteredRequestsLogs;
+
+          sharedData = await RequestsLogsSummarizer(
+            configuration: sharingConfiguration,
+          ).summarize(logs);
         } else if (tabIndex == LogsInspectorTab.logs.index) {
-          sharedData = await _controller.loggerListener.getSummary(
-            LogSharingConfiguration(),
-          );
+          final logs = await _controller.filteredLoggerLogs;
+          sharedData = await LoggerLogsSummarizer().summarize(logs);
         } else {
           throw StateError('Unknown tab');
         }

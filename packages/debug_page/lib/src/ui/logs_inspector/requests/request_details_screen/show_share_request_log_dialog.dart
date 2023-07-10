@@ -1,7 +1,6 @@
-import 'package:debug_page/src/core/log_gatherer.dart';
 import 'package:flutter/material.dart';
 
-class RequestSharingConfiguration implements SummaryConfiguration {
+class RequestSharingConfiguration {
   const RequestSharingConfiguration({required this.includeResponse});
 
   final bool includeResponse;

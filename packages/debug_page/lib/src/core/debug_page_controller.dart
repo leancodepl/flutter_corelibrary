@@ -31,6 +31,10 @@ class DebugPageController {
   List<Filter<LogRecord>> loggerFilters;
 
   List<RequestLogRecord> get requestsLogs => loggingHttpClient.logs;
+  Future<List<RequestLogRecord>> get filteredRequestsLogs {
+    return requestsFilters.apply(requestsLogs);
+  }
+
   Stream<List<RequestLogRecord>> get requestsLogStream {
     return loggingHttpClient.logStream.asyncMap(
       (event) => requestsFilters.apply(event),
@@ -38,6 +42,8 @@ class DebugPageController {
   }
 
   List<LogRecord> get loggerLogs => loggerListener.logs;
+  Future<List<LogRecord>> get filteredLoggerLogs =>
+      loggerFilters.apply(loggerLogs);
   Stream<List<LogRecord>> get loggerLogStream {
     return loggerListener.logStream.asyncMap(
       (event) => loggerFilters.apply(event),

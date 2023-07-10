@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:debug_page/src/core/log_gatherer.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
 class LoggingHttpClient extends http.BaseClient
-    implements LogGatherer<RequestLogRecord, RequestSharingConfiguration> {
+    implements LogGatherer<RequestLogRecord> {
   LoggingHttpClient({http.Client? client})
       : _httpClient = client ?? http.Client(),
         _logs = [],
@@ -66,17 +65,5 @@ class LoggingHttpClient extends http.BaseClient
       }),
       response.statusCode,
     );
-  }
-
-  @override
-  Future<String> getSummary(RequestSharingConfiguration configuration) async {
-    final buffer = StringBuffer();
-
-    for (final log in logs) {
-      buffer.writeln(await log.toSummary(configuration));
-      buffer.writeln(LogGatherer.recordsSeparator);
-    }
-
-    return buffer.toString();
   }
 }
