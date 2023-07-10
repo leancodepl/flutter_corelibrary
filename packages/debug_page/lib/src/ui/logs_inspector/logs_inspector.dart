@@ -1,5 +1,4 @@
-import 'package:debug_page/debug_page.dart';
-import 'package:debug_page/src/core/logger_listener.dart';
+import 'package:debug_page/src/core/debug_page_controller.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/logs_inspector_share_button.dart';
@@ -14,13 +13,10 @@ enum LogsInspectorTab {
 class LogsInspector extends StatefulWidget {
   const LogsInspector({
     super.key,
-    required LoggingHttpClient loggingHttpClient,
-    required LoggerListener loggerListener,
-  })  : _loggingHttpClient = loggingHttpClient,
-        _loggerListener = loggerListener;
+    required DebugPageController controller,
+  }) : _controller = controller;
 
-  final LoggingHttpClient _loggingHttpClient;
-  final LoggerListener _loggerListener;
+  final DebugPageController _controller;
 
   @override
   State<StatefulWidget> createState() {
@@ -38,8 +34,7 @@ class _LogsInspectorState extends State<LogsInspector> {
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: LogsInspectorShareButton(
-          loggingHttpClient: widget._loggingHttpClient,
-          loggerListener: widget._loggerListener,
+          controller: widget._controller,
         ),
         appBar: AppBar(
           title: const Text('Logs inspector'),
@@ -62,13 +57,11 @@ class _LogsInspectorState extends State<LogsInspector> {
           child: TabBarView(
             children: [
               LogsInspectorRequestsTab(
-                loggingHttpClient: widget._loggingHttpClient,
+                controller: widget._controller,
                 showFilters: showFilters,
               ),
               LogsInspectorLoggerTab(
-                loggerListener: widget._loggerListener,
-                showFilters: showFilters,
-              ),
+                  controller: widget._controller, showFilters: showFilters),
             ],
           ),
         ),

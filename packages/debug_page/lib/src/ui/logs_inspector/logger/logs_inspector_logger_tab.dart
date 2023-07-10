@@ -1,4 +1,4 @@
-import 'package:debug_page/src/core/logger_listener.dart';
+import 'package:debug_page/src/core/debug_page_controller.dart';
 import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logger_log_tile.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.dart';
@@ -9,12 +9,12 @@ import 'package:logging/logging.dart';
 class LogsInspectorLoggerTab extends StatefulWidget {
   const LogsInspectorLoggerTab({
     super.key,
-    required LoggerListener loggerListener,
+    required DebugPageController controller,
     required bool showFilters,
-  })  : _loggerListener = loggerListener,
+  })  : _controller = controller,
         _showFilters = showFilters;
 
-  final LoggerListener _loggerListener;
+  final DebugPageController _controller;
   final bool _showFilters;
 
   @override
@@ -39,7 +39,7 @@ class _LogsInspectorLoggerTabState extends State<LogsInspectorLoggerTab> {
             valueListenable: _filters,
             builder: (context, filters, child) =>
                 _LogsInspectorLoggerTabContent(
-              loggerListener: widget._loggerListener,
+              controller: widget._controller,
               filters: filters,
             ),
           ),
@@ -51,19 +51,19 @@ class _LogsInspectorLoggerTabState extends State<LogsInspectorLoggerTab> {
 
 class _LogsInspectorLoggerTabContent extends StatelessWidget {
   const _LogsInspectorLoggerTabContent({
-    required LoggerListener loggerListener,
+    required DebugPageController controller,
     required List<Filter<LogRecord>> filters,
-  })  : _loggerListener = loggerListener,
+  })  : _controller = controller,
         _filters = filters;
 
-  final LoggerListener _loggerListener;
+  final DebugPageController _controller;
   final List<Filter<LogRecord>> _filters;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<LogRecord>>(
-      initialData: _loggerListener.logs,
-      stream: _loggerListener.logStream,
+      initialData: _controller.loggerLogs,
+      stream: _controller.loggerLogStream,
       builder: (context, snapshot) {
         final logs = snapshot.data;
 

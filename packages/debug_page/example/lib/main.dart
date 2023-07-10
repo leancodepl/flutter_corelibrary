@@ -39,9 +39,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState() : loggingHttpClient = LoggingHttpClient();
+  _MyHomePageState() : loggingHttpClient = LoggingHttpClient() {
+    debugPageController = DebugPageController(
+      loggingHttpClient: loggingHttpClient,
+    );
+  }
 
   final LoggingHttpClient loggingHttpClient;
+  late DebugPageController debugPageController;
   final _logger = Logger('MyHomePage');
 
   static final _requests = [
@@ -92,9 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('Push the button to send a request'),
-              Expanded(
-                child: DebugPage(loggingHttpClient: loggingHttpClient),
-              ),
+              Expanded(child: DebugPage(controller: debugPageController)),
             ],
           ),
         ),
@@ -105,5 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.send),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    debugPageController.dispose();
   }
 }

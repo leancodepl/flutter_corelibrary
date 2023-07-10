@@ -59,17 +59,17 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
           mainAxisSize: MainAxisSize.min,
           children: [
             LabeledDropdown<RequestStatus>(
-              title: const Text('Type'),
+              title: const Text('Status code'),
               onChanged: (value) {
                 setState(() => requestStatus = value);
                 _updateFilters();
               },
               options: const [
                 (value: null, label: 'Any'),
-                (value: RequestStatus.success, label: '200'),
-                (value: RequestStatus.redirect, label: '300'),
-                (value: RequestStatus.clientError, label: '400'),
-                (value: RequestStatus.serverError, label: '500'),
+                (value: RequestStatus.success, label: '2xx'),
+                (value: RequestStatus.redirect, label: '3xx'),
+                (value: RequestStatus.clientError, label: '4xx'),
+                (value: RequestStatus.serverError, label: '5xx'),
               ],
             ),
             FilteredSearchField(

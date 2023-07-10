@@ -22,8 +22,6 @@ class LoggerListener
   final _logsController = StreamController<List<LogRecord>>.broadcast();
   final List<LogRecord> _logs = [];
 
-  static const _endOfLogCharacter = '_';
-
   @override
   Stream<List<LogRecord>> get logStream => _logsController.stream;
   @override
@@ -37,7 +35,7 @@ class LoggerListener
 
     for (final logRecord in logs) {
       buffer.writeln(logRecord.format());
-      buffer.writeln(_endOfLogCharacter * 50);
+      buffer.writeln(LogGatherer.recordsSeparator);
     }
 
     return buffer.toString();

@@ -74,8 +74,7 @@ class LoggingHttpClient extends http.BaseClient
 
     for (final log in logs) {
       buffer.writeln(await log.toSummary(configuration));
-      // TODO: handle
-      buffer.writeln('_' * 50);
+      buffer.writeln(LogGatherer.recordsSeparator);
     }
 
     return buffer.toString();

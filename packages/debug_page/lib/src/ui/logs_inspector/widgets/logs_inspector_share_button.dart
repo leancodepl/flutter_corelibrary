@@ -1,5 +1,5 @@
+import 'package:debug_page/src/core/debug_page_controller.dart';
 import 'package:debug_page/src/core/logger_listener.dart';
-import 'package:debug_page/src/core/logging_http_client.dart';
 import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/share_request_log_dialog.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/share_button.dart';
@@ -9,13 +9,10 @@ import 'package:share_plus/share_plus.dart';
 class LogsInspectorShareButton extends StatelessWidget {
   const LogsInspectorShareButton({
     super.key,
-    required LoggingHttpClient loggingHttpClient,
-    required LoggerListener loggerListener,
-  })  : _loggingHttpClient = loggingHttpClient,
-        _loggerListener = loggerListener;
+    required DebugPageController controller,
+  }) : _controller = controller;
 
-  final LoggingHttpClient _loggingHttpClient;
-  final LoggerListener _loggerListener;
+  final DebugPageController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +27,11 @@ class LogsInspectorShareButton extends StatelessWidget {
             return;
           }
 
-          sharedData = await _loggingHttpClient.getSummary(
+          sharedData = await _controller.loggingHttpClient.getSummary(
             sharingConfiguration,
           );
         } else if (tabIndex == LogsInspectorTab.logs.index) {
-          sharedData = await _loggerListener.getSummary(
+          sharedData = await _controller.loggerListener.getSummary(
             LogSharingConfiguration(),
           );
         } else {

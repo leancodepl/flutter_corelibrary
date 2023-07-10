@@ -1,43 +1,28 @@
-import 'package:debug_page/debug_page.dart';
-import 'package:debug_page/src/core/logger_listener.dart';
+import 'package:debug_page/src/core/debug_page_controller.dart';
 import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:flutter/material.dart';
 
 class DebugPage extends StatefulWidget {
   const DebugPage({
     super.key,
-    required LoggingHttpClient loggingHttpClient,
-  }) : _loggingHttpClient = loggingHttpClient;
+    required DebugPageController controller,
+  }) : _controller = controller;
 
-  final LoggingHttpClient _loggingHttpClient;
+  final DebugPageController _controller;
 
   @override
-  State<DebugPage> createState() {
-    return _DebugPageState();
-  }
+  State<DebugPage> createState() => _DebugPageState();
 }
 
 class _DebugPageState extends State<DebugPage> {
-  _DebugPageState() : _loggerListener = LoggerListener();
-
-  final LoggerListener _loggerListener;
+  _DebugPageState();
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
       onGenerateRoute: (_) => MaterialPageRoute(
-        builder: (context) => LogsInspector(
-          loggingHttpClient: widget._loggingHttpClient,
-          loggerListener: _loggerListener,
-        ),
+        builder: (context) => LogsInspector(controller: widget._controller),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _loggerListener.dispose();
   }
 }

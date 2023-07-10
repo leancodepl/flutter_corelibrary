@@ -1,4 +1,4 @@
-import 'package:debug_page/src/core/logging_http_client.dart';
+import 'package:debug_page/src/core/debug_page_controller.dart';
 import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 class LogsInspectorRequestsTab extends StatefulWidget {
   const LogsInspectorRequestsTab({
     super.key,
-    required LoggingHttpClient loggingHttpClient,
+    required DebugPageController controller,
     required bool showFilters,
-  })  : _loggingHttpClient = loggingHttpClient,
+  })  : _controller = controller,
         _showFilters = showFilters;
 
-  final LoggingHttpClient _loggingHttpClient;
+  final DebugPageController _controller;
   final bool _showFilters;
 
   @override
@@ -40,7 +40,7 @@ class _LogsInspectorRequestsTabState extends State<LogsInspectorRequestsTab> {
             valueListenable: _filters,
             builder: (context, filters, child) =>
                 _LogsInspectorRequestsTabContent(
-              loggingHttpClient: widget._loggingHttpClient,
+              controller: widget._controller,
               filters: filters,
             ),
           ),
@@ -52,19 +52,19 @@ class _LogsInspectorRequestsTabState extends State<LogsInspectorRequestsTab> {
 
 class _LogsInspectorRequestsTabContent extends StatelessWidget {
   const _LogsInspectorRequestsTabContent({
-    required LoggingHttpClient loggingHttpClient,
+    required DebugPageController controller,
     required List<Filter<RequestLogRecord>> filters,
-  })  : _loggingHttpClient = loggingHttpClient,
+  })  : _controller = controller,
         _filters = filters;
 
-  final LoggingHttpClient _loggingHttpClient;
+  final DebugPageController _controller;
   final List<Filter<RequestLogRecord>> _filters;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<RequestLogRecord>>(
-      initialData: _loggingHttpClient.logs,
-      stream: _loggingHttpClient.logStream,
+      initialData: _controller.requestsLogs,
+      stream: _controller.requestsLogStream,
       builder: (context, snapshot) {
         final logs = snapshot.data;
 
