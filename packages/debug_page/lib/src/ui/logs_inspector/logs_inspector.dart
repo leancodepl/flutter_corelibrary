@@ -50,6 +50,7 @@ class _LogsInspectorState extends State<LogsInspector> {
             )
           ],
           bottom: TabBar(
+            labelPadding: const EdgeInsets.only(bottom: 8),
             labelStyle: DebugPageTypography.medium,
             tabs: const [
               Text('Requests'),
