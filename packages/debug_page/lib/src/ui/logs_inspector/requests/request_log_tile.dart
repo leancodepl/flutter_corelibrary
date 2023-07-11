@@ -1,4 +1,4 @@
-import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,8 @@ extension _ColorExtension on RequestStatus {
     return switch (this) {
       RequestStatus.success => Colors.green,
       RequestStatus.redirect => Colors.orange,
-      RequestStatus.error => Colors.red,
+      RequestStatus.clientError => Colors.red.shade400,
+      RequestStatus.serverError => Colors.red,
       RequestStatus.unknown => Colors.grey,
     };
   }
@@ -20,7 +21,7 @@ class RequestLogTile extends StatelessWidget {
     required this.log,
   });
 
-  final RequestLog log;
+  final RequestLogRecord log;
 
   String _formatTime(DateTime time) =>
       '${time.hour}:${time.minute}:${time.second}.${time.millisecond}';

@@ -1,21 +1,23 @@
 import 'dart:async';
 
-import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/models/log_gatherer.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
-class LoggingHttpClient extends http.BaseClient {
+class LoggingHttpClient extends http.BaseClient
+    implements LogGatherer<RequestLogRecord> {
   LoggingHttpClient({http.Client? client})
       : _httpClient = client ?? http.Client(),
-        _logs = [],
-        _logsController = StreamController.broadcast();
+        _logsController = BehaviorSubject.seeded([]);
 
   final http.Client _httpClient;
-  final List<RequestLog> _logs;
-  final StreamController<List<RequestLog>> _logsController;
+  final BehaviorSubject<List<RequestLogRecord>> _logsController;
 
-  Stream<List<RequestLog>> get logStream => _logsController.stream;
-  List<RequestLog> get logs => List.unmodifiable(_logs);
+  @override
+  Stream<List<RequestLogRecord>> get logStream => _logsController.stream;
+  @override
+  List<RequestLogRecord> get logs => _logsController.value;
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -35,9 +37,9 @@ class LoggingHttpClient extends http.BaseClient {
     final responseBodyCompleter = Completer<String>();
 
     _logsController.add(
-      _logs
+      logs
         ..add(
-          RequestLog(
+          RequestLogRecord(
             method: request.method,
             url: request.url,
             startTime: startTime,
@@ -45,7 +47,7 @@ class LoggingHttpClient extends http.BaseClient {
             statusCode: response.statusCode,
             requestHeaders: request.headers,
             requestBody: requestBody,
-            responseBody: responseBodyCompleter.future,
+            responseBodyCompleter: responseBodyCompleter,
             responseHeaders: response.headers,
           ),
         ),

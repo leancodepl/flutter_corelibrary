@@ -1,22 +1,35 @@
 PODS:
   - Flutter (1.0.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - sensors_plus (0.0.1):
+    - Flutter
+  - share_plus (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   sensors_plus:
     :path: ".symlinks/plugins/sensors_plus/ios"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   sensors_plus: 5717760720f7e6acd96fdbd75b7428f5ad755ec2
+  share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
 
-PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+PODFILE CHECKSUM: d4b1e61d92195dbae4de5691d6fcd85ff6450632
 
 COCOAPODS: 1.12.1

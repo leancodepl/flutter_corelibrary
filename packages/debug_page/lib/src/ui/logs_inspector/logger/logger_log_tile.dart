@@ -1,3 +1,4 @@
+import 'package:debug_page/src/models/log_record_format_extension.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
 import 'package:debug_page/src/ui/logs_inspector/logger/logger_log_details_screen/logger_log_details_screen.dart';
 import 'package:debug_page/src/ui/typography.dart';
@@ -12,10 +13,6 @@ class LoggerLogTile extends StatelessWidget {
 
   final LogRecord log;
 
-  String _formatLog(LogRecord log) {
-    return '${log.loggerName} (${log.level}): ${log.message}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -24,7 +21,7 @@ class LoggerLogTile extends StatelessWidget {
         LoggerLogDetailsRoute(logRecord: log),
       ),
       title: Text(
-        _formatLog(log),
+        log.format(),
         style: DebugPageTypography.medium,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,

@@ -1,15 +1,15 @@
-import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/logs_inspector/map_view.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
 
-class RequestTab extends StatelessWidget {
-  const RequestTab({
+class RequestDetailsScreenRequestTab extends StatelessWidget {
+  const RequestDetailsScreenRequestTab({
     super.key,
     required this.requestLog,
   });
 
-  final RequestLog requestLog;
+  final RequestLogRecord requestLog;
 
   @override
   Widget build(BuildContext context) {

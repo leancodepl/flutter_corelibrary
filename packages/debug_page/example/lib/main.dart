@@ -17,7 +17,7 @@ void main() {
   runApp(MyApp(loggingHttpClient: loggingHttpClient));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({
     super.key,
     required LoggingHttpClient loggingHttpClient,
@@ -26,9 +26,27 @@ class MyApp extends StatelessWidget {
   final LoggingHttpClient _loggingHttpClient;
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  _MyAppState();
+
+  late DebugPageController _debugPageController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _debugPageController = DebugPageController(
+      loggingHttpClient: widget._loggingHttpClient,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DebugPageOverlay(
-      loggingHttpClient: _loggingHttpClient,
+      controller: _debugPageController,
       child: MaterialApp(
         title: 'Debug Page Demo',
         theme: ThemeData(
@@ -37,10 +55,17 @@ class MyApp extends StatelessWidget {
         ),
         home: MyHomePage(
           title: 'Flutter Debug Page Demo Page',
-          loggingHttpClient: _loggingHttpClient,
+          loggingHttpClient: widget._loggingHttpClient,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _debugPageController.dispose();
+
+    super.dispose();
   }
 }
 
@@ -59,8 +84,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState();
+  _MyHomePageState() : loggingHttpClient = LoggingHttpClient() {
+    debugPageController = DebugPageController(
+      loggingHttpClient: loggingHttpClient,
+    );
+  }
 
+  final LoggingHttpClient loggingHttpClient;
+  late DebugPageController debugPageController;
   final _logger = Logger('MyHomePage');
 
   static final _requests = [

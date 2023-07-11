@@ -1,5 +1,6 @@
-import 'package:debug_page/src/logging_http_client.dart';
-import 'package:debug_page/src/request_log.dart';
+import 'package:debug_page/src/core/debug_page_controller.dart';
+import 'package:debug_page/src/models/request_log_record.dart';
+import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/request_log_tile.dart';
 import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
@@ -7,26 +8,50 @@ import 'package:flutter/material.dart';
 class LogsInspectorRequestsTab extends StatelessWidget {
   const LogsInspectorRequestsTab({
     super.key,
-    required LoggingHttpClient loggingHttpClient,
-  }) : _loggingHttpClient = loggingHttpClient;
+    required DebugPageController controller,
+    required bool showFilters,
+  })  : _controller = controller,
+        _showFilters = showFilters;
 
-  final LoggingHttpClient _loggingHttpClient;
+  final DebugPageController _controller;
+  final bool _showFilters;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<RequestLog>>(
-      initialData: _loggingHttpClient.logs,
-      stream: _loggingHttpClient.logStream,
+    return Column(
+      children: [
+        if (_showFilters)
+          RequestsTabFiltersMenu(
+            onFiltersChanged: (value) =>
+                _controller.requestsFilters.value = value,
+          ),
+        Expanded(
+          child: _LogsInspectorRequestsTabContent(
+            controller: _controller,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LogsInspectorRequestsTabContent extends StatelessWidget {
+  const _LogsInspectorRequestsTabContent({
+    required DebugPageController controller,
+  }) : _controller = controller;
+
+  final DebugPageController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<RequestLogRecord>>(
+      initialData: _controller.requestsLogs,
+      stream: _controller.requestsLogStream,
       builder: (context, snapshot) {
         final logs = snapshot.data;
 
-        if (logs == null || logs.isEmpty) {
-          return Center(
-            child: Text(
-              'No requests yet',
-              style: DebugPageTypography.medium,
-            ),
-          );
+        if (logs == null || logs.isEmpty == true) {
+          return _EmptyPlaceholder();
         }
 
         return ListView(
@@ -38,6 +63,18 @@ class LogsInspectorRequestsTab extends StatelessWidget {
           ).toList(),
         );
       },
+    );
+  }
+}
+
+class _EmptyPlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'No requests yet',
+        style: DebugPageTypography.medium,
+      ),
     );
   }
 }
