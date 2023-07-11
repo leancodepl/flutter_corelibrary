@@ -58,7 +58,10 @@ class _LogsInspectorRequestsTabContent extends StatelessWidget {
           children: ListTile.divideTiles(
             context: context,
             tiles: logs.reversed.map(
-              (log) => RequestLogTile(log: log),
+              (log) => RequestLogTile(
+                log: log,
+                ignoredBasePath: _controller.ignoredBasePath,
+              ),
             ),
           ).toList(),
         );

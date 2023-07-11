@@ -10,8 +10,12 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shake/shake.dart';
 
 class DebugPageController {
-  DebugPageController({required this.loggingHttpClient})
-      : loggerListener = LoggerListener() {
+  DebugPageController({
+    this.showEntryButton = false,
+    this.showOnShake = true,
+    this.ignoredBasePath,
+    required this.loggingHttpClient,
+  }) : loggerListener = LoggerListener() {
     requestsFilters = ValueNotifier([]);
     _sourceRequestsStreamSubscription = loggingHttpClient.logStream.listen(
       _updateRequestsStream,
@@ -30,11 +34,18 @@ class DebugPageController {
       () => _updateLoggerLogsStream(loggerListener.logs),
     );
 
-    _shakeDetector = ShakeDetector.autoStart(
-      shakeThresholdGravity: 4,
-      onPhoneShake: () => visible.value = true,
-    );
+    if (showOnShake) {
+      _shakeDetector = ShakeDetector.autoStart(
+        shakeThresholdGravity: 4,
+        onPhoneShake: () => visible.value = true,
+      );
+    }
   }
+
+  final bool showEntryButton;
+  final bool showOnShake;
+
+  final String? ignoredBasePath;
 
   final LoggingHttpClient loggingHttpClient;
   final LoggerListener loggerListener;
