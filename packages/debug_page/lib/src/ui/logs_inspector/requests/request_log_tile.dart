@@ -19,15 +19,24 @@ class RequestLogTile extends StatelessWidget {
   const RequestLogTile({
     super.key,
     required this.log,
+    required this.ignoredBasePath,
   });
 
   final RequestLogRecord log;
+  final String? ignoredBasePath;
 
   String _formatTime(DateTime time) =>
       '${time.hour}:${time.minute}:${time.second}.${time.millisecond}';
 
   @override
   Widget build(BuildContext context) {
+    var url = log.url.toString();
+    final ignoredBasePath = this.ignoredBasePath;
+
+    if (ignoredBasePath != null && url.startsWith(ignoredBasePath)) {
+      url = url.substring(ignoredBasePath.length);
+    }
+
     return ListTile(
       trailing: Text(
         log.statusCode.toString(),
@@ -38,7 +47,7 @@ class RequestLogTile extends StatelessWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(log.url.toString(), style: DebugPageTypography.medium),
+          Text(url, style: DebugPageTypography.medium),
           Row(
             children: [
               Text(

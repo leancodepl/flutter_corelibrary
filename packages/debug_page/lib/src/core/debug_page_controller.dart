@@ -13,6 +13,7 @@ class DebugPageController {
   DebugPageController({
     this.showEntryButton = false,
     this.showOnShake = true,
+    this.ignoredBasePath,
     required this.loggingHttpClient,
   }) : loggerListener = LoggerListener() {
     requestsFilters = ValueNotifier([]);
@@ -43,6 +44,8 @@ class DebugPageController {
 
   final bool showEntryButton;
   final bool showOnShake;
+
+  final String? ignoredBasePath;
 
   final LoggingHttpClient loggingHttpClient;
   final LoggerListener loggerListener;
