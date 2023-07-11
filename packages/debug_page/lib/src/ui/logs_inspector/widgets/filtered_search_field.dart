@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class FilteredSearchField<T> extends StatelessWidget {
   const FilteredSearchField({
     super.key,
+    required this.initialPhrase,
     required this.onPhraseChanged,
     required this.initialFilterValue,
     required this.filterOptions,
     required this.onFilterChanged,
   });
 
+  final String initialPhrase;
   final ValueChanged<String> onPhraseChanged;
   final T initialFilterValue;
   final List<DropdownOption<T>> filterOptions;
@@ -22,7 +24,10 @@ class FilteredSearchField<T> extends StatelessWidget {
       children: [
         Flexible(
           flex: 3,
-          child: SearchField(onChanged: onPhraseChanged),
+          child: SearchField(
+            initialPhrase: initialPhrase,
+            onChanged: onPhraseChanged,
+          ),
         ),
         Flexible(
           flex: 2,

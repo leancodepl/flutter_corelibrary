@@ -1,5 +1,5 @@
+import 'package:debug_page/src/core/debug_page_controller.dart';
 import 'package:debug_page/src/core/filters/logger_filters.dart';
-import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/ui/colors.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
@@ -16,10 +16,10 @@ enum LogSearchType {
 class LoggerTabFiltersMenu extends StatefulWidget {
   const LoggerTabFiltersMenu({
     super.key,
-    required this.onFiltersChanged,
-  });
+    required DebugPageController controller,
+  }) : _controller = controller;
 
-  final ValueChanged<List<Filter<LogRecord>>> onFiltersChanged;
+  final DebugPageController _controller;
 
   @override
   State<LoggerTabFiltersMenu> createState() => _LoggerTabFiltersMenuState();
@@ -28,23 +28,37 @@ class LoggerTabFiltersMenu extends StatefulWidget {
 class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
   Level? logLevel;
   var searchType = LogSearchType.all;
-  String? searchPhrase;
+  String searchPhrase = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    final initialFilters = widget._controller.loggerFilters.value;
+
+    for (final filter in initialFilters) {
+      if (filter is LoggerLevelFilter) {
+        logLevel = filter.desiredLevel;
+      } else if (filter is LoggerSearchFilter) {
+        searchType = filter.type;
+        searchPhrase = filter.phrase;
+      }
+    }
+  }
 
   void _updateFilters() {
     final logLevel = this.logLevel;
     final searchType = this.searchType;
     final searchPhrase = this.searchPhrase;
 
-    final filters = [
+    widget._controller.loggerFilters.value = [
       if (logLevel != null) LoggerLevelFilter(desiredLevel: logLevel),
-      if (searchPhrase != null)
+      if (searchPhrase.isNotEmpty)
         LoggerSearchFilter(
           type: searchType,
           phrase: searchPhrase,
         ),
     ];
-
-    widget.onFiltersChanged(filters);
   }
 
   @override
@@ -59,7 +73,7 @@ class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
           children: [
             LabeledDropdown<Level>(
               title: const Text('Level'),
-              initialValue: null,
+              initialValue: logLevel,
               onChanged: (value) {
                 setState(() => logLevel = value);
                 _updateFilters();
@@ -74,15 +88,16 @@ class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
               ],
             ),
             FilteredSearchField<LogSearchType>(
+              initialPhrase: searchPhrase,
               onPhraseChanged: (value) {
                 searchPhrase = value;
                 _updateFilters();
               },
+              initialFilterValue: searchType,
               onFilterChanged: (value) {
                 setState(() => searchType = value!);
                 _updateFilters();
               },
-              initialFilterValue: LogSearchType.all,
               filterOptions: const [
                 (label: 'All', value: LogSearchType.all),
                 (label: 'Message', value: LogSearchType.logMessage),
