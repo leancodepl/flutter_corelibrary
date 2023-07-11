@@ -39,6 +39,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     _debugPageController = DebugPageController(
+      showEntryButton: true,
       loggingHttpClient: widget._loggingHttpClient,
     );
   }

@@ -11,7 +11,7 @@ import 'package:shake/shake.dart';
 
 class DebugPageController {
   DebugPageController({
-    this.showEntryButton = true,
+    this.showEntryButton = false,
     this.showOnShake = true,
     required this.loggingHttpClient,
   }) : loggerListener = LoggerListener() {

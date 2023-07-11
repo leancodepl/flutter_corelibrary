@@ -23,14 +23,17 @@ class DebugPageOverlay extends StatelessWidget {
       children: [
         child,
         if (_controller.showEntryButton)
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: GestureDetector(
-              onTap: () => _controller.visible.value = true,
-              child: Container(
-                width: 48,
-                height: 48,
-                color: Colors.blue.withOpacity(0.2),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onDoubleTap: () => _controller.visible.value = true,
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  color: Colors.blue.withOpacity(0.2),
+                ),
               ),
             ),
           ),
