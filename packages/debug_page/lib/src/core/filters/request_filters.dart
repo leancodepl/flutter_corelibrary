@@ -44,8 +44,8 @@ class RequestSearchFilter implements Filter<RequestLogRecord> {
     }
 
     return switch (type) {
-      RequestSearchType.url when url == true => true,
-      RequestSearchType.body when body == true => true,
+      RequestSearchType.url => url ?? false,
+      RequestSearchType.body => body ?? false,
       RequestSearchType.all when url == true || body == true => true,
       _ => false,
     };

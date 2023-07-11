@@ -42,8 +42,8 @@ class LoggerSearchFilter implements Filter<LogRecord> {
     }
 
     return switch (type) {
-      LogSearchType.loggerName when loggerName == true => true,
-      LogSearchType.logMessage when message == true => true,
+      LogSearchType.loggerName => loggerName ?? false,
+      LogSearchType.logMessage => message ?? false,
       LogSearchType.all when loggerName == true || message == true => true,
       _ => false,
     };

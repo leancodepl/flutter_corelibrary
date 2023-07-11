@@ -63,9 +63,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    super.dispose();
-
     _debugPageController.dispose();
+
+    super.dispose();
   }
 }
 
@@ -188,12 +188,5 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _sendRequest,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    debugPageController.dispose();
   }
 }
