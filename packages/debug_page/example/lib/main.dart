@@ -8,10 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 void main() {
-  // This is necessary if you want to instantiate a DebugPage before calling
-  // runApp()
-  WidgetsFlutterBinding.ensureInitialized();
-
   final loggingHttpClient = LoggingHttpClient();
 
   runApp(MyApp(loggingHttpClient: loggingHttpClient));
