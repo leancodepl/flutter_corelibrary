@@ -20,15 +20,9 @@ class LogsInspectorRequestsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (_showFilters)
-          RequestsTabFiltersMenu(
-            onFiltersChanged: (value) =>
-                _controller.requestsFilters.value = value,
-          ),
+        if (_showFilters) RequestsTabFiltersMenu(controller: _controller),
         Expanded(
-          child: _LogsInspectorRequestsTabContent(
-            controller: _controller,
-          ),
+          child: _LogsInspectorRequestsTabContent(controller: _controller),
         ),
       ],
     );

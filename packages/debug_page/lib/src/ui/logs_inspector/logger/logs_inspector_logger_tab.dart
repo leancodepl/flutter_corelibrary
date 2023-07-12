@@ -20,11 +20,7 @@ class LogsInspectorLoggerTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (_showFilters)
-          LoggerTabFiltersMenu(
-            onFiltersChanged: (value) =>
-                _controller.loggerFilters.value = value,
-          ),
+        if (_showFilters) LoggerTabFiltersMenu(controller: _controller),
         Expanded(
           child: _LogsInspectorLoggerTabContent(controller: _controller),
         ),

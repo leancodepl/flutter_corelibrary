@@ -1,5 +1,5 @@
+import 'package:debug_page/src/core/debug_page_controller.dart';
 import 'package:debug_page/src/core/filters/request_filters.dart';
-import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/colors.dart';
 import 'package:debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
@@ -16,10 +16,10 @@ enum RequestSearchType {
 class RequestsTabFiltersMenu extends StatefulWidget {
   const RequestsTabFiltersMenu({
     super.key,
-    required this.onFiltersChanged,
-  });
+    required DebugPageController controller,
+  }) : _controller = controller;
 
-  final ValueChanged<List<Filter<RequestLogRecord>>> onFiltersChanged;
+  final DebugPageController _controller;
 
   @override
   State<StatefulWidget> createState() {
@@ -30,24 +30,38 @@ class RequestsTabFiltersMenu extends StatefulWidget {
 class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
   RequestStatus? requestStatus;
   var searchType = RequestSearchType.url;
-  String? searchPhrase;
+  String searchPhrase = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    final initialFilters = widget._controller.requestsFilters.value;
+
+    for (final filter in initialFilters) {
+      if (filter is RequestStatusFilter) {
+        requestStatus = filter.desiredStatus;
+      } else if (filter is RequestSearchFilter) {
+        searchType = filter.type;
+        searchPhrase = filter.phrase;
+      }
+    }
+  }
 
   void _updateFilters() {
     final requestStatus = this.requestStatus;
     final searchType = this.searchType;
     final searchPhrase = this.searchPhrase;
 
-    final filters = [
+    widget._controller.requestsFilters.value = [
       if (requestStatus != null)
         RequestStatusFilter(desiredStatus: requestStatus),
-      if (searchPhrase != null)
+      if (searchPhrase.isNotEmpty)
         RequestSearchFilter(
           type: searchType,
           phrase: searchPhrase,
         ),
     ];
-
-    widget.onFiltersChanged(filters);
   }
 
   @override
@@ -62,6 +76,7 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
           children: [
             LabeledDropdown<RequestStatus>(
               title: const Text('Status code'),
+              initialValue: requestStatus,
               onChanged: (value) {
                 setState(() => requestStatus = value);
                 _updateFilters();
@@ -75,6 +90,7 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
               ],
             ),
             FilteredSearchField(
+              initialPhrase: searchPhrase,
               onPhraseChanged: (value) {
                 searchPhrase = value;
                 _updateFilters();
