@@ -1,39 +1,64 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+A debug page that logs http requests and logger logs.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+You only have to wrap your ```MaterialApp``` with ```DebugPageOverlay``` and provide a ```DebugPageController```. ```DebugPageController``` requires a ```LoggingHttpClient```, which is a wrapper over ```Client``` from dart's ```http``` package. This allows you to put your implementation of client in there.
 
 ```dart
-const like = 'sample';
+class MyApp extends StatefulWidget {
+  const MyApp({
+    super.key,
+    required LoggingHttpClient loggingHttpClient,
+  }) : _loggingHttpClient = loggingHttpClient;
+
+  final LoggingHttpClient _loggingHttpClient;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  _MyAppState();
+
+  late DebugPageController _debugPageController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _debugPageController = DebugPageController(
+      showEntryButton: true,
+      loggingHttpClient: widget._loggingHttpClient,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DebugPageOverlay(
+      controller: _debugPageController,
+      child: MaterialApp(
+        title: 'Debug Page Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: MyHomePage(
+          title: 'Flutter Debug Page Demo Page',
+          loggingHttpClient: widget._loggingHttpClient,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _debugPageController.dispose();
+
+    super.dispose();
+  }
+}
 ```
 
-## Additional information
+For a complete working sample, see [example](example).
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+You can configure debug page's entry points by setting ```showEntryButton``` (defaults to false) and ```showOnShake``` (defaults to true) flags in the constructor of ```DebugPageController```.
