@@ -40,7 +40,7 @@ extension AdaptiveSvgGenImage on SvgGenImage {
     Clip clipBehavior = Clip.hardEdge,
   }) {
     return SvgPicture(
-      SvgAdaptiveAssetBytesLoader(
+      LeancodeFlutterSvgAdaptiveLoader(
         path,
         assetBundle: bundle,
         packageName: package,
