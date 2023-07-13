@@ -1,6 +1,6 @@
 # leancode_flutter_svg_adaptive_loader
 
-[![enhanced_gradients pub.dev badge][pub-badge]][pub-badge-link]
+[![leancode_flutter_svg_adaptive_loader pub.dev badge][pub-badge]][pub-badge-link]
 [![][build-badge]][build-badge-link]
 
 This package adds an adaptive bytes loader for `.svg` assets. That allows you to compile your vector assets by `vector_graphics_compiler`
