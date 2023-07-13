@@ -1,7 +1,11 @@
 extension ApplyExtension<T> on List<Filter<T>> {
   Future<List<T>> apply(List<T> source) async {
+    // This is needed to ignore changes made to original list between
+    // calculating criteriaMet and returning the final result
+    final sourceCopy = [...source];
+
     final criteriaMet = await Future.wait(
-      source.map(
+      sourceCopy.map(
         (item) async {
           final f = await Future.wait(map((filter) => filter.filter(item)));
           return f.every((e) => e);
@@ -9,7 +13,7 @@ extension ApplyExtension<T> on List<Filter<T>> {
       ),
     );
 
-    return source.indexed
+    return sourceCopy.indexed
         .where((e) => criteriaMet[e.$1])
         .map((e) => e.$2)
         .toList();
