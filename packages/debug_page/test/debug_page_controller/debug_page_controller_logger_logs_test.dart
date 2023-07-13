@@ -5,7 +5,7 @@ import 'package:debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 
-import 'logging_http_client_test.dart';
+import '../logging_http_client_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
