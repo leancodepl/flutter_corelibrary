@@ -1,3 +1,5 @@
+# debug_page
+
 A debug page that logs http requests and logger logs.
 
 ## Usage
