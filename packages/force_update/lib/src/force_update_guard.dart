@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
+import 'package:cqrs/cqrs.dart';
 import 'package:flutter/material.dart';
+import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/src/force_update_storage.dart';
 import 'package:force_update/src/ui/force_update_screen.dart';
 import 'package:force_update/src/app_version.dart';
@@ -16,13 +19,11 @@ class ForceUpdateResponse {
 class ForceUpdateGuard<T> extends StatefulWidget {
   const ForceUpdateGuard({
     super.key,
-    required this.fetchUpdatesInfo,
-    required this.parseResponse,
+    required this.cqrs,
     required this.child,
   });
 
-  final Future<T> Function() fetchUpdatesInfo;
-  final Future<ForceUpdateResponse> Function(T) parseResponse;
+  final Cqrs cqrs;
   final Widget child;
 
   static const _updateCheckingInterval = Duration(minutes: 5);
@@ -45,11 +46,25 @@ class _ForceUpdateGuardState<T> extends State<ForceUpdateGuard<T>> {
     _logger.info('Looking for updates...');
 
     try {
-      final response = await widget.fetchUpdatesInfo();
-      final parsedResponse = await widget.parseResponse(response);
+      final PlatformDTO platform;
+
+      if (Platform.isAndroid) {
+        platform = PlatformDTO.android;
+      } else if (Platform.isIOS) {
+        platform = PlatformDTO.ios;
+      } else {
+        throw StateError('Force update only works for Android & iOS');
+      }
+
+      final response = await widget.cqrs.get(
+        VersionSupport(
+          platform: platform,
+          version: _packageInfo.version,
+        ),
+      );
 
       final minRequiredVersion = AppVersion(
-        version: parsedResponse.minRequiredVersion,
+        version: response.minimumRequiredVersion,
       );
 
       await _storage.writeMinRequiredVersion(minRequiredVersion);

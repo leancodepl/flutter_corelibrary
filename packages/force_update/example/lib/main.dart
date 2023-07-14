@@ -1,6 +1,8 @@
+import 'package:cqrs/cqrs.dart';
 import 'package:flutter/material.dart';
 import 'package:force_update/force_update.dart';
 import 'package:logging/logging.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
@@ -8,7 +10,9 @@ void main() {
     debugPrint('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  runApp(const MyApp());
+  final cqrs = Cqrs(http.Client(), Uri.parse('local'));
+
+  runApp(MyApp(cqrs: cqrs));
 }
 
 class UpdateInfoDTO {
@@ -22,17 +26,14 @@ Future<UpdateInfoDTO> fetchUpdatesFromServer() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.cqrs});
+
+  final Cqrs cqrs;
 
   @override
   Widget build(BuildContext context) {
     return ForceUpdateGuard<UpdateInfoDTO>(
-      fetchUpdatesInfo: fetchUpdatesFromServer,
-      parseResponse: (dto) async {
-        return ForceUpdateResponse(
-          minRequiredVersion: dto.minRequiredVersion,
-        );
-      },
+      cqrs: cqrs,
       child: MaterialApp(
         title: 'Force update demo',
         theme: ThemeData(

@@ -14,6 +14,7 @@ dependencies:
   logging: ^1.2.0 
   shared_preferences: ^2.2.0
   leancode_contracts: ^0.6.0
+  cqrs: ^9.0.0
 
 dev_dependencies:
   flutter_test:
