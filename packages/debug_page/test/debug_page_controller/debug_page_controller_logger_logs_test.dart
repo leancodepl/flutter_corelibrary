@@ -47,8 +47,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.FINE),
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
-
+      await Future.delayed(Duration.zero);
       // Should include logs at levels: fine, finer, finest
       expect(controller.loggerLogs.length, 3);
     });
@@ -71,8 +70,7 @@ void main() {
         ),
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
-
+      await Future.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 2);
     });
 
@@ -85,8 +83,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.SEVERE),
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
-
+      await Future.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 1);
     });
 
@@ -99,8 +96,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.SEVERE),
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
-
+      await Future.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 1);
     });
   });

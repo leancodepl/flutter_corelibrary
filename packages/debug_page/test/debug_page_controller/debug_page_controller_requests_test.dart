@@ -84,7 +84,7 @@ void main() {
         const RequestStatusFilter(desiredStatus: RequestStatus.success)
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(Duration.zero);
       expect(controller.requestsLogs.length, 1);
     });
 
@@ -102,7 +102,7 @@ void main() {
         ),
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(Duration.zero);
       expect(controller.requestsLogs.length, 1);
     });
 
@@ -122,8 +122,7 @@ void main() {
         ),
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
-
+      await Future.delayed(Duration.zero);
       expect(controller.requestsLogs.length, 1);
     });
   });
