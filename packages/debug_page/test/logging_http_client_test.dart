@@ -1,10 +1,6 @@
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:debug_page/debug_page.dart';
-import 'package:http/http.dart' as http;
-import 'package:mocktail/mocktail.dart';
-
-class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

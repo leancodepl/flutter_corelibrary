@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:debug_page/debug_page.dart';
 
-import '../logging_http_client_test.dart';
+import '../util/mock_http_client.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
