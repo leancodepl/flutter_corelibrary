@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ExampleApp.Core.Services</AssemblyName>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../ExampleApp.Core.Contracts/ExampleApp.Core.Contracts.csproj" />
+    <ProjectReference Include="../ExampleApp.Core.Domain/ExampleApp.Core.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+
+    <PackageReference Include="Dapper" />
+
+    <PackageReference Include="LeanCode.Components" />
+    <PackageReference Include="LeanCode.CQRS.Execution" />
+    <PackageReference Include="LeanCode.CQRS.MassTransitRelay" />
+    <PackageReference Include="LeanCode.CQRS.Security" />
+    <PackageReference Include="LeanCode.CQRS.Validation.Fluent" />
+    <PackageReference Include="LeanCode.Dapper" />
+    <PackageReference Include="LeanCode.DomainModels.EF" />
+    <PackageReference Include="LeanCode.Kratos" />
+    <PackageReference Include="LeanCode.Npgsql.ActiveDirectory" />
+
+    <PackageReference Include="MassTransit" />
+    <PackageReference Include="MassTransit.EntityFrameworkCore" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+
+  </ItemGroup>
+</Project>

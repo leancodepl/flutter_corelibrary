@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exampleapp-tests
+  namespace: exampleapp-dev
+  labels:
+    app: exampleapp-tests
+spec:
+  restartPolicy: Never
+  containers:
+  - name: tests
+    image: exampleapp-tests
+    resources:
+      requests:
+        cpu: '500m'
+        memory: '200Mi'
+      limits:
+        cpu: '4'
+        memory: '4Gi'

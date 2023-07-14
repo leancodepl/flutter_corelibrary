@@ -1,0 +1,198 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "LeanCode.DomainModels/8.0.1963-preview": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/LeanCode.DomainModels.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LeanCode.DomainModels.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "contentFiles": {
+          "contentFiles/any/net8.0/LICENSE": {
+            "buildAction": "None",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        }
+      },
+      "LeanCode.DomainModels.Generators/8.0.1963-preview": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/LeanCode.DomainModels.Generators.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/LeanCode.DomainModels.Generators.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "contentFiles": {
+          "contentFiles/any/netstandard2.0/LICENSE": {
+            "buildAction": "None",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        }
+      },
+      "LeanCode.TimeProvider/8.0.1963-preview": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/LeanCode.TimeProvider.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LeanCode.TimeProvider.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "contentFiles": {
+          "contentFiles/any/net8.0/LICENSE": {
+            "buildAction": "None",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LeanCode.DomainModels/8.0.1963-preview": {
+      "sha512": "HzzX2+A3LarPuaE1Cc2dOM+ZamP2OLmP54NEVchbr4ZhI1V3JPj+XwQLhvFSUNF1miWON5O3GAUCGbpz39Gnvw==",
+      "type": "package",
+      "path": "leancode.domainmodels/8.0.1963-preview",
+      "files": [
+        ".nupkg.metadata",
+        "content/LICENSE",
+        "contentFiles/any/net8.0/LICENSE",
+        "leancode.domainmodels.8.0.1963-preview.nupkg.sha512",
+        "leancode.domainmodels.nuspec",
+        "lib/net8.0/LeanCode.DomainModels.dll",
+        "lib/net8.0/LeanCode.DomainModels.pdb",
+        "lib/net8.0/LeanCode.DomainModels.xml"
+      ]
+    },
+    "LeanCode.DomainModels.Generators/8.0.1963-preview": {
+      "sha512": "9sV2hCzqYTwzFgcBx8kyDG5Vq4+R0qq7wiv1Ax9YqZOYTeNylwSdKzppX4Nuz/ye7r7hw9ImKVvnBddCfOgPqQ==",
+      "type": "package",
+      "path": "leancode.domainmodels.generators/8.0.1963-preview",
+      "files": [
+        ".nupkg.metadata",
+        "analyzers/dotnet/cs/LeanCode.DomainModels.Generators.dll",
+        "content/LICENSE",
+        "contentFiles/any/netstandard2.0/LICENSE",
+        "leancode.domainmodels.generators.8.0.1963-preview.nupkg.sha512",
+        "leancode.domainmodels.generators.nuspec",
+        "lib/netstandard2.0/LeanCode.DomainModels.Generators.dll",
+        "lib/netstandard2.0/LeanCode.DomainModels.Generators.pdb",
+        "lib/netstandard2.0/LeanCode.DomainModels.Generators.xml"
+      ]
+    },
+    "LeanCode.TimeProvider/8.0.1963-preview": {
+      "sha512": "V29T5yklSIIhyb6/B3ZUEhO33xU12QLz0yXSzGrezeC89eXDq54l/PtkOdy4kcRF6zYNrkNtHaC4FVZtOrNFbg==",
+      "type": "package",
+      "path": "leancode.timeprovider/8.0.1963-preview",
+      "files": [
+        ".nupkg.metadata",
+        "content/LICENSE",
+        "contentFiles/any/net8.0/LICENSE",
+        "leancode.timeprovider.8.0.1963-preview.nupkg.sha512",
+        "leancode.timeprovider.nuspec",
+        "lib/net8.0/LeanCode.TimeProvider.dll",
+        "lib/net8.0/LeanCode.TimeProvider.pdb",
+        "lib/net8.0/LeanCode.TimeProvider.xml"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "LeanCode.DomainModels >= 8.0.1963-preview",
+      "LeanCode.DomainModels.Generators >= 8.0.1963-preview",
+      "LeanCode.TimeProvider >= 8.0.1963-preview"
+    ]
+  },
+  "packageFolders": {
+    "/Users/jakublange/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/src/Core/ExampleApp.Core.Domain/ExampleApp.Core.Domain.csproj",
+      "projectName": "ExampleApp.Core.Domain",
+      "projectPath": "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/src/Core/ExampleApp.Core.Domain/ExampleApp.Core.Domain.csproj",
+      "packagesPath": "/Users/jakublange/.nuget/packages/",
+      "outputPath": "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/src/Core/ExampleApp.Core.Domain/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/NuGet.Config",
+        "/Users/jakublange/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {},
+        "https://f.feedz.io/leancode/public/nuget/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "allWarningsAsErrors": true,
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "default"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "LeanCode.DomainModels": {
+            "target": "Package",
+            "version": "[8.0.1963-preview, )"
+          },
+          "LeanCode.DomainModels.Generators": {
+            "target": "Package",
+            "version": "[8.0.1963-preview, )"
+          },
+          "LeanCode.TimeProvider": {
+            "target": "Package",
+            "version": "[8.0.1963-preview, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100-preview.6.23330.14/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

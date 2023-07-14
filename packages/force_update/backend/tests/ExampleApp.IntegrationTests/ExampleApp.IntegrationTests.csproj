@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ExampleApp.IntegrationTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Apps/ExampleApp.Api/ExampleApp.Api.csproj" />
+    <ProjectReference Include="../../src/Apps/ExampleApp.Migrations/ExampleApp.Migrations.csproj" />
+    <ProjectReference Include="../../src/Core/ExampleApp.Core.Services/ExampleApp.Core.Services.csproj" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+
+    <PackageReference Include="LeanCode.CQRS.RemoteHttp.Client" />
+    <PackageReference Include="LeanCode.IntegrationTestHelpers" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WebApplicationFactoryContentRootAttribute
+      Include="ExampleApp.IntegrationTests"
+      AssemblyName="ExampleApp.IntegrationTests"
+      ContentRootPath="$(MSBuildProjectDirectory)"
+      ContentRootTest="ExampleApp.IntegrationTests.csproj"
+      Priority="-1" />
+  </ItemGroup>
+
+</Project>

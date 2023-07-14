@@ -1,0 +1,147 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "LeanCode.Contracts/1.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/LeanCode.Contracts.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/LeanCode.Contracts.dll": {}
+        }
+      },
+      "LeanCode.ForceUpdate.Contracts/8.0.1963-preview": {
+        "type": "package",
+        "dependencies": {
+          "LeanCode.Contracts": "1.1.0"
+        },
+        "compile": {
+          "lib/net8.0/LeanCode.ForceUpdate.Contracts.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LeanCode.ForceUpdate.Contracts.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "contentFiles": {
+          "contentFiles/any/net8.0/LICENSE": {
+            "buildAction": "None",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LeanCode.Contracts/1.1.1": {
+      "sha512": "5YLiwpkg5/pyk3Mam3npCOS3NFeA8t+/ZaDYmAO82vVvRl3+eVHBTI2Q1J2mqeAdo8kNYdehOlrNfODiVrDe/g==",
+      "type": "package",
+      "path": "leancode.contracts/1.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "leancode.contracts.1.1.1.nupkg.sha512",
+        "leancode.contracts.nuspec",
+        "lib/net6.0/LeanCode.Contracts.dll",
+        "lib/net7.0/LeanCode.Contracts.dll"
+      ]
+    },
+    "LeanCode.ForceUpdate.Contracts/8.0.1963-preview": {
+      "sha512": "2AEOAvJtDCXYWb3aD647oHsyTCxr0J9tO63iLucZzHEr+ts9st8+qQdbd2RKvCRDGQ9ciO9tVyeUvThNKiS4Ig==",
+      "type": "package",
+      "path": "leancode.forceupdate.contracts/8.0.1963-preview",
+      "files": [
+        ".nupkg.metadata",
+        "content/LICENSE",
+        "contentFiles/any/net8.0/LICENSE",
+        "leancode.forceupdate.contracts.8.0.1963-preview.nupkg.sha512",
+        "leancode.forceupdate.contracts.nuspec",
+        "lib/net8.0/LeanCode.ForceUpdate.Contracts.dll",
+        "lib/net8.0/LeanCode.ForceUpdate.Contracts.pdb",
+        "lib/net8.0/LeanCode.ForceUpdate.Contracts.xml"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "LeanCode.Contracts >= 1.1.1",
+      "LeanCode.ForceUpdate.Contracts >= 8.0.1963-preview"
+    ]
+  },
+  "packageFolders": {
+    "/Users/jakublange/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/src/Core/ExampleApp.Core.Contracts/ExampleApp.Core.Contracts.csproj",
+      "projectName": "ExampleApp.Core.Contracts",
+      "projectPath": "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/src/Core/ExampleApp.Core.Contracts/ExampleApp.Core.Contracts.csproj",
+      "packagesPath": "/Users/jakublange/.nuget/packages/",
+      "outputPath": "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/src/Core/ExampleApp.Core.Contracts/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/NuGet.Config",
+        "/Users/jakublange/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {},
+        "https://f.feedz.io/leancode/public/nuget/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "allWarningsAsErrors": true,
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "default"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "LeanCode.Contracts": {
+            "target": "Package",
+            "version": "[1.1.1, )"
+          },
+          "LeanCode.ForceUpdate.Contracts": {
+            "target": "Package",
+            "version": "[8.0.1963-preview, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100-preview.6.23330.14/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

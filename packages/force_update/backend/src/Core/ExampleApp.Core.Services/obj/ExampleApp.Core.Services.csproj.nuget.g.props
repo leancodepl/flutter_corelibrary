@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/Users/jakublange/.nuget/packages/</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/Users/jakublange/.nuget/packages/</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.7.0</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="/Users/jakublange/.nuget/packages/" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.npgsql.activedirectory/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.npgsql.activedirectory/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.Npgsql.ActiveDirectory</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.kratos/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.kratos/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.Kratos</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.domainmodels.ef/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.domainmodels.ef/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.DomainModels.EF</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.dapper/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.dapper/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.Dapper</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.components/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.components/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.Components</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.cqrs.validation.fluent/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.cqrs.validation.fluent/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.CQRS.Validation.Fluent</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.cqrs.security/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.cqrs.security/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.CQRS.Security</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.cqrs.masstransitrelay/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.cqrs.masstransitrelay/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.CQRS.MassTransitRelay</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)leancode.cqrs.execution/8.0.1963-preview/contentFiles/any/net8.0/LICENSE" Condition="Exists('$(NuGetPackageRoot)leancode.cqrs.execution/8.0.1963-preview/contentFiles/any/net8.0/LICENSE')">
+      <NuGetPackageId>LeanCode.CQRS.Execution</NuGetPackageId>
+      <NuGetPackageVersion>8.0.1963-preview</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>LICENSE</Link>
+    </None>
+  </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore/8.0.0-preview.5.23280.1/buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore/8.0.0-preview.5.23280.1/buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets/8.0.0-preview.5.23280.8/buildTransitive/net6.0/Microsoft.Extensions.Configuration.UserSecrets.props" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets/8.0.0-preview.5.23280.8/buildTransitive/net6.0/Microsoft.Extensions.Configuration.UserSecrets.props')" />
+  </ImportGroup>
+</Project>

@@ -1,0 +1,117 @@
+<Project>
+  <PropertyGroup>
+    <CoreLibVersion>8.0.1963-preview</CoreLibVersion>
+    <ExtensionsVersion>8.0.0-preview.5.23280.8</ExtensionsVersion>
+    <EFCoreVersion>8.0.0-preview.5.23280.1</EFCoreVersion>
+    <AspNetCoreVersion>8.0.0-preview.5.23302.2</AspNetCoreVersion>
+    <MassTransitVersion>8.0.15</MassTransitVersion>
+    <NpgsqlVersion>8.0.0-preview.4 </NpgsqlVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Update="LeanCode.Contracts" Version="1.1.1" />
+
+    <PackageReference Update="LeanCode.AzureIdentity" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.ClientCredentialsHandler" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Components" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.CQRS" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.CQRS.AspNetCore" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.CQRS.Execution" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.CQRS.MassTransitRelay" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.CQRS.RemoteHttp.Client" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.CQRS.Validation.Fluent" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Dapper" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.DomainModels" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.DomainModels.EF" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.DomainModels.Generators" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.EFMigrator" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.ForceUpdate" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.ForceUpdate.Contracts" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Kratos" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Localization" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Logging" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.IntegrationTestHelpers" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Npgsql.ActiveDirectory" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.OpenTelemetry" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Pipelines" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Pipelines.Autofac" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Serialization" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Startup.MicrosoftDI" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.TimeProvider" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.UrlHelper" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.ViewRenderer.Razor" Version="$(CoreLibVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Azure.Extensions.AspNetCore.DataProtection.Blobs" Version="1.3.2" />
+    <PackageReference Update="Azure.Extensions.AspNetCore.DataProtection.Keys" Version="1.2.2" />
+
+    <PackageReference Update="Azure.Storage.Blobs" Version="12.16.0" />
+
+    <PackageReference Update="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="$(EFCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="$(EFCoreVersion)" />
+
+    <PackageReference Update="Microsoft.Extensions.Azure" Version="1.6.3" />
+
+    <PackageReference Update="Microsoft.Extensions.Configuration" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.AzureKeyVault" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Logging.Console" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Hosting" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Hosting.Abstractions" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Http" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Http.Polly" Version="$(ExtensionsVersion)" />
+
+    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetCoreVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+
+    <PackageReference Update="MassTransit" Version="$(MassTransitVersion)" />
+    <PackageReference Update="MassTransit.Azure.ServiceBus.Core" Version="$(MassTransitVersion)" />
+    <PackageReference Update="MassTransit.EntityFrameworkCore" Version="$(MassTransitVersion)" />
+    <PackageReference Update="MassTransit.RabbitMQ" Version="$(MassTransitVersion)" />
+
+    <PackageReference Update="Npgsql" Version="$(NpgsqlVersion)" />
+    <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlVersion)" />
+    <PackageReference Update="Npgsql.OpenTelemetry" Version="$(NpgsqlVersion)" />
+
+    <PackageReference Update="OpenTelemetry" Version="1.5.0" />
+    <PackageReference Update="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.5.0" />
+    <PackageReference Update="OpenTelemetry.Extensions.Hosting" Version="1.5.0" />
+    <PackageReference Update="OpenTelemetry.Instrumentation.AspNetCore" Version="1.5.0-beta.1" />
+    <PackageReference Update="OpenTelemetry.Instrumentation.Http" Version="1.5.0-beta.1 " />
+
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Dapper" Version="2.0.123" />
+    <PackageReference Update="Polly" Version="7.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Update="NSubstitute" Version="4.3.0" />
+    <PackageReference Update="xunit.analyzers" Version="1.0.0" />
+    <PackageReference Update="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageReference Update="xunit" Version="2.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Serilog" Version="2.12.0" />
+    <PackageReference Update="Serilog.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Update="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Update="Serilog.Sinks.Seq" Version="5.2.2" />
+    <PackageReference Update="Serilog.Formatting.Compact" Version="1.1.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)ExampleApp.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+</Project>

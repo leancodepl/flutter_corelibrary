@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exampleapp-integration-tests
+  namespace: exampleapp-dev
+  labels:
+    app: exampleapp-integration-tests
+spec:
+  restartPolicy: Never
+  containers:
+  - name: tests
+    image: exampleapp-integration-tests
+    ports:
+      - containerPort: 22
+    resources:
+      requests:
+        cpu: '500m'
+        memory: '200Mi'
+      limits:
+        cpu: '4'
+        memory: '4Gi'

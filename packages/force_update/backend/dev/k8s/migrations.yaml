@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exampleapp-migrations
+  namespace: exampleapp-dev
+  labels:
+    app: exampleapp-migrations
+spec:
+  selector:
+    matchLabels:
+      app: exampleapp-migrations
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exampleapp-migrations
+    spec:
+      containers:
+      - name: migrations
+        image: exampleapp-migrations
+        resources:
+          requests:
+            cpu: '500m'
+            memory: '200Mi'
+          limits:
+            cpu: '1'
+            memory: '1Gi'

@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0-preview
+
+USER root
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends unzip procps \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+USER $APP_UID
+
+ARG APP_VERSION
+
+ENV APP_VERSION=${APP_VERSION}
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+
+COPY --chown=$APP_UID config /home/app/config
+COPY --chown=$APP_UID out/api /home/app/bin
+
+WORKDIR /home/app/code/src/Apps/ExampleApp.Api
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT /home/app/config/run.sh

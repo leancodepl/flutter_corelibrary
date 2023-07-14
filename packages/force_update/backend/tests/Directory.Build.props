@@ -1,0 +1,31 @@
+<Project>
+
+  <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+
+    <OutputType>library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <DebugType>portable</DebugType>
+
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NSubstitute" />
+
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.analyzers" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <Import
+    Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"
+    Condition="Exists($([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../')))" />
+</Project>

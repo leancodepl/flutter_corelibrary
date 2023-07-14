@@ -1,0 +1,27 @@
+<Project>
+  <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <Authors>LeanCode</Authors>
+    <Description>ExampleApp Package</Description>
+
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>false</IsPackable>
+
+    <OutputType>library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>SYSLIB1040</NoWarn>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <AssemblyVersion>9.9.9.9</AssemblyVersion>
+    <Version>$(APP_VERSION)</Version>
+    <InformationalVersion>$(APP_VERSION)-$(GIT_COMMIT)</InformationalVersion>
+  </PropertyGroup>
+
+  <Import
+    Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"
+    Condition="Exists($([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../')))" />
+</Project>

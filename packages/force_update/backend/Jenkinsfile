@@ -1,0 +1,142 @@
+properties([
+    copyArtifactPermission('/ExampleApp/Production/*')
+]);
+
+def isReleaseBuild = BRANCH_NAME == 'master';
+def dbPassword = 'Passw12#'
+
+leancode.builder('exampleapp-backend')
+    .withMonorepoTest(['backend'])
+    .withBuildKit()
+    .withDotnet([version: '8.0-preview', image: 'mcr.microsoft.com/dotnet/sdk'])
+    .withDefaultContainer(
+        name: 'postgres',
+        image: 'postgres',
+        version: '14',
+        defCpuReq: '1',
+        defCpuLim: '2',
+        defMemReq: '1Gi',
+        defMemLim: '2Gi',
+        args: [:])
+    .withDefaultContainer(
+        name: 'storage',
+        image: 'mcr.microsoft.com/azure-storage/azurite',
+        version: '3.15.0',
+        defCpuReq: '100m',
+        defCpuLim: '500m',
+        defMemReq: '100Mi',
+        defMemLim: '500Mi',
+        args: [:])
+    .withEnv(envVar(key: 'POSTGRES_PASSWORD', value: dbPassword))
+    .withVolume(emptyDirVolume(mountPath: '/var/lib/postgresql/data', memory: true))
+    .run {
+
+    def scmVars
+
+    stage('Checkout') {
+        scmVars = safeCheckout scm
+    }
+
+    leancode.configureRepositories()
+
+    stage('Version') {
+        env.GIT_COMMIT = scmVars.GIT_COMMIT
+        env.APP_VERSION = isReleaseBuild ? "0.1.${nextBuildNumber()}" : '0.0.0'
+        echo "Building version: ${env.APP_VERSION}"
+
+        if (isReleaseBuild) {
+            currentBuild.displayName = "v${env.APP_VERSION}"
+        }
+    }
+
+    dir('backend') {
+        container('dotnet') {
+            stage('Build') {
+                sh '''
+                    dotnet restore
+                    dotnet build -c Release --no-restore
+                '''
+            }
+
+            stage('Test') {
+                try {
+                    dir('tests') {
+                        sh 'dotnet msbuild /t:RunTests /p:Configuration=Release /p:LogFileName=$PWD/test-results/tests.trx'
+                    }
+                } finally {
+                    step([$class: 'MSTestPublisher', testResultsFile:'*/test-results/*.trx', failOnError: true, keepLongStdio: true])
+                }
+            }
+
+            stage('Integration test') {
+                try {
+                    dir('tests/ExampleApp.IntegrationTests') {
+                        env.PostgreSQL__ConnectionStringBase = "Host=localhost;Username=postgres;Password=$dbPassword"
+
+                        sh 'dotnet test -c Release -l "trx;LogFileName=$PWD/test-results/integration.trx" -p:MaxParallelThreads=2'
+                    }
+                } finally {
+                    step([$class: 'MSTestPublisher', testResultsFile:'tests/ExampleApp.IntegrationTests/test-results/*.trx', failOnError: true, keepLongStdio: true])
+                }
+            }
+
+            stage('Publish') {
+                dir('src/Apps/ExampleApp.Api') {
+                    sh 'dotnet publish -c Release -o deploy --no-build'
+                }
+                dir('src/Apps/ExampleApp.Migrations') {
+                    sh 'dotnet publish -c Release -o deploy --no-build'
+                }
+            }
+        }
+
+        stage('Push containers') {
+            when (isReleaseBuild) {
+                leancode.withACR {
+                    sh """
+                        buildctl build \
+                            --frontend dockerfile.v0 \
+                            --local context=. \
+                            --local dockerfile=./release \
+                            --opt filename=Dockerfile.api \
+                            --output type=image,name=${leancode.ACR()}/exampleapp-api:$APP_VERSION,push=true
+                        buildctl build \
+                            --frontend dockerfile.v0 \
+                            --local context=. \
+                            --local dockerfile=./release \
+                            --opt filename=Dockerfile.migrations \
+                            --output type=image,name=${leancode.ACR()}/exampleapp-migrations:$APP_VERSION,push=true
+                    """
+                }
+            }
+        }
+    }
+
+    dir('backend/release') {
+        stage('Deploy to test') {
+            when (isReleaseBuild) {
+                env.ENVIRONMENT = 'test'
+                env.NAMESPACE = 'exampleapp-test'
+                sh 'envsubst < migrations.yaml.tpl > migrations.yaml'
+                sh 'envsubst < api.yaml.tpl > api.yaml'
+
+                withCredentials([file(credentialsId: 'ExampleAppTestKubeconfig', variable: 'KUBECONFIG')]) {
+                    sh '''
+                        kubectl delete -f migrations.yaml --ignore-not-found
+
+                        echo "Migrating database"
+                        kubectl apply -f migrations.yaml
+                        kubectl wait --filename=migrations.yaml --for='condition=Complete' --timeout=180s || exit 1
+
+                        echo "Migrations completed successfully"
+
+                        kubectl apply -f api.yaml
+                    '''
+                }
+
+                archiveArtifacts artifacts: '*.yaml', fingerprint: true
+                relatedBuild.writeAsArtifact "$APP_VERSION", 'APP_VERSION'
+            }
+        }
+    }
+}

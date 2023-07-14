@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Diagnostics.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.IMeterFactory">
+            <summary>
+            A factory for creating <see cref="T:System.Diagnostics.Metrics.Meter"/> instances.
+            </summary>
+            <remarks>
+            Meter factories will be accountable for the following responsibilities:
+            - Creating a new meter.
+            - Attaching the factory instance as a scope to the Meter constructor for all created Meter objects.
+            - Storing created meters in a cache and returning a cached instance if a meter with the same parameters (name, version, and tags) is requested.
+            - Disposing of all cached Meter objects upon factory disposal.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.IMeterFactory.Create(System.Diagnostics.Metrics.MeterOptions)">
+            <summary>
+            Creates a new <see cref="T:System.Diagnostics.Metrics.Meter"/> instance.
+            </summary>
+            <param name="options">The <see cref="T:System.Diagnostics.Metrics.MeterOptions"/> to use when creating the meter.</param>
+            <returns>A new <see cref="T:System.Diagnostics.Metrics.Meter"/> instance.</returns>
+            <remarks>
+            The <see cref="T:System.Diagnostics.Metrics.Meter"/> instance returned by this method should be cached by the factory and returned for subsequent requests for a meter with the same parameters (name, version, and tags).
+            </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.MeterFactoryExtensions">
+            <summary>
+            Extension methods for <see cref="T:System.Diagnostics.Metrics.Meter" /> and <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMeterFactory" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MeterFactoryExtensions.Create(Microsoft.Extensions.Diagnostics.Metrics.IMeterFactory,System.String,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Object}})">
+            <summary>
+            Creates a <see cref="T:System.Diagnostics.Metrics.Meter" /> with the specified <paramref name="name" />, <paramref name="version" />, and <paramref name="tags" />.
+            </summary>
+            <param name="meterFactory">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMeterFactory" /> to use to create the <see cref="T:System.Diagnostics.Metrics.Meter" />.</param>
+            <param name="name">The name of the <see cref="T:System.Diagnostics.Metrics.Meter" />.</param>
+            <param name="version">The version of the <see cref="T:System.Diagnostics.Metrics.Meter" />.</param>
+            <param name="tags">The tags to associate with the <see cref="T:System.Diagnostics.Metrics.Meter" />.</param>
+            <returns>A <see cref="T:System.Diagnostics.Metrics.Meter" /> with the specified <paramref name="name" />, <paramref name="version" />, and <paramref name="tags" />.</returns>
+        </member>
+    </members>
+</doc>
