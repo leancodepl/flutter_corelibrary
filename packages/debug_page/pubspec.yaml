@@ -1,8 +1,10 @@
 name: debug_page
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
-
+version: 1.0.0-alpha
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/debug_page
+repository: https://github.com/leancodepl/flutter_corelibrary
+description: >-
+  A package providing a debug page which shows outgoing http requests and Logger logs
+  
 environment:
   sdk: '>=3.0.5 <4.0.0'
   flutter: ">=1.17.0"
