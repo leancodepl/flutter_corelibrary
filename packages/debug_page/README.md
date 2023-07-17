@@ -1,3 +1,5 @@
+# debug_page
+
 A debug page that logs http requests and logger logs.
 
 ## Usage
@@ -62,3 +64,7 @@ class _MyAppState extends State<MyApp> {
 For a complete working sample, see [example](example).
 
 You can configure debug page's entry points by setting ```showEntryButton``` (defaults to false) and ```showOnShake``` (defaults to true) flags in the constructor of ```DebugPageController```.
+
+## Warning
+
+For gathering loggers logs, this package relies on listening to `Logger.root`. This means that changing `Logger.root.level` affects this package behavior.
