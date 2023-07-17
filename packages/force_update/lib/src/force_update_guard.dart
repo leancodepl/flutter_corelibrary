@@ -26,7 +26,7 @@ class ForceUpdateGuard<T> extends StatefulWidget {
   final Cqrs cqrs;
   final Widget child;
 
-  static const _updateCheckingInterval = Duration(minutes: 5);
+  static const updateCheckingInterval = Duration(minutes: 5);
 
   @override
   State<ForceUpdateGuard<T>> createState() => _ForceUpdateGuardState<T>();
@@ -87,7 +87,7 @@ class _ForceUpdateGuardState<T> extends State<ForceUpdateGuard<T>> {
     _updateVersionsInfo();
 
     _checkForEnforcedUpdateTimer = Timer.periodic(
-      ForceUpdateGuard._updateCheckingInterval,
+      ForceUpdateGuard.updateCheckingInterval,
       (timer) => _updateVersionsInfo(),
     );
   }
