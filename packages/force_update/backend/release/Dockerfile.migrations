@@ -1,9 +1,0 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview
-
-USER $APP_UID
-
-WORKDIR /home/app
-
-COPY src/Apps/ExampleApp.Migrations/deploy .
-
-ENTRYPOINT ["dotnet", "ExampleApp.Migrations.dll", "migrate"]

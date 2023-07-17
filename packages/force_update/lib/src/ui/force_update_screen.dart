@@ -25,7 +25,7 @@ class ForceUpdateScreen extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {},
                       child: const Text('Update'),
-                    )
+                    ),
                   ],
                 ),
               ),

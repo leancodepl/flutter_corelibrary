@@ -10,6 +10,7 @@ class ForceUpdateStorage {
 
   Future<AppVersion?> readMinRequiredVersion() async {
     final prefs = await _getPrefs;
+
     final versionString = prefs.getString(_key);
     if (versionString == null) {
       return null;

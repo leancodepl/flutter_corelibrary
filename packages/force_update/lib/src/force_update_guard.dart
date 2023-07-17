@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:cqrs/cqrs.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/src/force_update_storage.dart';
@@ -46,15 +46,11 @@ class _ForceUpdateGuardState<T> extends State<ForceUpdateGuard<T>> {
     _logger.info('Looking for updates...');
 
     try {
-      final PlatformDTO platform;
-
-      if (Platform.isAndroid) {
-        platform = PlatformDTO.android;
-      } else if (Platform.isIOS) {
-        platform = PlatformDTO.ios;
-      } else {
-        throw StateError('Force update only works for Android & iOS');
-      }
+      final platform = switch (defaultTargetPlatform) {
+        TargetPlatform.android => PlatformDTO.android,
+        TargetPlatform.iOS => PlatformDTO.ios,
+        _ => throw StateError('Force update only works for Android & iOS'),
+      };
 
       final response = await widget.cqrs.get(
         VersionSupport(
