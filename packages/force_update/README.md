@@ -1,39 +1,11 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# force_update
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+This is an internal Leancode package for quickly implementing Force Update. To use it, just wrap your `MaterialApp` in a `ForceUpdateGuard`
+widget and pass an instance to CQRS.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+# behavior
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+On every app launch, a request will be made to fetch the minimum required version of the app. To avoid
+affecting UX, the app will not wait for the request to complete. Instead, the result will be stored in prefs and used on next app launch. 
+If the app notices on startup that the minimum version stored in prefs is higher than the current one, a force update screen will be shown.
+To keep the minimum required version up to date, requests are made every 5 minutes when the app is running. 

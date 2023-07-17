@@ -1,8 +1,10 @@
 name: force_update
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
-
+version: 1.0.0-alpha
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/force_update
+repository: https://github.com/leancodepl/flutter_corelibrary
+description: >-
+  An internal package that speeds up implementation of Force Update
+  
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: ">=3.10.0"
