@@ -102,13 +102,26 @@ class _ForceUpdateGuardState<T> extends State<ForceUpdateGuard<T>> {
       valueListenable: force,
       builder: (context, force, child) {
         if (force == true) {
-          if (widget.useAndroidSystemForceUpdateScreen) {
-            InAppUpdate.performImmediateUpdate();
+          final useAndroidSystemForceUpdateScreen =
+              defaultTargetPlatform == TargetPlatform.android &&
+                  widget.useAndroidSystemForceUpdateScreen;
 
-            return const SizedBox();
+          if (!useAndroidSystemForceUpdateScreen) {
+            return widget.forceUpdateScreen;
           }
 
-          return widget.forceUpdateScreen;
+          return FutureBuilder(
+            future: InAppUpdate.checkForUpdate(),
+            builder: (context, snapshot) {
+              final data = snapshot.data;
+              if (data?.immediateUpdateAllowed ?? false) {
+                InAppUpdate.performImmediateUpdate();
+              }
+
+              // TODO: Add a loading indicator
+              return const SizedBox();
+            },
+          );
         }
 
         return child!;
