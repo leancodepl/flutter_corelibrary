@@ -10,13 +10,7 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class ForceUpdateResponse {
-  const ForceUpdateResponse({required this.minRequiredVersion});
-
-  final String minRequiredVersion;
-}
-
-class ForceUpdateGuard<T> extends StatefulWidget {
+class ForceUpdateGuard extends StatefulWidget {
   const ForceUpdateGuard({
     super.key,
     required this.cqrs,
@@ -33,10 +27,10 @@ class ForceUpdateGuard<T> extends StatefulWidget {
   static const updateCheckingInterval = Duration(minutes: 5);
 
   @override
-  State<ForceUpdateGuard<T>> createState() => _ForceUpdateGuardState<T>();
+  State<ForceUpdateGuard> createState() => _ForceUpdateGuardState();
 }
 
-class _ForceUpdateGuardState<T> extends State<ForceUpdateGuard<T>> {
+class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   _ForceUpdateGuardState() : _storage = ForceUpdateStorage();
 
   final ForceUpdateStorage _storage;

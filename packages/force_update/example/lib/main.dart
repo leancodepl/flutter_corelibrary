@@ -29,16 +29,6 @@ void main() async {
   runApp(MyApp(cqrs: cqrs));
 }
 
-class UpdateInfoDTO {
-  const UpdateInfoDTO({required this.minRequiredVersion});
-
-  final String minRequiredVersion;
-}
-
-Future<UpdateInfoDTO> fetchUpdatesFromServer() async {
-  return const UpdateInfoDTO(minRequiredVersion: '1.1.0');
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.cqrs});
 
@@ -46,7 +36,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ForceUpdateGuard<UpdateInfoDTO>(
+    return ForceUpdateGuard(
       cqrs: cqrs,
       forceUpdateScreen: const ForceUpdateScreen(),
       child: MaterialApp(
