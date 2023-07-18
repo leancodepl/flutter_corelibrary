@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "zJddM6OpMgDuB+GY6Ibjp0Fv7eDWONs46mTYlFY5fm7/JA8iGjBt9tTfmTUPA1eoKM81HAsCedC5V/M1ZUi+Yg==",
+  "success": true,
+  "projectFilePath": "/Users/jakublange/Desktop/force_update/flutter_corelibrary/packages/force_update/backend/backend.csproj",
+  "expectedPackageFiles": [
+    "/Users/jakublange/.nuget/packages/leancode.contracts/1.1.0/leancode.contracts.1.1.0.nupkg.sha512",
+    "/Users/jakublange/.nuget/packages/leancode.forceupdate.contracts/8.0.1996-preview/leancode.forceupdate.contracts.8.0.1996-preview.nupkg.sha512"
+  ],
+  "logs": []
+}
