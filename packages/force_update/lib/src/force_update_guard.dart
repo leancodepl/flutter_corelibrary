@@ -59,7 +59,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
 
     _checkForEnforcedUpdateTimer = Timer.periodic(
       ForceUpdateGuard.updateCheckingInterval,
-      (timer) => _updateVersionsInfo(),
+      (_) => _updateVersionsInfo(),
     );
   }
 
@@ -94,33 +94,33 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: force,
+      child: widget.child,
       builder: (context, force, child) {
-        if (force == true) {
-          final useAndroidSystemForceUpdateScreen =
-              defaultTargetPlatform == TargetPlatform.android &&
-                  widget.useAndroidSystemForceUpdateScreen;
-
-          if (!useAndroidSystemForceUpdateScreen) {
-            return widget.forceUpdateScreen;
-          }
-
-          return FutureBuilder(
-            future: InAppUpdate.checkForUpdate(),
-            builder: (context, snapshot) {
-              final data = snapshot.data;
-              if (data?.immediateUpdateAllowed ?? false) {
-                InAppUpdate.performImmediateUpdate();
-              }
-
-              // TODO: Add a loading indicator
-              return const SizedBox();
-            },
-          );
+        if (force != true) {
+          return child!;
         }
 
-        return child!;
+        final useAndroidSystemForceUpdateScreen =
+            defaultTargetPlatform == TargetPlatform.android &&
+                widget.useAndroidSystemForceUpdateScreen;
+
+        if (!useAndroidSystemForceUpdateScreen) {
+          return widget.forceUpdateScreen;
+        }
+
+        return FutureBuilder(
+          future: InAppUpdate.checkForUpdate(),
+          builder: (context, snapshot) {
+            final data = snapshot.data;
+            if (data?.immediateUpdateAllowed ?? false) {
+              InAppUpdate.performImmediateUpdate();
+            }
+
+            // TODO: Add a loading indicator
+            return const SizedBox();
+          },
+        );
       },
-      child: widget.child,
     );
   }
 
