@@ -1,4 +1,5 @@
 import 'package:cqrs/cqrs.dart';
+import 'package:example/force_update_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/force_update.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ForceUpdateGuard<UpdateInfoDTO>(
       cqrs: cqrs,
+      forceUpdateScreen: const ForceUpdateScreen(),
       child: MaterialApp(
         title: 'Force update demo',
         theme: ThemeData(
@@ -71,7 +73,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: const Center(child: Text('App')),
+      body: const Center(child: Text('Homepage')),
     );
   }
 }

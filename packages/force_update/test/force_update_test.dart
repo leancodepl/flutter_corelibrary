@@ -27,6 +27,10 @@ void main() {
         ForceUpdateGuard(
           key: key,
           cqrs: cqrs,
+          forceUpdateScreen: const Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text('Update'),
+          ),
           child: const SizedBox(),
         ),
       );

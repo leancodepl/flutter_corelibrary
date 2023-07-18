@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.2.0
   leancode_contracts: ^0.6.0
   cqrs: ^9.0.0
+  in_app_update: ^4.1.4
 
 dev_dependencies:
   flutter_test:

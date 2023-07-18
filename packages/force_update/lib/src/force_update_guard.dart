@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/src/force_update_storage.dart';
-import 'package:force_update/src/ui/force_update_screen.dart';
 import 'package:force_update/src/app_version.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -20,10 +20,14 @@ class ForceUpdateGuard<T> extends StatefulWidget {
   const ForceUpdateGuard({
     super.key,
     required this.cqrs,
+    this.useAndroidSystemForceUpdateScreen = false,
+    required this.forceUpdateScreen,
     required this.child,
   });
 
   final Cqrs cqrs;
+  final bool useAndroidSystemForceUpdateScreen;
+  final Widget forceUpdateScreen;
   final Widget child;
 
   static const updateCheckingInterval = Duration(minutes: 5);
@@ -98,7 +102,13 @@ class _ForceUpdateGuardState<T> extends State<ForceUpdateGuard<T>> {
       valueListenable: force,
       builder: (context, force, child) {
         if (force == true) {
-          return const ForceUpdateScreen();
+          if (widget.useAndroidSystemForceUpdateScreen) {
+            InAppUpdate.performImmediateUpdate();
+
+            return const SizedBox();
+          }
+
+          return widget.forceUpdateScreen;
         }
 
         return child!;
