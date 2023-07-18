@@ -10,11 +10,14 @@ class ForceUpdateScreen extends StatelessWidget {
 
   final Widget? icon;
 
+  static const _androidBundleId = 'your_bundle_id';
+  static const _appleAppId = 'your_app_id';
+
   Future<void> _goToStore() {
     final url = switch (defaultTargetPlatform) {
       TargetPlatform.android =>
-        'https://play.google.com/store/apps/details?id={{bundle_id}}',
-      TargetPlatform.iOS => 'https://apps.apple.com/pl/app/id{{apple_app_id}}',
+        'https://play.google.com/store/apps/details?id=$_androidBundleId',
+      TargetPlatform.iOS => 'https://apps.apple.com/pl/app/id$_appleAppId',
       _ => throw StateError('Force update only works for Android & iOS'),
     };
 
@@ -44,15 +47,15 @@ class ForceUpdateScreen extends StatelessWidget {
                       icon,
                       const SizedBox(height: 24),
                     ],
-                    const Text('Aktualizuj aplikację'),
+                    const Text('Update required'),
                     const SizedBox(height: 8),
                     const Text(
-                      'Aby móc korzystac z aplikacji, wymagana jest aktualizacja do najnowszej wersji',
+                      'To continue using the app, you have to update it',
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
                       onPressed: _goToStore,
-                      child: const Text('Aktualizuj'),
+                      child: const Text('Update'),
                     ),
                   ],
                 ),

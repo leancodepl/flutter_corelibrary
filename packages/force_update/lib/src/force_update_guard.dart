@@ -40,6 +40,29 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
 
   final _logger = Logger('ForceUpdateGuard');
 
+  @override
+  void initState() {
+    super.initState();
+
+    init();
+  }
+
+  Future<void> init() async {
+    _packageInfo = await PackageInfo.fromPlatform();
+    final minRequiredVersion = await _storage.readMinRequiredVersion();
+    final currentVersion = AppVersion(version: _packageInfo.version);
+
+    force.value =
+        minRequiredVersion != null && currentVersion < minRequiredVersion;
+
+    _updateVersionsInfo();
+
+    _checkForEnforcedUpdateTimer = Timer.periodic(
+      ForceUpdateGuard.updateCheckingInterval,
+      (timer) => _updateVersionsInfo(),
+    );
+  }
+
   Future<void> _updateVersionsInfo() async {
     _logger.info('Looking for updates...');
 
@@ -65,29 +88,6 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     } catch (e, st) {
       _logger.info('Failed to fetch updates info', e, st);
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    init();
-  }
-
-  Future<void> init() async {
-    _packageInfo = await PackageInfo.fromPlatform();
-    final minRequiredVersion = await _storage.readMinRequiredVersion();
-    final currentVersion = AppVersion(version: _packageInfo.version);
-
-    force.value =
-        minRequiredVersion != null && currentVersion < minRequiredVersion;
-
-    _updateVersionsInfo();
-
-    _checkForEnforcedUpdateTimer = Timer.periodic(
-      ForceUpdateGuard.updateCheckingInterval,
-      (timer) => _updateVersionsInfo(),
-    );
   }
 
   @override
