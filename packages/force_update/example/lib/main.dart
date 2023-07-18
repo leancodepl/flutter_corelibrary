@@ -3,7 +3,6 @@ import 'package:example/force_update_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/force_update.dart';
-import 'package:logging/logging.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockCqrs extends Mock implements Cqrs {}
@@ -11,11 +10,6 @@ class MockCqrs extends Mock implements Cqrs {}
 class MockQuery extends Mock implements Query<VersionSupportDTO> {}
 
 void main() async {
-  Logger.root.level = Level.ALL; // defaults to Level.INFO
-  Logger.root.onRecord.listen((record) {
-    debugPrint('${record.level.name}: ${record.time}: ${record.message}');
-  });
-
   final cqrs = MockCqrs();
   registerFallbackValue(MockQuery());
   when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
