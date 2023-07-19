@@ -77,14 +77,14 @@ Future<void> pumpForceUpdateGuard(
   await tester.pump();
 }
 
-void expectForceUpdatePage(bool value) {
+void expectForceUpdatePage({required bool value}) {
   expect(
     find.byKey(_forceUpdateScreenKey),
     value ? findsOneWidget : findsNothing,
   );
 }
 
-void expectSuggestUpdateDialog(bool value) {
+void expectSuggestUpdateDialog({required bool value}) {
   expect(
     find.byKey(_suggestUpdateDialogKey),
     value ? findsOneWidget : findsNothing,

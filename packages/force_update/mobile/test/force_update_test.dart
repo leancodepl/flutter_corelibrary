@@ -17,11 +17,11 @@ void main() {
       registerFallbackValue(MockQuery());
 
       PackageInfo.setMockInitialValues(
-        appName: "",
-        packageName: "",
-        version: "1.0.0",
-        buildNumber: "0",
-        buildSignature: "",
+        appName: '',
+        packageName: '',
+        version: '1.0.0',
+        buildNumber: '0',
+        buildSignature: '',
       );
 
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
@@ -35,10 +35,10 @@ void main() {
       registerUpdateRequired(cqrs);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
-      expectForceUpdatePage(false);
+      expectForceUpdatePage(value: false);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
-      expectForceUpdatePage(true);
+      expectForceUpdatePage(value: true);
 
       // Unfortunately, this cannot be reset in teardown / teardownAll, but has
       // to be done in every test separately:
@@ -51,10 +51,10 @@ void main() {
       registerUpToDate(cqrs);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
-      expectForceUpdatePage(false);
+      expectForceUpdatePage(value: false);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
-      expectForceUpdatePage(false);
+      expectForceUpdatePage(value: false);
 
       debugDefaultTargetPlatformOverride = null;
     });
@@ -65,17 +65,17 @@ void main() {
       registerUpToDate(cqrs);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
-      expectForceUpdatePage(false);
+      expectForceUpdatePage(value: false);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
-      expectForceUpdatePage(false);
+      expectForceUpdatePage(value: false);
 
       registerUpdateRequired(cqrs);
 
       await tester.pump(ForceUpdateGuard.updateCheckingInterval);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(3));
-      expectForceUpdatePage(true);
+      expectForceUpdatePage(value: true);
 
       debugDefaultTargetPlatformOverride = null;
     });
@@ -84,10 +84,10 @@ void main() {
       registerUpdateSuggested(cqrs);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
-      expectSuggestUpdateDialog(false);
+      expectSuggestUpdateDialog(value: false);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
-      expectSuggestUpdateDialog(false);
+      expectSuggestUpdateDialog(value: false);
 
       debugDefaultTargetPlatformOverride = null;
     });
@@ -96,10 +96,10 @@ void main() {
       registerUpToDate(cqrs);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
-      expectSuggestUpdateDialog(false);
+      expectSuggestUpdateDialog(value: false);
 
       await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
-      expectSuggestUpdateDialog(false);
+      expectSuggestUpdateDialog(value: false);
 
       debugDefaultTargetPlatformOverride = null;
     });

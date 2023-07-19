@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/src/force_update_storage.dart';
-import 'package:force_update/src/app_version.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:version/version.dart';
 
 class ForceUpdateGuard extends StatefulWidget {
   const ForceUpdateGuard({
@@ -59,7 +59,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   Future<void> init() async {
     _packageInfo = await PackageInfo.fromPlatform();
 
-    _updateVersionsInfo();
+    unawaited(_updateVersionsInfo());
 
     _checkForEnforcedUpdateTimer = Timer.periodic(
       ForceUpdateGuard.updateCheckingInterval,
@@ -67,7 +67,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     );
 
     final mostRecentForceUpdateResult = await _storage.readMostRecentResult();
-    final currentVersion = AppVersion(version: _packageInfo.version);
+    final currentVersion = Version.parse(_packageInfo.version);
 
     if (mostRecentForceUpdateResult == null ||
         mostRecentForceUpdateResult.versionAtTimeOfRequest < currentVersion) {
@@ -120,10 +120,12 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
         ),
       );
 
-      await _storage.writeResult(ForceUpdateResult(
-        versionAtTimeOfRequest: AppVersion(version: _packageInfo.version),
-        result: response.result,
-      ));
+      await _storage.writeResult(
+        ForceUpdateResult(
+          versionAtTimeOfRequest: Version.parse(_packageInfo.version),
+          result: response.result,
+        ),
+      );
     } catch (e, st) {
       _logger.info('Failed to fetch updates info', e, st);
     }

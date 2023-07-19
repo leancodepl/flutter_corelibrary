@@ -10,23 +10,24 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  cqrs: ^9.0.0
   flutter:
     sdk: flutter
-  package_info_plus: ^4.0.2
-  logging: ^1.2.0 
-  shared_preferences: ^2.2.0
-  leancode_contracts: ^0.6.0
-  cqrs: ^9.0.0
   in_app_update: ^4.1.4
+  leancode_contracts: ^0.6.0
+  logging: ^1.2.0 
+  package_info_plus: ^4.0.2
+  shared_preferences: ^2.2.0
   url_launcher: ^6.1.12
+  version: ^3.0.2
 
 dev_dependencies:
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
   leancode_contracts_generator: ^0.11.0
-  mocktail: ^0.3.0
   leancode_lint: ^4.0.0+1
+  mocktail: ^0.3.0
 
 
 flutter:

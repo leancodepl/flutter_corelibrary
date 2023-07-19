@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:force_update/data/contracts/contracts.dart';
-import 'package:force_update/src/app_version.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:version/version.dart';
 
 class ForceUpdateResult {
   const ForceUpdateResult({
@@ -10,17 +10,16 @@ class ForceUpdateResult {
     required this.result,
   });
 
-  final AppVersion versionAtTimeOfRequest;
+  ForceUpdateResult.fromJson(Map<String, dynamic> json)
+      : versionAtTimeOfRequest =
+            Version.parse(json['versionAtTimeOfRequest'] as String),
+        result = VersionSupportResultDTO.values[json['result'] as int];
+
+  final Version versionAtTimeOfRequest;
   final VersionSupportResultDTO result;
 
-  ForceUpdateResult.fromJson(Map<String, dynamic> json)
-      : versionAtTimeOfRequest = AppVersion(
-          version: json['versionAtTimeOfRequest'],
-        ),
-        result = VersionSupportResultDTO.values[json['result']];
-
   Map<String, dynamic> toJson() => {
-        'versionAtTimeOfRequest': versionAtTimeOfRequest.version,
+        'versionAtTimeOfRequest': versionAtTimeOfRequest.toString(),
         'result': result.index,
       };
 }
@@ -40,11 +39,13 @@ class ForceUpdateStorage {
       return null;
     }
 
-    return ForceUpdateResult.fromJson(jsonDecode(mostRecentResult));
+    return ForceUpdateResult.fromJson(
+      jsonDecode(mostRecentResult) as Map<String, dynamic>,
+    );
   }
 
   Future<void> writeResult(ForceUpdateResult result) async {
     final prefs = await _getPrefs;
-    prefs.setString(_mostRecentResultKey, jsonEncode(result.toJson()));
+    await prefs.setString(_mostRecentResultKey, jsonEncode(result.toJson()));
   }
 }
