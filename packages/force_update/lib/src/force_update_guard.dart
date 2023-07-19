@@ -14,17 +14,26 @@ class ForceUpdateGuard extends StatefulWidget {
   const ForceUpdateGuard({
     super.key,
     required this.cqrs,
-    this.useAndroidSystemForceUpdateScreen = false,
+    required this.suggestUpdateDialog,
     required this.forceUpdateScreen,
+    this.useAndroidSystemUI = false,
+    this.androidSystemUILoadingIndicator,
+    required this.dialogContextKey,
     required this.child,
   });
 
   final Cqrs cqrs;
-  final bool useAndroidSystemForceUpdateScreen;
+  final Widget suggestUpdateDialog;
   final Widget forceUpdateScreen;
+  final bool useAndroidSystemUI;
+  final Widget? androidSystemUILoadingIndicator;
+  final GlobalKey dialogContextKey;
   final Widget child;
 
   static const updateCheckingInterval = Duration(minutes: 5);
+
+  bool get _actuallyUseAndroidSystemUI =>
+      defaultTargetPlatform == TargetPlatform.android && useAndroidSystemUI;
 
   @override
   State<ForceUpdateGuard> createState() => _ForceUpdateGuardState();
@@ -36,6 +45,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   final ForceUpdateStorage _storage;
   late PackageInfo _packageInfo;
   final force = ValueNotifier<bool?>(null);
+  final suggest = ValueNotifier<bool?>(null);
   Timer? _checkForEnforcedUpdateTimer;
 
   final _logger = Logger('ForceUpdateGuard');
@@ -49,11 +59,6 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
 
   Future<void> init() async {
     _packageInfo = await PackageInfo.fromPlatform();
-    final minRequiredVersion = await _storage.readMinRequiredVersion();
-    final currentVersion = AppVersion(version: _packageInfo.version);
-
-    force.value =
-        minRequiredVersion != null && currentVersion < minRequiredVersion;
 
     _updateVersionsInfo();
 
@@ -61,6 +66,42 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
       ForceUpdateGuard.updateCheckingInterval,
       (_) => _updateVersionsInfo(),
     );
+
+    final mostRecentForceUpdateResult = await _storage.readMostRecentResult();
+    final currentVersion = AppVersion(version: _packageInfo.version);
+
+    if (mostRecentForceUpdateResult == null ||
+        mostRecentForceUpdateResult.versionAtTimeOfRequest < currentVersion) {
+      return;
+    }
+
+    force.value = mostRecentForceUpdateResult.result ==
+        VersionSupportResultDTO.updateRequired;
+
+    if (mostRecentForceUpdateResult.result ==
+        VersionSupportResultDTO.updateSuggested) {
+      if (widget._actuallyUseAndroidSystemUI) {
+        await InAppUpdate.checkForUpdate();
+        await InAppUpdate.startFlexibleUpdate();
+        return InAppUpdate.completeFlexibleUpdate();
+      }
+
+      final context = widget.dialogContextKey.currentContext;
+
+      // ignore: use_build_context_synchronously
+      if (context == null || !context.mounted) {
+        _logger.warning(
+          'Failed to show SuggestUpdateDialog: context is null or not mounted',
+        );
+
+        return;
+      }
+
+      return showDialog(
+        context: context,
+        builder: (context) => widget.suggestUpdateDialog,
+      );
+    }
   }
 
   Future<void> _updateVersionsInfo() async {
@@ -80,11 +121,10 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
         ),
       );
 
-      final minRequiredVersion = AppVersion(
-        version: response.minimumRequiredVersion,
-      );
-
-      await _storage.writeMinRequiredVersion(minRequiredVersion);
+      await _storage.writeResult(ForceUpdateResult(
+        versionAtTimeOfRequest: AppVersion(version: _packageInfo.version),
+        result: response.result,
+      ));
     } catch (e, st) {
       _logger.info('Failed to fetch updates info', e, st);
     }
@@ -100,11 +140,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
           return child!;
         }
 
-        final useAndroidSystemForceUpdateScreen =
-            defaultTargetPlatform == TargetPlatform.android &&
-                widget.useAndroidSystemForceUpdateScreen;
-
-        if (!useAndroidSystemForceUpdateScreen) {
+        if (!widget._actuallyUseAndroidSystemUI) {
           return widget.forceUpdateScreen;
         }
 

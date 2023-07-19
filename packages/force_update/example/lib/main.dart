@@ -1,5 +1,6 @@
 import 'package:cqrs/cqrs.dart';
 import 'package:example/force_update_screen.dart';
+import 'package:example/suggest_update_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/force_update.dart';
@@ -10,30 +11,51 @@ class MockCqrs extends Mock implements Cqrs {}
 class MockQuery extends Mock implements Query<VersionSupportDTO> {}
 
 void main() async {
+  const forceUpdate = ForceUpdate(
+    androidBundleId: 'com.example.example',
+    appleAppId: '1111111111',
+  );
+
   final cqrs = MockCqrs();
   registerFallbackValue(MockQuery());
   when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
-    (_) async => VersionSupportDTO(
-      currentlySupportedVersion: '1.0.0',
-      minimumRequiredVersion: '1.2.0',
-      result: VersionSupportResultDTO.updateRequired,
-    ),
+    (_) async {
+      return VersionSupportDTO(
+        currentlySupportedVersion: '1.0.0',
+        minimumRequiredVersion: '1.2.0',
+        result: VersionSupportResultDTO.updateSuggested,
+      );
+    },
   );
 
-  runApp(MyApp(cqrs: cqrs));
+  runApp(MyApp(
+    forceUpdate: forceUpdate,
+    cqrs: cqrs,
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.cqrs});
+final _navigatorKey = GlobalKey<NavigatorState>();
 
-  final Cqrs cqrs;
+class MyApp extends StatelessWidget {
+  const MyApp({
+    super.key,
+    required ForceUpdate forceUpdate,
+    required Cqrs cqrs,
+  })  : _forceUpdate = forceUpdate,
+        _cqrs = cqrs;
+
+  final ForceUpdate _forceUpdate;
+  final Cqrs _cqrs;
 
   @override
   Widget build(BuildContext context) {
     return ForceUpdateGuard(
-      cqrs: cqrs,
-      forceUpdateScreen: const ForceUpdateScreen(),
+      dialogContextKey: _navigatorKey,
+      cqrs: _cqrs,
+      suggestUpdateDialog: SuggestUpdateDialog(forceUpdate: _forceUpdate),
+      forceUpdateScreen: ForceUpdateScreen(forceUpdate: _forceUpdate),
       child: MaterialApp(
+        navigatorKey: _navigatorKey,
         title: 'Force update demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

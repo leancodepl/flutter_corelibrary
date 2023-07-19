@@ -1,33 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:force_update/force_update.dart';
 
 class ForceUpdateScreen extends StatelessWidget {
   const ForceUpdateScreen({
     super.key,
-    this.icon,
-  });
+    required ForceUpdate forceUpdate,
+  }) : _forceUpdate = forceUpdate;
 
-  final Widget? icon;
-
-  static const _androidBundleId = 'your_bundle_id';
-  static const _appleAppId = 'your_app_id';
-
-  Future<void> _goToStore() {
-    final url = switch (defaultTargetPlatform) {
-      TargetPlatform.android =>
-        'https://play.google.com/store/apps/details?id=$_androidBundleId',
-      TargetPlatform.iOS => 'https://apps.apple.com/pl/app/id$_appleAppId',
-      _ => throw StateError('Force update only works for Android & iOS'),
-    };
-
-    return launchUrl(Uri.parse(url));
-  }
+  final ForceUpdate _forceUpdate;
 
   @override
   Widget build(BuildContext context) {
-    final icon = this.icon;
-
     return MaterialApp(
       home: Scaffold(
         body: SafeArea(
@@ -43,10 +26,6 @@ class ForceUpdateScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (icon != null) ...[
-                      icon,
-                      const SizedBox(height: 24),
-                    ],
                     const Text('Update required'),
                     const SizedBox(height: 8),
                     const Text(
@@ -54,7 +33,7 @@ class ForceUpdateScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
-                      onPressed: _goToStore,
+                      onPressed: _forceUpdate.openStore,
                       child: const Text('Update'),
                     ),
                   ],
