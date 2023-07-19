@@ -45,7 +45,6 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   final ForceUpdateStorage _storage;
   late PackageInfo _packageInfo;
   final force = ValueNotifier<bool?>(null);
-  final suggest = ValueNotifier<bool?>(null);
   Timer? _checkForEnforcedUpdateTimer;
 
   final _logger = Logger('ForceUpdateGuard');
@@ -152,8 +151,8 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
               InAppUpdate.performImmediateUpdate();
             }
 
-            // TODO: Add a loading indicator
-            return const SizedBox();
+            return widget.androidSystemUILoadingIndicator ??
+                const CircularProgressIndicator();
           },
         );
       },
