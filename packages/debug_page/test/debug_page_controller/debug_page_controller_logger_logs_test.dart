@@ -57,8 +57,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.SEVERE),
       ];
 
-      await Future.delayed(const Duration(milliseconds: 100));
-
+      await Future.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 2);
     });
 
