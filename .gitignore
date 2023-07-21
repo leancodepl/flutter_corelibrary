@@ -1,3 +1,6 @@
+# Miscellaneous
+**.DS_Store
+
 # Melos-generated pubspec overrides
 pubspec_overrides.yaml
 
