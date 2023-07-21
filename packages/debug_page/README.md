@@ -67,4 +67,4 @@ You can configure debug page's entry points by setting ```showEntryButton``` (de
 
 ## Warning
 
-For gathering loggers logs, this package relies on listening to `Logger.root`. This means that changing `Logger.root.level` affects this package behavior.
+For gathering loggers logs, this package relies on listening to `Logger.root`. This means that changing `Logger.root.level` affects this package behavior and the logs are only collected from the current isolate.
