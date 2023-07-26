@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:lean_analytics/core/core.dart';
+import 'package:leancode_analytics/leancode_analytics.dart';
 
-class FirebaseLeanAnalytics extends LeanAnalytics {
+class FirebaseLeanAnalytics implements LeanAnalytics {
   final FirebaseAnalytics instance = FirebaseAnalytics.instance;
 
   @override

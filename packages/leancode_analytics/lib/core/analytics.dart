@@ -1,6 +1,6 @@
 import 'event.dart';
 
-abstract class LeanAnalytics {
+abstract interface class LeanAnalytics {
   void register(AnalyticsEvent event);
 
   // TODO: set default user params
