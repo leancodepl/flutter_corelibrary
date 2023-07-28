@@ -1,7 +1,9 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:leancode_analytics/leancode_analytics.dart';
 
+/// Firebase implementation of LeanAnalytics
 class FirebaseLeanAnalytics implements LeanAnalytics {
+  /// Instance of [FirebaseAnalytics]
   final FirebaseAnalytics instance = FirebaseAnalytics.instance;
 
   @override
@@ -14,6 +16,7 @@ class FirebaseLeanAnalytics implements LeanAnalytics {
         parameters: event.params,
       );
 
+      /// sets context for other events
       await instance.setCurrentScreen(
         screenName: event.name,
       );

@@ -1,27 +1,62 @@
 # leancode_analytics
 
-This is Leancode package to add analytics in app. 
+This is Leancode package to add base analytics in flutter app. 
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Custom NavigatorObserver for registering events on `Route` changes
+- TapAnalyticsEvent 
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add leancode_analytics package to your app
+
+```yaml
+git:
+    url: ssh://git@github.com/leancodepl/flutter_corelibrary.git
+    path: packages/leancode_analytics
+```
+
+Create Google analytics project and add Firebase to your app based on this documentation:
+https://firebase.google.com/docs/analytics/get-started?platform=flutter
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Create instance of `FirebaseLeanAnalytics` and add it to your DI.
+
+Add `LeanAnalyticsNavigationObserver` to your Navigation observers eg. for `GoRouter`:
 
 ```dart
-const like = 'sample';
+GoRouter(
+    ...
+
+    observers: [LeanAnalyticsNavigationObserver(context.read<LeanAnalytics>())],
+
+    ...
+  )
 ```
 
-## Additional information
+Implement `LeanAnalyticsRoute` in your custom `Route` and use it for all screens that should be registered.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+### Tap event
+
+Register tap event in all your tappable widgets:
+
+```dart
+context.read<LeanAnalytics>().register(
+    TapAnalyticsEvent(
+        key: key! as ValueKey<String>,
+        label: label,
+    ),
+);
+```
+
+### Login event
+
+Send login event:
+
+```dart
+context.read<LeanAnalytics>().register(
+    LoginAnalyticsEvent(userId: userId),
+);
+```
