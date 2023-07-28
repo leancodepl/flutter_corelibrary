@@ -67,8 +67,8 @@ class LoginAnalyticsEvent extends AnalyticsEvent {
     required String userId,
     Map<String, Object> params = const {},
   })  : assert(
-          params.keys.contains('login'),
-          "Don't pass 'login' key in params. It will be overridden",
+          params.keys.contains('user_id'),
+          "Don't pass 'user_id' key in params. It will be overridden",
         ),
         super(
           name: 'login',
