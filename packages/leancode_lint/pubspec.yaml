@@ -1,8 +1,12 @@
 name: leancode_lint
-version: 4.0.0+1
+version: 4.0.0+2
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: Lint rules used at LeanCode.
+
+topics:
+  - analysis
+  - lints
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

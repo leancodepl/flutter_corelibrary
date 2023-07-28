@@ -81,7 +81,7 @@ class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
               options: const [
                 (value: null, label: 'ALL'),
                 (value: Level.CONFIG, label: 'CONFIG'),
-                (value: Level.FINE, label: '>= FINE'),
+                (value: Level.FINE, label: '<= FINE'),
                 (value: Level.INFO, label: 'INFO'),
                 (value: Level.WARNING, label: 'WARNING'),
                 (value: Level.SEVERE, label: 'SEVERE'),
