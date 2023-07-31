@@ -21,10 +21,10 @@ class LeanAnalyticsNavigationObserver extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route case LeanAnalyticsRoute _) {
+    if (route case final LeanAnalyticsRoute route) {
       analytics.register(
         ScreenViewAnalyticsEvent(
-          pageName: (route as LeanAnalyticsRoute).id,
+          pageName: route.id,
           screenViewType: ScreenViewType.push,
         ),
       );
