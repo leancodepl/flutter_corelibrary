@@ -1,3 +1,13 @@
+# 5.0.0
+
+- Elevate level of all infos to warning except for:
+  - [`deprecated_member_use_from_same_package`](https://dart.dev/tools/linter-rules/deprecated_member_use_from_same_package)
+  - [`deprecated_export_use`](https://dart.dev/tools/diagnostic-messages#deprecated_export_use)
+  - [`deprecated_member_use`](https://dart.dev/tools/diagnostic-messages#deprecated_member_use)
+  - `hack`
+  - `todo`
+  - `undone`
+
 # 4.0.0+2
 
 - Add `analysis` and `lints` topics to pubspec
