@@ -7,7 +7,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Finds and renders xml-based svg asset', (tester) async {
-    final loader = LeancodeFlutterSvgAdaptiveLoader(
+    final loader = FlutterSvgAdaptiveLoader(
       'assets/foo.svg',
       packageName: 'leancode_flutter_svg_adaptive_loader',
       assetBundle: rootBundle,
@@ -23,7 +23,7 @@ void main() {
   });
 
   testWidgets('Finds and renders compiled binary svg asset', (tester) async {
-    final loader = LeancodeFlutterSvgAdaptiveLoader(
+    final loader = FlutterSvgAdaptiveLoader(
       'assets/foo_compiled.svg',
       packageName: 'leancode_flutter_svg_adaptive_loader',
       assetBundle: rootBundle,

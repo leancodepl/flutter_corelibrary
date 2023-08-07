@@ -1,3 +1,3 @@
 ## 1.0.0
 
-- Initial release with LeancodeFlutterSvgAdaptiveLoader
+- Initial release with `FlutterSvgAdaptiveLoader`
