@@ -20,6 +20,9 @@ class FlutterSvgAdaptiveLoader extends BytesLoader {
     this.assetBundle,
   });
 
+  /// UTF-8 decoder replacement character
+  static const _replacementCharacter = 0xFFFD;
+
   /// The name of the asset to load.
   final String assetName;
 
@@ -56,15 +59,23 @@ class FlutterSvgAdaptiveLoader extends BytesLoader {
   Future<ByteData> loadBytes(BuildContext? context) {
     return _prepareMessage(context).then((message) {
       // Dart encodes strings in UTF-16 so one codepoint is 2 bytes
-      final first1000Chars = _decode(message, min(2000, message.lengthInBytes));
+      final first100Chars = _decode(message, min(200, message.lengthInBytes));
+      final invalidCodePoints = first100Chars.codeUnits
+          .where((e) => e == _replacementCharacter)
+          .length;
 
-      if (first1000Chars.contains('<svg')) {
+      // One invalid code point is still acceptable since the last code point
+      // could have been longer than 1 code unit and gotten cut a part
+      // of the code units
+      if (invalidCodePoints > 1) {
+        // Invalid UTF-8 encoded string - process as a binary vector
+        return message;
+      } else {
+        // Valid UTF-8 encoded string - process as a svg vector
         return svg.cache.putIfAbsent(
           cacheKey(context),
           () => _loadSvg(message),
         );
-      } else {
-        return message;
       }
     });
   }
