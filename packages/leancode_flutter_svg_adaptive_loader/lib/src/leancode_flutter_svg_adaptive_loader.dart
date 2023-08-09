@@ -47,8 +47,8 @@ class FlutterSvgAdaptiveLoader extends BytesLoader {
     );
   }
 
-  String _decode(ByteData? message, [int? length]) =>
-      utf8.decode(message!.buffer.asUint8List(0, length), allowMalformed: true);
+  String _decode(ByteData message, [int? length]) =>
+      utf8.decode(message.buffer.asUint8List(0, length), allowMalformed: true);
 
   /// This method intentionally avoids using `await` to avoid unnecessary event
   /// loop turns. This is meant to to help tests in particular.
@@ -61,7 +61,7 @@ class FlutterSvgAdaptiveLoader extends BytesLoader {
       if (first1000Chars.contains('<svg')) {
         return svg.cache.putIfAbsent(
           cacheKey(context),
-          () => _loadSvg(context, message),
+          () => _loadSvg(message),
         );
       } else {
         return message;
@@ -69,10 +69,7 @@ class FlutterSvgAdaptiveLoader extends BytesLoader {
     });
   }
 
-  Future<ByteData> _loadSvg(
-    BuildContext? context,
-    ByteData? message,
-  ) {
+  Future<ByteData> _loadSvg(ByteData message) {
     return compute(
       (message) {
         return vg
