@@ -14,3 +14,9 @@ dependencies:
   flutter_svg: ^2.0.7
   vector_graphics: ^1.1.7
   vector_graphics_compiler: ^1.1.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_lint: ^4.0.0
+  meta: ^1.9.1
