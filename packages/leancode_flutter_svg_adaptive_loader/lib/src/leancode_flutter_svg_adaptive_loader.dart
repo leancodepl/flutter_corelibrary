@@ -8,8 +8,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 import 'package:vector_graphics_compiler/vector_graphics_compiler.dart' as vg;
 
-/// A [BytesLoader] able to distinguish xml-based svg from compiled binary form,
-/// by looking for '<svg' pattern at 1000 of first characters.
+/// A [BytesLoader] able to distinguish xml-based svg from a compiled binary form,
+/// by looking for UTF-8 decoder [_replacementCharacter]s on the first 100 characters.
 /// Using logic from [AssetBytesLoader] for binaries and [SvgAssetLoader]
 /// for standard xml-based format.
 class FlutterSvgAdaptiveLoader extends BytesLoader {
