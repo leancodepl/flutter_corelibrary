@@ -45,7 +45,7 @@ Register tap event in all your tappable widgets:
 ```dart
 context.read<LeanAnalytics>().register(
     TapAnalyticsEvent(
-        key: key! as ValueKey<String>,
+        key: key,
         label: label,
     ),
 );
