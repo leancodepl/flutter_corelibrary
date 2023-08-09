@@ -1,0 +1,24 @@
+name: leancode_flutter_svg_adaptive_loader_test
+description: Tests for leancode_flutter_svg_adaptive_loader package
+version: 1.0.0
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_flutter_svg_adaptive_loader:
+    path: ../
+  leancode_lint: ^4.0.0
+  meta: ^1.9.1
+
+flutter:
+  assets:
+    - assets/foo.svg
+    - assets/foo_compiled.svg
