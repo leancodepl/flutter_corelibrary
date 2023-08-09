@@ -20,8 +20,3 @@ dev_dependencies:
     sdk: flutter
   leancode_lint: ^4.0.0
   meta: ^1.9.1
-
-flutter:
-  assets:
-    - assets/foo.svg
-    - assets/foo_compiled.svg
