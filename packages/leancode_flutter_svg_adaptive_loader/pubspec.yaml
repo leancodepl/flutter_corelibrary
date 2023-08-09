@@ -1,0 +1,22 @@
+name: leancode_flutter_svg_adaptive_loader
+version: 1.0.0
+description: Flutter SVG adaptive loader for binary or xml-based formats
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_flutter_svg_adaptive_loader
+repository: https://github.com/leancodepl/flutter_corelibrary
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.7
+  vector_graphics: ^1.1.7
+  vector_graphics_compiler: ^1.1.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_lint: ^4.0.0
+  meta: ^1.9.1
