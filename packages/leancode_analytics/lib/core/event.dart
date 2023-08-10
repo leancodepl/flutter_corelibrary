@@ -61,7 +61,7 @@ class TapAnalyticsEvent extends AnalyticsEvent {
   /// Create [TapAnalyticsEvent] with [key], tapped element [label]
   /// and optional [params]
   TapAnalyticsEvent({
-    required ValueKey<String> key,
+    required String key,
     required String? label,
     Map<String, Object> params = const {},
   })  : assert(
@@ -76,8 +76,8 @@ class TapAnalyticsEvent extends AnalyticsEvent {
           name: 'tap',
           params: {
             ...params,
-            'key': key.value,
-            if (label != null) 'label': label
+            'key': key,
+            if (label != null) 'label': label,
           },
         );
 }
