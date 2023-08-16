@@ -53,7 +53,14 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    final gradient = LinearGradient(colors: _colors, stops: _stops);
+    final linearGradient = LinearGradient(
+      colors: _colors,
+      stops: _stops,
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    );
+    final radialGradient = RadialGradient(colors: _colors, stops: _stops);
+    final sweepGradient = SweepGradient(colors: _colors, stops: _stops);
 
     return MaterialApp(
       home: Scaffold(
@@ -61,18 +68,33 @@ class _MainAppState extends State<MainApp> {
           onPressed: _randomizeGradient,
           child: const Icon(Icons.shuffle),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        body: ListView(
           children: [
-            _GradientPreview(
-              title: 'Regular LinearGradient',
-              gradient: gradient,
+            const SizedBox(height: 24),
+            const Text(
+              'Regular gradient (first half) vs Enhanced gradient (second half)',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Center(
+              child: _LinearGradientComparison(
+                gradientA: linearGradient,
+                gradientB: linearGradient.enhanced(),
+              ),
             ),
             const SizedBox(height: 16),
-            _GradientPreview(
-              title: 'Enhanced LinearGradient',
-              gradient: gradient.enhanced(),
+            Center(
+              child: _RadialGradientComparison(
+                gradientA: radialGradient,
+                gradientB: radialGradient.enhanced(),
+              ),
             ),
+            const SizedBox(height: 16),
+            _SweepGradientComparison(
+              gradientA: sweepGradient,
+              gradientB: sweepGradient.enhanced(),
+            ),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -80,29 +102,153 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-class _GradientPreview extends StatelessWidget {
-  const _GradientPreview({
-    required this.title,
-    required this.gradient,
+class _LinearGradientComparison extends StatelessWidget {
+  const _LinearGradientComparison({
+    required this.gradientA,
+    required this.gradientB,
   });
 
-  final String title;
-  final Gradient gradient;
+  final Gradient gradientA;
+  final Gradient gradientB;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(title),
-        const SizedBox(height: 8),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: gradient,
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: gradientA,
+              ),
+              child: const SizedBox(
+                width: double.infinity,
+              ),
+            ),
           ),
+          Expanded(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: gradientB,
+              ),
+              child: const SizedBox(
+                width: double.infinity,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RadialGradientComparison extends StatelessWidget {
+  const _RadialGradientComparison({
+    required this.gradientA,
+    required this.gradientB,
+  });
+
+  final RadialGradient gradientA;
+  final RadialGradient gradientB;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        const SizedBox(
+          width: 200,
+          height: 200,
+        ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: ClipRect(
+              child: SizedBox(
+                width: 100,
+                height: 200,
+                child: OverflowBox(
+                  alignment: Alignment.centerLeft,
+                  maxWidth: double.infinity,
+                  child: SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: gradientA,
+                      ),
+                      child: const SizedBox(
+                        width: 200,
+                        height: 200,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: ClipRect(
+              child: SizedBox(
+                width: 100,
+                height: 200,
+                child: OverflowBox(
+                  alignment: Alignment.centerRight,
+                  maxWidth: double.infinity,
+                  child: SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: gradientB,
+                      ),
+                      child: const SizedBox(
+                        width: 200,
+                        height: 200,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SweepGradientComparison extends StatelessWidget {
+  const _SweepGradientComparison({
+    required this.gradientA,
+    required this.gradientB,
+  });
+
+  final Gradient gradientA;
+  final Gradient gradientB;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(gradient: gradientA),
           child: const SizedBox(
-            width: double.infinity,
-            height: 48,
+            width: 200,
+            height: 200,
+          ),
+        ),
+        DecoratedBox(
+          decoration: BoxDecoration(gradient: gradientB),
+          child: const SizedBox(
+            width: 200,
+            height: 200,
           ),
         ),
       ],
