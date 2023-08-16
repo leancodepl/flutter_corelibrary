@@ -13,7 +13,7 @@ dependencies:
   collection: ^1.17.1
   flutter:
     sdk: flutter
-  material_color_utilities: ^0.2.0
+  material_color_utilities: any
 
 dev_dependencies:
   flutter_test:
