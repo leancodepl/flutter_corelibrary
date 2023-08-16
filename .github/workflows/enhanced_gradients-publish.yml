@@ -3,6 +3,8 @@ name: enhanced_gradients publish
 on:
   push:
     tags: ["enhanced_gradients-v*"]
+    branches:
+      - "master"
 
 jobs:
   publish:
