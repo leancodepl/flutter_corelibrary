@@ -55,3 +55,13 @@ colors in the HCT color system in Flutter animations.
 [pub-badge-link]: https://pub.dev/packages/enhanced_gradients
 [build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/enhanced_gradients-test.yml?branch=master
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/enhanced_gradients-test.yml
+
+## Examples
+
+The following examples are screenshots taken in the example app of randomly generated gradients. Note that the HCT gradients might not always look better than the regular ones, as it is all subjective and depends on the desired effect.
+
+![First screenshot with gradient comparison](art/example-1.png)
+
+![Second screenshot with gradient comparison](art/example-2.png)
+
+![Third screenshot with gradient comparison](art/example-3.png)

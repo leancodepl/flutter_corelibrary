@@ -1,6 +1,6 @@
 ## 1.0.1
 
- - **DOCS**(enhanced_gradients): expand readme and the example app.
+- Expand readme and the example app.
 
 ## 1.0.0
 
