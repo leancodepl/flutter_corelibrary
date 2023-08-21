@@ -1,3 +1,8 @@
+## 1.0.2
+
+ - **FIX**(enhanced_gradients): remove dependency on HctSolver and use Hct instead.
+ - **DOCS**(enhanced_gradients): Add more examples to readme.
+
 ## 1.0.1
 
 - Expand readme and the example app.
