@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Remove dependency on HctSolver and use Hct instead.
+
 ## 1.0.1
 
 - Expand readme and the example app.
