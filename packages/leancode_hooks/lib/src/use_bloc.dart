@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-/// Provides a [Cubit] or a [Bloc] that is automatically disposed without having
-/// to use BlocProvider.
+/// Provides [Cubit]'s or [Bloc]'s current state. Forces [HookWidget] to
+/// rebuild on state change.
 B useBloc<B extends BlocBase<Object?>>(
   B Function() create, [
   List<Object?> keys = const [],

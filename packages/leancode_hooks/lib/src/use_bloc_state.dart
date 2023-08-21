@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-/// Provides a [Cubit] or a [Bloc] current state. Forces [HookWidget] rebuild on
-/// state changed.
+/// Provides [Cubit]'s or [Bloc]'s current state. Forces [HookWidget] to
+/// rebuild on state change.
 S useBlocState<S>(BlocBase<S> bloc) {
   return useStream(
     bloc.stream,
