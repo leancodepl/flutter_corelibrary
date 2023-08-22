@@ -1,8 +1,10 @@
-# Unreleased
+# 6.0.0
 
 - Enable the following lints:
   - [`no_self_assignments`](https://dart.dev/tools/linter-rules/no_self_assignments)
   - [`no_wildcard_variable_uses`](https://dart.dev/tools/linter-rules/no_wildcard_variable_uses)
+- Remove deprecated rules `iterable_contains_unrelated_type` and `list_remove_unrelated_type`
+- Bump minimum Dart version to 3.1
 
 # 5.0.0
 
