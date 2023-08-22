@@ -1,3 +1,8 @@
+# 0.0.5
+
+- Add `useBlocListener` hook.
+- Add `useBloc` hook.
+
 # 0.0.4
 
 - Make `usePostFrameEffect` accept nullable keys.
