@@ -1,7 +1,7 @@
 # 0.0.5
 
-- Implement `useBlocListener` hook.
-- Implement `useBloc` hook.
+- Add `useBlocListener` hook.
+- Add `useBloc` hook.
 
 # 0.0.4
 
