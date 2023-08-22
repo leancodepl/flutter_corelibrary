@@ -8,9 +8,8 @@ Lint rules used internally in LeanCode projects.
 
 Add `leancode_lint` as a dev dependency.
 
-```yaml
-dev_dependencies:
-  leancode_lint: ^1.2.1
+```sh
+dart pub add leancode_lint --dev
 ```
 
 ## Usage
@@ -19,7 +18,7 @@ dev_dependencies:
 
 Add `include: package:leancode_lint/analysis_options.yaml` to
 `analysis_options.yaml` in your project. You might want to exclude some files
-(e.g generated freezed models) from analysis.
+(e.g generated json serializable) from analysis.
 
 ```yaml
 include: package:leancode_lint/analysis_options.yaml
@@ -28,14 +27,13 @@ include: package:leancode_lint/analysis_options.yaml
 analyzer:
   exclude:
     - '**/*.g.dart'
-    - '**/*.freezed.dart'
 ```
 
 ### Package
 
 Add `include: package:leancode_lint/analysis_options_package.yaml` to
 `analysis_options.yaml` in your project. It includes additional lints for
-packages. You might want to exclude some files (e.g generated freezed models)
+packages. You might want to exclude some files (e.g generated json serializable)
 from analysis.
 
 ```yaml
@@ -45,7 +43,6 @@ include: package:leancode_lint/analysis_options_package.yaml
 analyzer:
   exclude:
     - '**/*.g.dart'
-    - '**/*.freezed.dart'
 ```
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
