@@ -1,3 +1,9 @@
+# Unreleased
+
+- Enable the following lints:
+  - [`no_self_assignments`](https://dart.dev/tools/linter-rules/no_self_assignments)
+  - [`no_wildcard_variable_uses`](https://dart.dev/tools/linter-rules/no_wildcard_variable_uses)
+
 # 5.0.0
 
 - Elevate level of all infos to warning except for:
