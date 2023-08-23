@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   cqrs: ^9.0.0
+  equatable: ^2.0.5
   http: ^1.0.0
   logging: ^1.2.0
 
