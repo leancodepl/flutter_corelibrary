@@ -62,6 +62,8 @@ class CqrsCommandResult {
         validationErrors = const [];
 
   final bool isSuccess;
+
+  bool get isFailure => error != null;
   bool get isInvalid => error == CqrsCommandError.validation;
 
   final List<ValidationError> validationErrors;
