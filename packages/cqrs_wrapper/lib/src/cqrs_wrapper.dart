@@ -16,36 +16,42 @@ class CqrsWrapper {
   final Cqrs _cqrs;
   final Logger _logger;
 
-  void onError(CqrsError error) {}
+  // void onQueryError(CqrsQueryError error) {}
 
-  // TODO: Differentiate errors being returned
-  Future<CqrsQueryResult<T, CqrsError>> noThrowGet<T>(Query<T> query) async {
+  Future<CqrsQueryResult<T>> noThrowGet<T>(Query<T> query) async {
     try {
       final data = await _cqrs.get(query);
       _logger.info('Query ${query.runtimeType} executed successfully.');
-      return CqrsQuerySuccess(data);
+      return CqrsSuccess(data);
     } on SocketException catch (e, s) {
       _logger.severe(
         'Query ${query.runtimeType} failed with network error.',
         e,
         s,
       );
-      return const CqrsQueryFailure(CqrsNetworkError());
+      return const CqrsFailure(CqrsQueryError.network);
     } catch (e, s) {
       _logger.severe('Query ${query.runtimeType} failed unexpectedly.', e, s);
-      return const CqrsQueryFailure(CqrsUnknownError());
+
+      if (e is! CqrsException) {
+        return const CqrsFailure(CqrsQueryError.unknown);
+      }
+      return switch (e.response.statusCode) {
+        401 => const CqrsFailure(CqrsQueryError.authentication),
+        403 => const CqrsFailure(CqrsQueryError.forbiddenAccess),
+        _ => const CqrsFailure(CqrsQueryError.unknown),
+      };
     }
   }
 
-  // TODO: Differentiate errors being returned
-  Future<CqrsCommandResult<CqrsError>> noThrowRun(Command command) async {
+  Future<CqrsCommandResult> noThrowRun(Command command) async {
     try {
       final result = await _cqrs.run(command);
 
       if (result.success) {
         _logger.info('Command ${command.runtimeType} executed successfully.');
 
-        return const CqrsCommandSuccess();
+        return const CqrsCommandResult.success();
       } else {
         final buffer = StringBuffer();
         for (final error in result.errors) {
@@ -57,7 +63,19 @@ class CqrsWrapper {
           ' ValidationErrors: [$buffer]',
         );
 
-        return CqrsCommandFailure(CqrsValidationError(result.errors));
+        if (result.hasError(401)) {
+          return CqrsCommandResult.nonValidationError(
+            CqrsCommandError.authentication,
+          );
+        } else if (result.hasError(403)) {
+          return CqrsCommandResult.nonValidationError(
+            CqrsCommandError.forbiddenAccess,
+          );
+        } else if (result.hasError(422)) {
+          return CqrsCommandResult.validationError(result.errors);
+        } else {
+          return CqrsCommandResult.nonValidationError(CqrsCommandError.unknown);
+        }
       }
     } on SocketException catch (e, s) {
       _logger.severe(
@@ -65,14 +83,16 @@ class CqrsWrapper {
         e,
         s,
       );
-      return const CqrsCommandFailure(CqrsNetworkError());
+      return CqrsCommandResult.nonValidationError(
+        CqrsCommandError.forbiddenAccess,
+      );
     } catch (e, s) {
       _logger.severe(
         'Command ${command.runtimeType} failed unexpectedly.',
         e,
         s,
       );
-      return const CqrsCommandFailure(CqrsUnknownError());
+      return CqrsCommandResult.nonValidationError(CqrsCommandError.unknown);
     }
   }
 }
