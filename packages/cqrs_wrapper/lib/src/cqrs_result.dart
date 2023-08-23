@@ -18,6 +18,7 @@ sealed class CqrsResult<T, E extends CqrsError> extends Equatable {
 
   bool get isSuccess => asSuccess != null;
   bool get isFailure => asFailure != null;
+  bool get isInvalid => asFailure?.error.asValidationError != null;
 
   T? get data => asSuccess?.data;
   E? get error => asFailure?.error;
