@@ -7,6 +7,7 @@ environment:
   sdk: '>=3.0.1 <4.0.0'
 
 dependencies:
+  cqrs: ^9.0.0
   http: ^1.0.0
   logging: ^1.2.0
 
