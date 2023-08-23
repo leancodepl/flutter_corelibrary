@@ -2,27 +2,42 @@
 
 import 'package:cqrs/cqrs.dart';
 
-abstract class CqrsError {}
+sealed class CqrsError {
+  const CqrsError();
 
-class CqrsValidationError implements CqrsError {
+  CqrsValidationError? get asValidationError => switch (this) {
+        final CqrsValidationError v => v,
+        _ => null,
+      };
+
+  List<ValidationError> get validationErrors => switch (this) {
+        CqrsValidationError(:final validationErrors) => validationErrors,
+        _ => const [],
+      };
+
+  bool get isValidationError => asValidationError != null;
+}
+
+final class CqrsValidationError extends CqrsError {
   CqrsValidationError(List<ValidationError> validationErrors)
       : validationErrors = List.unmodifiable(validationErrors);
 
+  @override
   final List<ValidationError> validationErrors;
 }
 
-class CqrsUnknownError implements CqrsError {
+final class CqrsUnknownError extends CqrsError {
   const CqrsUnknownError();
 }
 
-class CqrsNetworkError implements CqrsError {
+final class CqrsNetworkError extends CqrsError {
   const CqrsNetworkError();
 }
 
-class CqrsAuthorizationError implements CqrsError {
+final class CqrsAuthorizationError extends CqrsError {
   const CqrsAuthorizationError();
 }
 
-class CqrsAuthenticationError implements CqrsError {
+final class CqrsAuthenticationError extends CqrsError {
   const CqrsAuthenticationError();
 }
