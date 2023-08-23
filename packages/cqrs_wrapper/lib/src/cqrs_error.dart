@@ -2,42 +2,50 @@
 
 import 'package:cqrs/cqrs.dart';
 
-sealed class CqrsError {
-  const CqrsError();
-
-  CqrsValidationError? get asValidationError => switch (this) {
-        final CqrsValidationError v => v,
-        _ => null,
-      };
-
-  List<ValidationError> get validationErrors => switch (this) {
-        CqrsValidationError(:final validationErrors) => validationErrors,
-        _ => const [],
-      };
-
-  bool get isValidationError => asValidationError != null;
+enum CqrsCommandErrorType {
+  validation,
+  unknown,
+  network,
+  forbiddenAccess,
+  authentication,
 }
 
-final class CqrsValidationError extends CqrsError {
-  CqrsValidationError(List<ValidationError> validationErrors)
-      : validationErrors = List.unmodifiable(validationErrors);
+enum CqrsQueryErrorType {
+  unknown,
+  network,
+  forbiddenAccess,
+  authentication,
+}
 
-  @override
+final class CqrsCommandError {
+  CqrsCommandError.validation(List<ValidationError> validationErrors)
+      : errorType = CqrsCommandErrorType.validation,
+        validationErrors = List.unmodifiable(validationErrors);
+
+  CqrsCommandError.unknown()
+      : errorType = CqrsCommandErrorType.unknown,
+        validationErrors = const [];
+
+  CqrsCommandError.network()
+      : errorType = CqrsCommandErrorType.network,
+        validationErrors = const [];
+
+  CqrsCommandError.forbiddenAccess()
+      : errorType = CqrsCommandErrorType.forbiddenAccess,
+        validationErrors = const [];
+
+  CqrsCommandError.authentication()
+      : errorType = CqrsCommandErrorType.authentication,
+        validationErrors = const [];
+
   final List<ValidationError> validationErrors;
+  final CqrsCommandErrorType errorType;
+
+  bool get isValidationError => errorType == CqrsCommandErrorType.validation;
 }
 
-final class CqrsUnknownError extends CqrsError {
-  const CqrsUnknownError();
-}
+final class CqrsQueryError {
+  const CqrsQueryError(this.errorType);
 
-final class CqrsNetworkError extends CqrsError {
-  const CqrsNetworkError();
-}
-
-final class CqrsAuthorizationError extends CqrsError {
-  const CqrsAuthorizationError();
-}
-
-final class CqrsAuthenticationError extends CqrsError {
-  const CqrsAuthenticationError();
+  final CqrsQueryErrorType errorType;
 }
