@@ -10,7 +10,9 @@ environment:
   sdk: '>=3.0.1 <4.0.0'
 
 dependencies:
+  equatable: ^2.0.5
   http: ^1.0.0
+  logging: ^1.2.0
 
 dev_dependencies:
   coverage: ^1.5.0

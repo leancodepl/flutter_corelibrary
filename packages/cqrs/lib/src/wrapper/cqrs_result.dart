@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:cqrs/cqrs.dart';
-import 'package:cqrs_wrapper/src/cqrs_error.dart';
+import 'package:cqrs/src/command_result.dart';
+import 'package:cqrs/src/wrapper/cqrs_error.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class CqrsResult<T, E> extends Equatable {

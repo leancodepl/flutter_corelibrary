@@ -1,11 +1,56 @@
 // ignore_for_file: public_member_api_docs
 import 'dart:io';
 
-import 'package:cqrs/cqrs.dart';
-import 'package:cqrs_wrapper/src/cqrs_error.dart';
-import 'package:cqrs_wrapper/src/cqrs_result.dart';
+import 'package:cqrs/src/cqrs.dart';
+import 'package:cqrs/src/cqrs_exception.dart';
+import 'package:cqrs/src/transport_types.dart';
+import 'package:cqrs/src/wrapper/cqrs_error.dart';
+import 'package:cqrs/src/wrapper/cqrs_result.dart';
 import 'package:logging/logging.dart';
 
+/// CQRS wrapper providing a convenient way of handling errors.
+///
+/// Example:
+///
+/// ```dart
+/// final apiUri = Uri.parse('https://budget.manager/api/');
+/// final logger = Logger('BudgetManager')
+///
+/// final cqrs = Cqrs(
+///   loginClient,
+///   apiUri,
+/// );
+///
+/// final cqrsWrapper = CqrsWrapper(
+///   cqrs: cqrs,
+///   logger: logger,
+/// );
+///
+/// // Fetching first page of the transactions with error handling
+/// final result = await cqrsWrapper.noThrowGet(AllTransactions(page: 1));
+///
+/// if (result.isSuccesful) {
+///   print(result.data);
+/// } else if (result.isFailure) {
+///   print(result.error);
+/// }
+///
+/// // Adding a new transaction and
+/// final result = await cqrsWrapper.noThrowRun(
+///   AddTransaction(
+///     amount: 100,
+///     title: 'Groceries',
+///   ),
+/// );
+///
+/// if (result.isSuccess) {
+///   print('Transaction added succefully');
+/// } else if (result.isInvalid) {
+///   print('Invalid data passed');
+/// } else if (result.isFailure) {
+///   print('Something failed');
+/// }
+/// ```
 class CqrsWrapper {
   const CqrsWrapper({
     required Cqrs cqrs,
