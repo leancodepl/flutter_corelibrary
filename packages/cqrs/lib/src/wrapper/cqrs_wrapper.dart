@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs
 import 'dart:io';
 
 import 'package:cqrs/src/cqrs.dart';
@@ -80,7 +79,9 @@ class CqrsWrapper {
   /// Send a query to the backend via [Cqrs.get] and return the result of the
   /// execution.
   ///
-  ///
+  /// In case of an error [_onQueryError] is called if it was provided in the
+  /// contructor. Refer to [CqrsQueryError] enum for list of all errors that
+  /// are handled by the [CqrsWrapper].
   Future<CqrsQueryResult<T>> noThrowGet<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -95,6 +96,12 @@ class CqrsWrapper {
     return result;
   }
 
+  /// Send a command to the backend via [Cqrs.get] and return the result of the
+  /// execution.
+  ///
+  /// In case of an error [_onCommandError] is called if it was provided in the
+  /// contructor. Refer to [CqrsCommandError] enum for list of all errors that
+  /// are handled by the [CqrsWrapper].
   Future<CqrsCommandResult> noThrowRun(
     Command command, {
     Map<String, String> headers = const {},
