@@ -52,9 +52,19 @@ import 'package:logging/logging.dart';
 /// }
 /// ```
 class CqrsWrapper {
+  /// Creates a [CqrsWrapper] class.
+  ///
+  /// [cqrs] is a [Cqrs] object used for communicating with the backend via
+  /// queries and commands. Wrapper uses [logger] for printing status messages
+  /// about sent queries and commands.
+  ///
+  /// Specific query and command errors can be handled via respectively
+  /// [onQueryError] and [onCommandError] callbacks. Those can be used to
+  /// define cartain actions that need to happen everytime when result error
+  /// occurs after calling either [noThrowGet] or [noThrowRun].
   const CqrsWrapper({
     required Cqrs cqrs,
-    required Logger logger,
+    Logger? logger,
     void Function(CqrsQueryError error)? onQueryError,
     void Function(CqrsCommandError error)? onCommandError,
   })  : _cqrs = cqrs,
@@ -63,8 +73,7 @@ class CqrsWrapper {
         _onCommandError = onCommandError;
 
   final Cqrs _cqrs;
-  final Logger _logger;
-
+  final Logger? _logger;
   final void Function(CqrsQueryError error)? _onQueryError;
   final void Function(CqrsCommandError error)? _onCommandError;
 
@@ -93,11 +102,11 @@ class CqrsWrapper {
   Future<CqrsQueryResult<T>> _noThrowGet<T>(Query<T> query) async {
     try {
       final data = await _cqrs.get(query);
-      _logger.info('Query ${query.runtimeType} executed successfully.');
+      _logger?.info('Query ${query.runtimeType} executed successfully.');
 
       return CqrsSuccess(data);
     } on SocketException catch (e, s) {
-      _logger.severe(
+      _logger?.severe(
         'Query ${query.runtimeType} failed with network error.',
         e,
         s,
@@ -105,7 +114,7 @@ class CqrsWrapper {
 
       return const CqrsFailure(CqrsQueryError.network);
     } catch (e, s) {
-      _logger.severe('Query ${query.runtimeType} failed unexpectedly.', e, s);
+      _logger?.severe('Query ${query.runtimeType} failed unexpectedly.', e, s);
 
       if (e is! CqrsException) {
         return const CqrsFailure(CqrsQueryError.unknown);
@@ -124,7 +133,7 @@ class CqrsWrapper {
       final result = await _cqrs.run(command);
 
       if (result.success) {
-        _logger.info('Command ${command.runtimeType} executed successfully.');
+        _logger?.info('Command ${command.runtimeType} executed successfully.');
 
         return const CqrsCommandResult.success();
       } else {
@@ -133,7 +142,7 @@ class CqrsWrapper {
           buffer.write('${error.message} (${error.code}), ');
         }
 
-        _logger.warning(
+        _logger?.warning(
           'Command ${command.runtimeType} failed.'
           ' ValidationErrors: [$buffer]',
         );
@@ -147,7 +156,7 @@ class CqrsWrapper {
         }
       }
     } on SocketException catch (e, s) {
-      _logger.severe(
+      _logger?.severe(
         'Command ${command.runtimeType} failed with network error.',
         e,
         s,
@@ -157,7 +166,7 @@ class CqrsWrapper {
         CqrsCommandError.forbiddenAccess,
       );
     } catch (e, s) {
-      _logger.severe(
+      _logger?.severe(
         'Command ${command.runtimeType} failed unexpectedly.',
         e,
         s,
