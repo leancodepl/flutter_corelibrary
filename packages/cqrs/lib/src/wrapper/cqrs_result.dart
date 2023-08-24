@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:cqrs/src/command_result.dart';
+import 'package:cqrs/src/cqrs.dart';
 import 'package:cqrs/src/wrapper/cqrs_error.dart';
 import 'package:equatable/equatable.dart';
 
+/// Generic class used to contain a result of [Cqrs] operations.
 sealed class CqrsResult<T, E> extends Equatable {
+  /// Creates a [CqrsResult] class
   const CqrsResult();
 
   CqrsSuccess<T, E>? get asSuccess => switch (this) {
@@ -20,6 +23,7 @@ sealed class CqrsResult<T, E> extends Equatable {
   bool get isSuccess => asSuccess != null;
   bool get isFailure => asFailure != null;
 
+  // Return
   T? get data => asSuccess?.data;
   E? get error => asFailure?.error;
 }
