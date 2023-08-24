@@ -61,7 +61,7 @@ class CqrsCommandResult {
         error = CqrsCommandError.validation,
         validationErrors = List.unmodifiable(validationErrors);
 
-  CqrsCommandResult.nonValidationError(this.error)
+  CqrsCommandResult.nonValidationError(CqrsCommandError this.error)
       : isSuccess = false,
         validationErrors = const [];
 
