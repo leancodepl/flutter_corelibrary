@@ -77,6 +77,10 @@ class CqrsWrapper {
   final void Function(CqrsQueryError error)? _onQueryError;
   final void Function(CqrsCommandError error)? _onCommandError;
 
+  /// Send a query to the backend via [Cqrs.get] and return the result of the
+  /// execution.
+  ///
+  ///
   Future<CqrsQueryResult<T>> noThrowGet<T>(Query<T> query) async {
     final result = await _noThrowGet(query);
     final error = result.error;
