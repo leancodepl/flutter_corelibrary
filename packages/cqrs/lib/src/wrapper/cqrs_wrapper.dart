@@ -13,7 +13,7 @@ import 'package:logging/logging.dart';
 /// Example:
 ///
 /// ```dart
-/// final apiUri = Uri.parse('https://budget.manager/api/');
+/// final apiUri = Uri.parse('https://flowers.garden/api/');
 /// final logger = Logger('BudgetManager')
 ///
 /// final cqrs = Cqrs(
@@ -27,7 +27,7 @@ import 'package:logging/logging.dart';
 /// );
 ///
 /// // Fetching first page of the transactions with error handling
-/// final result = await cqrsWrapper.noThrowGet(AllTransactions(page: 1));
+/// final result = await cqrsWrapper.noThrowGet(AllFlowers(page: 1));
 ///
 /// if (result.isSuccesful) {
 ///   print(result.data);
@@ -37,9 +37,9 @@ import 'package:logging/logging.dart';
 ///
 /// // Adding a new transaction and
 /// final result = await cqrsWrapper.noThrowRun(
-///   AddTransaction(
-///     amount: 100,
-///     title: 'Groceries',
+///   AddFlower(
+///     title: 'Orchid',
+///     color: 'red'
 ///   ),
 /// );
 ///
@@ -81,8 +81,11 @@ class CqrsWrapper {
   /// execution.
   ///
   ///
-  Future<CqrsQueryResult<T>> noThrowGet<T>(Query<T> query) async {
-    final result = await _noThrowGet(query);
+  Future<CqrsQueryResult<T>> noThrowGet<T>(
+    Query<T> query, {
+    Map<String, String> headers = const {},
+  }) async {
+    final result = await _noThrowGet(query, headers: headers);
     final error = result.error;
 
     if (result.isFailure && error != null) {
@@ -92,8 +95,11 @@ class CqrsWrapper {
     return result;
   }
 
-  Future<CqrsCommandResult> noThrowRun(Command command) async {
-    final result = await _noThrowRun(command);
+  Future<CqrsCommandResult> noThrowRun(
+    Command command, {
+    Map<String, String> headers = const {},
+  }) async {
+    final result = await _noThrowRun(command, headers: headers);
     final error = result.error;
 
     if (result.isFailure && error != null) {
@@ -103,9 +109,12 @@ class CqrsWrapper {
     return result;
   }
 
-  Future<CqrsQueryResult<T>> _noThrowGet<T>(Query<T> query) async {
+  Future<CqrsQueryResult<T>> _noThrowGet<T>(
+    Query<T> query, {
+    required Map<String, String> headers,
+  }) async {
     try {
-      final data = await _cqrs.get(query);
+      final data = await _cqrs.get(query, headers: headers);
       _logger?.info('Query ${query.runtimeType} executed successfully.');
 
       return CqrsSuccess(data);
@@ -132,9 +141,12 @@ class CqrsWrapper {
     }
   }
 
-  Future<CqrsCommandResult> _noThrowRun(Command command) async {
+  Future<CqrsCommandResult> _noThrowRun(
+    Command command, {
+    required Map<String, String> headers,
+  }) async {
     try {
-      final result = await _cqrs.run(command);
+      final result = await _cqrs.run(command, headers: headers);
 
       if (result.success) {
         _logger?.info('Command ${command.runtimeType} executed successfully.');
