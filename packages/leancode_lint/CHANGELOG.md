@@ -1,8 +1,10 @@
-# Unreleased
+# 6.0.0
 
 - Enable the following lints:
   - [`no_self_assignments`](https://dart.dev/tools/linter-rules/no_self_assignments)
   - [`no_wildcard_variable_uses`](https://dart.dev/tools/linter-rules/no_wildcard_variable_uses)
+- Remove deprecated rules `iterable_contains_unrelated_type` and `list_remove_unrelated_type`
+- Bump minimum Dart version to 3.1
 
 # 5.0.0
 
@@ -20,17 +22,17 @@
 
 # 4.0.0+1
 
-- Remove lint [`library_private_types_in_public_api`](https://dart-lang.github.io/linter/lints/library_private_types_in_public_api.html) which was accidentally enabled
+- Remove lint [`library_private_types_in_public_api`](https://dart.dev/tools/linter-rules/library_private_types_in_public_api) which was accidentally enabled
 
 # 4.0.0
 
 - Enable the following lints:
-  - [`implicit_reopen`](https://dart-lang.github.io/linter/lints/implicit_reopen.html)
-  - [`unnecessary_breaks`](https://dart-lang.github.io/linter/lints/unnecessary_breaks.html)
-  - [`type_literal_in_constant_pattern`](https://dart-lang.github.io/linter/lints/type_literal_in_constant_pattern.html)
-  - [`invalid_case_patterns`](https://dart-lang.github.io/linter/lints/invalid_case_patterns.html)
-  - [`deprecated_member_use_from_same_package`](https://dart-lang.github.io/linter/lints/deprecated_member_use_from_same_package.html)
-- Remove the deprecated lint [`enable_null_safety`](https://dart-lang.github.io/linter/lints/enable_null_safety.html)
+  - [`implicit_reopen`](https://dart.dev/tools/linter-rules/implicit_reopen)
+  - [`unnecessary_breaks`](https://dart.dev/tools/linter-rules/unnecessary_breaks)
+  - [`type_literal_in_constant_pattern`](https://dart.dev/tools/linter-rules/type_literal_in_constant_pattern)
+  - [`invalid_case_patterns`](https://dart.dev/tools/linter-rules/invalid_case_patterns)
+  - [`deprecated_member_use_from_same_package`](https://dart.dev/tools/linter-rules/deprecated_member_use_from_same_package)
+- Remove the deprecated lint [`enable_null_safety`](https://dart.dev/tools/linter-rules/enable_null_safety)
 - Bump minimum Dart version to 3.0
 - Remove dependence on `flutter_lints`
 
@@ -41,13 +43,13 @@
 # 2.1.0
 
 - Enable the following lints:
-  - [`collection_methods_unrelated_type`](https://dart-lang.github.io/linter/lints/collection_methods_unrelated_type.html)
-  - [`combinators_ordering`](https://dart-lang.github.io/linter/lints/combinators_ordering.html)
-  - [`dangling_library_doc_comments`](https://dart-lang.github.io/linter/lints/dangling_library_doc_comments.html)
-  - [`enable_null_safety`](https://dart-lang.github.io/linter/lints/enable_null_safety.html)
-  - [`library_annotations`](https://dart-lang.github.io/linter/lints/library_annotations.html)
-  - [`unnecessary_library_directive`](https://dart-lang.github.io/linter/lints/unnecessary_library_directive.html)
-  - [`use_string_in_part_of_directives`](https://dart-lang.github.io/linter/lints/use_string_in_part_of_directives.html)
+  - [`collection_methods_unrelated_type`](https://dart.dev/tools/linter-rules/collection_methods_unrelated_type)
+  - [`combinators_ordering`](https://dart.dev/tools/linter-rules/combinators_ordering)
+  - [`dangling_library_doc_comments`](https://dart.dev/tools/linter-rules/dangling_library_doc_comments)
+  - [`enable_null_safety`](https://dart.dev/tools/linter-rules/enable_null_safety)
+  - [`library_annotations`](https://dart.dev/tools/linter-rules/library_annotations)
+  - [`unnecessary_library_directive`](https://dart.dev/tools/linter-rules/unnecessary_library_directive)
+  - [`use_string_in_part_of_directives`](https://dart.dev/tools/linter-rules/use_string_in_part_of_directives)
 
 # 2.0.0+1
 
@@ -63,36 +65,36 @@
 # 1.3.0
 
 - Enable the following lints:
-  - [`discarded_futures`](https://dart-lang.github.io/linter/lints/discarded_futures.html)
-  - [`unnecessary_to_list_in_spreads`](https://dart-lang.github.io/linter/lints/unnecessary_to_list_in_spreads.html)
-  - [`unnecessary_null_aware_operator_on_extension_on_nullable`](https://dart-lang.github.io/linter/lints/unnecessary_null_aware_operator_on_extension_on_nullable.html)
+  - [`discarded_futures`](https://dart.dev/tools/linter-rules/discarded_futures)
+  - [`unnecessary_to_list_in_spreads`](https://dart.dev/tools/linter-rules/unnecessary_to_list_in_spreads)
+  - [`unnecessary_null_aware_operator_on_extension_on_nullable`](https://dart.dev/tools/linter-rules/unnecessary_null_aware_operator_on_extension_on_nullable)
 
 # 1.2.1
 
 - Disable the following lints:
-  - [use_build_context_synchronously](https://dart-lang.github.io/linter/lints/use_build_context_synchronously)
-  - [library_private_types_in_public_api](https://dart-lang.github.io/linter/lints/library_private_types_in_public_api)
+  - [use_build_context_synchronously](https://dart.dev/tools/linter-rules/use_build_context_synchronously)
+  - [library_private_types_in_public_api](https://dart.dev/tools/linter-rules/library_private_types_in_public_api)
 
 # 1.2.0
 
 - Enable the following lints:
-  - [use_super_parameters](https://dart-lang.github.io/linter/lints/use_super_parameters)
-  - [use_enums](https://dart-lang.github.io/linter/lints/use_enums)
-  - [null_check_on_nullable_type_parameter](https://dart-lang.github.io/linter/lints/null_check_on_nullable_type_parameter.html)
+  - [use_super_parameters](https://dart.dev/tools/linter-rules/use_super_parameters)
+  - [use_enums](https://dart.dev/tools/linter-rules/use_enums)
+  - [null_check_on_nullable_type_parameter](https://dart.dev/tools/linter-rules/null_check_on_nullable_type_parameter)
 - Bump minimum Dart version to 2.17.
 
 # 1.1.0
 
 - Enable the following lints:
-  - [avoid_final_parameters](https://dart-lang.github.io/linter/lints/avoid_final_parameters)
-  - [conditional_uri_does_not_exist](https://dart-lang.github.io/linter/lints/conditional_uri_does_not_exist)
-  - [literal_only_boolean_expressions](https://dart-lang.github.io/linter/lints/literal_only_boolean_expressions)
-  - [no_leading_underscores_for_library_prefixes](https://dart-lang.github.io/linter/lints/no_leading_underscores_for_library_prefixes)
-  - [no_leading_underscores_for_local_identifiers](https://dart-lang.github.io/linter/lints/no_leading_underscores_for_local_identifiers)
-  - [secure_pubspec_urls](https://dart-lang.github.io/linter/lints/secure_pubspec_urls)
-  - [sized_box_shrink_expand](https://dart-lang.github.io/linter/lints/sized_box_shrink_expand)
-  - [unnecessary_constructor_name](https://dart-lang.github.io/linter/lints/unnecessary_constructor_name)
-  - [unnecessary_late](https://dart-lang.github.io/linter/lints/unnecessary_late)
+  - [avoid_final_parameters](https://dart.dev/tools/linter-rules/avoid_final_parameters)
+  - [conditional_uri_does_not_exist](https://dart.dev/tools/linter-rules/conditional_uri_does_not_exist)
+  - [literal_only_boolean_expressions](https://dart.dev/tools/linter-rules/literal_only_boolean_expressions)
+  - [no_leading_underscores_for_library_prefixes](https://dart.dev/tools/linter-rules/no_leading_underscores_for_library_prefixes)
+  - [no_leading_underscores_for_local_identifiers](https://dart.dev/tools/linter-rules/no_leading_underscores_for_local_identifiers)
+  - [secure_pubspec_urls](https://dart.dev/tools/linter-rules/secure_pubspec_urls)
+  - [sized_box_shrink_expand](https://dart.dev/tools/linter-rules/sized_box_shrink_expand)
+  - [unnecessary_constructor_name](https://dart.dev/tools/linter-rules/unnecessary_constructor_name)
+  - [unnecessary_late](https://dart.dev/tools/linter-rules/unnecessary_late)
 
 # 1.0.2
 
@@ -107,8 +109,8 @@
 # 1.0.1
 
 - Disable the following lints:
-  - [prefer_final_parameters](https://dart-lang.github.io/linter/lints/prefer_final_parameters)
-  - [library_private_types_in_public_api](https://dart-lang.github.io/linter/lints/library_private_types_in_public_api)
+  - [prefer_final_parameters](https://dart.dev/tools/linter-rules/prefer_final_parameters)
+  - [library_private_types_in_public_api](https://dart.dev/tools/linter-rules/library_private_types_in_public_api)
 - Fix warning with `package:flutter_lints/flutter.yaml` not being found
 
 # 1.0.0

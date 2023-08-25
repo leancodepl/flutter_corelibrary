@@ -67,12 +67,10 @@ analyzer:
     implementation_imports: warning
     implicit_reopen: warning
     invalid_case_patterns: warning
-    iterable_contains_unrelated_type: warning
     leading_newlines_in_multiline_strings: warning
     library_annotations: warning
     library_names: warning
     library_prefixes: warning
-    list_remove_unrelated_type: warning
     literal_only_boolean_expressions: warning
     no_adjacent_strings_in_list: warning
     no_duplicate_case_values: warning
@@ -286,7 +284,6 @@ linter:
     implicit_call_tearoffs: false
     implicit_reopen: true
     invalid_case_patterns: true
-    iterable_contains_unrelated_type: true
     join_return_with_assignment: false
     leading_newlines_in_multiline_strings: true
     library_annotations: true
@@ -294,7 +291,6 @@ linter:
     library_prefixes: true
     library_private_types_in_public_api: false
     lines_longer_than_80_chars: false
-    list_remove_unrelated_type: true
     literal_only_boolean_expressions: true
     matching_super_parameters: false
     missing_whitespace_between_adjacent_strings: false
