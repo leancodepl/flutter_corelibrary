@@ -80,6 +80,8 @@ analyzer:
     no_leading_underscores_for_local_identifiers: warning
     no_logic_in_create_state: warning
     no_runtimeType_toString: warning
+    no_self_assignments: warning
+    no_wildcard_variable_uses: warning
     non_constant_identifier_names: warning
     noop_primitive_operations: warning
     null_check_on_nullable_type_parameter: warning
@@ -304,6 +306,8 @@ linter:
     no_literal_bool_comparisons: false
     no_logic_in_create_state: true
     no_runtimeType_toString: true
+    no_self_assignments: true
+    no_wildcard_variable_uses: true
     non_constant_identifier_names: true
     noop_primitive_operations: true
     null_check_on_nullable_type_parameter: true
