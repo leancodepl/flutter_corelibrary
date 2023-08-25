@@ -8,6 +8,13 @@ import 'package:cqrs/src/wrapper/cqrs_error.dart';
 import 'package:cqrs/src/wrapper/cqrs_result.dart';
 import 'package:logging/logging.dart';
 
+/// Convenient extension for handling validation errors of command result.
+extension CqrsCommandResultValidationErrorExtension
+    on CqrsCommandResult<CqrsCommandError> {
+  /// Wheter the command result is failure because of a validation error.
+  bool get isInvalid => error == CqrsCommandError.validation;
+}
+
 /// CQRS wrapper providing a convenient way of handling errors.
 ///
 /// Example:
