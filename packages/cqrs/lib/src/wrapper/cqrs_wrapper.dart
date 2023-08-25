@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cqrs/src/command_result.dart';
 import 'package:cqrs/src/cqrs.dart';
 import 'package:cqrs/src/cqrs_exception.dart';
 import 'package:cqrs/src/transport_types.dart';
@@ -31,7 +32,7 @@ import 'package:logging/logging.dart';
 /// if (result.isSuccesful) {
 ///   print(result.data);
 /// } else if (result.isFailure) {
-///   print(result.error);
+///   print('Something failed with error ${result.error}');
 /// }
 ///
 /// // Adding a new transaction and
@@ -47,10 +48,10 @@ import 'package:logging/logging.dart';
 /// } else if (result.isInvalid) {
 ///   print('Invalid data passed');
 /// } else if (result.isFailure) {
-///   print('Something failed');
+///   print('Something failed with error ${result.error}');
 /// }
 /// ```
-class CqrsWrapper {
+class CqrsWrapper implements Cqrs {
   /// Creates a [CqrsWrapper] class.
   ///
   /// [cqrs] is a [Cqrs] object used for communicating with the backend via
@@ -81,7 +82,7 @@ class CqrsWrapper {
   ///
   /// In case of an error [_onQueryError] is called if it was provided in the
   /// contructor. Refer to [CqrsQueryError] enum for list of all errors that
-  /// are handled by the [CqrsWrapper].
+  /// are recognized by the [CqrsWrapper].
   Future<CqrsQueryResult<T, CqrsQueryError>> noThrowGet<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -101,7 +102,7 @@ class CqrsWrapper {
   ///
   /// In case of an error [_onCommandError] is called if it was provided in the
   /// contructor. Refer to [CqrsCommandError] enum for list of all errors that
-  /// are handled by the [CqrsWrapper].
+  /// are recognized by the [CqrsWrapper].
   Future<CqrsCommandResult<CqrsCommandError>> noThrowRun(
     Command command, {
     Map<String, String> headers = const {},
@@ -204,5 +205,29 @@ class CqrsWrapper {
         _ => const CqrsCommandFailure(CqrsCommandError.unknown),
       };
     }
+  }
+
+  @override
+  Future<T> get<T>(
+    Query<T> query, {
+    Map<String, String> headers = const {},
+  }) {
+    return _cqrs.get(query, headers: headers);
+  }
+
+  @override
+  Future<CommandResult> run(
+    Command command, {
+    Map<String, String> headers = const {},
+  }) {
+    return _cqrs.run(command, headers: headers);
+  }
+
+  @override
+  Future<T> perform<T>(
+    Operation<T> operation, {
+    Map<String, String> headers = const {},
+  }) {
+    return _cqrs.perform(operation, headers: headers);
   }
 }
