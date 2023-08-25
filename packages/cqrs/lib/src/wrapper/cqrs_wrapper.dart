@@ -82,7 +82,7 @@ class CqrsWrapper {
   /// In case of an error [_onQueryError] is called if it was provided in the
   /// contructor. Refer to [CqrsQueryError] enum for list of all errors that
   /// are handled by the [CqrsWrapper].
-  Future<CqrsQueryResult<T>> noThrowGet<T>(
+  Future<CqrsQueryResult<T, CqrsQueryError>> noThrowGet<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
   }) async {
@@ -102,7 +102,7 @@ class CqrsWrapper {
   /// In case of an error [_onCommandError] is called if it was provided in the
   /// contructor. Refer to [CqrsCommandError] enum for list of all errors that
   /// are handled by the [CqrsWrapper].
-  Future<CqrsCommandResult> noThrowRun(
+  Future<CqrsCommandResult<CqrsCommandError>> noThrowRun(
     Command command, {
     Map<String, String> headers = const {},
   }) async {
@@ -116,7 +116,7 @@ class CqrsWrapper {
     return result;
   }
 
-  Future<CqrsQueryResult<T>> _noThrowGet<T>(
+  Future<CqrsQueryResult<T, CqrsQueryError>> _noThrowGet<T>(
     Query<T> query, {
     required Map<String, String> headers,
   }) async {
@@ -124,7 +124,7 @@ class CqrsWrapper {
       final data = await _cqrs.get(query, headers: headers);
       _logger?.info('Query ${query.runtimeType} executed successfully.');
 
-      return CqrsSuccess(data);
+      return CqrsQuerySuccess(data);
     } on SocketException catch (e, s) {
       _logger?.severe(
         'Query ${query.runtimeType} failed with network error.',
@@ -132,23 +132,23 @@ class CqrsWrapper {
         s,
       );
 
-      return const CqrsFailure(CqrsQueryError.network);
+      return const CqrsQueryFailure(CqrsQueryError.network);
     } catch (e, s) {
       _logger?.severe('Query ${query.runtimeType} failed unexpectedly.', e, s);
 
       if (e is! CqrsException) {
-        return const CqrsFailure(CqrsQueryError.unknown);
+        return const CqrsQueryFailure(CqrsQueryError.unknown);
       }
 
       return switch (e.response.statusCode) {
-        401 => const CqrsFailure(CqrsQueryError.authentication),
-        403 => const CqrsFailure(CqrsQueryError.forbiddenAccess),
-        _ => const CqrsFailure(CqrsQueryError.unknown),
+        401 => const CqrsQueryFailure(CqrsQueryError.authentication),
+        403 => const CqrsQueryFailure(CqrsQueryError.forbiddenAccess),
+        _ => const CqrsQueryFailure(CqrsQueryError.unknown),
       };
     }
   }
 
-  Future<CqrsCommandResult> _noThrowRun(
+  Future<CqrsCommandResult<CqrsCommandError>> _noThrowRun(
     Command command, {
     required Map<String, String> headers,
   }) async {
@@ -158,7 +158,7 @@ class CqrsWrapper {
       if (result.success) {
         _logger?.info('Command ${command.runtimeType} executed successfully.');
 
-        return const CqrsCommandResult.success();
+        return const CqrsCommandSuccess();
       } else {
         final buffer = StringBuffer();
         for (final error in result.errors) {
@@ -171,11 +171,12 @@ class CqrsWrapper {
         );
 
         if (result.hasError(422)) {
-          return CqrsCommandResult.validationError(result.errors);
-        } else {
-          return CqrsCommandResult.nonValidationError(
-            CqrsCommandError.unknown,
+          return CqrsCommandFailure(
+            CqrsCommandError.validation,
+            validationErrors: result.errors,
           );
+        } else {
+          return const CqrsCommandFailure(CqrsCommandError.unknown);
         }
       }
     } on SocketException catch (e, s) {
@@ -185,9 +186,7 @@ class CqrsWrapper {
         s,
       );
 
-      return CqrsCommandResult.nonValidationError(
-        CqrsCommandError.forbiddenAccess,
-      );
+      return const CqrsCommandFailure(CqrsCommandError.forbiddenAccess);
     } catch (e, s) {
       _logger?.severe(
         'Command ${command.runtimeType} failed unexpectedly.',
@@ -196,21 +195,13 @@ class CqrsWrapper {
       );
 
       if (e is! CqrsException) {
-        return CqrsCommandResult.nonValidationError(
-          CqrsCommandError.unknown,
-        );
+        return const CqrsCommandFailure(CqrsCommandError.unknown);
       }
 
       return switch (e.response.statusCode) {
-        401 => CqrsCommandResult.nonValidationError(
-            CqrsCommandError.authentication,
-          ),
-        403 => CqrsCommandResult.nonValidationError(
-            CqrsCommandError.forbiddenAccess,
-          ),
-        _ => CqrsCommandResult.nonValidationError(
-            CqrsCommandError.unknown,
-          ),
+        401 => const CqrsCommandFailure(CqrsCommandError.authentication),
+        403 => const CqrsCommandFailure(CqrsCommandError.forbiddenAccess),
+        _ => const CqrsCommandFailure(CqrsCommandError.unknown),
       };
     }
   }
