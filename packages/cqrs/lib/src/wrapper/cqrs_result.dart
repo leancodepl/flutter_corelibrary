@@ -2,34 +2,30 @@
 
 import 'package:cqrs/src/command_result.dart';
 import 'package:cqrs/src/cqrs.dart';
-import 'package:cqrs/src/wrapper/cqrs_error.dart';
 import 'package:equatable/equatable.dart';
 
-/// Generic class used to contain a result of [Cqrs] operations.
-sealed class CqrsResult<T, E> extends Equatable {
-  /// Creates a [CqrsResult] class
-  const CqrsResult();
+sealed class CqrsQueryResult<T, E> extends Equatable {
+  const CqrsQueryResult();
 
-  CqrsSuccess<T, E>? get asSuccess => switch (this) {
-        final CqrsSuccess<T, E> s => s,
-        CqrsFailure() => null,
+  CqrsQuerySuccess<T, E>? get asSuccess => switch (this) {
+        final CqrsQuerySuccess<T, E> s => s,
+        CqrsQueryFailure() => null,
       };
 
-  CqrsFailure<T, E>? get asFailure => switch (this) {
-        CqrsSuccess() => null,
-        final CqrsFailure<T, E> f => f,
+  CqrsQueryFailure<T, E>? get asFailure => switch (this) {
+        CqrsQuerySuccess() => null,
+        final CqrsQueryFailure<T, E> f => f,
       };
 
   bool get isSuccess => asSuccess != null;
   bool get isFailure => asFailure != null;
 
-  // Return
   T? get data => asSuccess?.data;
   E? get error => asFailure?.error;
 }
 
-final class CqrsSuccess<T, E> extends CqrsResult<T, E> {
-  const CqrsSuccess(this.data);
+final class CqrsQuerySuccess<T, E> extends CqrsQueryResult<T, E> {
+  const CqrsQuerySuccess(this.data);
 
   @override
   final T data;
@@ -38,8 +34,8 @@ final class CqrsSuccess<T, E> extends CqrsResult<T, E> {
   List<Object?> get props => [data];
 }
 
-final class CqrsFailure<T, E> extends CqrsResult<T, E> {
-  const CqrsFailure(this.error);
+final class CqrsQueryFailure<T, E> extends CqrsQueryResult<T, E> {
+  const CqrsQueryFailure(this.error);
 
   @override
   final E error;
@@ -48,28 +44,52 @@ final class CqrsFailure<T, E> extends CqrsResult<T, E> {
   List<Object?> get props => [error];
 }
 
-typedef CqrsQueryResult<T> = CqrsResult<T, CqrsQueryError>;
+/// Generic class used to contain a result of [Cqrs] operations.
+sealed class CqrsCommandResult<E> extends Equatable {
+  /// Creates a [CqrsCommandResult] class
+  const CqrsCommandResult();
 
-class CqrsCommandResult {
-  const CqrsCommandResult.success()
-      : isSuccess = true,
-        error = null,
-        validationErrors = const [];
+  CqrsCommandSuccess<E>? get asSuccess => switch (this) {
+        final CqrsCommandSuccess<E> s => s,
+        CqrsCommandFailure() => null,
+      };
 
-  CqrsCommandResult.validationError(List<ValidationError> validationErrors)
-      : isSuccess = false,
-        error = CqrsCommandError.validation,
-        validationErrors = List.unmodifiable(validationErrors);
+  CqrsCommandFailure<E>? get asFailure => switch (this) {
+        CqrsCommandSuccess() => null,
+        final CqrsCommandFailure<E> f => f,
+      };
 
-  CqrsCommandResult.nonValidationError(CqrsCommandError this.error)
-      : isSuccess = false,
-        validationErrors = const [];
+  bool get isSuccess => asSuccess != null;
+  bool get isFailure => asFailure != null;
 
-  final bool isSuccess;
+  // Return
+  E? get error => asFailure?.error;
 
-  bool get isFailure => error != null;
-  bool get isInvalid => error == CqrsCommandError.validation;
+  List<ValidationError> get validationErrors;
+}
 
+final class CqrsCommandSuccess<E> extends CqrsCommandResult<E> {
+  const CqrsCommandSuccess() : validationErrors = const [];
+
+  @override
   final List<ValidationError> validationErrors;
-  final CqrsCommandError? error;
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class CqrsCommandFailure<E> extends CqrsCommandResult<E> {
+  const CqrsCommandFailure(
+    this.error, {
+    this.validationErrors = const [],
+  });
+
+  @override
+  final E error;
+
+  @override
+  final List<ValidationError> validationErrors;
+
+  @override
+  List<Object?> get props => [error, validationErrors];
 }
