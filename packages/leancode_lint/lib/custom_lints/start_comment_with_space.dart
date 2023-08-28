@@ -6,8 +6,10 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 class StartCommentWithSpace extends DartLintRule {
   StartCommentWithSpace() : super(code: _createCode(_CommentType.comment));
 
+  static const ruleName = 'start_comment_with_space';
+
   static LintCode _createCode(_CommentType param) => LintCode(
-        name: 'start_comment_with_space',
+        name: ruleName,
         problemMessage: 'Start ${param.name}s with a space.',
       );
 

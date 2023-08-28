@@ -5,6 +5,8 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
   AddSliverPrefixForWidgetReturningSliver() : super(code: _getLintCode());
 
+  static const ruleName = 'add_sliver_prefix_for_widget_returning_sliver';
+
   @override
   void run(
     CustomLintResolver resolver,
@@ -131,7 +133,7 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
     };
 
     return LintCode(
-      name: 'add_sliver_prefix_for_widget_returning_sliver',
+      name: ruleName,
       problemMessage: problemMessageBase,
       correctionMessage: exampleName != null ? 'Ex. Sliver$exampleName' : null,
     );

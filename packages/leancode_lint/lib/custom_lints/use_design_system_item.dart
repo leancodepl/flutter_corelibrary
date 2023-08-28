@@ -8,9 +8,11 @@ final class UseDesignSystemItem extends UseInsteadType {
     required String validType,
     required Iterable<(String, String)> replacements,
   }) : super(
-          lintCodeName: 'use_design_system_item_$validType',
+          lintCodeName: '${ruleName}_$validType',
           replacements: {validType: replacements.toList()},
         );
+
+  static const ruleName = 'use_design_system_item';
 
   static Iterable<UseDesignSystemItem>? getRulesListFromConfigs(
     CustomLintConfigs configs,
