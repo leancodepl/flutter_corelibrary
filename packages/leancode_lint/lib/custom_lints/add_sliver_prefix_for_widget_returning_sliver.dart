@@ -28,7 +28,12 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
           return;
         }
 
-        final expressions = _substractReturnExpressions(buildMethod.body);
+        final expressions = switch (buildMethod.body) {
+          ExpressionFunctionBody(:final expression) => [expression],
+          BlockFunctionBody(:final block) =>
+            block.statements.expand(_getAllInnerReturnStatements).toList(),
+          _ => <Expression>[],
+        };
 
         final isSliver = _anyReturnsSliver(expressions);
 
@@ -40,6 +45,50 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
         }
       },
     );
+  }
+
+  Iterable<Expression> _getAllInnerReturnStatements(Statement statement) {
+    switch (statement) {
+      case IfStatement():
+        return [
+          ..._getAllInnerReturnStatements(statement.thenStatement),
+          if (statement.elseStatement case final statement?)
+            ..._getAllInnerReturnStatements(statement),
+        ];
+
+      case ForStatement():
+        return _getAllInnerReturnStatements(statement.body);
+
+      case Block():
+        return statement.statements.expand(_getAllInnerReturnStatements);
+
+      case TryStatement():
+        return [
+          ...statement.body.statements.expand(_getAllInnerReturnStatements),
+          ...statement.catchClauses
+              .expand((clause) => clause.body.statements)
+              .expand(_getAllInnerReturnStatements),
+          ...?statement.finallyBlock?.statements
+              .expand(_getAllInnerReturnStatements),
+        ];
+
+      case DoStatement():
+        return _getAllInnerReturnStatements(statement.body);
+
+      case WhileStatement():
+        return _getAllInnerReturnStatements(statement.body);
+
+      case ExpressionStatement():
+        return _getAllInnerReturnStatements(statement);
+
+      case ReturnStatement():
+        return [
+          if (statement.expression case final expression?) expression,
+        ];
+
+      default:
+        return [];
+    }
   }
 
   MethodDeclaration? _getBuildMethod(ClassDeclaration node) {
@@ -68,18 +117,6 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
             TypeChecker.fromName('State', packageName: 'flutter'),
           ]).isSuperOf(element),
         _ => false,
-      };
-
-  Iterable<Expression> _substractReturnExpressions(FunctionBody body) =>
-      switch (body) {
-        ExpressionFunctionBody(:final expression) => [expression],
-        // ignore: cast_nullable_to_non_nullable
-        BlockFunctionBody(:final block) => block.statements
-            .whereType<ReturnStatement>()
-            .map((e) => e.expression)
-            .toList()
-            .removeWhere((element) => element == null) as Iterable<Expression>,
-        _ => <Expression>[],
       };
 
   static LintCode _getLintCode([String? className]) {
