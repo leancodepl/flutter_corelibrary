@@ -1,3 +1,6 @@
+# 7.0.0
+- Implement Leancode custom lints
+
 # 6.0.0
 
 - Enable the following lints:

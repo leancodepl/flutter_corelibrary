@@ -1,6 +1,6 @@
-import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/custom_quick_fixes/add_starting_space_to_comment.dart';
 
 /// Forces comments/docs to start with a space.
 class StartCommentWithSpace extends DartLintRule {
@@ -15,7 +15,7 @@ class StartCommentWithSpace extends DartLintRule {
 
   @override
   List<Fix> getFixes() {
-    return [_AddStartingSpaceToComment()];
+    return [AddStartingSpaceToComment()];
   }
 
   @override
@@ -53,24 +53,4 @@ class StartCommentWithSpace extends DartLintRule {
 enum _CommentType {
   comment,
   doc;
-}
-
-class _AddStartingSpaceToComment extends DartFix {
-  @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
-  ) {
-    reporter
-        .createChangeBuilder(
-          message: 'Add leading space to comment',
-          priority: 1,
-        )
-        .addDartFileEdit(
-          (builder) => builder.addSimpleInsertion(analysisError.offset, ' '),
-        );
-  }
 }

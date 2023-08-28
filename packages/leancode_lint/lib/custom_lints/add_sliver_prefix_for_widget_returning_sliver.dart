@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
+import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
@@ -93,16 +94,11 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
     }
   }
 
-  MethodDeclaration? _getBuildMethod(ClassDeclaration node) {
-    try {
-      return node.members.firstWhere(
+  MethodDeclaration? _getBuildMethod(ClassDeclaration node) =>
+      node.members.firstWhereOrNull(
         (member) =>
             member is MethodDeclaration && member.name.lexeme == 'build',
-      ) as MethodDeclaration;
-    } catch (e) {
-      return null;
-    }
-  }
+      ) as MethodDeclaration?;
 
   bool _hasSliverPrefix(String className) =>
       ['Sliver', '_Sliver'].any(className.startsWith);
