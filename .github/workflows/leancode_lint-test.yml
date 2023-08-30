@@ -1,0 +1,63 @@
+name: leancode_lint test
+
+on:
+  push:
+    branches: [master]
+    tags-ignore: ['leancode_lint-v*']
+    paths:
+      - 'packages/leancode_lint/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/leancode_lint/**'
+
+jobs:
+  test:
+    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: 3.0.5
+
+    defaults:
+      run:
+        working-directory: packages/leancode_lint
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Enter test directory
+        run: cd test/lints_test_app/
+
+      - name: Download pub dependencies
+        run: flutter pub get
+
+      - name: Run lint rules test
+        run: dart run custom_lint .
+
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: leancode_lint
