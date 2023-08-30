@@ -1,8 +1,12 @@
+// ignore_for_file: comment_references
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+/// Displays warning for widgets returning slivers but not having [Sliver] or
+/// [_Sliver] prefix.
 class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
   AddSliverPrefixForWidgetReturningSliver() : super(code: _getLintCode());
 
@@ -31,14 +35,15 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
           return;
         }
 
-        final expressions = switch (buildMethod.body) {
+        // Get all return expressions from build method
+        final returnExpressions = switch (buildMethod.body) {
           ExpressionFunctionBody(:final expression) => [expression],
           BlockFunctionBody(:final block) =>
             block.statements.expand(_getAllInnerReturnStatements).toList(),
           _ => <Expression>[],
         };
 
-        final isSliver = _anyReturnsSliver(expressions);
+        final isSliver = _anyReturnsSliver(returnExpressions);
 
         if (node case ClassDeclaration(:final declaredElement?) when isSliver) {
           reporter.reportErrorForElement(
@@ -50,6 +55,7 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
     );
   }
 
+  /// Returns all return expressions from passed statement recursively.
   Iterable<Expression> _getAllInnerReturnStatements(Statement statement) {
     switch (statement) {
       case IfStatement():
@@ -131,7 +137,9 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
     return LintCode(
       name: ruleName,
       problemMessage: problemMessageBase,
-      correctionMessage: exampleName != null ? 'Ex. Sliver$exampleName' : null,
+      correctionMessage: exampleName != null
+          ? 'Ex. Sliver$exampleName or _Sliver$exampleName'
+          : null,
     );
   }
 }
