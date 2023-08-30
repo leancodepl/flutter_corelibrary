@@ -1,5 +1,6 @@
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/assists/convert_record_into_nominal_type.dart';
+import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/lints/add_sliver_prefix_for_widget_returning_sliver.dart';
 import 'package:leancode_lint/lints/start_comment_with_space.dart';
 import 'package:leancode_lint/lints/use_design_system_item.dart';
@@ -12,6 +13,7 @@ class _Linter extends PluginBase {
         StartCommentWithSpace(),
         ...UseDesignSystemItem.getRulesListFromConfigs(configs),
         AddSliverPrefixForWidgetReturningSliver(),
+        AddCubitSuffixForYourCubits(),
       ];
 
   @override
