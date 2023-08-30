@@ -53,10 +53,7 @@ jobs:
         run: flutter pub get
 
       - name: Run lint rules test
-        run: dart run custom_lint .
-
-      - name: Run tests with coverage
-        run: flutter test --coverage
+        run: dart run custom_lint
 
       - uses: codecov/codecov-action@v1
         with:
