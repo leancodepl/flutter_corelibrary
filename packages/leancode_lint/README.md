@@ -52,22 +52,5 @@ If your package is a library rather than binary application, you will expose som
 include: package:leancode_lint/analysis_options_package.yaml
 ```
 
-Within this package, you can define our own lints, assists and quick fixes.
-
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint
-
-## Testing this package
-In order to run the tests:
-
-```shell
-cd test/lints_test_app
-flutter pub get
-dart run custom_lint .
-```
-
-In order to create new tests:
-1. Create your own lint rule.
-2. Write dart file containing code that should trigger your lint warning.
-3. Precede the line with warning/error with:
-`// expect_lint: <your_lint_name>`
