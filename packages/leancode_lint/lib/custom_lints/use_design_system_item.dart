@@ -28,8 +28,8 @@ final class UseDesignSystemItem extends UseInsteadType {
         [
           for (final forbidden in entry.value! as List)
             (
-              (forbidden as Map)['packageName'] as String,
-              forbidden['itemName'] as String,
+              (forbidden as Map)['from_package'] as String,
+              forbidden['instead_of'] as String,
             ),
         ],
       ),

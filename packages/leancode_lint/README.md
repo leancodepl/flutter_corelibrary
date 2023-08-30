@@ -28,13 +28,13 @@ custom_lint:
   rules:
     - use_design_system_item:
       LftText:
-        - packageName: flutter
-          itemName: Text
-        - packageName: flutter
-          itemName: RichText
+        - instead_of: Text
+          from_package: flutter
+        - instead_of: RichText
+          from_package: flutter
       LftScaffold:
-        - packageName: flutter
-          itemName: Scaffold
+        - instead_of: Scaffold
+          from_package: flutter
 
 analyzer:
   plugins:
