@@ -15,12 +15,16 @@ String typeParametersString(
 }
 
 Expression? maybeGetSingleReturnExpression(FunctionBody body) {
-  if (body
-      case ExpressionFunctionBody(:final expression) ||
-          BlockFunctionBody(
-            block: Block(statements: [ReturnStatement(:final expression?)])
-          )) {
-    return expression;
-  }
-  return null;
+  return switch (body) {
+    ExpressionFunctionBody(:final expression) ||
+    BlockFunctionBody(
+      block: Block(
+        statements: [
+          ReturnStatement(:final expression?),
+        ],
+      )
+    ) =>
+      expression,
+    _ => null,
+  };
 }

@@ -1,12 +1,10 @@
-// ignore_for_file: comment_references
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
-/// Displays warning for widgets returning slivers but not having [Sliver] or
-/// [_Sliver] prefix.
+/// Displays warning for widgets returning slivers but not having `Sliver` or
+/// `_Sliver` prefix.
 class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
   AddSliverPrefixForWidgetReturningSliver() : super(code: _getLintCode());
 
@@ -65,27 +63,26 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
             ..._getAllInnerReturnStatements(statement),
         ];
 
-      case ForStatement():
-        return _getAllInnerReturnStatements(statement.body);
+      case ForStatement(:final body):
+        return _getAllInnerReturnStatements(body);
 
       case Block():
         return statement.statements.expand(_getAllInnerReturnStatements);
 
-      case TryStatement():
+      case TryStatement(:final body, :final catchClauses, :final finallyBlock):
         return [
-          ...statement.body.statements.expand(_getAllInnerReturnStatements),
-          ...statement.catchClauses
+          ...body.statements.expand(_getAllInnerReturnStatements),
+          ...catchClauses
               .expand((clause) => clause.body.statements)
               .expand(_getAllInnerReturnStatements),
-          ...?statement.finallyBlock?.statements
-              .expand(_getAllInnerReturnStatements),
+          ...?finallyBlock?.statements.expand(_getAllInnerReturnStatements),
         ];
 
-      case DoStatement():
-        return _getAllInnerReturnStatements(statement.body);
+      case DoStatement(:final body):
+        return _getAllInnerReturnStatements(body);
 
-      case WhileStatement():
-        return _getAllInnerReturnStatements(statement.body);
+      case WhileStatement(:final body):
+        return _getAllInnerReturnStatements(body);
 
       case ExpressionStatement():
         return _getAllInnerReturnStatements(statement);
