@@ -1,4 +1,5 @@
 # 7.0.0
+
 - Implement LeanCode custom lints
 
 # 6.0.0

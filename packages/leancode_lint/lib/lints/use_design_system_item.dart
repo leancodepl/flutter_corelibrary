@@ -1,7 +1,7 @@
 // ignore_for_file: comment_references
 
 import 'package:custom_lint_builder/custom_lint_builder.dart';
-import 'package:leancode_lint/custom_lints/use_instead_type.dart';
+import 'package:leancode_lint/lints/use_instead_type.dart';
 
 final class UseDesignSystemItem extends UseInsteadType {
   UseDesignSystemItem({
@@ -14,12 +14,12 @@ final class UseDesignSystemItem extends UseInsteadType {
 
   static const ruleName = 'use_design_system_item';
 
-  static Iterable<UseDesignSystemItem>? getRulesListFromConfigs(
+  static Iterable<UseDesignSystemItem> getRulesListFromConfigs(
     CustomLintConfigs configs,
   ) {
-    final dsLintOptions = configs.rules['use_design_system_item']?.json ?? {};
+    final dsLintOptions = configs.rules[ruleName]?.json ?? {};
     if (dsLintOptions.isEmpty) {
-      return null;
+      return const Iterable.empty();
     }
 
     final designSystemReplacements = dsLintOptions.entries.map(

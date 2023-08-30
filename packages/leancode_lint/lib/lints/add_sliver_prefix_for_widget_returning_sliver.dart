@@ -2,6 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning for widgets returning slivers but not having `Sliver` or
 /// `_Sliver` prefix.
@@ -37,7 +38,7 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
         final returnExpressions = switch (buildMethod.body) {
           ExpressionFunctionBody(:final expression) => [expression],
           BlockFunctionBody(:final block) =>
-            block.statements.expand(_getAllInnerReturnStatements).toList(),
+            block.statements.expand(getAllInnerReturnStatements).toList(),
           _ => <Expression>[],
         };
 
@@ -53,55 +54,9 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
     );
   }
 
-  /// Returns all return expressions from passed statement recursively.
-  Iterable<Expression> _getAllInnerReturnStatements(Statement statement) {
-    switch (statement) {
-      case IfStatement():
-        return [
-          ..._getAllInnerReturnStatements(statement.thenStatement),
-          if (statement.elseStatement case final statement?)
-            ..._getAllInnerReturnStatements(statement),
-        ];
-
-      case ForStatement(:final body):
-        return _getAllInnerReturnStatements(body);
-
-      case Block():
-        return statement.statements.expand(_getAllInnerReturnStatements);
-
-      case TryStatement(:final body, :final catchClauses, :final finallyBlock):
-        return [
-          ...body.statements.expand(_getAllInnerReturnStatements),
-          ...catchClauses
-              .expand((clause) => clause.body.statements)
-              .expand(_getAllInnerReturnStatements),
-          ...?finallyBlock?.statements.expand(_getAllInnerReturnStatements),
-        ];
-
-      case DoStatement(:final body):
-        return _getAllInnerReturnStatements(body);
-
-      case WhileStatement(:final body):
-        return _getAllInnerReturnStatements(body);
-
-      case ExpressionStatement():
-        return _getAllInnerReturnStatements(statement);
-
-      case ReturnStatement():
-        return [
-          if (statement.expression case final expression?) expression,
-        ];
-
-      default:
-        return [];
-    }
-  }
-
-  MethodDeclaration? _getBuildMethod(ClassDeclaration node) =>
-      node.members.firstWhereOrNull(
-        (member) =>
-            member is MethodDeclaration && member.name.lexeme == 'build',
-      ) as MethodDeclaration?;
+  MethodDeclaration? _getBuildMethod(ClassDeclaration node) => node.members
+      .whereType<MethodDeclaration>()
+      .firstWhereOrNull((member) => member.name.lexeme == 'build');
 
   bool _hasSliverPrefix(String className) =>
       ['Sliver', '_Sliver'].any(className.startsWith);
