@@ -6,43 +6,50 @@ Lint rules used internally in LeanCode projects.
 
 ## Installation
 
-Add `leancode_lint` as a dev dependency.
+1. Add `leancode_lint` and `custom_lint` as a dev dependency in your project's `pubspec.yaml`.
 
 ```sh
-dart pub add leancode_lint --dev
+dart pub add leancode_lint custom_lint --dev
 ```
 
-## Usage
-
-### App
-
-Add `include: package:leancode_lint/analysis_options.yaml` to
-`analysis_options.yaml` in your project. You might want to exclude some files
+2. In your `analysis_options.yaml` add `include: package:leancode_lint/analysis_options.yaml`. You might want to exclude some files
 (e.g generated json serializable) from analysis.
 
+4. Enable the `custom_lint` analyzer plugin in `analysis_options.yaml`. You can customize lint rules by adding a `custom_lint` config 
+with `rules` like in the example below.
+
+5. Run `flutter pub get` in your project main directory and restart your IDE. You're ready to go!
+   
 ```yaml
 include: package:leancode_lint/analysis_options.yaml
 
-# Optional
+# Optional lint rules configuration
+custom_lint:
+  rules:
+    - use_design_system_item:
+      AppText:
+        - instead_of: Text
+          from_package: flutter
+        - instead_of: RichText
+          from_package: flutter
+      AppScaffold:
+        - instead_of: Scaffold
+          from_package: flutter
+
 analyzer:
+  plugins:
+    # Required for our custom lints support
+    - custom_lint
   exclude:
     - '**/*.g.dart'
 ```
 
-### Package
+## Usage in libraries
 
-Add `include: package:leancode_lint/analysis_options_package.yaml` to
-`analysis_options.yaml` in your project. It includes additional lints for
-packages. You might want to exclude some files (e.g generated json serializable)
-from analysis.
+If your package is a library rather than binary application, you will expose some public API for users of your library. Therefore, you should use lint rules optimized for this case by changing your `include` entry in `analysis_options.yaml`:
 
 ```yaml
 include: package:leancode_lint/analysis_options_package.yaml
-
-# Optional
-analyzer:
-  exclude:
-    - '**/*.g.dart'
 ```
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
