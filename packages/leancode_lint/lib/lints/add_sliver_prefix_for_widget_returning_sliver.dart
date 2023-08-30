@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
-/// Displays warning for widgets returning slivers but not having `Sliver` or
-/// `_Sliver` prefix.
+/// Displays warning for widgets which return slivers but do not have the
+/// `Sliver` or `_Sliver` prefix in their name.
 class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
   AddSliverPrefixForWidgetReturningSliver() : super(code: _getLintCode());
 
@@ -42,7 +42,7 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
           _ => <Expression>[],
         };
 
-        final isSliver = _anyReturnsSliver(returnExpressions);
+        final isSliver = _anyIsSliver(returnExpressions.whereNotNull());
 
         if (node case ClassDeclaration(:final declaredElement?) when isSliver) {
           reporter.reportErrorForElement(
@@ -61,7 +61,7 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
   bool _hasSliverPrefix(String className) =>
       ['Sliver', '_Sliver'].any(className.startsWith);
 
-  bool _anyReturnsSliver(Iterable<Expression> expressions) => expressions.any(
+  bool _anyIsSliver(Iterable<Expression> expressions) => expressions.any(
         (expression) =>
             expression is InstanceCreationExpression &&
             _hasSliverPrefix(expression.constructorName.type.name2.lexeme),

@@ -30,7 +30,7 @@ Expression? maybeGetSingleReturnExpression(FunctionBody body) {
 }
 
 /// Returns all return expressions from passed statement recursively.
-Iterable<Expression> getAllInnerReturnStatements(Statement statement) {
+Iterable<Expression?> getAllInnerReturnStatements(Statement statement) {
   switch (statement) {
     case IfStatement():
       return [

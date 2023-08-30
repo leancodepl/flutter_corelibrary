@@ -1,15 +1,13 @@
-// ignore_for_file: comment_references
-
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/lints/use_instead_type.dart';
 
 final class UseDesignSystemItem extends UseInsteadType {
   UseDesignSystemItem({
-    required String validType,
+    required String preferredItemName,
     required Iterable<(String, String)> replacements,
   }) : super(
-          lintCodeName: '${ruleName}_$validType',
-          replacements: {validType: replacements.toList()},
+          lintCodeName: '${ruleName}_$preferredItemName',
+          replacements: {preferredItemName: replacements.toList()},
         );
 
   static const ruleName = 'use_design_system_item';
@@ -37,7 +35,7 @@ final class UseDesignSystemItem extends UseInsteadType {
 
     return designSystemReplacements.map(
       (entry) => UseDesignSystemItem(
-        validType: entry.key,
+        preferredItemName: entry.key,
         replacements: entry.value,
       ),
     );

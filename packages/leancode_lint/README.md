@@ -44,19 +44,12 @@ analyzer:
     - '**/*.g.dart'
 ```
 
-## Package
+## Usage in libraries
 
-Add `include: package:leancode_lint/analysis_options_package.yaml` to
-`analysis_options.yaml` in your project. It includes additional lints for
-packages. You might want to exclude some files (e.g generated json serializable)
-from analysis.
+If your package is a library rather than binary application, you will expose some public API for users of your library. Therefore, you should use lint rules optimized for this case by changing your `include` entry in `analysis_options.yaml`:
 
 ```yaml
 include: package:leancode_lint/analysis_options_package.yaml
-
-analyzer:
-  plugins:
-    - custom_lint
 ```
 
 Within this package, you can define our own lints, assists and quick fixes.
