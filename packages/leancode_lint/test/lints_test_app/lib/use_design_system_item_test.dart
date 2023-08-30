@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 
 class SampleWidget extends StatelessWidget {
@@ -5,6 +7,9 @@ class SampleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // expect_lint: use_design_system_item_LftText
+    Text? text;
+
     // expect_lint: use_design_system_item_LftScaffold
     return Scaffold(
       appBar: AppBar(
@@ -15,7 +20,7 @@ class SampleWidget extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             // expect_lint: use_design_system_item_LftText
             RichText(text: const TextSpan(text: 'abc')),
           ],

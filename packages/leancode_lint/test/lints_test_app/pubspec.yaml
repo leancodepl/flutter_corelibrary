@@ -1,5 +1,5 @@
 name: lints_test_app
-description: Simple Flutter app for lint rules testing
+description: Flutter app for lint rules testing
 
 publish_to: 'none' 
 
@@ -13,8 +13,6 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   leancode_lint:
     path: ../../../leancode_lint
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 // expect_lint: add_sliver_prefix_for_widget_returning_sliver
@@ -6,21 +8,23 @@ class WidgetReturningSliverFromInternalBlocks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: literal_only_boolean_expressions
-    if (true) {
+    if (Random().nextBool()) {
       return const SliverToBoxAdapter();
-      // ignore: dead_code
     } else {
       return const SliverToBoxAdapter();
     }
   }
 }
 
-class WidgetImpostor {
+abstract class WidgetImpostorInterface {
+  Widget build(BuildContext context);
+}
+
+// Should not throw warning since it's not real widget
+class WidgetImpostor extends WidgetImpostorInterface {
   WidgetImpostor();
 
   @override
-  // ignore: override_on_non_overriding_member
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter();
   }
@@ -36,6 +40,17 @@ class NotPrefixedWidgetReturningSliver extends StatelessWidget {
   }
 }
 
+// Should not throw warning since it's prefixed
+class SliverPrefixedWidgetReturningSliver extends StatelessWidget {
+  const SliverPrefixedWidgetReturningSliver({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverToBoxAdapter();
+  }
+}
+
+// Should not throw warning since it's not returning sliver
 class NotPrefixedWidgetNotReturningSliver extends StatelessWidget {
   const NotPrefixedWidgetNotReturningSliver({super.key});
 
