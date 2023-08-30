@@ -52,7 +52,5 @@ If your package is a library rather than binary application, you will expose som
 include: package:leancode_lint/analysis_options_package.yaml
 ```
 
-Within this package, you can define our own lints, assists and quick fixes.
-
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint

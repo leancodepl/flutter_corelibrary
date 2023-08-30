@@ -42,7 +42,7 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
           _ => <Expression>[],
         };
 
-        final isSliver = _anyIsSliver(returnExpressions.whereNotNull());
+        final isSliver = _anyIsSliver(returnExpressions.nonNulls);
 
         if (node case ClassDeclaration(:final declaredElement?) when isSliver) {
           reporter.reportErrorForElement(

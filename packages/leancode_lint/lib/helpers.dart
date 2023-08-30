@@ -64,9 +64,7 @@ Iterable<Expression?> getAllInnerReturnStatements(Statement statement) {
       return getAllInnerReturnStatements(statement);
 
     case ReturnStatement():
-      return [
-        if (statement.expression case final expression?) expression,
-      ];
+      return [statement.expression];
 
     default:
       return [];
