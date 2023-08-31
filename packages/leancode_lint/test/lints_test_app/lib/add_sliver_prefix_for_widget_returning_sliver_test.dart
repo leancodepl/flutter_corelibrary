@@ -20,7 +20,7 @@ abstract class WidgetImpostorInterface {
   Widget build(BuildContext context);
 }
 
-// Should not throw warning since it's not real widget
+// Should not report warning since it's not real widget
 class WidgetImpostor extends WidgetImpostorInterface {
   WidgetImpostor();
 
@@ -40,7 +40,7 @@ class NotPrefixedWidgetReturningSliver extends StatelessWidget {
   }
 }
 
-// Should not throw warning since it's prefixed
+// Should not report warning since it's prefixed
 class SliverPrefixedWidgetReturningSliver extends StatelessWidget {
   const SliverPrefixedWidgetReturningSliver({super.key});
 
@@ -50,7 +50,7 @@ class SliverPrefixedWidgetReturningSliver extends StatelessWidget {
   }
 }
 
-// Should not throw warning since it's not returning sliver
+// Should not report warning since it's not returning sliver
 class NotPrefixedWidgetNotReturningSliver extends StatelessWidget {
   const NotPrefixedWidgetNotReturningSliver({super.key});
 
