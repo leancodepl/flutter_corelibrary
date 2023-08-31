@@ -1,13 +1,13 @@
 Object? someFunction() {
   try {
-    // expect_lint: catch_binding_name
+    // expect_lint: catch_parameter_names
   } catch (exception) {
     return exception;
   }
 
-  try {
-    // expect_lint: catch_binding_name
-  } catch (err, stackTrace) {
+  try {} catch (err,
+  // expect_lint: catch_parameter_names
+  stackTrace) {
     return stackTrace;
   }
 

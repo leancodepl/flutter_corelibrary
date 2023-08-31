@@ -1,6 +1,6 @@
 class ClassWithInvalidUnnamedParametersOrder {
   const ClassWithInvalidUnnamedParametersOrder(
-    // expect_lint: class_parameters_and_fields_should_have_the_same_order
+    // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
     this.third,
     this.second,
     this.first,
@@ -9,7 +9,7 @@ class ClassWithInvalidUnnamedParametersOrder {
   );
 
   const ClassWithInvalidUnnamedParametersOrder.anotherConstructor(
-    // expect_lint: class_parameters_and_fields_should_have_the_same_order
+    // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
     this.third,
     this.second,
     this.first,
@@ -26,7 +26,7 @@ class ClassWithInvalidUnnamedParametersOrder {
 
 class ClassWithInvalidNamedParametersOrder {
   const ClassWithInvalidNamedParametersOrder({
-    // expect_lint: class_parameters_and_fields_should_have_the_same_order
+    // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
     required this.third,
     required this.first,
     required this.fourth,
@@ -91,7 +91,7 @@ class ClassWithValidNamedParametersOrder {
 
 class ClassWithInvalidNamedParametersOrderAndWithNonThisParameter {
   const ClassWithInvalidNamedParametersOrderAndWithNonThisParameter({
-    // expect_lint: class_parameters_and_fields_should_have_the_same_order
+    // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
     required this.first,
     required this.second,
     required String otherParameter,
@@ -132,7 +132,7 @@ class ClassWithValidNamedParametersOrderAndWithNonThisParameter {
 
 class ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter {
   const ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter(
-    // expect_lint: class_parameters_and_fields_should_have_the_same_order
+    // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
     this.third,
     this.second,
     String otherParameter,
@@ -218,7 +218,7 @@ class ClassWithMixedParametersWithValidOrder extends _AbstractClassWithField {
 
 class ClassWithMixedParametersWithInvalidOrder extends _AbstractClassWithField {
   const ClassWithMixedParametersWithInvalidOrder(
-    // expect_lint: class_parameters_and_fields_should_have_the_same_order
+    // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
     super.a,
     this.second,
     this.first, {

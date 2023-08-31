@@ -5,7 +5,7 @@ import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
-/// Displays warning when `HookWidget` does not use hooks in build method.
+/// Displays warning when a `HookWidget` does not use hooks in the build method.
 class HookWidgetDoesNotUseHooks extends DartLintRule {
   HookWidgetDoesNotUseHooks() : super(code: _getLintCode());
 
@@ -20,9 +20,10 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
     context.registry.addClassDeclaration(
       (node) {
         final isHookWidget = switch (node.declaredElement) {
-          final element? => const TypeChecker.any([
-              TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-            ]).isSuperOf(element),
+          final element? => const TypeChecker.fromName(
+              'HookWidget',
+              packageName: 'flutter_hooks',
+            ).isSuperOf(element),
           _ => false,
         };
 

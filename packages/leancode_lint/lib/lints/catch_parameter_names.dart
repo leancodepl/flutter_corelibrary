@@ -5,12 +5,12 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 /// Enforces that a catch clause has correctly named variable bindings:
 /// - if it's a catch-all, the exception should be named `err` and the stacktrace `st`
 /// - if it's a typed catch, the stacktrace has to be named `st`
-class CatchBindingName extends DartLintRule {
-  CatchBindingName()
+class CatchParameterNames extends DartLintRule {
+  CatchParameterNames()
       : super(code: _createCode(_CatchClauseParameter.exception));
 
   static LintCode _createCode(_CatchClauseParameter param) => LintCode(
-        name: 'catch_binding_name',
+        name: 'catch_parameter_names',
         problemMessage: 'Parameter name for the ${param.name} is non-standard.',
         correctionMessage: 'Rename the parameter to `${param.preferredName}`.',
       );

@@ -12,13 +12,18 @@ class SampleHookWidget extends HookWidget {
       // expect_lint: avoid_conditional_hooks
       useState('c');
 
-      // expect_lint: avoid_conditional_hooks
-      final a = useState('b');
+      final a = // expect_lint: avoid_conditional_hooks
+          useState('b');
 
-      // expect_lint: avoid_conditional_hooks
-      final b = Random().nextBool() ? useState('c') : null;
-      // expect_lint: avoid_conditional_hooks
-      final c = Random().nextBool() ? null : useState('c');
+      final b = Random().nextBool()
+          ? // expect_lint: avoid_conditional_hooks
+          useState('c')
+          : null;
+
+      final c = Random().nextBool()
+          ? null
+          : // expect_lint: avoid_conditional_hooks
+          useState('c');
 
       const abc = 'aaa';
 
@@ -29,10 +34,15 @@ class SampleHookWidget extends HookWidget {
 
     final test = useState('abc');
 
-    // expect_lint: avoid_conditional_hooks
-    final b = Random().nextBool() ? useState('c') : null;
-    // expect_lint: avoid_conditional_hooks
-    final c = Random().nextBool() ? null : useState('c');
+    final b = Random().nextBool()
+        ? // expect_lint: avoid_conditional_hooks
+        useState('c')
+        : null;
+
+    final c = Random().nextBool()
+        ? null
+        : // expect_lint: avoid_conditional_hooks
+        useState('c');
 
     return Container(
       key: Key('$test ${b?.value} ${c?.value}'),

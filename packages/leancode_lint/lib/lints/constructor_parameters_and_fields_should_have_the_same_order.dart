@@ -4,12 +4,13 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 /// Displays warning when constructor's parameters' order vary from class
 /// declared fields order. Works for the both named and unnamed parameters.
-class ClassParametersAndFieldsShouldHaveTheSameOrder extends DartLintRule {
-  ClassParametersAndFieldsShouldHaveTheSameOrder()
+class ConstructorParametersAndFieldsShouldHaveTheSameOrder
+    extends DartLintRule {
+  ConstructorParametersAndFieldsShouldHaveTheSameOrder()
       : super(code: _getLintCode());
 
   static const ruleName =
-      'class_parameters_and_fields_should_have_the_same_order';
+      'constructor_parameters_and_fields_should_have_the_same_order';
 
   @override
   void run(
