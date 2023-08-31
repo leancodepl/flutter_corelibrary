@@ -48,25 +48,20 @@ class ClassParametersAndFieldsShouldHaveTheSameOrder extends DartLintRule {
       return true;
     }
 
-    final namedParameters =
-        parameters.where((parameter) => parameter.isNamed).toList();
+    final namedParameters = parameters
+        .where((parameter) => parameter.isNamed && _isNotSuperFormal(parameter))
+        .toList();
 
-    final unnamedParameters =
-        parameters.where((parameter) => !parameter.isNamed).toList();
+    final unnamedParameters = parameters
+        .where(
+          (parameter) => !parameter.isNamed && _isNotSuperFormal(parameter),
+        )
+        .toList();
 
     final fieldsWithNamedParameters = fields
         .where(
           (field) => namedParameters.any(
-            (parameter) {
-              final relevantField = field.fields.variables.first;
-
-              final effectiveFieldName =
-                  relevantField.name.lexeme.startsWith('_')
-                      ? relevantField.name.lexeme.substring(1)
-                      : relevantField.name.lexeme;
-
-              return parameter.name?.lexeme == effectiveFieldName;
-            },
+            (parameter) => _compareEffectiveNames(field, parameter),
           ),
         )
         .toList();
@@ -74,46 +69,46 @@ class ClassParametersAndFieldsShouldHaveTheSameOrder extends DartLintRule {
     final fieldsWithUnnamedParameters = fields
         .where(
           (field) => unnamedParameters.any(
-            (parameter) {
-              final relevantField = field.fields.variables.first;
-
-              final effectiveFieldName =
-                  relevantField.name.lexeme.startsWith('_')
-                      ? relevantField.name.lexeme.substring(1)
-                      : relevantField.name.lexeme;
-
-              return parameter.name?.lexeme == effectiveFieldName;
-            },
+            (parameter) => _compareEffectiveNames(field, parameter),
           ),
         )
         .toList();
 
     for (var i = 0; i < namedParameters.length; i++) {
-      final relevantField = fieldsWithNamedParameters[i].fields.variables.first;
-
-      final effectiveFieldName = relevantField.name.lexeme.startsWith('_')
-          ? relevantField.name.lexeme.substring(1)
-          : relevantField.name.lexeme;
-
-      if (namedParameters[i].name?.lexeme != effectiveFieldName) {
+      if (!_compareEffectiveNames(
+        fieldsWithNamedParameters[i],
+        namedParameters[i],
+      )) {
         return false;
       }
     }
 
     for (var i = 0; i < unnamedParameters.length; i++) {
-      final relevantField =
-          fieldsWithUnnamedParameters[i].fields.variables.first;
-
-      final effectiveFieldName = relevantField.name.lexeme.startsWith('_')
-          ? relevantField.name.lexeme.substring(1)
-          : relevantField.name.lexeme;
-
-      if (unnamedParameters[i].name?.lexeme != effectiveFieldName) {
+      if (!_compareEffectiveNames(
+        fieldsWithUnnamedParameters[i],
+        unnamedParameters[i],
+      )) {
         return false;
       }
     }
 
     return true;
+  }
+
+  bool _isNotSuperFormal(FormalParameter parameter) =>
+      !(parameter.declaredElement?.isSuperFormal ?? false);
+
+  bool _compareEffectiveNames(
+    FieldDeclaration field,
+    FormalParameter parameter,
+  ) {
+    final relevantField = field.fields.variables.first;
+
+    final effectiveFieldName = relevantField.name.lexeme.startsWith('_')
+        ? relevantField.name.lexeme.substring(1)
+        : relevantField.name.lexeme;
+
+    return parameter.name?.lexeme == effectiveFieldName;
   }
 
   static LintCode _getLintCode() => const LintCode(

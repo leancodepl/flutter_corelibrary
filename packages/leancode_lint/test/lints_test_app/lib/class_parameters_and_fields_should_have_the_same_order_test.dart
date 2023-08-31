@@ -217,3 +217,35 @@ class ClassWithValidUnnamedParametersOrderWithNonThis {
   // ignore: unused_field
   final String _otherParameter;
 }
+
+class ClassWithValidUnnamedParametersOrderWithSuper extends _ClassWithField {
+  const ClassWithValidUnnamedParametersOrderWithSuper(
+    this.first,
+    this.second,
+    this.third,
+    this.fourth,
+    this.fifth,
+    super.a,
+  );
+
+  const ClassWithValidUnnamedParametersOrderWithSuper.anotherConstructor(
+    this.first,
+    this.second,
+    this.third,
+    this.fourth,
+    this.fifth,
+    super.a,
+  );
+
+  final int first;
+  final int second;
+  final int third;
+  final int fourth;
+  final int fifth;
+}
+
+class _ClassWithField {
+  const _ClassWithField(this.a);
+
+  final int a;
+}
