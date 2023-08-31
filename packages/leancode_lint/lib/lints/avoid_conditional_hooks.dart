@@ -3,8 +3,7 @@ import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
-/// Displays warning for cubits which do not have the `Cubit` suffix in their
-/// class name.
+/// Displays warning for conditional hooks usage.
 class AvoidConditionalHooks extends DartLintRule {
   AvoidConditionalHooks() : super(code: _getLintCode());
 

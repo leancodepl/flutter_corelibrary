@@ -1,6 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
-import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
@@ -19,8 +18,8 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
   ) {
     context.registry.addClassDeclaration(
       (node) {
-        final isWidgetClass = _isWidgetClass(node);
-        if (!isWidgetClass) {
+        final isThisWidgetClass = isWidgetClass(node);
+        if (!isThisWidgetClass) {
           return;
         }
 
@@ -29,7 +28,7 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
           return;
         }
 
-        final buildMethod = _getBuildMethod(node);
+        final buildMethod = getBuildMethod(node);
         if (buildMethod == null) {
           return;
         }
@@ -54,10 +53,6 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
     );
   }
 
-  MethodDeclaration? _getBuildMethod(ClassDeclaration node) => node.members
-      .whereType<MethodDeclaration>()
-      .firstWhereOrNull((member) => member.name.lexeme == 'build');
-
   bool _hasSliverPrefix(String className) =>
       ['Sliver', '_Sliver'].any(className.startsWith);
 
@@ -66,14 +61,6 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
             expression is InstanceCreationExpression &&
             _hasSliverPrefix(expression.constructorName.type.name2.lexeme),
       );
-
-  bool _isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-        final element? => const TypeChecker.any([
-            TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-            TypeChecker.fromName('State', packageName: 'flutter'),
-          ]).isSuperOf(element),
-        _ => false,
-      };
 
   static LintCode _getLintCode([String? className]) {
     const problemMessageBase =

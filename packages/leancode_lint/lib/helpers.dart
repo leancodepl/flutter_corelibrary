@@ -1,5 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:collection/collection.dart';
+import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 String typeParametersString(
   Iterable<TypeParameter> typeParameters, {
@@ -141,3 +143,16 @@ Iterable<Expression?> getAllInnerReturnStatements(Statement statement) {
       return [];
   }
 }
+
+bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
+      final element? => const TypeChecker.any([
+          TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
+          TypeChecker.fromName('State', packageName: 'flutter'),
+          TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+        ]).isSuperOf(element),
+      _ => false,
+    };
+
+MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
+    .whereType<MethodDeclaration>()
+    .firstWhereOrNull((member) => member.name.lexeme == 'build');
