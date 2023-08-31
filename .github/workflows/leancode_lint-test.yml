@@ -47,7 +47,10 @@ jobs:
           restore-keys: ${{ runner.os }}-pub-
 
       - name: Run lint rules tests
-        run: cd test/lints_test_app/ && flutter pub get && dart run custom_lint
+        run: |
+          cd test/lints_test_app/
+          flutter pub get
+          dart run custom_lint
 
       - uses: codecov/codecov-action@v1
         with:
