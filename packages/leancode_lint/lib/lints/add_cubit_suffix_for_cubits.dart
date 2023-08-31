@@ -37,9 +37,6 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
     );
   }
 
-  @override
-  List<Fix> getFixes() => [];
-
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
 
   bool _isCubitClass(ClassDeclaration node) =>

@@ -2,6 +2,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+/// Displays warning when constructor's parameters' order vary from class
+/// declared fields order. Works for the both named and unnamed parameters.
 class ClassParametersAndFieldsShouldHaveTheSameOrder extends DartLintRule {
   ClassParametersAndFieldsShouldHaveTheSameOrder()
       : super(code: _getLintCode());
@@ -26,12 +28,15 @@ class ClassParametersAndFieldsShouldHaveTheSameOrder extends DartLintRule {
         final constructors = node.members.whereType<ConstructorDeclaration>();
         for (final constructor in constructors) {
           if (!_hasValidOrder(constructor, fields)) {
+            final firstParameter = constructor.parameters.parameters.first;
+            final lastParameter = constructor.parameters.parameters.last;
+
             reporter.reportErrorForOffset(
               _getLintCode(),
-              constructor.parameters.parameters.first.offset,
-              constructor.parameters.parameters.last.offset +
-                  constructor.parameters.parameters.last.length -
-                  constructor.parameters.parameters.first.offset,
+              firstParameter.offset,
+              lastParameter.offset +
+                  lastParameter.length -
+                  firstParameter.offset,
             );
           }
         }
