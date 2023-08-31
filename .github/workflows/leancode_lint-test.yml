@@ -47,8 +47,8 @@ jobs:
           restore-keys: ${{ runner.os }}-pub-
 
       - name: Run lint rules tests
-        working-directory: /packages/leancode_lint/test/lints_test_app/
         run: |
+          cd test/lints_test_app/
           flutter pub get
           dart run custom_lint
 
