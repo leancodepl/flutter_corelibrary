@@ -1,0 +1,17 @@
+include: package:leancode_lint/analysis_options.yaml
+
+custom_lint:
+  rules:
+    - use_design_system_item:
+      LftText:
+        - instead_of: Text
+          from_package: flutter
+        - instead_of: RichText
+          from_package: flutter
+      LftScaffold:
+        - instead_of: Scaffold
+          from_package: flutter
+
+analyzer:
+  plugins:
+    - custom_lint

@@ -1,0 +1,20 @@
+name: lints_test_app
+description: Flutter app for lint rules testing
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  leancode_lint:
+    path: ../../../leancode_lint
+
+flutter:
+  uses-material-design: true
