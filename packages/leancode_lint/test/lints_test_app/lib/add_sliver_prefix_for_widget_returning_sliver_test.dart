@@ -30,10 +30,10 @@ class WidgetImpostor extends WidgetImpostorInterface {
   }
 }
 
+// expect_lint: add_sliver_prefix_for_widget_returning_sliver
 class NotPrefixedWidgetReturningSliver extends StatelessWidget {
   const NotPrefixedWidgetReturningSliver({super.key});
 
-// expect_lint: add_sliver_prefix_for_widget_returning_sliver
   @override
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter();

@@ -46,7 +46,7 @@ jobs:
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
-      - name: Enter test directory
+      - name: Run lint rules tests
         run: cd test/lints_test_app/ && flutter pub get && dart run custom_lint
 
       - uses: codecov/codecov-action@v1
