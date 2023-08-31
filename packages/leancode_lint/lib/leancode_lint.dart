@@ -4,7 +4,7 @@ import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/lints/add_sliver_prefix_for_widget_returning_sliver.dart';
 import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
-import 'package:leancode_lint/lints/class_parameters_and_fields_should_have_the_same_order.dart';
+import 'package:leancode_lint/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:leancode_lint/lints/start_comment_with_space.dart';
 import 'package:leancode_lint/lints/use_design_system_item.dart';
