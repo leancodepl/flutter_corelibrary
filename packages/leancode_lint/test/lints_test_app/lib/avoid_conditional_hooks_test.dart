@@ -12,6 +12,7 @@ class SampleHookWidget extends HookWidget {
       // expect_lint: avoid_conditional_hooks
       useState('c');
 
+      // expect_lint: avoid_conditional_hooks
       final a = useState('b');
 
       // expect_lint: avoid_conditional_hooks

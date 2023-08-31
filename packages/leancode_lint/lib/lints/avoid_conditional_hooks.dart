@@ -25,15 +25,26 @@ class AvoidConditionalHooks extends DartLintRule {
             for (final variable in variables.variables) {
               final expression = variable.initializer;
 
-              if (expression != null &&
-                  isHook(expression) &&
-                  expression is ConditionalExpression) {
-                reporter.reportErrorForOffset(
-                  _getLintCode(),
-                  expression.beginToken.offset,
-                  expression.length,
-                );
-              }
+              return switch (expression) {
+                ConditionalExpression(
+                  :final thenExpression,
+                  :final elseExpression,
+                ) =>
+                  [thenExpression, elseExpression].where(isHook).forEach(
+                        (hookExpression) => reporter.reportErrorForOffset(
+                          _getLintCode(),
+                          hookExpression.beginToken.offset,
+                          hookExpression.length,
+                        ),
+                      ),
+                final _? when isHook(expression) && isInConditionalStatement =>
+                  reporter.reportErrorForOffset(
+                    _getLintCode(),
+                    expression.beginToken.offset,
+                    expression.length,
+                  ),
+                _ => null,
+              };
             }
           } else if (isInConditionalStatement) {
             reporter.reportErrorForOffset(
