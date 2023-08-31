@@ -33,17 +33,17 @@ Expression? maybeGetSingleReturnExpression(FunctionBody body) {
 }
 
 bool isHook(Expression expression) {
-  const hookSuffix = 'use';
+  const hookPrefix = 'use'; //_use
 
   switch (expression) {
     case FunctionExpression(declaredElement: ExecutableElement(:final name)):
-      return name.startsWith(hookSuffix);
+      return name.startsWith(hookPrefix);
 
     case FunctionReference():
-      return expression.toSource().startsWith(hookSuffix);
+      return expression.toSource().startsWith(hookPrefix);
 
     case MethodInvocation(:final methodName):
-      return methodName.name.startsWith(hookSuffix);
+      return methodName.name.startsWith(hookPrefix);
 
     case ConditionalExpression(:final thenExpression, :final elseExpression):
       return isHook(thenExpression) || isHook(elseExpression);

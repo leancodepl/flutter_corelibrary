@@ -18,6 +18,8 @@ class SampleHookWidgetUsingHooks extends HookWidget {
   Widget build(BuildContext context) {
     final a = useState('test');
 
+    useAutomaticKeepAlive();
+
     return Container(
       key: Key(a.value),
     );

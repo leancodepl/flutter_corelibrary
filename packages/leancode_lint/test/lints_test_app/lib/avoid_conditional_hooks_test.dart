@@ -11,7 +11,9 @@ class SampleHookWidget extends HookWidget {
     if (Random().nextBool()) {
       // expect_lint: avoid_conditional_hooks
       useState('c');
+
       final a = useState('b');
+
       // expect_lint: avoid_conditional_hooks
       final b = Random().nextBool() ? useState('c') : null;
       // expect_lint: avoid_conditional_hooks
