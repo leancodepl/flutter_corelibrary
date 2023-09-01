@@ -36,7 +36,7 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
   const hookPrefixes = ['use', '_use'];
 
   switch (expression) {
-    case AwaitExpression(:final expression):
+    case AwaitExpression():
       return getAllInnerHookExpressions(expression);
 
     case SwitchExpression(:final cases):
@@ -73,8 +73,8 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
         if (hookPrefixes.any(methodName.name.startsWith)) expression,
       ];
 
-    case FunctionExpressionInvocation(:final function):
-      return getAllInnerHookExpressions(function);
+    case FunctionExpressionInvocation():
+      return [];
 
     case AssignmentExpression(:final rightHandSide):
       return getAllInnerHookExpressions(rightHandSide);
@@ -88,8 +88,8 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
         ...getAllInnerHookExpressions(elseExpression),
       ];
 
-    case NullShortableExpression(:final nullShortingTermination):
-      return getAllInnerHookExpressions(nullShortingTermination);
+    case NullShortableExpression():
+      return [];
 
     case ParenthesizedExpression(:final expression):
       return getAllInnerHookExpressions(expression);
