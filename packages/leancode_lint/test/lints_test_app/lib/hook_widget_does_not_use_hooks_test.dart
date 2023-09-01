@@ -26,6 +26,19 @@ class SampleHookWidgetUsingHooks extends HookWidget {
   }
 }
 
+class HookWidgetUsingPrivateHook extends HookWidget {
+  const HookWidgetUsingPrivateHook({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    _usePrivateHook();
+
+    return Container();
+  }
+
+  void _usePrivateHook() {}
+}
+
 class SampleStatelessWidget extends StatelessWidget {
   const SampleStatelessWidget({super.key});
 

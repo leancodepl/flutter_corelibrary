@@ -17,3 +17,8 @@ class NotProperlyNamedWithDifferentSuperClass extends ProperlyNamedCubit {
 class ProperlyNamedWithDifferentSuperClassCubit extends ProperlyNamedCubit {
   ProperlyNamedWithDifferentSuperClassCubit();
 }
+
+// expect_lint: add_cubit_suffix_for_your_cubits
+class ClassExtendingOtherCubitClassWithoutSuffix extends NotProperlyNamed {
+  ClassExtendingOtherCubitClassWithoutSuffix();
+}

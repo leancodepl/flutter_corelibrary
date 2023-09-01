@@ -237,3 +237,48 @@ class ClassWithMixedParametersWithInvalidOrder extends _AbstractClassWithField {
   // ignore: unused_field
   final String _test;
 }
+
+class ClassWithValidOrderButOneFieldSetInConstructorBody {
+  const ClassWithValidOrderButOneFieldSetInConstructorBody({
+    required this.first,
+    required this.second,
+    required this.fourth,
+    required this.fifth,
+  }) : third = 3;
+
+  final int first;
+  final int second;
+  final int third;
+  final int fourth;
+  final int fifth;
+}
+
+class ClassWithValidOrderButOneFieldHasInitializer {
+  const ClassWithValidOrderButOneFieldHasInitializer({
+    required this.first,
+    required this.second,
+    required this.fourth,
+    required this.fifth,
+  });
+
+  final int first;
+  final int second;
+  final third = 3;
+  final int fourth;
+  final int fifth;
+}
+
+class ClassWithValidOrderButOneFieldIsNullableAndMutable {
+  ClassWithValidOrderButOneFieldIsNullableAndMutable({
+    required this.first,
+    required this.second,
+    required this.fourth,
+    required this.fifth,
+  });
+
+  final int first;
+  final int second;
+  int? third;
+  final int fourth;
+  final int fifth;
+}
