@@ -32,69 +32,123 @@ Expression? maybeGetSingleReturnExpression(FunctionBody body) {
   };
 }
 
-bool isHook(Expression expression) {
-  const hookPrefix = 'use'; //_use
+Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
+  const hookPrefixes = ['use', '_use'];
 
   switch (expression) {
-    case FunctionExpression(declaredElement: ExecutableElement(:final name)):
-      return name.startsWith(hookPrefix);
+    case AwaitExpression(:final expression):
+      return getAllInnerHookExpressions(expression);
+
+    case SwitchExpression(:final cases):
+      return cases.expand(
+        (element) => getAllInnerHookExpressions(element.expression),
+      );
+
+    case FunctionExpression(
+        :final body,
+        declaredElement: ExecutableElement(:final name),
+      ):
+      if (hookPrefixes.any(name.startsWith)) {
+        return [expression];
+      }
+
+      return switch (body) {
+        ExpressionFunctionBody(:final expression) =>
+          getAllInnerHookExpressions(expression),
+        BlockFunctionBody(:final block)
+            when block.statements
+                .expand(getAllStatementsContainingHooks)
+                .isNotEmpty =>
+          [expression],
+        _ => [],
+      };
 
     case FunctionReference():
-      return expression.toSource().startsWith(hookPrefix);
+      return [
+        if (hookPrefixes.any(expression.toSource().startsWith)) expression,
+      ];
 
     case MethodInvocation(:final methodName):
-      return methodName.name.startsWith(hookPrefix);
+      return [
+        if (hookPrefixes.any(methodName.name.startsWith)) expression,
+      ];
+
+    case FunctionExpressionInvocation(:final function):
+      return getAllInnerHookExpressions(function);
+
+    case AssignmentExpression(:final rightHandSide):
+      return getAllInnerHookExpressions(rightHandSide);
+
+    case InvocationExpression(:final function):
+      return getAllInnerHookExpressions(function);
 
     case ConditionalExpression(:final thenExpression, :final elseExpression):
-      return isHook(thenExpression) || isHook(elseExpression);
+      return [
+        ...getAllInnerHookExpressions(thenExpression),
+        ...getAllInnerHookExpressions(elseExpression),
+      ];
+
+    case NullShortableExpression(:final nullShortingTermination):
+      return getAllInnerHookExpressions(nullShortingTermination);
+
+    case ParenthesizedExpression(:final expression):
+      return getAllInnerHookExpressions(expression);
+
+    case InstanceCreationExpression():
+      return [];
 
     default:
-      return false;
+      return [];
   }
 }
 
-Iterable<Statement> getAllInnerHookStatements(Statement statement) {
+Iterable<Statement> getAllStatementsContainingHooks(Statement statement) {
   switch (statement) {
     case IfStatement():
       return [
-        ...getAllInnerHookStatements(statement.thenStatement),
+        ...getAllStatementsContainingHooks(statement.thenStatement),
         if (statement.elseStatement case final statement?)
-          ...getAllInnerHookStatements(statement),
+          ...getAllStatementsContainingHooks(statement),
       ];
 
     case ForStatement(:final body):
-      return getAllInnerHookStatements(body);
+      return getAllStatementsContainingHooks(body);
 
     case Block():
-      return statement.statements.expand(getAllInnerHookStatements);
+      return statement.statements.expand(getAllStatementsContainingHooks);
 
     case TryStatement(:final body, :final catchClauses, :final finallyBlock):
       return [
-        ...body.statements.expand(getAllInnerHookStatements),
+        ...body.statements.expand(getAllStatementsContainingHooks),
         ...catchClauses
             .expand((clause) => clause.body.statements)
-            .expand(getAllInnerHookStatements),
-        ...?finallyBlock?.statements.expand(getAllInnerHookStatements),
+            .expand(getAllStatementsContainingHooks),
+        ...?finallyBlock?.statements.expand(getAllStatementsContainingHooks),
       ];
 
     case DoStatement(:final body):
-      return getAllInnerHookStatements(body);
+      return getAllStatementsContainingHooks(body);
 
     case WhileStatement(:final body):
-      return getAllInnerHookStatements(body);
+      return getAllStatementsContainingHooks(body);
 
     case VariableDeclarationStatement():
       return [
         if (statement.variables.variables
             .map((variable) => variable.initializer)
             .nonNulls
-            .any(isHook))
+            .any(
+              (expression) => getAllInnerHookExpressions(expression).isNotEmpty,
+            ))
           statement,
       ];
 
     case ExpressionStatement():
+      final hasHookExpressions =
+          getAllInnerHookExpressions(statement.expression).isNotEmpty;
+
       return [
-        if (isHook(statement.expression)) statement,
+        if (hasHookExpressions) statement,
       ];
 
     default:

@@ -17,7 +17,7 @@ class AvoidConditionalHooks extends DartLintRule {
   ) {
     context.registry.addStatement(
       (node) {
-        final innerHooks = getAllInnerHookStatements(node);
+        final innerHooks = getAllStatementsContainingHooks(node);
         final isInConditionalStatement = _isConditionalStatement(node);
 
         for (final hook in innerHooks) {
@@ -30,14 +30,21 @@ class AvoidConditionalHooks extends DartLintRule {
                   :final thenExpression,
                   :final elseExpression,
                 ) =>
-                  [thenExpression, elseExpression].where(isHook).forEach(
+                  [thenExpression, elseExpression]
+                      .where(
+                        (expression) =>
+                            getAllInnerHookExpressions(expression).isNotEmpty,
+                      )
+                      .forEach(
                         (hookExpression) => reporter.reportErrorForOffset(
                           _getLintCode(),
                           hookExpression.beginToken.offset,
                           hookExpression.length,
                         ),
                       ),
-                final _? when isHook(expression) && isInConditionalStatement =>
+                final _?
+                    when getAllInnerHookExpressions(expression).isNotEmpty &&
+                        isInConditionalStatement =>
                   reporter.reportErrorForOffset(
                     _getLintCode(),
                     expression.beginToken.offset,
