@@ -37,7 +37,11 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
 
   switch (expression) {
     case AwaitExpression():
-      return getAllInnerHookExpressions(expression);
+      return [
+        if (hookPrefixes
+            .any(expression.expression.beginToken.lexeme.startsWith))
+          expression,
+      ];
 
     case SwitchExpression(:final cases):
       return cases.expand(
@@ -80,7 +84,9 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
       return getAllInnerHookExpressions(rightHandSide);
 
     case InvocationExpression(:final function):
-      return getAllInnerHookExpressions(function);
+      return [
+        if (hookPrefixes.any(function.beginToken.lexeme.startsWith)) expression,
+      ];
 
     case ConditionalExpression(:final thenExpression, :final elseExpression):
       return [
@@ -92,7 +98,10 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
       return [];
 
     case ParenthesizedExpression(:final expression):
-      return getAllInnerHookExpressions(expression);
+      return [
+        if (hookPrefixes.any(expression.beginToken.lexeme.startsWith))
+          expression,
+      ];
 
     case InstanceCreationExpression():
       return [];

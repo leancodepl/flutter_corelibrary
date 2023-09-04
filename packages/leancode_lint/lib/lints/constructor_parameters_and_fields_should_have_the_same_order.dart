@@ -80,7 +80,9 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         )
         .toList();
 
-    for (var i = 0; i < namedParameters.length; i++) {
+    for (var i = 0;
+        i < namedParameters.length && i < fieldsWithNamedParameters.length;
+        i++) {
       if (!_compareEffectiveNames(
         fieldsWithNamedParameters[i],
         namedParameters[i],
@@ -89,7 +91,9 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
       }
     }
 
-    for (var i = 0; i < unnamedParameters.length; i++) {
+    for (var i = 0;
+        i < unnamedParameters.length && i < fieldsWithUnnamedParameters.length;
+        i++) {
       if (!_compareEffectiveNames(
         fieldsWithUnnamedParameters[i],
         unnamedParameters[i],
@@ -114,7 +118,12 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         ? relevantField.name.lexeme.substring(1)
         : relevantField.name.lexeme;
 
-    return parameter.name?.lexeme == effectiveFieldName;
+    final effectiveParameterName =
+        parameter.name?.lexeme.startsWith('_') ?? false
+            ? parameter.name?.lexeme.substring(1)
+            : parameter.name?.lexeme;
+
+    return effectiveParameterName == effectiveFieldName;
   }
 
   static LintCode _getLintCode() => const LintCode(
