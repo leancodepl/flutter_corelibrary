@@ -75,10 +75,14 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
     case MethodInvocation(:final methodName):
       return [
         if (hookPrefixes.any(methodName.name.startsWith)) expression,
+        ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
       ];
 
-    case FunctionExpressionInvocation():
-      return [];
+    case FunctionExpressionInvocation(:final function):
+      return [
+        if (hookPrefixes.any(function.beginToken.lexeme.startsWith)) expression,
+        ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
+      ];
 
     case AssignmentExpression(:final rightHandSide):
       return getAllInnerHookExpressions(rightHandSide);
@@ -86,6 +90,7 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
     case InvocationExpression(:final function):
       return [
         if (hookPrefixes.any(function.beginToken.lexeme.startsWith)) expression,
+        ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
       ];
 
     case ConditionalExpression(:final thenExpression, :final elseExpression):
@@ -103,8 +108,13 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
           expression,
       ];
 
+    case NamedExpression():
+      return getAllInnerHookExpressions(expression.expression);
+
     case InstanceCreationExpression():
-      return [];
+      return [
+        ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
+      ];
 
     default:
       return [];
@@ -158,6 +168,11 @@ Iterable<Statement> getAllStatementsContainingHooks(Statement statement) {
 
       return [
         if (hasHookExpressions) statement,
+      ];
+
+    case ReturnStatement(:final expression?):
+      return [
+        if (getAllInnerHookExpressions(expression).isNotEmpty) statement,
       ];
 
     default:

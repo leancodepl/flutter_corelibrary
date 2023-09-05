@@ -19,8 +19,16 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
   ) {
     context.registry.addClassDeclaration(
       (node) {
-        final isHookWidget =
-            node.extendsClause?.superclass.name2.lexeme == 'HookWidget';
+        final element = node.declaredElement;
+        if (element == null) {
+          return;
+        }
+
+        final isHookWidget = const TypeChecker.fromName(
+          'HookWidget',
+          packageName: 'flutter_hooks',
+        ).isSuperOf(element);
+
         if (!isHookWidget) {
           return;
         }
@@ -31,25 +39,25 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
         }
 
         // Get all hook  expressions from build method
-        final hasHooks = switch (buildMethod.body) {
+        final hooks = switch (buildMethod.body) {
           ExpressionFunctionBody(:final expression) =>
-            getAllInnerHookExpressions(expression).isNotEmpty,
+            getAllInnerHookExpressions(expression),
           BlockFunctionBody(:final block) =>
-            block.statements.expand(getAllStatementsContainingHooks).isNotEmpty,
-          _ => false,
+            block.statements.expand(getAllStatementsContainingHooks),
+          _ => <Expression>[],
         };
 
-        if (hasHooks) {
+        if (hooks.isNotEmpty) {
           return;
         }
 
-        final superclass = node.extendsClause!.superclass;
-
-        reporter.reportErrorForOffset(
-          _getLintCode(),
-          superclass.offset,
-          superclass.length,
-        );
+        if (node.extendsClause case ExtendsClause(:final superclass)) {
+          reporter.reportErrorForOffset(
+            _getLintCode(),
+            superclass.offset,
+            superclass.length,
+          );
+        }
       },
     );
   }

@@ -47,3 +47,27 @@ class SampleStatelessWidget extends StatelessWidget {
     return Container();
   }
 }
+
+class WidgetUsingHookDirectlyInWidget extends HookWidget {
+  const WidgetUsingHookDirectlyInWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    useTextEditingController();
+
+    return PageView(
+      controller: usePageController(),
+    );
+  }
+}
+
+class WidgetUsingHookWhichIsClassInstranceAlias extends HookWidget {
+  const WidgetUsingHookWhichIsClassInstranceAlias({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    useTextEditingController();
+
+    return Container();
+  }
+}

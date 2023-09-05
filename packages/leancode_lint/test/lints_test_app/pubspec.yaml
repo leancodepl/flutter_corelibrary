@@ -15,6 +15,7 @@ dependencies:
   flutter_hooks: ^0.18.5+1
 
 dev_dependencies:
+  custom_lint: ^0.5.3
   leancode_lint:
     path: ../../../leancode_lint
 
