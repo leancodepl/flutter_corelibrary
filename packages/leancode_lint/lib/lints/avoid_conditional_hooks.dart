@@ -70,6 +70,7 @@ class AvoidConditionalHooks extends DartLintRule {
     }) {
       return switch (node) {
         IfStatement(expression: final condition) ||
+        IfElement(expression: final condition) ||
         ConditionalExpression(:final condition) ||
         SwitchStatement(expression: final condition) ||
         SwitchExpression(expression: final condition) when condition != child =>

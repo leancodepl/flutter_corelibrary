@@ -182,3 +182,18 @@ class HookAfterReturn extends HookWidget {
     throw Exception('$a$b');
   }
 }
+
+class CollectionIf extends HookWidget {
+  const CollectionIf({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final a = [
+      if (Random().nextBool())
+        // expect_lint: avoid_conditional_hooks
+        useState(1),
+    ];
+
+    throw Exception('$a');
+  }
+}
