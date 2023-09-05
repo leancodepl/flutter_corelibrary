@@ -100,20 +100,27 @@ class SampleSwitchExpressionHookWidget extends HookWidget {
       };
 }
 
-class SampleSwitchExpressionHookWidget2 extends HookWidget {
-  const SampleSwitchExpressionHookWidget2({super.key});
+class SampleSwitchHookWidget extends HookWidget {
+  const SampleSwitchHookWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     switch (Random().nextInt(10)) {
       case 5:
-        // expect_lint: avoid_conditional_hooks
-        final state = useState(false);
+        final state =
+            // expect_lint: avoid_conditional_hooks
+            useState(false);
 
         return Container(key: Key(state.value.toString()));
-
-      default:
-        return Container();
     }
+
+    return switch (Random().nextInt(10)) {
+      5 => TextField(
+          controller:
+              // expect_lint: avoid_conditional_hooks
+              useTextEditingController(),
+        ),
+      _ => const SizedBox(),
+    };
   }
 }

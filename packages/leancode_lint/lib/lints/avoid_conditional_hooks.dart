@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
@@ -36,89 +35,46 @@ class AvoidConditionalHooks extends DartLintRule {
           return;
         }
 
-        final conditionaHookTokens = switch (buildMethod.body) {
-          ExpressionFunctionBody(:final expression) =>
-            getAllInnerHookExpressions(expression)
-                .where(_isConditional)
-                .map((expression) => expression.beginToken),
-          BlockFunctionBody(:final block) =>
-            block.statements.expand(_getConditionalHooksTokens),
-          _ => <Token>[],
+        // get all hook expressions from build method
+        final hookExpressions = switch (buildMethod.body) {
+          ExpressionFunctionBody(expression: final AstNode node) ||
+          BlockFunctionBody(block: final AstNode node) =>
+            getAllInnerHookExpressions(node),
+          _ => <InvocationExpression>[],
         };
 
-        for (final token in conditionaHookTokens) {
-          reporter.reportErrorForOffset(
-            _getLintCode(),
-            token.offset,
-            token.length,
-          );
+        final hooksCalledConditionally = hookExpressions.where(_isConditional);
+
+        for (final hookExpression in hooksCalledConditionally) {
+          reporter.reportErrorForNode(_getLintCode(), hookExpression);
         }
       },
     );
   }
 
-  bool _isConditional(
-    AstNode node, {
-    bool deepSearch = true,
-    AstNode? child,
-  }) =>
-      switch (node) {
-        IfStatement(:final expression) ||
-        ConditionalExpression(condition: final expression) ||
-        SwitchStatement(:final expression) ||
-        SwitchExpression(:final expression) when expression != child =>
+  bool _isConditional(InvocationExpression node) {
+    bool isConditional(
+      AstNode node, {
+      required AstNode child,
+    }) {
+      return switch (node) {
+        IfStatement(expression: final condition) ||
+        ConditionalExpression(:final condition) ||
+        SwitchStatement(expression: final condition) ||
+        SwitchExpression(expression: final condition) when condition != child =>
           true,
-        _ => switch (deepSearch) {
-            true => switch (node.parent) {
-                final parent? => _isConditional(parent, child: node),
-                _ => false,
-              },
+        _ => switch (node.parent) {
+            final parent? => isConditional(parent, child: node),
             _ => false,
-          }
+          },
       };
-
-  Iterable<Token> _getConditionalHooksTokens(Statement node) {
-    final conditionalHooksTokens = <Token>[];
-
-    final innerHooks = getAllStatementsContainingHooks(node);
-    final isInConditionalStatement = _isConditional(node);
-
-    for (final hook in innerHooks) {
-      if (hook case VariableDeclarationStatement(:final variables)) {
-        for (final variable in variables.variables) {
-          final expression = variable.initializer;
-
-          switch (expression) {
-            case ConditionalExpression(
-                :final thenExpression,
-                :final elseExpression,
-              ):
-              [thenExpression, elseExpression]
-                  .where(
-                    (expression) =>
-                        getAllInnerHookExpressions(expression).isNotEmpty,
-                  )
-                  .forEach(
-                    (hookExpression) => conditionalHooksTokens.add(
-                      hookExpression.beginToken,
-                    ),
-                  );
-            case final _?
-                when getAllInnerHookExpressions(expression).isNotEmpty &&
-                    isInConditionalStatement:
-              conditionalHooksTokens.add(expression.beginToken);
-          }
-        }
-      } else if (isInConditionalStatement) {
-        conditionalHooksTokens.add(hook.beginToken);
-      }
     }
 
-    return conditionalHooksTokens;
+    return isConditional(node, child: node);
   }
 
   static LintCode _getLintCode() => const LintCode(
         name: ruleName,
-        problemMessage: "Don't use conditional hooks",
+        problemMessage: "Don't use hooks conditionally",
       );
 }

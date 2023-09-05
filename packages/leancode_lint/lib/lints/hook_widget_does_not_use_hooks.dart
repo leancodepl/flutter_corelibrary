@@ -39,7 +39,7 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
           return;
         }
 
-        // get all hook  expressions from build method
+        // get all hook expressions from build method
         final hookExpressions = switch (buildMethod.body) {
           ExpressionFunctionBody(expression: final AstNode node) ||
           BlockFunctionBody(block: final AstNode node) =>
