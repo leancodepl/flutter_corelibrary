@@ -52,6 +52,7 @@ class AvoidConditionalHooks extends DartLintRule {
     );
   }
 
+  /// Check if node is present in any conditional branch
   bool _isConditional(InvocationExpression node) {
     bool isConditional(
       AstNode node, {
@@ -62,6 +63,27 @@ class AvoidConditionalHooks extends DartLintRule {
         ConditionalExpression(:final condition) ||
         SwitchStatement(expression: final condition) ||
         SwitchExpression(expression: final condition) when condition != child =>
+          true,
+        BinaryExpression(
+          operator: Token(
+            type: TokenType.QUESTION_QUESTION ||
+                TokenType.AMPERSAND_AMPERSAND ||
+                TokenType.BAR_BAR
+          ),
+          :final rightOperand
+        )
+            when rightOperand == child =>
+          true,
+        AssignmentExpression(
+          operator: Token(
+            type: TokenType.QUESTION_QUESTION_EQ ||
+                TokenType.AMPERSAND_EQ ||
+                TokenType.BAR_EQ ||
+                TokenType.CARET_EQ
+          ),
+          :final rightHandSide,
+        )
+            when rightHandSide == child =>
           true,
         _ => switch (node.parent) {
             final parent? => isConditional(parent, child: node),

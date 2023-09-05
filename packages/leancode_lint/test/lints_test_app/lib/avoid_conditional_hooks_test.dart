@@ -124,3 +124,47 @@ class SampleSwitchHookWidget extends HookWidget {
     };
   }
 }
+
+class ShortCircuits extends HookWidget {
+  const ShortCircuits({super.key, this.notifier});
+
+  final ValueNotifier<int>? notifier;
+
+  @override
+  Widget build(BuildContext context) {
+    // ignore: unused_local_variable
+    final a1 = useMemoized(() => null) ?? 123;
+    // ignore: unused_local_variable
+    final a2 = notifier ??
+        // expect_lint: avoid_conditional_hooks
+        useState(1);
+
+    if (useIsMounted()() || Random().nextBool()) {}
+    if (Random().nextBool() ||
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()()) {}
+    if (useIsMounted()() && Random().nextBool()) {}
+    if (Random().nextBool() &&
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()()) {}
+
+    ValueNotifier<int>? b;
+    b ??=
+        // expect_lint: avoid_conditional_hooks
+        useState(1);
+
+    // ignore: unused_local_variable
+    var c = true;
+    c |=
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()();
+    c &=
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()();
+    c ^=
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()();
+
+    return const SizedBox();
+  }
+}
