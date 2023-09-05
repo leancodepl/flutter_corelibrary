@@ -29,3 +29,21 @@ class SampleWidget extends StatelessWidget {
     );
   }
 }
+
+class LftScaffold extends StatelessWidget {
+  const LftScaffold({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class LftText extends StatelessWidget {
+  const LftText({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
