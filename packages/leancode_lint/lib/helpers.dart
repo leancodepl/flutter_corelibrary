@@ -187,46 +187,33 @@ Iterable<Statement> getAllStatementsContainingHooks(Statement statement) {
   }
 }
 
-/// Returns all return expressions from passed statement recursively.
-Iterable<Expression?> getAllInnerReturnStatements(Statement statement) {
-  switch (statement) {
-    case IfStatement():
-      return [
-        ...getAllInnerReturnStatements(statement.thenStatement),
-        if (statement.elseStatement case final statement?)
-          ...getAllInnerReturnStatements(statement),
-      ];
+class _ReturnExpressionGatherer extends GeneralizingAstVisitor<void> {
+  final List<Expression?> _returnExpressions = [];
 
-    case ForStatement(:final body):
-      return getAllInnerReturnStatements(body);
-
-    case Block():
-      return statement.statements.expand(getAllInnerReturnStatements);
-
-    case TryStatement(:final body, :final catchClauses, :final finallyBlock):
-      return [
-        ...body.statements.expand(getAllInnerReturnStatements),
-        ...catchClauses
-            .expand((clause) => clause.body.statements)
-            .expand(getAllInnerReturnStatements),
-        ...?finallyBlock?.statements.expand(getAllInnerReturnStatements),
-      ];
-
-    case DoStatement(:final body):
-      return getAllInnerReturnStatements(body);
-
-    case WhileStatement(:final body):
-      return getAllInnerReturnStatements(body);
-
-    case ExpressionStatement():
-      return [];
-
-    case ReturnStatement():
-      return [statement.expression];
-
-    default:
-      return [];
+  static List<Expression?> gather(AstNode node) {
+    final visitor = _ReturnExpressionGatherer();
+    node.visitChildren(visitor);
+    return visitor._returnExpressions;
   }
+
+  @override
+  void visitFunctionBody(FunctionBody node) {
+    // stop recursing on a new function body, return statements will be from a different scope
+  }
+
+  @override
+  void visitReturnStatement(ReturnStatement node) {
+    _returnExpressions.add(node.expression);
+  }
+}
+
+/// Returns all return expressions of a function body.
+Iterable<Expression?> getAllReturnExpressions(FunctionBody body) {
+  return switch (body) {
+    BlockFunctionBody(:final block) => _ReturnExpressionGatherer.gather(block),
+    ExpressionFunctionBody(:final expression) => [expression],
+    EmptyFunctionBody() || NativeFunctionBody() => const Iterable.empty(),
+  };
 }
 
 bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
