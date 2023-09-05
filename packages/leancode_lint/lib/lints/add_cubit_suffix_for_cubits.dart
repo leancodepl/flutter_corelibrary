@@ -27,12 +27,10 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
           return;
         }
 
-        if (node case ClassDeclaration(:final declaredElement?)) {
-          reporter.reportErrorForElement(
-            _getLintCode(node.name.lexeme),
-            declaredElement,
-          );
-        }
+        reporter.reportErrorForToken(
+          _getLintCode(node.name.lexeme),
+          node.name,
+        );
       },
     );
   }

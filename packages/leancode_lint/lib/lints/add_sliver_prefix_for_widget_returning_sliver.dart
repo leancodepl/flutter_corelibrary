@@ -38,10 +38,10 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
 
         final isSliver = _anyIsSliver(returnExpressions.nonNulls);
 
-        if (node case ClassDeclaration(:final declaredElement?) when isSliver) {
-          reporter.reportErrorForElement(
+        if (isSliver) {
+          reporter.reportErrorForToken(
             _getLintCode(node.name.lexeme),
-            declaredElement,
+            node.name,
           );
         }
       },

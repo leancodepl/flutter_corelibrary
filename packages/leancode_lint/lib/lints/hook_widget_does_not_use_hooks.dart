@@ -39,23 +39,19 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
           return;
         }
 
-        // Get all hook  expressions from build method
-        final hooks = switch (buildMethod.body) {
+        // get all hook  expressions from build method
+        final hookExpressions = switch (buildMethod.body) {
           ExpressionFunctionBody(expression: final AstNode node) ||
           BlockFunctionBody(block: final AstNode node) =>
             getAllInnerHookExpressions(node),
           _ => <Expression>[],
         };
 
-        if (hooks.isNotEmpty) {
+        if (hookExpressions.isNotEmpty) {
           return;
         }
 
-        reporter.reportErrorForOffset(
-          _getLintCode(),
-          superclass.offset,
-          superclass.length,
-        );
+        reporter.reportErrorForNode(_getLintCode(), superclass);
       },
     );
   }
