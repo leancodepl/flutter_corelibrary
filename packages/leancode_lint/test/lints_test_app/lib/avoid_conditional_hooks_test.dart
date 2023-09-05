@@ -35,9 +35,7 @@ class SampleHookWidget extends HookWidget {
 
       const abc = 'aaa';
 
-      return Container(
-        key: Key('${a.value} $abc ${b?.value} ${c?.value}'),
-      );
+      debugPrint('$a$b$c$abc');
     }
 
     final test = useState('abc');
@@ -132,9 +130,7 @@ class ShortCircuits extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
     final a1 = useMemoized(() => null) ?? 123;
-    // ignore: unused_local_variable
     final a2 = notifier ??
         // expect_lint: avoid_conditional_hooks
         useState(1);
@@ -153,7 +149,6 @@ class ShortCircuits extends HookWidget {
         // expect_lint: avoid_conditional_hooks
         useState(1);
 
-    // ignore: unused_local_variable
     var c = true;
     c |=
         // expect_lint: avoid_conditional_hooks
@@ -165,6 +160,25 @@ class ShortCircuits extends HookWidget {
         // expect_lint: avoid_conditional_hooks
         useIsMounted()();
 
-    return const SizedBox();
+    throw Exception('$a1$a2$c');
+  }
+}
+
+class HookAfterReturn extends HookWidget {
+  const HookAfterReturn({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final a = useState(1);
+
+    if (Random().nextBool()) {
+      return const SizedBox();
+    }
+
+    final b =
+        // expect_lint: avoid_conditional_hooks
+        useState(1);
+
+    throw Exception('$a$b');
   }
 }

@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
@@ -43,7 +44,16 @@ class AvoidConditionalHooks extends DartLintRule {
           _ => <InvocationExpression>[],
         };
 
-        final hooksCalledConditionally = hookExpressions.where(_isConditional);
+        final returnExpressions =
+            getAllReturnExpressions(buildMethod.body).nonNulls;
+        // everything past that return is considered conditional
+        final firstReturn = returnExpressions.isEmpty
+            ? null
+            : returnExpressions
+                .reduce((acc, curr) => acc.offset < curr.offset ? acc : curr);
+
+        final hooksCalledConditionally =
+            hookExpressions.where((e) => _isConditional(firstReturn, e));
 
         for (final hookExpression in hooksCalledConditionally) {
           reporter.reportErrorForNode(_getLintCode(), hookExpression);
@@ -53,7 +63,7 @@ class AvoidConditionalHooks extends DartLintRule {
   }
 
   /// Check if node is present in any conditional branch
-  bool _isConditional(InvocationExpression node) {
+  bool _isConditional(Expression? firstReturn, InvocationExpression node) {
     bool isConditional(
       AstNode node, {
       required AstNode child,
@@ -92,7 +102,14 @@ class AvoidConditionalHooks extends DartLintRule {
       };
     }
 
-    return isConditional(node, child: node);
+    bool isBefore(Expression firstReturn, InvocationExpression node) {
+      return firstReturn.offset < node.offset &&
+          // make sure the hook isn't inside of the return
+          !firstReturn.sourceRange.covers(node.sourceRange);
+    }
+
+    return isConditional(node, child: node) ||
+        (firstReturn != null && isBefore(firstReturn, node));
   }
 
   static LintCode _getLintCode() => const LintCode(
