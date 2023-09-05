@@ -2,6 +2,6 @@ packages/cqrs @Albert221 @shilangyu
 packages/login_client @Albert221
 packages/login_client_flutter @Albert221
 packages/override_api_endpoint @lukaszgarstecki @Xezolpl
-packages/leancode_lint @RobertOdrowaz
+packages/leancode_lint @RobertOdrowaz @shilangyu
 packages/leancode_hooks @bartekpacia
 packages/enhanced_gradients @kotertom
