@@ -43,10 +43,13 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
           expression,
       ];
 
-    case SwitchExpression(:final cases):
-      return cases.expand(
-        (element) => getAllInnerHookExpressions(element.expression),
-      );
+    case SwitchExpression(:final cases, :final expression):
+      return [
+        ...cases.expand(
+          (element) => getAllInnerHookExpressions(element.expression),
+        ),
+        ...getAllInnerHookExpressions(expression),
+      ];
 
     case FunctionExpression(
         :final body,
@@ -84,20 +87,29 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
         ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
       ];
 
-    case AssignmentExpression(:final rightHandSide):
-      return getAllInnerHookExpressions(rightHandSide);
-
     case InvocationExpression(:final function):
       return [
         if (hookPrefixes.any(function.beginToken.lexeme.startsWith)) expression,
         ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
       ];
 
+    case AssignmentExpression(:final rightHandSide):
+      return getAllInnerHookExpressions(rightHandSide);
+
     case ConditionalExpression(:final thenExpression, :final elseExpression):
       return [
+        ...getAllInnerHookExpressions(expression.condition),
         ...getAllInnerHookExpressions(thenExpression),
         ...getAllInnerHookExpressions(elseExpression),
       ];
+
+    case InstanceCreationExpression():
+      return [
+        ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
+      ];
+
+    case NamedExpression():
+      return getAllInnerHookExpressions(expression.expression);
 
     case NullShortableExpression():
       return [];
@@ -106,14 +118,6 @@ Iterable<Expression> getAllInnerHookExpressions(Expression expression) {
       return [
         if (hookPrefixes.any(expression.beginToken.lexeme.startsWith))
           expression,
-      ];
-
-    case NamedExpression():
-      return getAllInnerHookExpressions(expression.expression);
-
-    case InstanceCreationExpression():
-      return [
-        ...expression.argumentList.arguments.expand(getAllInnerHookExpressions),
       ];
 
     default:
@@ -129,6 +133,11 @@ Iterable<Statement> getAllStatementsContainingHooks(Statement statement) {
         if (statement.elseStatement case final statement?)
           ...getAllStatementsContainingHooks(statement),
       ];
+
+    case SwitchStatement():
+      return statement.members
+          .expand((member) => member.statements)
+          .expand(getAllStatementsContainingHooks);
 
     case ForStatement(:final body):
       return getAllStatementsContainingHooks(body);
@@ -163,11 +172,9 @@ Iterable<Statement> getAllStatementsContainingHooks(Statement statement) {
       ];
 
     case ExpressionStatement():
-      final hasHookExpressions =
-          getAllInnerHookExpressions(statement.expression).isNotEmpty;
-
       return [
-        if (hasHookExpressions) statement,
+        if (getAllInnerHookExpressions(statement.expression).isNotEmpty)
+          statement,
       ];
 
     case ReturnStatement(:final expression?):
