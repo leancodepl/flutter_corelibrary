@@ -71,3 +71,12 @@ class WidgetUsingHookWhichIsClassInstranceAlias extends HookWidget {
     return Container();
   }
 }
+
+class WidgetTransitivelyBeingAHookWidget extends SampleHookWidgetUsingHooks {
+  const WidgetTransitivelyBeingAHookWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
