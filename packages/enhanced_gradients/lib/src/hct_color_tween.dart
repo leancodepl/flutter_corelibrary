@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:enhanced_gradients/src/lerp_utils.dart';
 import 'package:flutter/animation.dart';
-import 'package:material_color_utilities/hct/hct_solver.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 /// A Color [Tween] interpolated in the HCT color space provided by the package
@@ -37,9 +36,7 @@ Color _lerpHctNonNullable(Color colorA, Color colorB, double t) {
   final tone = lerpDouble(beginHct.tone, endHct.tone, t)!;
 
   return Color(
-    // This is a slight optimization over calling
-    // `Hct.from(hue, chroma, tone).toInt()`
-    HctSolver.solveToInt(hue, chroma, tone),
+    Hct.from(hue, chroma, tone).toInt(),
   ).withOpacity(opacity);
 }
 

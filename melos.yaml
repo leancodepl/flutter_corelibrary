@@ -1,7 +1,7 @@
 name: flutter_corelibrary
 
 packages:
-  - packages/**
+  - packages/*
 
 scripts:
   get:

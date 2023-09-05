@@ -10,6 +10,9 @@ on:
     branches: [master]
     paths:
       - "packages/enhanced_gradients/**"
+  # Run a check daily due to the dependency on `material_color_utilities: any`
+  schedule:
+    - cron: "0 17 * * *"
 
 jobs:
   test:
@@ -21,6 +24,7 @@ jobs:
       matrix:
         include:
           - version: "3.10.0"
+          - channel: "stable"
 
     defaults:
       run:

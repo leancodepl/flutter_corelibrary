@@ -2,7 +2,7 @@ name: enhanced_gradients publish
 
 on:
   push:
-    tags: ["enhanced_gradients-v*"]
+    tags: ['enhanced_gradients-v*']
 
 jobs:
   publish:
