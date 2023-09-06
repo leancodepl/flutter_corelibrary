@@ -34,19 +34,14 @@ class AddSliverPrefixForWidgetReturningSliver extends DartLintRule {
         }
 
         // Get all return expressions from build method
-        final returnExpressions = switch (buildMethod.body) {
-          ExpressionFunctionBody(:final expression) => [expression],
-          BlockFunctionBody(:final block) =>
-            block.statements.expand(getAllInnerReturnStatements).toList(),
-          _ => <Expression>[],
-        };
+        final returnExpressions = getAllReturnExpressions(buildMethod.body);
 
         final isSliver = _anyIsSliver(returnExpressions.nonNulls);
 
-        if (node case ClassDeclaration(:final declaredElement?) when isSliver) {
-          reporter.reportErrorForElement(
+        if (isSliver) {
+          reporter.reportErrorForToken(
             _getLintCode(node.name.lexeme),
-            declaredElement,
+            node.name,
           );
         }
       },

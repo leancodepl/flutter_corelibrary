@@ -19,17 +19,18 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
   ) {
     context.registry.addClassDeclaration(
       (node) {
-        final element = node.declaredElement;
-        if (element == null) {
+        final superclass = node.extendsClause?.superclass;
+        final superclassElement = superclass?.element;
+        if (superclass == null || superclassElement == null) {
           return;
         }
 
-        final isHookWidget = const TypeChecker.fromName(
+        final isDirectHookWidget = const TypeChecker.fromName(
           'HookWidget',
           packageName: 'flutter_hooks',
-        ).isSuperOf(element);
+        ).isExactly(superclassElement);
 
-        if (!isHookWidget) {
+        if (!isDirectHookWidget) {
           return;
         }
 
@@ -38,26 +39,19 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
           return;
         }
 
-        // Get all hook  expressions from build method
-        final hooks = switch (buildMethod.body) {
-          ExpressionFunctionBody(:final expression) =>
-            getAllInnerHookExpressions(expression),
-          BlockFunctionBody(:final block) =>
-            block.statements.expand(getAllStatementsContainingHooks),
+        // get all hook expressions from build method
+        final hookExpressions = switch (buildMethod.body) {
+          ExpressionFunctionBody(expression: final AstNode node) ||
+          BlockFunctionBody(block: final AstNode node) =>
+            getAllInnerHookExpressions(node),
           _ => <Expression>[],
         };
 
-        if (hooks.isNotEmpty) {
+        if (hookExpressions.isNotEmpty) {
           return;
         }
 
-        if (node.extendsClause case ExtendsClause(:final superclass)) {
-          reporter.reportErrorForOffset(
-            _getLintCode(),
-            superclass.offset,
-            superclass.length,
-          );
-        }
+        reporter.reportErrorForNode(_getLintCode(), superclass);
       },
     );
   }
@@ -70,7 +64,7 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
   static LintCode _getLintCode() => const LintCode(
         name: ruleName,
         problemMessage: 'This HookWidget does not use hooks.',
-        correctionMessage: 'Convert it to StatelessWidget or StatefulWidget',
+        correctionMessage: 'Convert it to a StatelessWidget',
       );
 }
 

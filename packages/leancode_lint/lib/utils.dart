@@ -7,4 +7,6 @@ extension IterableExtensions<T> on Iterable<T> {
       yield (iter1.current, iter2.current);
     }
   }
+
+  T? firstWhereOrNull(bool Function(T) test) => where(test).firstOrNull;
 }

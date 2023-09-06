@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-// expect_lint: hook_widget_does_not_use_hooks
-class SampleHookWidgetNotUsingHooks extends HookWidget {
+class SampleHookWidgetNotUsingHooks extends
+    // expect_lint: hook_widget_does_not_use_hooks
+    HookWidget {
   const SampleHookWidgetNotUsingHooks({super.key});
 
   @override
@@ -69,5 +70,31 @@ class WidgetUsingHookWhichIsClassInstranceAlias extends HookWidget {
     useTextEditingController();
 
     return Container();
+  }
+}
+
+class WidgetTransitivelyBeingAHookWidget extends SampleHookWidgetUsingHooks {
+  const WidgetTransitivelyBeingAHookWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class WidgetUsingBuilder extends
+    // expect_lint: hook_widget_does_not_use_hooks
+    HookWidget {
+  const WidgetUsingBuilder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        final state = useState(1);
+
+        throw Exception('$state');
+      },
+    );
   }
 }

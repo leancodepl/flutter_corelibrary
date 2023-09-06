@@ -35,9 +35,7 @@ class SampleHookWidget extends HookWidget {
 
       const abc = 'aaa';
 
-      return Container(
-        key: Key('${a.value} $abc ${b?.value} ${c?.value}'),
-      );
+      debugPrint('$a$b$c$abc');
     }
 
     final test = useState('abc');
@@ -100,20 +98,102 @@ class SampleSwitchExpressionHookWidget extends HookWidget {
       };
 }
 
-class SampleSwitchExpressionHookWidget2 extends HookWidget {
-  const SampleSwitchExpressionHookWidget2({super.key});
+class SampleSwitchHookWidget extends HookWidget {
+  const SampleSwitchHookWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     switch (Random().nextInt(10)) {
       case 5:
-        // expect_lint: avoid_conditional_hooks
-        final state = useState(false);
+        final state =
+            // expect_lint: avoid_conditional_hooks
+            useState(false);
 
         return Container(key: Key(state.value.toString()));
-
-      default:
-        return Container();
     }
+
+    return switch (Random().nextInt(10)) {
+      5 => TextField(
+          controller:
+              // expect_lint: avoid_conditional_hooks
+              useTextEditingController(),
+        ),
+      _ => const SizedBox(),
+    };
+  }
+}
+
+class ShortCircuits extends HookWidget {
+  const ShortCircuits({super.key, this.notifier});
+
+  final ValueNotifier<int>? notifier;
+
+  @override
+  Widget build(BuildContext context) {
+    final a1 = useMemoized(() => null) ?? 123;
+    final a2 = notifier ??
+        // expect_lint: avoid_conditional_hooks
+        useState(1);
+
+    if (useIsMounted()() || Random().nextBool()) {}
+    if (Random().nextBool() ||
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()()) {}
+    if (useIsMounted()() && Random().nextBool()) {}
+    if (Random().nextBool() &&
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()()) {}
+
+    ValueNotifier<int>? b;
+    b ??=
+        // expect_lint: avoid_conditional_hooks
+        useState(1);
+
+    var c = true;
+    c |=
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()();
+    c &=
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()();
+    c ^=
+        // expect_lint: avoid_conditional_hooks
+        useIsMounted()();
+
+    throw Exception('$a1$a2$c');
+  }
+}
+
+class HookAfterReturn extends HookWidget {
+  const HookAfterReturn({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final a = useState(1);
+
+    if (Random().nextBool()) {
+      return const SizedBox();
+    }
+
+    final b =
+        // expect_lint: avoid_conditional_hooks
+        useState(1);
+
+    throw Exception('$a$b');
+  }
+}
+
+class CollectionIf extends HookWidget {
+  const CollectionIf({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final a = [
+      if (Random().nextBool())
+        // expect_lint: avoid_conditional_hooks
+        useState(1),
+    ];
+
+    throw Exception('$a');
   }
 }
