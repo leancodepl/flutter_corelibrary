@@ -62,6 +62,12 @@ class LoggingHttpClient extends http.BaseClient
         );
       }),
       response.statusCode,
+      contentLength: response.contentLength,
+      request: response.request,
+      headers: response.headers,
+      isRedirect: response.isRedirect,
+      persistentConnection: response.persistentConnection,
+      reasonPhrase: response.reasonPhrase,
     );
   }
 }
