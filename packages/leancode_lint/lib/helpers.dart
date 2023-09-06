@@ -42,6 +42,11 @@ class _HookExpressionsGatherer extends GeneralizingAstVisitor<void> {
   }
 
   @override
+  void visitFunctionBody(FunctionBody node) {
+    // stop recursing on a new function body
+  }
+
+  @override
   void visitInvocationExpression(InvocationExpression node) {
     const hookPrefixes = ['use', '_use'];
 
