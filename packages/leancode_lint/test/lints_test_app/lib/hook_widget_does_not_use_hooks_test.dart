@@ -98,3 +98,18 @@ class WidgetUsingBuilder extends
     );
   }
 }
+
+final a =
+    // expect_lint: hook_widget_does_not_use_hooks
+    HookBuilder(
+  builder: (context) {
+    return const SizedBox();
+  },
+);
+
+final b = HookBuilder(
+  builder: (context) {
+    useState(123);
+    return const SizedBox();
+  },
+);

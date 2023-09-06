@@ -16,50 +16,29 @@ class AvoidConditionalHooks extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration(
-      (node) {
-        final element = node.declaredElement;
-        if (element == null) {
-          return;
-        }
+    context.registry.addHookWidgetBody((node, diagnosticNode) {
+      // get all hook expressions from build method
+      final hookExpressions = switch (node) {
+        ExpressionFunctionBody(expression: final AstNode node) ||
+        BlockFunctionBody(block: final AstNode node) =>
+          getAllInnerHookExpressions(node),
+        _ => <InvocationExpression>[],
+      };
 
-        final isHookWidget = const TypeChecker.fromName(
-          'HookWidget',
-          packageName: 'flutter_hooks',
-        ).isSuperOf(element);
-        if (!isHookWidget) {
-          return;
-        }
+      final returnExpressions = getAllReturnExpressions(node).nonNulls;
+      // everything past that return is considered conditional
+      final firstReturn = returnExpressions.isEmpty
+          ? null
+          : returnExpressions
+              .reduce((acc, curr) => acc.offset < curr.offset ? acc : curr);
 
-        final buildMethod = getBuildMethod(node);
-        if (buildMethod == null) {
-          return;
-        }
+      final hooksCalledConditionally =
+          hookExpressions.where((e) => _isConditional(firstReturn, e));
 
-        // get all hook expressions from build method
-        final hookExpressions = switch (buildMethod.body) {
-          ExpressionFunctionBody(expression: final AstNode node) ||
-          BlockFunctionBody(block: final AstNode node) =>
-            getAllInnerHookExpressions(node),
-          _ => <InvocationExpression>[],
-        };
-
-        final returnExpressions =
-            getAllReturnExpressions(buildMethod.body).nonNulls;
-        // everything past that return is considered conditional
-        final firstReturn = returnExpressions.isEmpty
-            ? null
-            : returnExpressions
-                .reduce((acc, curr) => acc.offset < curr.offset ? acc : curr);
-
-        final hooksCalledConditionally =
-            hookExpressions.where((e) => _isConditional(firstReturn, e));
-
-        for (final hookExpression in hooksCalledConditionally) {
-          reporter.reportErrorForNode(_getLintCode(), hookExpression);
-        }
-      },
-    );
+      for (final hookExpression in hooksCalledConditionally) {
+        reporter.reportErrorForNode(_getLintCode(), hookExpression);
+      }
+    });
   }
 
   /// Check if node is present in any conditional branch
