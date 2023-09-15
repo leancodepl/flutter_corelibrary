@@ -1,7 +1,7 @@
-import 'package:cqrs/src/command_result.dart';
-import 'package:cqrs/src/cqrs.dart';
-import 'package:cqrs/src/cqrs_exception.dart';
-import 'package:cqrs/src/transport_types.dart';
+import 'dart:io';
+
+import 'package:cqrs/cqrs.dart';
+
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
@@ -33,7 +33,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, true);
+        expect(result, const CqrsQuerySuccess<bool?, CqrsError>(true));
 
         verify(
           () => client.post(
@@ -58,41 +58,88 @@ void main() {
 
         final result = await cqrs.get(ExampleQuery());
 
-        expect(result, null);
+        expect(result, const CqrsQuerySuccess<bool?, CqrsError>(null));
       });
 
-      test('throws CQRSException on json decoding failure', () async {
+      test(
+          'returns CqrsQueryFailure(CqrsError.unknown) on json decoding failure',
+          () async {
         mockClientPost(client, Response('true', 200));
 
-        final result = cqrs.get(ExampleQueryFailingResultFactory());
+        final result = await cqrs.get(ExampleQueryFailingResultFactory());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              'An error occured while decoding response body JSON:\n'
-                  'Exception: This is error.',
-            ),
-          ),
+          const CqrsQueryFailure<bool, CqrsError>(CqrsError.unknown),
         );
       });
 
-      test('throws CQRSException when response code is other than 200', () {
-        mockClientPost(client, Response('', 404));
+      test('returns CqrsQueryFailure(CqrsError.network) on socket exception',
+          () async {
+        mockClientException(
+          client,
+          const SocketException('This might be socket exception'),
+        );
 
-        final result = cqrs.get(ExampleQuery());
+        final result = await cqrs.get(ExampleQuery());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              'Invalid, non 200 status code returned by ExampleQuery query.',
-            ),
-          ),
+          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.network),
+        );
+      });
+
+      test('returns CqrsQueryFailure(CqrsError.unknown) on client exception',
+          () async {
+        mockClientException(
+          client,
+          Exception('This is not a socket exception'),
+        );
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.unknown),
+        );
+      });
+
+      test(
+          'returns CqrsQueryFailure(CqrsError.authentication) when response code is 401',
+          () async {
+        mockClientPost(client, Response('', 401));
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.authentication),
+        );
+      });
+
+      test(
+          'returns CqrsQueryFailure(CqrsError.forbiddenAccess) when response code is 403',
+          () async {
+        mockClientPost(client, Response('', 403));
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.forbiddenAccess),
+        );
+      });
+
+      test(
+          'returns CqrsQueryFailure(CqrsError.unknown) for other response codes',
+          () async {
+        mockClientPost(client, Response('', 404));
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.unknown),
         );
       });
     });
@@ -244,6 +291,16 @@ void mockClientPost(MockClient client, Response response) {
       headers: any(named: 'headers'),
     ),
   ).thenAnswer((_) async => response);
+}
+
+void mockClientException(MockClient client, Exception exception) {
+  when(
+    () => client.post(
+      any(),
+      body: any(named: 'body'),
+      headers: any(named: 'headers'),
+    ),
+  ).thenAnswer((_) async => throw exception);
 }
 
 class ExampleQuery implements Query<bool?> {
