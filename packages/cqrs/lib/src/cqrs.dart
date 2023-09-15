@@ -107,13 +107,16 @@ class Cqrs {
   }
 
   /// Send a command to the backend and get the results of running it, that is
-  /// whether it was successful and validation errors if there were any.
+  /// whether it was successful and errors if there were any.
   ///
   /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// A [CqrsException] will be thrown in case of an error.
+  /// After succesfull completion returns [CqrsCommandSuccess].
+  ///
+  /// A [CqrsCommandFailure] will be returned in case of an error. Refer to
+  /// [CqrsError] for info on how [Cqrs] differentiates common errors.
   Future<CqrsCommandResult<CqrsError>> run(
     Command command, {
     Map<String, String> headers = const {},
