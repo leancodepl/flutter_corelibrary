@@ -106,6 +106,59 @@ class Cqrs {
     return const CqrsQueryFailure(CqrsError.unknown);
   }
 
+  /// Send a command to the backend and get the results of running it, that is
+  /// whether it was successful and validation errors if there were any.
+  ///
+  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
+  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
+  /// will be ignored.
+  ///
+  /// A [CqrsException] will be thrown in case of an error.
+  Future<CqrsCommandResult<CqrsError>> run(
+    Command command, {
+    Map<String, String> headers = const {},
+  }) async {
+    try {
+      final response = await _send(
+        command,
+        pathPrefix: 'command',
+        headers: headers,
+      );
+
+      if ([200, 422].contains(response.statusCode)) {
+        try {
+          final json = jsonDecode(response.body) as Map<String, dynamic>;
+          final result = CommandResult.fromJson(json);
+
+          if (response.statusCode == 200) {
+            _log(command, _ResultType.success);
+            return const CqrsCommandSuccess();
+          }
+
+          _log(command, _ResultType.validationError, null, null, result.errors);
+          return CqrsCommandFailure(
+            CqrsError.validation,
+            validationErrors: result.errors,
+          );
+        } catch (e, s) {
+          _log(command, _ResultType.jsonError, e, s);
+          return const CqrsCommandFailure(CqrsError.unknown);
+        }
+      }
+    } catch (e, s) {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult != ConnectivityResult.none) {
+        _log(command, _ResultType.networkError, e, s);
+        return const CqrsCommandFailure(CqrsError.network);
+      }
+      _log(command, _ResultType.unknownError, e, s);
+      return const CqrsCommandFailure(CqrsError.unknown);
+    }
+
+    _log(command, _ResultType.unknownError);
+    return const CqrsCommandFailure(CqrsError.unknown);
+  }
+
   Future<T> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
