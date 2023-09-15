@@ -1,17 +1,17 @@
 /// Error types that are recognized by Cqrs.
 enum CqrsError {
-  /// Represents generic unknown
-  unknown,
-
   /// Represents a network/socket error
   network,
 
-  /// Represents a HTTP 403 error
+  /// Represents a HTTP 403 forbidden access error
   forbiddenAccess,
 
-  /// Represents a HTTP 401 error
+  /// Represents a HTTP 401 authetication error
   authentication,
 
-  /// Represents a validation error
+  /// Represents a HTTP 422 validation error
   validation,
+
+  /// Represents a generic error which covers all remaining errors
+  unknown,
 }
