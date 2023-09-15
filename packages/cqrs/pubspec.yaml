@@ -10,6 +10,7 @@ environment:
   sdk: '>=3.0.1 <4.0.0'
 
 dependencies:
+  connectivity_plus: ^4.0.2
   equatable: ^2.0.5
   http: ^1.0.0
   logging: ^1.2.0
