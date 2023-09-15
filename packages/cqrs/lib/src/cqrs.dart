@@ -130,7 +130,7 @@ class Cqrs {
   /// [CqrsError] for info on how [Cqrs] differentiates common errors.
   Future<CqrsCommandResult<CqrsError>> run(
     Command command, {
-    required Map<String, String> headers,
+    Map<String, String> headers = const {},
   }) async {
     final result = await _run(command, headers: headers);
 
