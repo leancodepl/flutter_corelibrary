@@ -47,7 +47,23 @@ enum _ResultType {
       };
 }
 
+/// Class used for communicating with the backend via queries and commands.
 class Cqrs {
+  /// Creates a [Cqrs] class.
+  ///
+  /// `_client` is an [http.Client] client to be used for sending requests. It
+  /// should handle authentication and renewing the token when it is neccessary.
+  ///
+  /// If there are errors with requests being sent to the wrong URL, make sure
+  /// you provided a correct `_apiUri`, that is with presense or lack of the
+  /// trailing slash.
+  ///
+  /// The `timeout` defaults to 30 seconds. `headers` have lesser priority than
+  /// those provided directly into [get] or [run] methods and will be overrided
+  /// by those in case of some headers sharing the same key.
+  ///
+  /// Any result (be it successful of failure) of CQRS method will be logged
+  /// if a `logger` is provided.
   Cqrs(
     this._client,
     this._apiUri, {
@@ -64,6 +80,14 @@ class Cqrs {
   final Map<String, String> _headers;
   final Logger? _logger;
 
+  /// Send a query to the backend and expect a result of the type `T`.
+  ///
+  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
+  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
+  /// will be ignored.
+  ///
+  /// After succesfull completion returns [CqrsQuerySuccess] with recieved data
+  /// of type `T`. A [CqrsQueryFailure] will be returned in case of an error.
   Future<CqrsQueryResult<T, CqrsError>> get<T>(
     Query<T> query, {
     required Map<String, String> headers,
@@ -114,7 +138,6 @@ class Cqrs {
   /// will be ignored.
   ///
   /// After succesfull completion returns [CqrsCommandSuccess].
-  ///
   /// A [CqrsCommandFailure] will be returned in case of an error. Refer to
   /// [CqrsError] for info on how [Cqrs] differentiates common errors.
   Future<CqrsCommandResult<CqrsError>> run(
@@ -162,6 +185,13 @@ class Cqrs {
     return const CqrsCommandFailure(CqrsError.unknown);
   }
 
+  /// Send a operation to the backend and expect a result of the type `T`.
+  ///
+  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
+  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
+  /// will be ignored.
+  ///
+  /// A [CqrsException] will be thrown in case of an error.
   Future<T> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
