@@ -51,8 +51,7 @@ library;
 
 export 'src/command_result.dart';
 export 'src/cqrs.dart';
+export 'src/cqrs_error.dart';
 export 'src/cqrs_exception.dart';
+export 'src/cqrs_result.dart';
 export 'src/transport_types.dart';
-export 'src/wrapper/cqrs_error.dart';
-export 'src/wrapper/cqrs_result.dart';
-export 'src/wrapper/cqrs_wrapper.dart';
