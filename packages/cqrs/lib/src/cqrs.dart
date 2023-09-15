@@ -12,119 +12,100 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:cqrs/src/command_result.dart';
+import 'package:cqrs/src/cqrs_error.dart';
+import 'package:cqrs/src/cqrs_result.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
-import 'command_result.dart';
 import 'cqrs_exception.dart';
 import 'transport_types.dart';
 
-/// Class used for communicating with the backend via queries and commands.
+enum _ResultType {
+  success,
+  jsonError,
+  networkError,
+  authenticationError,
+  forbiddenAccessError,
+  validationError,
+  unknownError;
+
+  String get description => switch (this) {
+        success => 'executed successfully',
+        jsonError => 'failed while decoding response body JSON',
+        networkError => 'failed with network error',
+        authenticationError => 'failed with authentication',
+        forbiddenAccessError => 'failed with forbidden access error',
+        validationError => 'failed with following validation errors',
+        unknownError => 'failed unexpectedly',
+      };
+}
+
 class Cqrs {
-  /// Creates a [Cqrs] class.
-  ///
-  /// `_client` is an [http.Client] client to be used for sending requests. It
-  /// should handle authentication and renewing the token when it is neccessary.
-  ///
-  /// If there are errors with requests being sent to the wrong URL, make sure
-  /// you provided a correct `_apiUri`, that is with presense or lack of the
-  /// trailing slash.
-  ///
-  /// The `timeout` defaults to 30 seconds. `headers` have lesser priority than
-  /// those provided directly into [get] or [run] methods and will be overrided
-  /// by those in case of some headers sharing the same key.
   Cqrs(
     this._client,
     this._apiUri, {
     Duration timeout = const Duration(seconds: 30),
     Map<String, String> headers = const {},
+    Logger? logger,
   })  : _timeout = timeout,
-        _headers = headers;
+        _headers = headers,
+        _logger = logger;
 
   final http.Client _client;
   final Uri _apiUri;
   final Duration _timeout;
   final Map<String, String> _headers;
+  final Logger? _logger;
 
-  /// Send a query to the backend and expect a result of the type `T`.
-  ///
-  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
-  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
-  /// will be ignored.
-  ///
-  /// A [CqrsException] will be thrown in case of an error.
-  Future<T> get<T>(
+  Future<CqrsQueryResult<T, CqrsError>> get<T>(
     Query<T> query, {
-    Map<String, String> headers = const {},
+    required Map<String, String> headers,
   }) async {
-    final response = await _send(query, pathPrefix: 'query', headers: headers);
+    try {
+      final response =
+          await _send(query, pathPrefix: 'query', headers: headers);
 
-    if (response.statusCode == 200) {
-      try {
-        final dynamic json = jsonDecode(response.body);
-
-        return query.resultFactory(json);
-      } catch (e) {
-        throw CqrsException(
-          response,
-          'An error occured while decoding response body JSON:\n$e',
-        );
+      if (response.statusCode == 200) {
+        try {
+          final dynamic json = jsonDecode(response.body);
+          final result = query.resultFactory(json);
+          _log(query, _ResultType.success);
+          return CqrsQuerySuccess(result);
+        } catch (e, s) {
+          _log(query, _ResultType.jsonError, e, s);
+          return const CqrsQueryFailure(CqrsError.unknown);
+        }
       }
+
+      if (response.statusCode == 401) {
+        _log(query, _ResultType.authenticationError);
+        return const CqrsQueryFailure(CqrsError.authentication);
+      }
+      if (response.statusCode == 403) {
+        _log(query, _ResultType.forbiddenAccessError);
+        return const CqrsQueryFailure(CqrsError.forbiddenAccess);
+      }
+    } catch (e, s) {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult != ConnectivityResult.none) {
+        _log(query, _ResultType.networkError, e, s);
+        return const CqrsQueryFailure(CqrsError.network);
+      }
+      _log(query, _ResultType.unknownError, e, s);
+      return const CqrsQueryFailure(CqrsError.unknown);
     }
 
-    throw CqrsException(
-      response,
-      'Invalid, non 200 status code returned by ${query.getFullName()} query.',
-    );
+    _log(query, _ResultType.unknownError);
+    return const CqrsQueryFailure(CqrsError.unknown);
   }
 
-  /// Send a command to the backend and get the results of running it, that is
-  /// whether it was successful and validation errors if there were any.
-  ///
-  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
-  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
-  /// will be ignored.
-  ///
-  /// A [CqrsException] will be thrown in case of an error.
-  Future<CommandResult> run(
-    Command command, {
-    Map<String, String> headers = const {},
-  }) async {
-    final response = await _send(
-      command,
-      pathPrefix: 'command',
-      headers: headers,
-    );
-
-    if ([200, 422].contains(response.statusCode)) {
-      try {
-        final json = jsonDecode(response.body) as Map<String, dynamic>;
-
-        return CommandResult.fromJson(json);
-      } catch (e) {
-        throw CqrsException(
-          response,
-          'An error occured while decoding response body JSON:\n$e',
-        );
-      }
-    }
-
-    throw CqrsException(
-      response,
-      'Invalid, non 200 or 422 status code returned '
-      'by ${command.getFullName()} command.',
-    );
-  }
-
-  /// Send a operation to the backend and expect a result of the type `T`.
-  ///
-  /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
-  /// constructor, meaning `headers` override `_headers`. `Content-Type` header
-  /// will be ignored.
-  ///
-  /// A [CqrsException] will be thrown in case of an error.
   Future<T> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
@@ -135,15 +116,15 @@ class Cqrs {
     if (response.statusCode == 200) {
       try {
         final dynamic json = jsonDecode(response.body);
-
-        return operation.resultFactory(json);
-      } catch (e) {
-        throw CqrsException(
-          response,
-          'An error occured while decoding response body JSON:\n$e',
-        );
+        final result = operation.resultFactory(json);
+        _log(operation, _ResultType.success);
+        return result;
+      } catch (e, s) {
+        _log(operation, _ResultType.jsonError, e, s);
       }
     }
+
+    _log(operation, _ResultType.unknownError);
 
     throw CqrsException(
       response,
@@ -165,5 +146,39 @@ class Cqrs {
         'Content-Type': 'application/json',
       },
     ).timeout(_timeout);
+  }
+
+  void _log(
+    CqrsMethod method,
+    _ResultType result, [
+    Object? error,
+    StackTrace? stackTrace,
+    List<ValidationError> validationErrors = const [],
+  ]) {
+    final log = switch (result) {
+      _ResultType.success => _logger?.info,
+      _ResultType.validationError => _logger?.warning,
+      _ => _logger?.severe,
+    };
+
+    final methodTypePrefix = switch (method) {
+      Query() => 'Query',
+      Command() => 'Command',
+      _ => 'Operation',
+    };
+
+    final validationErrorsBuffer = StringBuffer();
+    for (final error in validationErrors) {
+      validationErrorsBuffer.write('${error.message} (${error.code}), ');
+    }
+
+    final details = switch (result) {
+      _ResultType.validationError =>
+        '$methodTypePrefix ${method.runtimeType} ${result.description}.\n'
+            '$validationErrorsBuffer',
+      _ => '$methodTypePrefix ${method.runtimeType} ${result.description}.',
+    };
+
+    log?.call(details, error, stackTrace);
   }
 }
