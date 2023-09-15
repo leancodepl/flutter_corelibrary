@@ -26,17 +26,31 @@
 /// );
 ///
 /// // Fetching first page of flowers
-/// final flowers = await cqrs.get(AllFlowers(page: 1));
+/// final result = await cqrs.get(AllFlowers(page: 1));
+///
+/// // Handling query result
+/// if (result.isSuccesful) {
+///   print(result.data);
+/// } else if (result.isFailure) {
+///   print('Something failed with error ${result.error}');
+/// }
 ///
 /// // Adding a new flower
 /// final result = await cqrs.run(
 ///   AddFlower(
-///     name: 'Daisy',
-///     pretty: true,
+///     title: 'Orchid',
+///     color: 'red'
 ///   ),
 /// );
 ///
-/// print(result.success); // true
+/// // Handling command result
+/// if (result.isSuccess) {
+///   print('Flower added succefully');
+/// } else if (result.isInvalid) {
+///   print('Validation error occured');
+/// } else if (result.isFailure) {
+///   print('Something failed with error ${result.error}');
+/// }
 /// ```
 ///
 /// See also:
