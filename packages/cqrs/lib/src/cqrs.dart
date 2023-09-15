@@ -14,16 +14,16 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:cqrs/src/command_result.dart';
-import 'package:cqrs/src/cqrs_error.dart';
-import 'package:cqrs/src/cqrs_middleware.dart';
-import 'package:cqrs/src/cqrs_result.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
+import 'command_result.dart';
+import 'cqrs_error.dart';
 import 'cqrs_exception.dart';
+import 'cqrs_middleware.dart';
+import 'cqrs_result.dart';
 import 'transport_types.dart';
 
 enum _ResultType {
@@ -119,7 +119,7 @@ class Cqrs {
   }
 
   /// Send a command to the backend and get the results of running it, that is
-  /// whether it was successful and errors if there were any.
+  /// whether it was successful and validation errors if there were any.
   ///
   /// Headers provided in `headers` are on top of the `headers` from the [Cqrs]
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
@@ -187,33 +187,31 @@ class Cqrs {
           final dynamic json = jsonDecode(response.body);
           final result = query.resultFactory(json);
           _log(query, _ResultType.success);
-          return CqrsQuerySuccess(result);
+          return CqrsQuerySuccess<T, CqrsError>(result);
         } catch (e, s) {
           _log(query, _ResultType.jsonError, e, s);
-          return const CqrsQueryFailure(CqrsError.unknown);
+          return CqrsQueryFailure<T, CqrsError>(CqrsError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(query, _ResultType.authenticationError);
-        return const CqrsQueryFailure(CqrsError.authentication);
+        return CqrsQueryFailure<T, CqrsError>(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(query, _ResultType.forbiddenAccessError);
-        return const CqrsQueryFailure(CqrsError.forbiddenAccess);
+        return CqrsQueryFailure<T, CqrsError>(CqrsError.forbiddenAccess);
       }
+    } on SocketException catch (e, s) {
+      _log(query, _ResultType.networkError, e, s);
+      return CqrsQueryFailure<T, CqrsError>(CqrsError.network);
     } catch (e, s) {
-      final connectivityResult = await Connectivity().checkConnectivity();
-      if (connectivityResult != ConnectivityResult.none) {
-        _log(query, _ResultType.networkError, e, s);
-        return const CqrsQueryFailure(CqrsError.network);
-      }
       _log(query, _ResultType.unknownError, e, s);
-      return const CqrsQueryFailure(CqrsError.unknown);
+      return CqrsQueryFailure<T, CqrsError>(CqrsError.unknown);
     }
 
     _log(query, _ResultType.unknownError);
-    return const CqrsQueryFailure(CqrsError.unknown);
+    return CqrsQueryFailure<T, CqrsError>(CqrsError.unknown);
   }
 
   Future<CqrsCommandResult<CqrsError>> _run(
@@ -234,7 +232,7 @@ class Cqrs {
 
           if (response.statusCode == 200) {
             _log(command, _ResultType.success);
-            return const CqrsCommandSuccess();
+            return const CqrsCommandSuccess<CqrsError>();
           }
 
           _log(command, _ResultType.validationError, null, null, result.errors);
@@ -244,21 +242,19 @@ class Cqrs {
           );
         } catch (e, s) {
           _log(command, _ResultType.jsonError, e, s);
-          return const CqrsCommandFailure(CqrsError.unknown);
+          return const CqrsCommandFailure<CqrsError>(CqrsError.unknown);
         }
       }
+    } on SocketException catch (e, s) {
+      _log(command, _ResultType.networkError, e, s);
+      return const CqrsCommandFailure<CqrsError>(CqrsError.network);
     } catch (e, s) {
-      final connectivityResult = await Connectivity().checkConnectivity();
-      if (connectivityResult != ConnectivityResult.none) {
-        _log(command, _ResultType.networkError, e, s);
-        return const CqrsCommandFailure(CqrsError.network);
-      }
       _log(command, _ResultType.unknownError, e, s);
-      return const CqrsCommandFailure(CqrsError.unknown);
+      return const CqrsCommandFailure<CqrsError>(CqrsError.unknown);
     }
 
     _log(command, _ResultType.unknownError);
-    return const CqrsCommandFailure(CqrsError.unknown);
+    return const CqrsCommandFailure<CqrsError>(CqrsError.unknown);
   }
 
   Future<http.Response> _send(
