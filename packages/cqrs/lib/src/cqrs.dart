@@ -21,7 +21,6 @@ import 'package:logging/logging.dart';
 
 import 'command_result.dart';
 import 'cqrs_error.dart';
-import 'cqrs_exception.dart';
 import 'cqrs_middleware.dart';
 import 'cqrs_result.dart';
 import 'transport_types.dart';
@@ -105,7 +104,8 @@ class Cqrs {
   /// will be ignored.
   ///
   /// After succesfull completion returns [CqrsQuerySuccess] with recieved data
-  /// of type `T`. A [CqrsQueryFailure] will be returned in case of an error.
+  /// of type `T`. A [CqrsQueryFailure] will be returned with according
+  /// [CqrsError] in case of an error.
   Future<CqrsQueryResult<T, CqrsError>> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -126,8 +126,9 @@ class Cqrs {
   /// will be ignored.
   ///
   /// After succesfull completion returns [CqrsCommandSuccess].
-  /// A [CqrsCommandFailure] will be returned in case of an error. Refer to
-  /// [CqrsError] for info on how [Cqrs] differentiates common errors.
+  /// A [CqrsCommandFailure] will be returned with according [CqrsError]
+  /// in case of an error and with list of [ValidationError] errors (in case of
+  /// validation error).
   Future<CqrsCommandResult<CqrsError>> run(
     Command command, {
     Map<String, String> headers = const {},
@@ -147,30 +148,19 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// A [CqrsException] will be thrown in case of an error.
-  Future<T> perform<T>(
+  /// After succesfull completion returns [CqrsOperationSuccess] with recieved
+  /// data of type `T`. A [CqrsOperationFailure] will be returned with
+  /// according [CqrsError] in case of an error.
+  Future<CqrsOperationResult<T, CqrsError>> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
   }) async {
-    final response =
-        await _send(operation, pathPrefix: 'operation', headers: headers);
+    final result = await _perform(operation, headers: headers);
 
-    if (response.statusCode == 200) {
-      try {
-        final dynamic json = jsonDecode(response.body);
-        final result = operation.resultFactory(json);
-        _log(operation, _ResultType.success);
-        return result;
-      } catch (e, s) {
-        _log(operation, _ResultType.jsonError, e, s);
-      }
-    }
-
-    _log(operation, _ResultType.unknownError);
-
-    throw CqrsException(
-      response,
-      'Invalid, non 200 status code returned by ${operation.getFullName()} operation.',
+    return _middlewares.fold(
+      result,
+      (result, middleware) async =>
+          middleware.handleOperationResult(await result),
     );
   }
 
@@ -263,6 +253,46 @@ class Cqrs {
 
     _log(command, _ResultType.unknownError);
     return const CqrsCommandFailure<CqrsError>(CqrsError.unknown);
+  }
+
+  Future<CqrsOperationResult<T, CqrsError>> _perform<T>(
+    Operation<T> operation, {
+    Map<String, String> headers = const {},
+  }) async {
+    try {
+      final response =
+          await _send(operation, pathPrefix: 'operation', headers: headers);
+
+      if (response.statusCode == 200) {
+        try {
+          final dynamic json = jsonDecode(response.body);
+          final result = operation.resultFactory(json);
+          _log(operation, _ResultType.success);
+          return CqrsOperationSuccess<T, CqrsError>(result);
+        } catch (e, s) {
+          _log(operation, _ResultType.jsonError, e, s);
+          return CqrsOperationFailure<T, CqrsError>(CqrsError.unknown);
+        }
+      }
+
+      if (response.statusCode == 401) {
+        _log(operation, _ResultType.authenticationError);
+        return CqrsOperationFailure<T, CqrsError>(CqrsError.authentication);
+      }
+      if (response.statusCode == 403) {
+        _log(operation, _ResultType.forbiddenAccessError);
+        return CqrsOperationFailure<T, CqrsError>(CqrsError.forbiddenAccess);
+      }
+    } on SocketException catch (e, s) {
+      _log(operation, _ResultType.networkError, e, s);
+      return CqrsOperationFailure<T, CqrsError>(CqrsError.network);
+    } catch (e, s) {
+      _log(operation, _ResultType.unknownError, e, s);
+      return CqrsOperationFailure<T, CqrsError>(CqrsError.unknown);
+    }
+
+    _log(operation, _ResultType.unknownError);
+    return CqrsOperationFailure<T, CqrsError>(CqrsError.unknown);
   }
 
   Future<http.Response> _send(
