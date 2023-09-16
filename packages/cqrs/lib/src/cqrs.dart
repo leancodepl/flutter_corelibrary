@@ -245,6 +245,14 @@ class Cqrs {
           return const CqrsCommandFailure<CqrsError>(CqrsError.unknown);
         }
       }
+      if (response.statusCode == 401) {
+        _log(command, _ResultType.authenticationError);
+        return const CqrsCommandFailure(CqrsError.authentication);
+      }
+      if (response.statusCode == 403) {
+        _log(command, _ResultType.forbiddenAccessError);
+        return const CqrsCommandFailure(CqrsError.forbiddenAccess);
+      }
     } on SocketException catch (e, s) {
       _log(command, _ResultType.networkError, e, s);
       return const CqrsCommandFailure<CqrsError>(CqrsError.network);
