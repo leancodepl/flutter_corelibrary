@@ -16,7 +16,7 @@ import 'package:equatable/equatable.dart';
 
 import 'command_result.dart';
 
-/// Generic result for CQRS queries. Can be either [CqrsQuerySuccess]
+/// Generic result for CQRS query result. Can be either [CqrsQuerySuccess]
 /// or [CqrsQueryFailure].
 sealed class CqrsQueryResult<T, E> extends Equatable {
   /// Creates a [CqrsQueryResult] class.
@@ -73,7 +73,7 @@ final class CqrsQueryFailure<T, E> extends CqrsQueryResult<T, E> {
   List<Object?> get props => [error];
 }
 
-/// Generic result for CQRS commands. Can be either [CqrsCommandSuccess]
+/// Generic result for CQRS command result. Can be either [CqrsCommandSuccess]
 /// or [CqrsCommandFailure].
 sealed class CqrsCommandResult<E> extends Equatable {
   /// Creates a [CqrsCommandResult] class.
@@ -133,4 +133,61 @@ final class CqrsCommandFailure<E> extends CqrsCommandResult<E> {
 
   @override
   List<Object?> get props => [error, validationErrors];
+}
+
+/// Generic result for CQRS operation result. Can be either [CqrsQuerySuccess]
+/// or [CqrsQueryFailure].
+sealed class CqrsOperationResult<T, E> extends Equatable {
+  /// Creates a [CqrsOperationResult] class.
+  const CqrsOperationResult();
+
+  /// Casts to [CqrsOperationSuccess] or `null`.
+  CqrsOperationSuccess<T, E>? get asSuccess => switch (this) {
+        final CqrsOperationSuccess<T, E> s => s,
+        CqrsOperationFailure() => null,
+      };
+
+  /// Casts to [CqrsOperationFailure] or `null`.
+  CqrsOperationFailure<T, E>? get asFailure => switch (this) {
+        CqrsOperationSuccess() => null,
+        final CqrsOperationFailure<T, E> f => f,
+      };
+
+  /// Whether this instance can be casted to [CqrsOperationSuccess].
+  bool get isSuccess => asSuccess != null;
+
+  /// Whether this instance can be casted to [CqrsOperationFailure].
+  bool get isFailure => asFailure != null;
+
+  /// Returns [data] of type [T] for [CqrsOperationSuccess] and `null`
+  /// for [CqrsOperationFailure].
+  T? get data => asSuccess?.data;
+
+  /// Returns [error] of type [E] for [CqrsOperationFailure] and `null`
+  /// for [CqrsOperationSuccess].
+  E? get error => asFailure?.error;
+}
+
+/// Generic class which represents a result of succesful query execution.
+final class CqrsOperationSuccess<T, E> extends CqrsOperationResult<T, E> {
+  /// Creates a [CqrsOperationSuccess] class.
+  const CqrsOperationSuccess(this.data);
+
+  @override
+  final T data;
+
+  @override
+  List<Object?> get props => [data];
+}
+
+/// Generic class which represents a result of unsuccesful query execution.
+final class CqrsOperationFailure<T, E> extends CqrsOperationResult<T, E> {
+  /// Creates a [CqrsOperationFailure] class.
+  const CqrsOperationFailure(this.error);
+
+  @override
+  final E error;
+
+  @override
+  List<Object?> get props => [error];
 }
