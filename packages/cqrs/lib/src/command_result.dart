@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:equatable/equatable.dart';
+
 import 'transport_types.dart';
 
 /// The result of running a [Command].
@@ -63,7 +65,7 @@ class CommandResult {
 }
 
 /// A validation error.
-class ValidationError {
+class ValidationError extends Equatable {
   /// Creates a [ValidationError] from [code], [message], and [propertyName].
   const ValidationError(this.code, this.message, this.propertyName);
 
@@ -91,4 +93,7 @@ class ValidationError {
 
   @override
   String toString() => '[$propertyName] $code: $message';
+
+  @override
+  List<Object?> get props => [code, message, propertyName];
 }
