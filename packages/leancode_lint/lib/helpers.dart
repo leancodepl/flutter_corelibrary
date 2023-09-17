@@ -41,11 +41,6 @@ class _HookExpressionsGatherer extends GeneralizingAstVisitor<void> {
     return visitor._hookExpressions;
   }
 
-  @override
-  void visitFunctionBody(FunctionBody node) {
-    // stop recursing on a new function body
-  }
-
   // use + upper case letter to avoid cases like "user"
   static final _isHookRegex = RegExp('^_?use[0-9A-Z]');
 
