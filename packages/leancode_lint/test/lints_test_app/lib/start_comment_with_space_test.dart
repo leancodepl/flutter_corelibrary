@@ -4,3 +4,10 @@ const a = 'abc';
 
 /// Valid docs comment
 const b = 'def';
+
+// expect_lint: start_comment_with_space
+//Invalid comment
+const c = 'ghi';
+
+// Valid comment
+const d = 'jkl';
