@@ -1,8 +1,8 @@
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/helpers.dart';
 
 /// Forces comments/docs to start with a space.
 class StartCommentWithSpace extends DartLintRule {
@@ -26,15 +26,13 @@ class StartCommentWithSpace extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addCompilationUnit((node) {
-      for (final token in _allFileComments(node)) {
-        if (_commentErrorOffset(token) case final contentStart?) {
-          reporter.reportErrorForOffset(
-            _createCode(_CommentType.comment),
-            token.offset + contentStart,
-            0,
-          );
-        }
+    context.registry.addRegularComment((token) {
+      if (_commentErrorOffset(token) case final contentStart?) {
+        reporter.reportErrorForOffset(
+          _createCode(_CommentType.comment),
+          token.offset + contentStart,
+          0,
+        );
       }
     });
 
@@ -49,31 +47,6 @@ class StartCommentWithSpace extends DartLintRule {
         }
       }
     });
-  }
-
-  Iterable<Token> _allFileComments(CompilationUnit unit) sync* {
-    bool isRegularComment(Token commentToken) {
-      final token = commentToken.toString();
-
-      return !token.startsWith('///') && token.startsWith('//');
-    }
-
-    Token? token = unit.root.beginToken;
-    while (token != null) {
-      Token? commentToken = token.precedingComments;
-      while (commentToken != null) {
-        if (isRegularComment(commentToken)) {
-          yield commentToken;
-        }
-        commentToken = commentToken.next;
-      }
-
-      if (token == token.next) {
-        break;
-      }
-
-      token = token.next;
-    }
   }
 
   int? _commentErrorOffset(Token comment) {

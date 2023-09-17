@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
@@ -101,6 +102,33 @@ MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .firstWhereOrNull((member) => member.name.lexeme == 'build');
 
 extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
+  void addRegularComment(void Function(Token comment) listener) {
+    addCompilationUnit((node) {
+      bool isRegularComment(Token commentToken) {
+        final token = commentToken.toString();
+
+        return !token.startsWith('///') && token.startsWith('//');
+      }
+
+      Token? token = node.root.beginToken;
+      while (token != null) {
+        Token? commentToken = token.precedingComments;
+        while (commentToken != null) {
+          if (isRegularComment(commentToken)) {
+            listener(commentToken);
+          }
+          commentToken = commentToken.next;
+        }
+
+        if (token == token.next) {
+          break;
+        }
+
+        token = token.next;
+      }
+    });
+  }
+
   void addHookWidgetBody(
     void Function(FunctionBody node, AstNode diagnosticNode) listener, {
     bool isExactly = false,
