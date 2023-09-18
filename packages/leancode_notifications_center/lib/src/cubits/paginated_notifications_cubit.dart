@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:leancode_contracts/leancode_contracts.dart';
 import 'package:leancode_notifications_center/src/mocks/notifications_mocks.dart';
 import 'package:leancode_notifications_center/src/models/notification.dart';
 import 'package:leancode_notifications_center/src/utils/notifications_payload_deserializer.dart';
@@ -7,9 +8,12 @@ import 'package:logging/logging.dart';
 class PaginatedNotificationsCubit extends Cubit<PaginatedNotificationsState> {
   PaginatedNotificationsCubit({
     required NotificationsDeserializer deserializer,
-  })  : _deserializer = deserializer,
+    required Cqrs cqrs,
+  })  : _cqrs = cqrs,
+        _deserializer = deserializer,
         super(PaginatedNotificationsReadyState());
 
+  final Cqrs _cqrs;
   final NotificationsDeserializer _deserializer;
 
   static const _pageSize = 10;

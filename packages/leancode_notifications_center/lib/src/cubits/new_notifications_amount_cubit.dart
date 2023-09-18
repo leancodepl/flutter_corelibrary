@@ -1,8 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:leancode_contracts/leancode_contracts.dart';
 import 'package:logging/logging.dart';
 
 class NewNotificationsAmountCubit extends Cubit<NotificationsAmountState> {
-  NewNotificationsAmountCubit() : super(NotificationsAmountInitialState());
+  NewNotificationsAmountCubit({
+    required Cqrs cqrs,
+  })  : _cqrs = cqrs,
+        super(NotificationsAmountInitialState());
+
+  final Cqrs _cqrs;
 
   static final _logger = Logger('NotificationsAmountCubit');
 

@@ -19,11 +19,14 @@ class NotificationsProvider extends StatelessWidget {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => NewNotificationsAmountCubit()..fetch(),
+          create: (context) => NewNotificationsAmountCubit(
+            cqrs: context.read(),
+          )..fetch(),
         ),
         BlocProvider(
           lazy: false,
           create: (context) => PaginatedNotificationsCubit(
+            cqrs: context.read(),
             deserializer: deserializer,
           )..init(),
         ),
