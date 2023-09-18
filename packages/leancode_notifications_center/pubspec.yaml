@@ -1,7 +1,5 @@
-name: force_update
+name: leancode_notifications_center
 version: 1.0.0-alpha
-homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/force_update
-repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
   An internal package that speeds up implementation of Force Update
   

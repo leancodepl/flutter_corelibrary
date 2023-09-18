@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_contracts/leancode_contracts.dart';
+import 'package:leancode_notifications_center/src/models/notification_category.dart';
 
 class NotificationData<T extends Object> {
   NotificationData({

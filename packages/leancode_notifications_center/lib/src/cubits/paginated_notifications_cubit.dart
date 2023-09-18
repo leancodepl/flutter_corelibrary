@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:force_update/src/mocks/notifications_mocks.dart';
-import 'package:force_update/src/models/notification.dart';
-import 'package:force_update/src/utils/notifications_payload_deserializer.dart';
+import 'package:leancode_notifications_center/src/mocks/notifications_mocks.dart';
+import 'package:leancode_notifications_center/src/models/notification.dart';
+import 'package:leancode_notifications_center/src/utils/notifications_payload_deserializer.dart';
 import 'package:logging/logging.dart';
 
 class PaginatedNotificationsCubit extends Cubit<PaginatedNotificationsState> {

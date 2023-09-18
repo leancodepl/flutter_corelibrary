@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:force_update/src/models/notification.dart';
-import 'package:force_update/src/models/notification_category.dart';
-import 'package:force_update/src/models/raw_notification.dart';
+import 'package:leancode_notifications_center/src/models/notification.dart';
+import 'package:leancode_notifications_center/src/models/notification_category.dart';
+import 'package:leancode_notifications_center/src/models/raw_notification.dart';
 
 typedef NotificationDeserializersMap
     = Map<String, Object Function(Map<String, dynamic> json)>;
@@ -28,7 +28,8 @@ class NotificationsDeserializer {
       );
 
   NotificationCategory? _tryParseNotificationCategory(
-          RawNotification message) =>
+    RawNotification message,
+  ) =>
       mockedCategories.firstWhereOrNull(
         (category) => category.id == message.category,
       );

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:force_update/src/cubits/new_notifications_amount_cubit.dart';
-import 'package:force_update/src/models/notifications_config.dart';
+import 'package:leancode_notifications_center/src/cubits/new_notifications_amount_cubit.dart';
+import 'package:leancode_notifications_center/src/cubits/paginated_notifications_cubit.dart';
+import 'package:leancode_notifications_center/src/models/notifications_config.dart';
 
 class NotificationsOverlay extends StatelessWidget {
   const NotificationsOverlay({

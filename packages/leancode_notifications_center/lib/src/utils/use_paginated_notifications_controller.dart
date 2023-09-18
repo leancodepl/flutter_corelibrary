@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:force_update/src/cubits/paginated_notifications_cubit.dart';
-
 import 'package:leancode_hooks/leancode_hooks.dart';
+import 'package:leancode_notifications_center/src/cubits/paginated_notifications_cubit.dart';
 import 'package:provider/provider.dart';
 
 const _extentAfterTreshold = 500;

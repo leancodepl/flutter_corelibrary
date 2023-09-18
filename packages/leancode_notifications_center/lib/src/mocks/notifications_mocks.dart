@@ -1,8 +1,8 @@
 // TODO: Remove after implementing real backend queries
 import 'dart:math';
 
-import 'package:force_update/src/models/raw_notification.dart';
 import 'package:leancode_contracts/leancode_contracts.dart';
+import 'package:leancode_notifications_center/src/models/raw_notification.dart';
 
 Iterable<RawNotification> getMockedMessages(String? nextToken) {
   const titles = [

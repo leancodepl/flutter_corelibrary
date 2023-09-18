@@ -1,4 +1,4 @@
-import 'package:force_update/src/utils/notifications_payload_deserializer.dart';
+import 'package:leancode_notifications_center/src/utils/notifications_payload_deserializer.dart';
 
 class NotificationsConfig {
   NotificationsConfig({
