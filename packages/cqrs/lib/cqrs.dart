@@ -26,7 +26,7 @@
 /// );
 ///
 /// // Fetching first page of flowers
-/// final result = await cqrs.get(AllFlowers(page: 1));
+/// final flowers = await cqrs.get(AllFlowers(page: 1));
 ///
 /// // Handling query result
 /// if (result.isSuccesful) {
