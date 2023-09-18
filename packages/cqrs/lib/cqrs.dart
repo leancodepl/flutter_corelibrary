@@ -39,7 +39,7 @@
 /// final result = await cqrs.run(
 ///   AddFlower(
 ///     title: 'Orchid',
-///     color: 'red'
+///     pretty: true,
 ///   ),
 /// );
 ///
