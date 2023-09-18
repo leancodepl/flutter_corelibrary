@@ -13,6 +13,10 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
   static const ruleName =
       'constructor_parameters_and_fields_should_have_the_same_order';
 
+  // TOOD: disabled until stabilized. Add documentation.
+  @override
+  bool get enabledByDefault => false;
+
   @override
   void run(
     CustomLintResolver resolver,
