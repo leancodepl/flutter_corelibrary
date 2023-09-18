@@ -1,8 +1,10 @@
+// ignore_for_file: unused_element
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-// expect_lint: add_sliver_prefix_for_widget_returning_sliver
+// expect_lint: prefix_widgets_returning_slivers
 class WidgetReturningSliverFromInternalBlocks extends StatelessWidget {
   const WidgetReturningSliverFromInternalBlocks({super.key});
 
@@ -13,6 +15,21 @@ class WidgetReturningSliverFromInternalBlocks extends StatelessWidget {
     } else {
       return const SliverToBoxAdapter();
     }
+  }
+}
+
+class Stateful extends StatefulWidget {
+  const Stateful({super.key});
+
+  @override
+  State<Stateful> createState() => _StatefulState();
+}
+
+// expect_lint: prefix_widgets_returning_slivers
+class _StatefulState extends State<Stateful> {
+  @override
+  Widget build(BuildContext context) {
+    return const SliverToBoxAdapter();
   }
 }
 
@@ -30,7 +47,7 @@ class WidgetImpostor extends WidgetImpostorInterface {
   }
 }
 
-// expect_lint: add_sliver_prefix_for_widget_returning_sliver
+// expect_lint: prefix_widgets_returning_slivers
 class NotPrefixedWidgetReturningSliver extends StatelessWidget {
   const NotPrefixedWidgetReturningSliver({super.key});
 
@@ -47,6 +64,36 @@ class SliverPrefixedWidgetReturningSliver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter();
+  }
+}
+
+// Should not report warning since it's prefixed (with app prefix)
+class LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
+  const LncdSliverPrefixedWidgetReturningSliver({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverToBoxAdapter();
+  }
+}
+
+// Should not report warning since it's prefixed (with app prefix + private)
+class _LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
+  const _LncdSliverPrefixedWidgetReturningSliver({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverToBoxAdapter();
+  }
+}
+
+// expect_lint: prefix_widgets_returning_slivers
+class LncdReturningAppPrefixedSliver extends StatelessWidget {
+  const LncdReturningAppPrefixedSliver({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const LncdSliverPrefixedWidgetReturningSliver();
   }
 }
 
