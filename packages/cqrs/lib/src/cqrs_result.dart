@@ -15,6 +15,15 @@
 import 'package:equatable/equatable.dart';
 
 import 'command_result.dart';
+import 'cqrs_error.dart';
+
+/// Extension adding [isInvalid] getter for validation error checking on
+/// [CqrsCommandResult] with error type [CqrsError].
+extension CqrsCommandResultValidationErrorExtension
+    on CqrsCommandResult<CqrsError> {
+  /// Whether is a [CqrsCommandFailure] with validation errors.
+  bool get isInvalid => error == CqrsError.validation;
+}
 
 /// Generic result for CQRS query result. Can be either [CqrsQuerySuccess]
 /// or [CqrsQueryFailure].
