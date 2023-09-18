@@ -38,7 +38,7 @@
 /// // Adding a new flower
 /// final result = await cqrs.run(
 ///   AddFlower(
-///     title: 'Orchid',
+///     name: 'Daisy',
 ///     pretty: true,
 ///   ),
 /// );
