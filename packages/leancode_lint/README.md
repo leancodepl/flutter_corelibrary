@@ -309,5 +309,13 @@ custom_lint:
           from_package: flutter
 ```
 
+## Assists
+
+See linked source code containing explanation in dart doc.
+
+- [Convert positional to named formal](./lib/assists/convert_positional_to_named_formal.dart)
+- [Convert record into nominal type](./lib/assists/convert_record_into_nominal_type.dart)
+- [Convert iterable map to collection-for](./lib/assists/convert_iterable_map_to_collection_for.dart)
+
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint
