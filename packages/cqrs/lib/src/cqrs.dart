@@ -38,9 +38,9 @@ enum _ResultType {
         success => 'executed successfully',
         jsonError => 'failed while decoding response body JSON',
         networkError => 'failed with network error',
-        authenticationError => 'failed with authentication',
+        authenticationError => 'failed with authentication error',
         forbiddenAccessError => 'failed with forbidden access error',
-        validationError => 'failed with following validation errors',
+        validationError => 'failed with validation errors',
         unknownError => 'failed unexpectedly',
       };
 }
@@ -337,7 +337,7 @@ class Cqrs {
 
     final details = switch (result) {
       _ResultType.validationError =>
-        '$methodTypePrefix ${method.runtimeType} ${result.description}.\n'
+        '$methodTypePrefix ${method.runtimeType} ${result.description}:\n'
             '$validationErrorsBuffer',
       _ => '$methodTypePrefix ${method.runtimeType} ${result.description}.',
     };
