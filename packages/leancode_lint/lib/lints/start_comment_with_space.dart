@@ -13,6 +13,7 @@ class StartCommentWithSpace extends DartLintRule {
   static LintCode _createCode(_CommentType param) => LintCode(
         name: ruleName,
         problemMessage: 'Start ${param.name}s with a space.',
+        errorSeverity: ErrorSeverity.WARNING,
       );
 
   @override

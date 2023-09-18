@@ -4,12 +4,13 @@ import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
+typedef ForbiddenItem = ({String name, String packageName});
+
 /// Enforces that items that have replacements defined are used.
 abstract base class UseInsteadType extends DartLintRule {
   UseInsteadType({
     /// preferred item -> forbidden items
-    required Map<String, List<(String packageName, String itemName)>>
-        replacements,
+    required Map<String, List<ForbiddenItem>> replacements,
     required this.lintCodeName,
     this.errorSeverity = ErrorSeverity.WARNING,
   })  : _checkers = [
@@ -18,11 +19,11 @@ abstract base class UseInsteadType extends DartLintRule {
             (
               preferredItemName,
               TypeChecker.any([
-                for (final (package, name) in forbidden)
-                  if (package.startsWith('dart:'))
-                    TypeChecker.fromUrl('$package#$name')
+                for (final (:name, :packageName) in forbidden)
+                  if (packageName.startsWith('dart:'))
+                    TypeChecker.fromUrl('$packageName#$name')
                   else
-                    TypeChecker.fromName(name, packageName: package),
+                    TypeChecker.fromName(name, packageName: packageName),
               ])
             ),
         ],

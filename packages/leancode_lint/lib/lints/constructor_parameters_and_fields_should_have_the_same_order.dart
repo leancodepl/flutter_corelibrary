@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -130,5 +131,6 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         name: ruleName,
         problemMessage:
             'Class parameters and fields should have the same order.',
+        errorSeverity: ErrorSeverity.WARNING,
       );
 }

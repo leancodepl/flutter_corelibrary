@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
@@ -95,5 +96,6 @@ class AvoidConditionalHooks extends DartLintRule {
   static LintCode _getLintCode() => const LintCode(
         name: ruleName,
         problemMessage: "Don't use hooks conditionally",
+        errorSeverity: ErrorSeverity.WARNING,
       );
 }

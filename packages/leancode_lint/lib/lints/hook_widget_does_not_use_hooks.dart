@@ -46,6 +46,7 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
         name: ruleName,
         problemMessage: 'This HookWidget does not use hooks.',
         correctionMessage: 'Convert it to a StatelessWidget',
+        errorSeverity: ErrorSeverity.WARNING,
       );
 }
 
