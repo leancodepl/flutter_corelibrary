@@ -311,6 +311,8 @@ custom_lint:
 
 ## Assists
 
+Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.
+
 See linked source code containing explanation in dart doc.
 
 - [Convert positional to named formal](./lib/assists/convert_positional_to_named_formal.dart)
