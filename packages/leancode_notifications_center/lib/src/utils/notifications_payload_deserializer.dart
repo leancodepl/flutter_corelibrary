@@ -9,9 +9,12 @@ typedef NotificationDeserializersMap
 class NotificationsDeserializer {
   NotificationsDeserializer({
     required NotificationDeserializersMap deserializers,
-  }) : _deserializers = deserializers;
+    required Iterable<NotificationCategory> categories,
+  })  : _deserializers = deserializers,
+        _categories = categories;
 
   final NotificationDeserializersMap _deserializers;
+  final Iterable<NotificationCategory> _categories;
 
   Iterable<NotificationData> deserializeMessages(
     Iterable<RawNotification> messages,
@@ -30,7 +33,7 @@ class NotificationsDeserializer {
   NotificationCategory? _tryParseNotificationCategory(
     RawNotification message,
   ) =>
-      mockedCategories.firstWhereOrNull(
+      _categories.firstWhereOrNull(
         (category) => category.id == message.category,
       );
 
