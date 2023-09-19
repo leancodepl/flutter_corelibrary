@@ -123,7 +123,7 @@ final class CqrsCommandSuccess<E> extends CqrsCommandResult<E> {
   final List<ValidationError> validationErrors = const [];
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [true];
 }
 
 /// Generic class which represents a result of unsuccesful command execution.
