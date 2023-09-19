@@ -87,7 +87,7 @@ class Cqrs {
   final Logger? _logger;
   final List<CqrsMiddleware> _middlewares;
 
-  /// Add new middleware at the end of a list.
+  /// Add given middleware at the end of a list.
   void addMiddleware(CqrsMiddleware middleware) {
     _middlewares.add(middleware);
   }
