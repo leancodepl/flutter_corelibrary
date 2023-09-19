@@ -34,6 +34,7 @@ void main() {
         const result = CqrsCommandSuccess<CqrsError>();
 
         expect(result.asSuccess, result);
+        expect(result.asSuccess?.props, result.props);
         expect(result.asFailure, null);
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
