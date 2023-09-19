@@ -19,20 +19,76 @@ void main() {
   group('CQRS', () {
     late MockClient client;
     late MockLogger logger;
+    late MockCqrsMiddleware middleware;
     late Cqrs cqrs;
 
     setUpAll(() {
       registerFallbackValue(Uri());
+      registerFallbackValue(const CqrsQuerySuccess<bool?, CqrsError>(true));
+      registerFallbackValue(
+        Future.value(const CqrsQuerySuccess<bool?, CqrsError>(true)),
+      );
+      registerFallbackValue(const CqrsCommandSuccess<CqrsError>());
+      registerFallbackValue(
+        Future.value(const CqrsCommandSuccess<CqrsError>()),
+      );
+      registerFallbackValue(const CqrsOperationSuccess<bool?, CqrsError>(true));
+      registerFallbackValue(
+        Future.value(const CqrsOperationSuccess<bool?, CqrsError>(true)),
+      );
     });
 
     setUp(() {
       client = MockClient();
       logger = MockLogger();
+      middleware = MockCqrsMiddleware();
       cqrs = Cqrs(
         client,
         Uri.parse('https://example.org/api/'),
         logger: logger,
       );
+    });
+
+    group('addMiddleware', () {
+      test('adds new middleware to the list', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verifyNever(() => middleware.handleQueryResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verify(() => middleware.handleQueryResult(result)).called(1);
+
+        cqrs.removeMiddleware(middleware);
+      });
+    });
+
+    group('removeMiddleware', () {
+      test('removes given middleware from the list', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+
+        verifyNever(() => middleware.handleQueryResult(result));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+
+        verify(() => middleware.handleQueryResult(result)).called(1);
+
+        cqrs.removeMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+
+        verifyNever(
+          () => middleware.handleQueryResult(any()),
+        );
+      });
     });
 
     group('get', () {
@@ -207,6 +263,21 @@ void main() {
             any(),
           ),
         ).called(1);
+      });
+
+      test(
+          'calls CqrsMiddleware.handleQueryResult for each'
+          ' middleware present', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verifyNever(() => middleware.handleQueryResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verify(() => middleware.handleQueryResult(result)).called(1);
       });
     });
 
@@ -419,6 +490,21 @@ void main() {
           ),
         ).called(1);
       });
+
+      test(
+          'calls CqrsMiddleware.handleCommandResult for each'
+          ' middleware present', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.run(ExampleCommand());
+        mockCqrsMiddlewareCommandResult(middleware, result);
+        verifyNever(() => middleware.handleCommandResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.run(ExampleCommand());
+        mockCqrsMiddlewareCommandResult(middleware, result);
+        verify(() => middleware.handleCommandResult(result)).called(1);
+      });
     });
 
     group('perform', () {
@@ -600,6 +686,21 @@ void main() {
           ),
         ).called(1);
       });
+
+      test(
+          'calls CqrsMiddleware.handleOperationResult for each'
+          ' middleware present', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.perform(ExampleOperation());
+        mockCqrsMiddlewareOperationResult(middleware, result);
+        verifyNever(() => middleware.handleOperationResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.perform(ExampleOperation());
+        mockCqrsMiddlewareOperationResult(middleware, result);
+        verify(() => middleware.handleOperationResult(result)).called(1);
+      });
     });
   });
 }
@@ -622,6 +723,39 @@ void mockClientException(MockClient client, Exception exception) {
       headers: any(named: 'headers'),
     ),
   ).thenAnswer((_) async => throw exception);
+}
+
+void mockCqrsMiddlewareQueryResult(
+  MockCqrsMiddleware middleware,
+  CqrsQueryResult<bool?, CqrsError> result,
+) {
+  when(
+    () => middleware.handleQueryResult(result),
+  ).thenAnswer(
+    (_) async => Future.value(result),
+  );
+}
+
+void mockCqrsMiddlewareCommandResult(
+  MockCqrsMiddleware middleware,
+  CqrsCommandResult<CqrsError> result,
+) {
+  when(
+    () => middleware.handleCommandResult(result),
+  ).thenAnswer(
+    (_) async => Future.value(result),
+  );
+}
+
+void mockCqrsMiddlewareOperationResult(
+  MockCqrsMiddleware middleware,
+  CqrsOperationResult<bool?, CqrsError> result,
+) {
+  when(
+    () => middleware.handleOperationResult(result),
+  ).thenAnswer(
+    (_) async => Future.value(result),
+  );
 }
 
 class ExampleQuery implements Query<bool?> {
