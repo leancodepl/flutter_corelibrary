@@ -24,8 +24,8 @@ void main() {
 
     group('handleOperationResult', () {
       test('returns the same result by default', () async {
-        const resultIn = CqrsCommandSuccess<CqrsError>();
-        final resultOut = await middleware.handleCommandResult(resultIn);
+        const resultIn = CqrsOperationSuccess<bool, CqrsError>(true);
+        final resultOut = await middleware.handleOperationResult(resultIn);
         expect(resultIn, resultOut);
       });
     });
