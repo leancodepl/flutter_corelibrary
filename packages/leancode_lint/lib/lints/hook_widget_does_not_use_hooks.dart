@@ -17,30 +17,11 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration(
-      (node) {
-        final superclass = node.extendsClause?.superclass;
-        final superclassElement = superclass?.element;
-        if (superclass == null || superclassElement == null) {
-          return;
-        }
-
-        final isDirectHookWidget = const TypeChecker.fromName(
-          'HookWidget',
-          packageName: 'flutter_hooks',
-        ).isExactly(superclassElement);
-
-        if (!isDirectHookWidget) {
-          return;
-        }
-
-        final buildMethod = getBuildMethod(node);
-        if (buildMethod == null) {
-          return;
-        }
-
+    context.registry.addHookWidgetBody(
+      isExactly: true,
+      (node, diagnosticTarget) {
         // get all hook expressions from build method
-        final hookExpressions = switch (buildMethod.body) {
+        final hookExpressions = switch (node) {
           ExpressionFunctionBody(expression: final AstNode node) ||
           BlockFunctionBody(block: final AstNode node) =>
             getAllInnerHookExpressions(node),
@@ -51,7 +32,7 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
           return;
         }
 
-        reporter.reportErrorForNode(_getLintCode(), superclass);
+        reporter.reportErrorForNode(_getLintCode(), diagnosticTarget);
       },
     );
   }
@@ -65,6 +46,7 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
         name: ruleName,
         problemMessage: 'This HookWidget does not use hooks.',
         correctionMessage: 'Convert it to a StatelessWidget',
+        errorSeverity: ErrorSeverity.WARNING,
       );
 }
 

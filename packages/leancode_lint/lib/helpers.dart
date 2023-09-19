@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
@@ -41,16 +42,12 @@ class _HookExpressionsGatherer extends GeneralizingAstVisitor<void> {
     return visitor._hookExpressions;
   }
 
-  @override
-  void visitFunctionBody(FunctionBody node) {
-    // stop recursing on a new function body
-  }
+  // use + upper case letter to avoid cases like "user"
+  static final _isHookRegex = RegExp('^_?use[0-9A-Z]');
 
   @override
   void visitInvocationExpression(InvocationExpression node) {
-    const hookPrefixes = ['use', '_use'];
-
-    if (hookPrefixes.any(node.beginToken.lexeme.startsWith)) {
+    if (_isHookRegex.hasMatch(node.beginToken.lexeme)) {
       _hookExpressions.add(node);
     }
 
@@ -103,3 +100,99 @@ bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
     .firstWhereOrNull((member) => member.name.lexeme == 'build');
+
+extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
+  void addRegularComment(void Function(Token comment) listener) {
+    addCompilationUnit((node) {
+      bool isRegularComment(Token commentToken) {
+        final token = commentToken.toString();
+
+        return !token.startsWith('///') && token.startsWith('//');
+      }
+
+      Token? token = node.root.beginToken;
+      while (token != null) {
+        Token? commentToken = token.precedingComments;
+        while (commentToken != null) {
+          if (isRegularComment(commentToken)) {
+            listener(commentToken);
+          }
+          commentToken = commentToken.next;
+        }
+
+        if (token == token.next) {
+          break;
+        }
+
+        token = token.next;
+      }
+    });
+  }
+
+  void addHookWidgetBody(
+    void Function(FunctionBody node, AstNode diagnosticNode) listener, {
+    bool isExactly = false,
+  }) {
+    addInstanceCreationExpression((node) {
+      final classElement = node.constructorName.type.element;
+      if (classElement == null) {
+        return;
+      }
+
+      final isHookBuilder = const TypeChecker.fromName(
+        'HookBuilder',
+        packageName: 'flutter_hooks',
+      ).isExactly(classElement);
+      if (!isHookBuilder) {
+        return;
+      }
+
+      final builderParameter = node.argumentList.arguments
+          .whereType<NamedExpression>()
+          .firstWhereOrNull((e) => e.name.label.name == 'builder');
+      if (builderParameter
+          case NamedExpression(expression: FunctionExpression(:final body))) {
+        listener(body, node.constructorName);
+      }
+    });
+    addClassDeclaration((node) {
+      final element = node.declaredElement;
+      if (element == null) {
+        return;
+      }
+
+      const checker = TypeChecker.fromName(
+        'HookWidget',
+        packageName: 'flutter_hooks',
+      );
+
+      final AstNode diagnosticNode;
+      if (isExactly) {
+        final superclass = node.extendsClause?.superclass;
+        final superclassElement = superclass?.element;
+        if (superclass == null || superclassElement == null) {
+          return;
+        }
+
+        final isDirectHookWidget = checker.isExactly(superclassElement);
+        if (!isDirectHookWidget) {
+          return;
+        }
+        diagnosticNode = superclass;
+      } else {
+        final isHookWidget = checker.isSuperOf(element);
+        if (!isHookWidget) {
+          return;
+        }
+        diagnosticNode = node;
+      }
+
+      final buildMethod = getBuildMethod(node);
+      if (buildMethod == null) {
+        return;
+      }
+
+      listener(buildMethod.body, diagnosticNode);
+    });
+  }
+}

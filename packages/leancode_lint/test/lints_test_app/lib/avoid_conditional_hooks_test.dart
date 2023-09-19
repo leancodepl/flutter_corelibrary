@@ -16,9 +16,12 @@ class SampleHookWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    void userSomething() {}
+
     if (Random().nextBool()) {
       // expect_lint: avoid_conditional_hooks
       useState('c');
+      userSomething();
 
       final a = // expect_lint: avoid_conditional_hooks
           useState('b');
@@ -197,3 +200,14 @@ class CollectionIf extends HookWidget {
     throw Exception('$a');
   }
 }
+
+final a = HookBuilder(
+  builder: (context) {
+    if (Random().nextBool()) {
+      // expect_lint: avoid_conditional_hooks
+      useState(1);
+    }
+    useState(2);
+    return const SizedBox();
+  },
+);

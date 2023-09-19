@@ -1,16 +1,19 @@
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/helpers.dart';
 
 /// Forces comments/docs to start with a space.
-class StartCommentWithSpace extends DartLintRule {
-  StartCommentWithSpace() : super(code: _createCode(_CommentType.comment));
+class StartCommentsWithSpace extends DartLintRule {
+  StartCommentsWithSpace() : super(code: _createCode(_CommentType.comment));
 
-  static const ruleName = 'start_comment_with_space';
+  static const ruleName = 'start_comments_with_space';
 
   static LintCode _createCode(_CommentType param) => LintCode(
         name: ruleName,
         problemMessage: 'Start ${param.name}s with a space.',
+        errorSeverity: ErrorSeverity.WARNING,
       );
 
   @override
@@ -24,21 +27,19 @@ class StartCommentWithSpace extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    // TODO: this visitor does not visit normal comments, just doc comments
+    context.registry.addRegularComment((token) {
+      if (_commentErrorOffset(token) case final contentStart?) {
+        reporter.reportErrorForOffset(
+          _createCode(_CommentType.comment),
+          token.offset + contentStart,
+          0,
+        );
+      }
+    });
+
     context.registry.addComment((node) {
       for (final token in node.tokens) {
-        final lexeme = token.lexeme;
-
-        // find index of first char after `/`
-        var contentStart = 0;
-        while (lexeme.length > contentStart && lexeme[contentStart] == '/') {
-          contentStart += 1;
-        }
-
-        final needsSpace =
-            lexeme.length != contentStart && lexeme[contentStart] != ' ';
-
-        if (needsSpace) {
+        if (_commentErrorOffset(token) case final contentStart?) {
           reporter.reportErrorForOffset(
             _createCode(_CommentType.doc),
             token.offset + contentStart,
@@ -47,6 +48,24 @@ class StartCommentWithSpace extends DartLintRule {
         }
       }
     });
+  }
+
+  int? _commentErrorOffset(Token comment) {
+    final lexeme = comment.lexeme;
+
+    // find index of first char after `/`
+    var contentStart = 0;
+    while (lexeme.length > contentStart && lexeme[contentStart] == '/') {
+      contentStart += 1;
+    }
+
+    final needsSpace =
+        lexeme.length != contentStart && lexeme[contentStart] != ' ';
+
+    if (needsSpace) {
+      return contentStart;
+    }
+    return null;
   }
 }
 

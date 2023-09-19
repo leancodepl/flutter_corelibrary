@@ -11,6 +11,10 @@ custom_lint:
       LftScaffold:
         - instead_of: Scaffold
           from_package: flutter
+    - prefix_widgets_returning_slivers:
+      application_prefix: Lncd
+    # TODO: remove explicit enable once enabled by default
+    - constructor_parameters_and_fields_should_have_the_same_order: true
 
 analyzer:
   plugins:

@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -13,6 +14,7 @@ class CatchParameterNames extends DartLintRule {
         name: 'catch_parameter_names',
         problemMessage: 'Parameter name for the ${param.name} is non-standard.',
         correctionMessage: 'Rename the parameter to `${param.preferredName}`.',
+        errorSeverity: ErrorSeverity.WARNING,
       );
 
   @override

@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -11,6 +12,10 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
 
   static const ruleName =
       'constructor_parameters_and_fields_should_have_the_same_order';
+
+  // TOOD: disabled until stabilized. Add documentation.
+  @override
+  bool get enabledByDefault => false;
 
   @override
   void run(
@@ -130,5 +135,6 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         name: ruleName,
         problemMessage:
             'Class parameters and fields should have the same order.',
+        errorSeverity: ErrorSeverity.WARNING,
       );
 }

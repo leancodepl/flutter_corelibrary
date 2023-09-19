@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -57,6 +58,7 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
       name: ruleName,
       problemMessage: problemMessageBase,
       correctionMessage: exampleName != null ? 'Ex. $exampleName' : null,
+      errorSeverity: ErrorSeverity.WARNING,
     );
   }
 }

@@ -82,19 +82,17 @@ class WidgetTransitivelyBeingAHookWidget extends SampleHookWidgetUsingHooks {
   }
 }
 
-class WidgetUsingBuilder extends
+final a =
     // expect_lint: hook_widget_does_not_use_hooks
-    HookWidget {
-  const WidgetUsingBuilder({super.key});
+    HookBuilder(
+  builder: (context) {
+    return const SizedBox();
+  },
+);
 
-  @override
-  Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final state = useState(1);
-
-        throw Exception('$state');
-      },
-    );
-  }
-}
+final b = HookBuilder(
+  builder: (context) {
+    useState(123);
+    return const SizedBox();
+  },
+);
