@@ -95,7 +95,7 @@ final class CSuccess extends CResult {
   const CSuccess();
 
   @override
-  List<Object?> get props => [true];
+  List<Object?> get props => [];
 }
 
 /// Generic class which represents a result of unsuccesful command execution.

@@ -30,6 +30,7 @@ void main() {
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
         expect(result.isInvalid, false);
+        expect(result.props.isEmpty, true);
         expect(result.validationErrors, const <ValidationError>[]);
       });
 
