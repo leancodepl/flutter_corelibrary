@@ -28,9 +28,9 @@ void main() {
       registerFallbackValue(
         Future.value(const QSuccess<bool?>(true)),
       );
-      registerFallbackValue(const CqrsCommandSuccess());
+      registerFallbackValue(const CSuccess());
       registerFallbackValue(
-        Future.value(const CqrsCommandSuccess()),
+        Future.value(const CSuccess()),
       );
       registerFallbackValue(const CqrsOperationSuccess<bool?>(true));
       registerFallbackValue(
@@ -294,7 +294,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandSuccess(),
+          const CSuccess(),
         );
 
         verify(
@@ -315,7 +315,7 @@ void main() {
       });
 
       test(
-          'returns CqrsCommandFailure(CqrsError.validation) if any validation '
+          'returns CFailure(CqrsError.validation) if any validation '
           'error occured and logs result', () async {
         const validationError = ValidationError(
           400,
@@ -335,7 +335,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandFailure(
+          const CFailure(
             CqrsError.validation,
             validationErrors: [validationError],
           ),
@@ -360,7 +360,7 @@ void main() {
       });
 
       test(
-          'returns CqrsCommandFailure(CqrsError.unknown) on json decoding'
+          'returns CFailure(CqrsError.unknown) on json decoding'
           ' failure and logs result', () async {
         mockClientPost(client, Response('this is not a valid json', 200));
 
@@ -368,7 +368,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandFailure(CqrsError.unknown),
+          const CFailure(CqrsError.unknown),
         );
 
         verify(
@@ -381,7 +381,7 @@ void main() {
       });
 
       test(
-          'returns CqrsCommandFailure(CqrsError.network) on socket exception'
+          'returns CFailure(CqrsError.network) on socket exception'
           ' and logs result', () async {
         mockClientException(
           client,
@@ -392,7 +392,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandFailure(CqrsError.network),
+          const CFailure(CqrsError.network),
         );
 
         verify(
@@ -405,7 +405,7 @@ void main() {
       });
 
       test(
-          'returns CqrsCommandFailure(CqrsError.unknown) on other'
+          'returns CFailure(CqrsError.unknown) on other'
           ' client exceptions and logs result', () async {
         mockClientException(
           client,
@@ -416,7 +416,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandFailure(CqrsError.unknown),
+          const CFailure(CqrsError.unknown),
         );
 
         verify(
@@ -429,7 +429,7 @@ void main() {
       });
 
       test(
-          'returns CqrsCommandFailure(CqrsError.authentication) when'
+          'returns CFailure(CqrsError.authentication) when'
           ' response code is 401 and logs result', () async {
         mockClientPost(client, Response('', 401));
 
@@ -437,7 +437,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandFailure(CqrsError.authentication),
+          const CFailure(CqrsError.authentication),
         );
 
         verify(
@@ -450,7 +450,7 @@ void main() {
       });
 
       test(
-          'returns CqrsCommandFailure(CqrsError.forbiddenAccess) when'
+          'returns CFailure(CqrsError.forbiddenAccess) when'
           ' response code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -458,7 +458,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandFailure(CqrsError.forbiddenAccess),
+          const CFailure(CqrsError.forbiddenAccess),
         );
 
         verify(
@@ -471,7 +471,7 @@ void main() {
       });
 
       test(
-          'returns CqrsCommandFailure(CqrsError.unknown) for other'
+          'returns CFailure(CqrsError.unknown) for other'
           ' response codes and logs result', () async {
         mockClientPost(client, Response('', 404));
 
@@ -479,7 +479,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandFailure(CqrsError.unknown),
+          const CFailure(CqrsError.unknown),
         );
 
         verify(
@@ -738,7 +738,7 @@ void mockCqrsMiddlewareQueryResult(
 
 void mockCqrsMiddlewareCommandResult(
   MockCqrsMiddleware middleware,
-  CqrsCommandResult result,
+  CResult result,
 ) {
   when(
     () => middleware.handleCommandResult(result),

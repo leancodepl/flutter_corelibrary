@@ -16,7 +16,7 @@ void main() {
 
     group('handleCommandResult', () {
       test('returns the same result by default', () async {
-        const resultIn = CqrsCommandSuccess();
+        const resultIn = CSuccess();
         final resultOut = await middleware.handleCommandResult(resultIn);
         expect(resultIn, resultOut);
       });

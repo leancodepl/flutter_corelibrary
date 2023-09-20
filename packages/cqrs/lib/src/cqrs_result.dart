@@ -60,28 +60,28 @@ final class QFailure<T> extends QResult<T> {
   List<Object?> get props => [error];
 }
 
-/// Generic result for CQRS command result. Can be either [CqrsCommandSuccess]
-/// or [CqrsCommandFailure].
-sealed class CqrsCommandResult extends Equatable {
-  /// Creates a [CqrsCommandResult] class.
-  const CqrsCommandResult();
+/// Generic result for CQRS command result. Can be either [CSuccess]
+/// or [CFailure].
+sealed class CResult extends Equatable {
+  /// Creates a [CResult] class.
+  const CResult();
 
-  /// Whether this instance is of final type [CqrsCommandSuccess].
+  /// Whether this instance is of final type [CSuccess].
   bool get isSuccess => switch (this) {
-        CqrsCommandSuccess() => true,
+        CSuccess() => true,
         _ => false,
       };
 
-  /// Whether this instance is of final type [CqrsCommandFailure].
+  /// Whether this instance is of final type [CFailure].
   bool get isFailure => switch (this) {
-        CqrsCommandFailure() => true,
+        CFailure() => true,
         _ => false,
       };
 
-  /// Whether this instance is of final type [CqrsCommandFailure] and comes
+  /// Whether this instance is of final type [CFailure] and comes
   /// from validation error.
   bool get isInvalid => switch (this) {
-        CqrsCommandFailure(error: CqrsError.validation) => true,
+        CFailure(error: CqrsError.validation) => true,
         _ => false,
       };
 
@@ -90,18 +90,18 @@ sealed class CqrsCommandResult extends Equatable {
 }
 
 /// Generic class which represents a result of succesful command execution.
-final class CqrsCommandSuccess extends CqrsCommandResult {
-  /// Creates a [CqrsCommandSuccess] class.
-  const CqrsCommandSuccess();
+final class CSuccess extends CResult {
+  /// Creates a [CSuccess] class.
+  const CSuccess();
 
   @override
   List<Object?> get props => [true];
 }
 
 /// Generic class which represents a result of unsuccesful command execution.
-final class CqrsCommandFailure extends CqrsCommandResult {
-  /// Creates a [CqrsCommandFailure] class.
-  const CqrsCommandFailure(
+final class CFailure extends CResult {
+  /// Creates a [CFailure] class.
+  const CFailure(
     this.error, {
     this.validationErrors = const [],
   });

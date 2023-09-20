@@ -22,10 +22,10 @@ void main() {
     });
   });
 
-  group('CqrsCommandResult', () {
+  group('CResult', () {
     group('fields values are correct', () {
       test('when constructed as success', () {
-        const result = CqrsCommandSuccess();
+        const result = CSuccess();
 
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
@@ -34,7 +34,7 @@ void main() {
       });
 
       test('when constructed as failure without validation errors', () {
-        const result = CqrsCommandFailure(CqrsError.unknown);
+        const result = CFailure(CqrsError.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
@@ -44,7 +44,7 @@ void main() {
       });
 
       test('when constructed as failure with validation errors', () {
-        const result = CqrsCommandFailure(
+        const result = CFailure(
           CqrsError.validation,
           validationErrors: [
             ValidationError(123, 'Test message', 'SomeProperty'),
