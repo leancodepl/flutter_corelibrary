@@ -95,7 +95,7 @@ final class CqrsCommandSuccess extends CqrsCommandResult {
   const CqrsCommandSuccess();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [true];
 }
 
 /// Generic class which represents a result of unsuccesful command execution.
