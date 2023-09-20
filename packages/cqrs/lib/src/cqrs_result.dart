@@ -24,16 +24,10 @@ sealed class QResult<T> extends Equatable {
   const QResult();
 
   /// Whether this instance is of final type [QSuccess].
-  bool get isSuccess => switch (this) {
-        QSuccess<T>() => true,
-        _ => false,
-      };
+  bool get isSuccess => this is QSuccess<T>;
 
   /// Whether this instance is of final type [QFailure].
-  bool get isFailure => switch (this) {
-        QFailure<T>() => true,
-        _ => false,
-      };
+  bool get isFailure => this is QFailure<T>;
 }
 
 /// Generic class which represents a result of succesful query execution.
@@ -67,16 +61,10 @@ sealed class CResult extends Equatable {
   const CResult();
 
   /// Whether this instance is of final type [CSuccess].
-  bool get isSuccess => switch (this) {
-        CSuccess() => true,
-        _ => false,
-      };
+  bool get isSuccess => this is CSuccess;
 
   /// Whether this instance is of final type [CFailure].
-  bool get isFailure => switch (this) {
-        CFailure() => true,
-        _ => false,
-      };
+  bool get isFailure => this is CFailure;
 
   /// Whether this instance is of final type [CFailure] and comes
   /// from validation error.
@@ -84,9 +72,6 @@ sealed class CResult extends Equatable {
         CFailure(error: CqrsError.validation) => true,
         _ => false,
       };
-
-  /// Returns a list of [ValidationError] errors.
-  List<ValidationError> get validationErrors => const [];
 }
 
 /// Generic class which represents a result of succesful command execution.
@@ -109,7 +94,8 @@ final class CFailure extends CResult {
   /// Error which was the reason of query failure
   final CqrsError error;
 
-  @override
+  /// A list of [ValidationError] errors returned from the backed after
+  /// command execution.
   final List<ValidationError> validationErrors;
 
   @override
@@ -123,16 +109,10 @@ sealed class OResult<T> extends Equatable {
   const OResult();
 
   /// Whether this instance is of final type [OSuccess].
-  bool get isSuccess => switch (this) {
-        OSuccess<T>() => true,
-        _ => false,
-      };
+  bool get isSuccess => this is OSuccess<T>;
 
   /// Whether this instance is of final type [OFailure].
-  bool get isFailure => switch (this) {
-        OFailure<T>() => true,
-        _ => false,
-      };
+  bool get isFailure => this is OFailure<T>;
 }
 
 /// Generic class which represents a result of succesful operation execution.
