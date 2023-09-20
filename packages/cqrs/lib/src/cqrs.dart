@@ -318,6 +318,10 @@ class Cqrs {
     StackTrace? stackTrace,
     List<ValidationError> validationErrors = const [],
   ]) {
+    if (_logger == null) {
+      return;
+    }
+
     final log = switch (result) {
       _ResultType.success => _logger?.info,
       _ResultType.validationError => _logger?.warning,
