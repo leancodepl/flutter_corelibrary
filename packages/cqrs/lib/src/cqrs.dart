@@ -321,7 +321,12 @@ class Cqrs {
     final log = switch (result) {
       _ResultType.success => _logger?.info,
       _ResultType.validationError => _logger?.warning,
-      _ => _logger?.severe,
+      _ResultType.jsonError ||
+      _ResultType.networkError ||
+      _ResultType.authenticationError ||
+      _ResultType.forbiddenAccessError ||
+      _ResultType.unknownError =>
+        _logger?.severe,
     };
 
     final methodTypePrefix = switch (method) {
