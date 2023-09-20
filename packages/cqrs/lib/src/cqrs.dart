@@ -60,7 +60,7 @@ class Cqrs {
   /// those provided directly into [get] or [run] methods and will be overrided
   /// by those in case of some headers sharing the same key.
   ///
-  /// Any result (be it successful of failure) of CQRS method will be logged
+  /// Any result (be it success or failure) of CQRS method will be logged
   /// given the `logger` is provided.
   ///
   /// In case when a global result handling is needed, one might provide
