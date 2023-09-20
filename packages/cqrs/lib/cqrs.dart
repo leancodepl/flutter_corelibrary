@@ -29,10 +29,10 @@
 /// final flowers = await cqrs.get(AllFlowers(page: 1));
 ///
 /// // Handling query result
-/// if (result.isSuccesful) {
-///   print(result.data);
-/// } else if (result.isFailure) {
-///   print('Something failed with error ${result.error}');
+/// if (flowers case QSuccess(:final data)) {
+///   print(data);
+/// } else if (flowers case QFailure(:final error)) {
+///   print('Something failed with error $error');
 /// }
 ///
 /// // Adding a new flower
@@ -44,12 +44,13 @@
 /// );
 ///
 /// // Handling command result
-/// if (result.isSuccess) {
+/// if (result case CSuccess()) {
 ///   print('Flower added succefully');
-/// } else if (result.isInvalid) {
-///   print('Validation error occured');
-/// } else if (result.isFailure) {
-///   print('Something failed with error ${result.error}');
+/// } else if (result case CFailure(isInvalid: true, :final validationErrors)) {
+///   print('Validation errors occured');
+///   handleValidationErrors(validationErrors);
+/// } else if (result case CFailure(:final error)) {
+///   print('Something failed with error ${error}');
 /// }
 /// ```
 ///
