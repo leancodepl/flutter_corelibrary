@@ -103,10 +103,10 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [CqrsQuerySuccess] with recieved data
-  /// of type `T`. A [CqrsQueryFailure] will be returned with according
+  /// After succesfull completion returns [QSuccess] with recieved data
+  /// of type `T`. A [QFailure] will be returned with according
   /// [CqrsError] in case of an error.
-  Future<CqrsQueryResult<T>> get<T>(
+  Future<QResult<T>> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
   }) async {
@@ -164,7 +164,7 @@ class Cqrs {
     );
   }
 
-  Future<CqrsQueryResult<T>> _get<T>(
+  Future<QResult<T>> _get<T>(
     Query<T> query, {
     required Map<String, String> headers,
   }) async {
@@ -177,31 +177,31 @@ class Cqrs {
           final dynamic json = jsonDecode(response.body);
           final result = query.resultFactory(json);
           _log(query, _ResultType.success);
-          return CqrsQuerySuccess(result);
+          return QSuccess(result);
         } catch (e, s) {
           _log(query, _ResultType.jsonError, e, s);
-          return CqrsQueryFailure<T>(CqrsError.unknown);
+          return QFailure<T>(CqrsError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(query, _ResultType.authenticationError);
-        return CqrsQueryFailure<T>(CqrsError.authentication);
+        return QFailure<T>(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(query, _ResultType.forbiddenAccessError);
-        return CqrsQueryFailure<T>(CqrsError.forbiddenAccess);
+        return QFailure<T>(CqrsError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(query, _ResultType.networkError, e, s);
-      return CqrsQueryFailure<T>(CqrsError.network);
+      return QFailure<T>(CqrsError.network);
     } catch (e, s) {
       _log(query, _ResultType.unknownError, e, s);
-      return CqrsQueryFailure<T>(CqrsError.unknown);
+      return QFailure<T>(CqrsError.unknown);
     }
 
     _log(query, _ResultType.unknownError);
-    return CqrsQueryFailure<T>(CqrsError.unknown);
+    return QFailure<T>(CqrsError.unknown);
   }
 
   Future<CqrsCommandResult> _run(

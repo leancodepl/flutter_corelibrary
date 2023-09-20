@@ -24,9 +24,9 @@ void main() {
 
     setUpAll(() {
       registerFallbackValue(Uri());
-      registerFallbackValue(const CqrsQuerySuccess<bool?>(true));
+      registerFallbackValue(const QSuccess<bool?>(true));
       registerFallbackValue(
-        Future.value(const CqrsQuerySuccess<bool?>(true)),
+        Future.value(const QSuccess<bool?>(true)),
       );
       registerFallbackValue(const CqrsCommandSuccess());
       registerFallbackValue(
@@ -102,7 +102,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const CqrsQuerySuccess<bool?>(true));
+        expect(result, const QSuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -131,11 +131,11 @@ void main() {
 
         final result = await cqrs.get(ExampleQuery());
 
-        expect(result, const CqrsQuerySuccess<bool?>(null));
+        expect(result, const QSuccess<bool?>(null));
       });
 
       test(
-          'returns CqrsQueryFailure(CqrsError.unknown) on json decoding'
+          'returns QFailure(CqrsError.unknown) on json decoding'
           ' failure and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
@@ -143,7 +143,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool>(CqrsError.unknown),
+          const QFailure<bool>(CqrsError.unknown),
         );
 
         verify(
@@ -157,7 +157,7 @@ void main() {
       });
 
       test(
-          'returns CqrsQueryFailure(CqrsError.network) on socket exception'
+          'returns QFailure(CqrsError.network) on socket exception'
           ' and logs result', () async {
         mockClientException(
           client,
@@ -168,7 +168,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?>(CqrsError.network),
+          const QFailure<bool?>(CqrsError.network),
         );
 
         verify(
@@ -181,7 +181,7 @@ void main() {
       });
 
       test(
-          'returns CqrsQueryFailure(CqrsError.unknown) on client exception'
+          'returns QFailure(CqrsError.unknown) on client exception'
           ' and logs result', () async {
         final exception = Exception('This is not a socket exception');
         mockClientException(client, exception);
@@ -190,7 +190,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?>(CqrsError.unknown),
+          const QFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -203,7 +203,7 @@ void main() {
       });
 
       test(
-          'returns CqrsQueryFailure(CqrsError.authentication) when response'
+          'returns QFailure(CqrsError.authentication) when response'
           ' code is 401 and logs result', () async {
         mockClientPost(client, Response('', 401));
 
@@ -211,7 +211,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?>(CqrsError.authentication),
+          const QFailure<bool?>(CqrsError.authentication),
         );
 
         verify(
@@ -224,7 +224,7 @@ void main() {
       });
 
       test(
-          'returns CqrsQueryFailure(CqrsError.forbiddenAccess) when response'
+          'returns QFailure(CqrsError.forbiddenAccess) when response'
           ' code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -232,7 +232,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?>(CqrsError.forbiddenAccess),
+          const QFailure<bool?>(CqrsError.forbiddenAccess),
         );
 
         verify(
@@ -245,7 +245,7 @@ void main() {
       });
 
       test(
-          'returns CqrsQueryFailure(CqrsError.unknown) for other response'
+          'returns QFailure(CqrsError.unknown) for other response'
           ' codes and logs result', () async {
         mockClientPost(client, Response('', 404));
 
@@ -253,7 +253,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?>(CqrsError.unknown),
+          const QFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -727,7 +727,7 @@ void mockClientException(MockClient client, Exception exception) {
 
 void mockCqrsMiddlewareQueryResult(
   MockCqrsMiddleware middleware,
-  CqrsQueryResult<bool?> result,
+  QResult<bool?> result,
 ) {
   when(
     () => middleware.handleQueryResult(result),

@@ -2,10 +2,10 @@ import 'package:cqrs/cqrs.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('CqrsQueryResult', () {
+  group('QResult', () {
     group('fields values are correct', () {
       test('when constructed as success', () {
-        const result = CqrsQuerySuccess(true);
+        const result = QSuccess(true);
 
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('when constructed as failure', () {
-        const result = CqrsQueryFailure<bool>(CqrsError.unknown);
+        const result = QFailure<bool>(CqrsError.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
