@@ -116,29 +116,29 @@ final class CFailure extends CResult {
   List<Object?> get props => [error, validationErrors];
 }
 
-/// Generic result for CQRS operation result. Can be either [CqrsOperationSuccess]
-/// or [CqrsOperationFailure].
-sealed class CqrsOperationResult<T> extends Equatable {
-  /// Creates a [CqrsOperationResult] class.
-  const CqrsOperationResult();
+/// Generic result for CQRS operation result. Can be either [OSuccess]
+/// or [OFailure].
+sealed class OResult<T> extends Equatable {
+  /// Creates a [OResult] class.
+  const OResult();
 
-  /// Whether this instance is of final type [CqrsOperationSuccess].
+  /// Whether this instance is of final type [OSuccess].
   bool get isSuccess => switch (this) {
-        CqrsOperationSuccess<T>() => true,
+        OSuccess<T>() => true,
         _ => false,
       };
 
-  /// Whether this instance is of final type [CqrsOperationFailure].
+  /// Whether this instance is of final type [OFailure].
   bool get isFailure => switch (this) {
-        CqrsOperationFailure<T>() => true,
+        OFailure<T>() => true,
         _ => false,
       };
 }
 
 /// Generic class which represents a result of succesful operation execution.
-final class CqrsOperationSuccess<T> extends CqrsOperationResult<T> {
-  /// Creates a [CqrsOperationSuccess] class.
-  const CqrsOperationSuccess(this.data);
+final class OSuccess<T> extends OResult<T> {
+  /// Creates a [OSuccess] class.
+  const OSuccess(this.data);
 
   /// Data of type [T] returned from operation execution.
   final T data;
@@ -148,9 +148,9 @@ final class CqrsOperationSuccess<T> extends CqrsOperationResult<T> {
 }
 
 /// Generic class which represents a result of unsuccesful operation execution.
-final class CqrsOperationFailure<T> extends CqrsOperationResult<T> {
-  /// Creates a [CqrsOperationFailure] class.
-  const CqrsOperationFailure(this.error);
+final class OFailure<T> extends OResult<T> {
+  /// Creates a [OFailure] class.
+  const OFailure(this.error);
 
   /// Error which was the reason of operation failure
   final CqrsError error;

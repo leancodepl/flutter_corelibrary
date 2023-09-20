@@ -64,10 +64,10 @@ void main() {
     });
   });
 
-  group('CqrsOperationResult', () {
+  group('OResult', () {
     group('fields values are correct', () {
       test('when constructed as success', () {
-        const result = CqrsOperationSuccess(true);
+        const result = OSuccess(true);
 
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
@@ -75,7 +75,7 @@ void main() {
       });
 
       test('when constructed as failure', () {
-        const result = CqrsOperationFailure<bool>(CqrsError.unknown);
+        const result = OFailure<bool>(CqrsError.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);

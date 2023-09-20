@@ -37,8 +37,8 @@ abstract class CqrsMiddleware {
 
   /// Handle and return operation result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<CqrsOperationResult<T>> handleOperationResult<T>(
-    CqrsOperationResult<T> result,
+  Future<OResult<T>> handleOperationResult<T>(
+    OResult<T> result,
   ) =>
       Future.value(result);
 }

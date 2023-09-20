@@ -148,10 +148,10 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [CqrsOperationSuccess] with recieved
-  /// data of type `T`. A [CqrsOperationFailure] will be returned with
+  /// After succesfull completion returns [OSuccess] with recieved
+  /// data of type `T`. A [OFailure] will be returned with
   /// according [CqrsError] in case of an error.
-  Future<CqrsOperationResult<T>> perform<T>(
+  Future<OResult<T>> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
   }) async {
@@ -255,7 +255,7 @@ class Cqrs {
     return const CFailure(CqrsError.unknown);
   }
 
-  Future<CqrsOperationResult<T>> _perform<T>(
+  Future<OResult<T>> _perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
   }) async {
@@ -268,31 +268,31 @@ class Cqrs {
           final dynamic json = jsonDecode(response.body);
           final result = operation.resultFactory(json);
           _log(operation, _ResultType.success);
-          return CqrsOperationSuccess<T>(result);
+          return OSuccess<T>(result);
         } catch (e, s) {
           _log(operation, _ResultType.jsonError, e, s);
-          return CqrsOperationFailure<T>(CqrsError.unknown);
+          return OFailure<T>(CqrsError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(operation, _ResultType.authenticationError);
-        return CqrsOperationFailure<T>(CqrsError.authentication);
+        return OFailure<T>(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(operation, _ResultType.forbiddenAccessError);
-        return CqrsOperationFailure<T>(CqrsError.forbiddenAccess);
+        return OFailure<T>(CqrsError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(operation, _ResultType.networkError, e, s);
-      return CqrsOperationFailure<T>(CqrsError.network);
+      return OFailure<T>(CqrsError.network);
     } catch (e, s) {
       _log(operation, _ResultType.unknownError, e, s);
-      return CqrsOperationFailure<T>(CqrsError.unknown);
+      return OFailure<T>(CqrsError.unknown);
     }
 
     _log(operation, _ResultType.unknownError);
-    return CqrsOperationFailure<T>(CqrsError.unknown);
+    return OFailure<T>(CqrsError.unknown);
   }
 
   Future<http.Response> _send(
