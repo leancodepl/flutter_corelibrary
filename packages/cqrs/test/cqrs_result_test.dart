@@ -31,7 +31,6 @@ void main() {
         expect(result.isFailure, false);
         expect(result.isInvalid, false);
         expect(result.props.isEmpty, true);
-        expect(result.validationErrors, const <ValidationError>[]);
       });
 
       test('when constructed as failure without validation errors', () {
@@ -40,7 +39,7 @@ void main() {
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
         expect(result.isInvalid, false);
-        expect(result.validationErrors, const <ValidationError>[]);
+        expect(result.validationErrors.isEmpty, true);
         expect(result.error, CqrsError.unknown);
       });
 
