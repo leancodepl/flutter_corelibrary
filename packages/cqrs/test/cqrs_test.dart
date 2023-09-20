@@ -24,17 +24,17 @@ void main() {
 
     setUpAll(() {
       registerFallbackValue(Uri());
-      registerFallbackValue(const CqrsQuerySuccess<bool?, CqrsError>(true));
+      registerFallbackValue(const CqrsQuerySuccess<bool?>(true));
       registerFallbackValue(
-        Future.value(const CqrsQuerySuccess<bool?, CqrsError>(true)),
+        Future.value(const CqrsQuerySuccess<bool?>(true)),
       );
-      registerFallbackValue(const CqrsCommandSuccess<CqrsError>());
+      registerFallbackValue(const CqrsCommandSuccess());
       registerFallbackValue(
-        Future.value(const CqrsCommandSuccess<CqrsError>()),
+        Future.value(const CqrsCommandSuccess()),
       );
-      registerFallbackValue(const CqrsOperationSuccess<bool?, CqrsError>(true));
+      registerFallbackValue(const CqrsOperationSuccess<bool?>(true));
       registerFallbackValue(
-        Future.value(const CqrsOperationSuccess<bool?, CqrsError>(true)),
+        Future.value(const CqrsOperationSuccess<bool?>(true)),
       );
     });
 
@@ -102,7 +102,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const CqrsQuerySuccess<bool?, CqrsError>(true));
+        expect(result, const CqrsQuerySuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -131,7 +131,7 @@ void main() {
 
         final result = await cqrs.get(ExampleQuery());
 
-        expect(result, const CqrsQuerySuccess<bool?, CqrsError>(null));
+        expect(result, const CqrsQuerySuccess<bool?>(null));
       });
 
       test(
@@ -143,7 +143,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool, CqrsError>(CqrsError.unknown),
+          const CqrsQueryFailure<bool>(CqrsError.unknown),
         );
 
         verify(
@@ -168,7 +168,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.network),
+          const CqrsQueryFailure<bool?>(CqrsError.network),
         );
 
         verify(
@@ -190,7 +190,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.unknown),
+          const CqrsQueryFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -211,7 +211,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.authentication),
+          const CqrsQueryFailure<bool?>(CqrsError.authentication),
         );
 
         verify(
@@ -232,7 +232,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.forbiddenAccess),
+          const CqrsQueryFailure<bool?>(CqrsError.forbiddenAccess),
         );
 
         verify(
@@ -253,7 +253,7 @@ void main() {
 
         expect(
           result,
-          const CqrsQueryFailure<bool?, CqrsError>(CqrsError.unknown),
+          const CqrsQueryFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -294,7 +294,7 @@ void main() {
 
         expect(
           result,
-          const CqrsCommandSuccess<CqrsError>(),
+          const CqrsCommandSuccess(),
         );
 
         verify(
@@ -518,7 +518,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const CqrsOperationSuccess<bool?, CqrsError>(true));
+        expect(result, const CqrsOperationSuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -548,7 +548,7 @@ void main() {
 
         final result = await cqrs.perform(ExampleOperation());
 
-        expect(result, const CqrsOperationSuccess<bool?, CqrsError>(null));
+        expect(result, const CqrsOperationSuccess<bool?>(null));
       });
 
       test(
@@ -561,7 +561,7 @@ void main() {
 
         expect(
           result,
-          const CqrsOperationFailure<bool, CqrsError>(CqrsError.unknown),
+          const CqrsOperationFailure<bool>(CqrsError.unknown),
         );
 
         verify(
@@ -586,7 +586,7 @@ void main() {
 
         expect(
           result,
-          const CqrsOperationFailure<bool?, CqrsError>(CqrsError.network),
+          const CqrsOperationFailure<bool?>(CqrsError.network),
         );
 
         verify(
@@ -608,7 +608,7 @@ void main() {
 
         expect(
           result,
-          const CqrsOperationFailure<bool?, CqrsError>(CqrsError.unknown),
+          const CqrsOperationFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -629,7 +629,7 @@ void main() {
 
         expect(
           result,
-          const CqrsOperationFailure<bool?, CqrsError>(
+          const CqrsOperationFailure<bool?>(
             CqrsError.authentication,
           ),
         );
@@ -652,7 +652,7 @@ void main() {
 
         expect(
           result,
-          const CqrsOperationFailure<bool?, CqrsError>(
+          const CqrsOperationFailure<bool?>(
             CqrsError.forbiddenAccess,
           ),
         );
@@ -675,7 +675,7 @@ void main() {
 
         expect(
           result,
-          const CqrsOperationFailure<bool?, CqrsError>(CqrsError.unknown),
+          const CqrsOperationFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -727,7 +727,7 @@ void mockClientException(MockClient client, Exception exception) {
 
 void mockCqrsMiddlewareQueryResult(
   MockCqrsMiddleware middleware,
-  CqrsQueryResult<bool?, CqrsError> result,
+  CqrsQueryResult<bool?> result,
 ) {
   when(
     () => middleware.handleQueryResult(result),
@@ -738,7 +738,7 @@ void mockCqrsMiddlewareQueryResult(
 
 void mockCqrsMiddlewareCommandResult(
   MockCqrsMiddleware middleware,
-  CqrsCommandResult<CqrsError> result,
+  CqrsCommandResult result,
 ) {
   when(
     () => middleware.handleCommandResult(result),
@@ -749,7 +749,7 @@ void mockCqrsMiddlewareCommandResult(
 
 void mockCqrsMiddlewareOperationResult(
   MockCqrsMiddleware middleware,
-  CqrsOperationResult<bool?, CqrsError> result,
+  CqrsOperationResult<bool?> result,
 ) {
   when(
     () => middleware.handleOperationResult(result),

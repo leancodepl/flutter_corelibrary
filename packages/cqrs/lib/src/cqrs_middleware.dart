@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'cqrs_error.dart';
 import 'cqrs_result.dart';
 
 /// Abstract class for CQRS result handlers. Can be used to specify certain
@@ -24,22 +23,22 @@ abstract class CqrsMiddleware {
 
   /// Handle and return query result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<CqrsQueryResult<T, CqrsError>> handleQueryResult<T>(
-    CqrsQueryResult<T, CqrsError> result,
+  Future<CqrsQueryResult<T>> handleQueryResult<T>(
+    CqrsQueryResult<T> result,
   ) =>
       Future.value(result);
 
   /// Handle and return command result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<CqrsCommandResult<CqrsError>> handleCommandResult(
-    CqrsCommandResult<CqrsError> result,
+  Future<CqrsCommandResult> handleCommandResult(
+    CqrsCommandResult result,
   ) =>
       Future.value(result);
 
   /// Handle and return operation result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<CqrsOperationResult<T, CqrsError>> handleOperationResult<T>(
-    CqrsOperationResult<T, CqrsError> result,
+  Future<CqrsOperationResult<T>> handleOperationResult<T>(
+    CqrsOperationResult<T> result,
   ) =>
       Future.value(result);
 }

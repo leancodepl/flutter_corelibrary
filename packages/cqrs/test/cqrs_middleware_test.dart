@@ -8,7 +8,7 @@ void main() {
   group('CqrsMiddleware', () {
     group('handleQueryResult', () {
       test('returns the same result by default', () async {
-        const resultIn = CqrsQuerySuccess<bool, CqrsError>(true);
+        const resultIn = CqrsQuerySuccess(true);
         final resultOut = await middleware.handleQueryResult(resultIn);
         expect(resultIn, resultOut);
       });
@@ -16,7 +16,7 @@ void main() {
 
     group('handleCommandResult', () {
       test('returns the same result by default', () async {
-        const resultIn = CqrsCommandSuccess<CqrsError>();
+        const resultIn = CqrsCommandSuccess();
         final resultOut = await middleware.handleCommandResult(resultIn);
         expect(resultIn, resultOut);
       });
@@ -24,7 +24,7 @@ void main() {
 
     group('handleOperationResult', () {
       test('returns the same result by default', () async {
-        const resultIn = CqrsOperationSuccess<bool, CqrsError>(true);
+        const resultIn = CqrsOperationSuccess(true);
         final resultOut = await middleware.handleOperationResult(resultIn);
         expect(resultIn, resultOut);
       });
