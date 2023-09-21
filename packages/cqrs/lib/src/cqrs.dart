@@ -65,9 +65,10 @@ class Cqrs {
   ///
   /// In case when a global result handling is needed, one might provide
   /// a `middlewares` list with a collection of [CqrsMiddleware] objects. Every
-  /// time a result is returned, [Cqrs.get] and [Cqrs.run] will execute for
-  /// each middleware on the list [CqrsMiddleware.handleQueryResult]
-  /// and [CqrsMiddleware.handleCommandResult] accordingly.
+  /// time a result is returned, [Cqrs.get], [Cqrs.run] and [Cqrs.perform] will
+  /// execute for each middleware on the list
+  /// [CqrsMiddleware.handleQueryResult], [CqrsMiddleware.handleCommandResult]
+  /// and [CqrsMiddleware.handleOperationResult] accordingly.
   Cqrs(
     this._client,
     this._apiUri, {
@@ -218,7 +219,7 @@ class Cqrs {
       if ([200, 422].contains(response.statusCode)) {
         try {
           final json = jsonDecode(response.body) as Map<String, dynamic>;
-          final result = CommandResult.fromJson(json);
+          final result = CommandResponse.fromJson(json);
 
           if (response.statusCode == 200) {
             _log(command, _ResultType.success);
