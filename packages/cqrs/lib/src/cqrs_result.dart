@@ -44,9 +44,11 @@ class CommandFailure extends CqrsMethodFailure<void, CommandErrorType> {
   final List<ValidationError> validationErrors;
 }
 
-/// Extension on [CommandResult] adding
+/// Extension on [CommandResult] which allows to check whether failure
+/// of command was caused by a validation error.
 extension CommandFailureValidationErrorExtension on CommandResult {
-  /// Whether this instance is of type [CqrsMethodFailure].
+  /// Whether this instance is of type [CqrsMethodFailure] with
+  /// [CommandErrorType.validation].
   bool get isInvalid => switch (this) {
         CommandFailure(error: CommandErrorType.validation) => true,
         _ => false
