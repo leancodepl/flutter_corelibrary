@@ -17,7 +17,7 @@ void main() {
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
-        expect(result.error, CqrsError.unknown);
+        expect(result.error, QueryErrorType.unknown);
       });
     });
   });
@@ -30,7 +30,6 @@ void main() {
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
         expect(result.isInvalid, false);
-        expect(result.props.isEmpty, true);
       });
 
       test('when constructed as failure without validation errors', () {
@@ -40,7 +39,7 @@ void main() {
         expect(result.isFailure, true);
         expect(result.isInvalid, false);
         expect(result.validationErrors.isEmpty, true);
-        expect(result.error, CqrsError.unknown);
+        expect(result.error, CommandErrorType.unknown);
       });
 
       test('when constructed as failure with validation errors', () {
@@ -79,7 +78,7 @@ void main() {
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
-        expect(result.error, CqrsError.unknown);
+        expect(result.error, OperationErrorType.unknown);
       });
     });
   });
