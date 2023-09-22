@@ -29,9 +29,9 @@
 /// final flowers = await cqrs.get(AllFlowers(page: 1));
 ///
 /// // Handling query result
-/// if (flowers case QSuccess(:final data)) {
+/// if (flowers case QuerySuccess(:final data)) {
 ///   print(data);
-/// } else if (flowers case QFailure(:final error)) {
+/// } else if (flowers case QueryFailure(:final error)) {
 ///   print('Something failed with error $error');
 /// }
 ///
@@ -44,12 +44,12 @@
 /// );
 ///
 /// // Handling command result
-/// if (result case CSuccess()) {
+/// if (result case CommandSuccess()) {
 ///   print('Flower added succefully');
-/// } else if (result case CFailure(isInvalid: true, :final validationErrors)) {
+/// } else if (result case CommandFailure(isInvalid: true, :final validationErrors)) {
 ///   print('Validation errors occured');
 ///   handleValidationErrors(validationErrors);
-/// } else if (result case CFailure(:final error)) {
+/// } else if (result case CommandFailure(:final error)) {
 ///   print('Something failed with error ${error}');
 /// }
 /// ```
@@ -64,7 +64,7 @@
 /// code contract generator.
 library;
 
-export 'src/command_result.dart';
+export 'src/command_response.dart';
 export 'src/cqrs.dart';
 export 'src/cqrs_error.dart';
 export 'src/cqrs_result.dart';

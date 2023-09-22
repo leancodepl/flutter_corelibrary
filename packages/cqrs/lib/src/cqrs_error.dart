@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:cqrs/cqrs.dart';
-
 /// Error types that are recognized by Cqrs.
 enum CqrsError {
   /// Represents a network/socket error.
@@ -78,29 +76,4 @@ enum OperationErrorType {
 
   /// Represents a generic error which covers all remaining errors.
   unknown,
-}
-
-class CommandError {
-  const CommandError.network()
-      : errorType = CommandErrorType.network,
-        validationErrors = const [];
-
-  const CommandError.authentication()
-      : errorType = CommandErrorType.authentication,
-        validationErrors = const [];
-
-  const CommandError.forbiddenAccess()
-      : errorType = CommandErrorType.forbiddenAccess,
-        validationErrors = const [];
-
-  CommandError.validation(List<ValidationError> validationErrors)
-      : errorType = CommandErrorType.validation,
-        validationErrors = List.unmodifiable(validationErrors);
-
-  const CommandError.unknown()
-      : errorType = CommandErrorType.unknown,
-        validationErrors = const [];
-
-  final CommandErrorType errorType;
-  final List<ValidationError> validationErrors;
 }

@@ -17,40 +17,68 @@ import 'package:equatable/equatable.dart';
 import 'command_response.dart';
 import 'cqrs_error.dart';
 
-typedef QueryResult<T> = _Result<T, QueryErrorType>;
-typedef QuerySuccess<T> = _Success<T, QueryErrorType>;
-typedef QueryFailure<T> = _Failure<T, QueryErrorType>;
+/// Represents a result of query execution.
+typedef QueryResult<T> = CqrsMethodResult<T, QueryErrorType>;
 
-typedef CommandResult = _Result<void, CommandError>;
-typedef CommandSuccess = _Success<void, CommandError>;
-typedef CommandFailure = _Failure<void, CommandError>;
+/// Represents a result of successful query execution.
+typedef QuerySuccess<T> = CqrsMethodSuccess<T, QueryErrorType>;
 
-typedef OperationResult<T> = _Result<T, OperationErrorType>;
-typedef OperationSuccess<T> = _Success<T, OperationErrorType>;
-typedef OperationFailure<T> = _Failure<T, OperationErrorType>;
+/// Represents a result of unsuccessful query execution.
+typedef QueryFailure<T> = CqrsMethodFailure<T, QueryErrorType>;
 
-extension CommandFailureValidationErrorExtension on CommandFailure {
-  bool get isInvalid => error.errorType == CommandErrorType.validation;
-  List<ValidationError> get validationErrors => error.validationErrors;
+/// Represents a result of command execution.
+typedef CommandResult = CqrsMethodResult<void, CommandErrorType>;
+
+/// Represents a result of successful command execution.
+typedef CommandSuccess = CqrsMethodSuccess<void, CommandErrorType>;
+
+/// Represents a result of unsuccessful command execution.
+class CommandFailure extends CqrsMethodFailure<void, CommandErrorType> {
+  /// Creates [CommandFailure] class.
+  const CommandFailure(
+    super.error, {
+    this.validationErrors = const [],
+  });
+
+  /// List of validation errors returned from backend.
+  final List<ValidationError> validationErrors;
 }
 
-/// Generic result for CQRS method result. Can be either [_Success]
-/// or [QFailure].
-sealed class _Result<T, E> extends Equatable {
-  /// Creates a [_Result] class.
-  const _Result();
+/// Extension on [CommandResult] adding
+extension CommandFailureValidationErrorExtension on CommandResult {
+  /// Whether this instance is of type [CqrsMethodFailure].
+  bool get isInvalid => switch (this) {
+        CommandFailure(error: CommandErrorType.validation) => true,
+        _ => false
+      };
+}
 
-  /// Whether this instance is of final type [_Success].
-  bool get isSuccess => this is _Success<T, E>;
+/// Represents a result of operation execution.
+typedef OperationResult<T> = CqrsMethodResult<T, OperationErrorType>;
 
-  /// Whether this instance is of final type [QFailure].
-  bool get isFailure => this is _Failure<T, E>;
+/// Represents a result of successful operation execution.
+typedef OperationSuccess<T> = CqrsMethodSuccess<T, OperationErrorType>;
+
+/// Represents a result of unsuccessful operation execution.
+typedef OperationFailure<T> = CqrsMethodFailure<T, OperationErrorType>;
+
+/// Generic result for CQRS method result. Can be either [CqrsMethodSuccess]
+/// or [CqrsMethodFailure].
+sealed class CqrsMethodResult<T, E> extends Equatable {
+  /// Creates a [CqrsMethodResult] class.
+  const CqrsMethodResult();
+
+  /// Whether this instance is of type [CqrsMethodSuccess].
+  bool get isSuccess => this is CqrsMethodSuccess<T, E>;
+
+  /// Whether this instance is of type [CqrsMethodFailure].
+  bool get isFailure => this is CqrsMethodFailure<T, E>;
 }
 
 /// Generic class which represents a result of succesful query execution.
-final class _Success<T, E> extends _Result<T, E> {
-  /// Creates a [_Success] class.
-  const _Success(this.data);
+class CqrsMethodSuccess<T, E> extends CqrsMethodResult<T, E> {
+  /// Creates a [CqrsMethodSuccess] class.
+  const CqrsMethodSuccess(this.data);
 
   /// Data of type [T] returned from query execution.
   final T data;
@@ -60,9 +88,9 @@ final class _Success<T, E> extends _Result<T, E> {
 }
 
 /// Generic class which represents a result of unsuccesful query execution.
-final class _Failure<T, E> extends _Result<T, E> {
-  /// Creates a [_Failure] class.
-  const _Failure(this.error);
+class CqrsMethodFailure<T, E> extends CqrsMethodResult<T, E> {
+  /// Creates a [CqrsMethodFailure] class.
+  const CqrsMethodFailure(this.error);
 
   /// Error which was the reason of query failure
   final E error;

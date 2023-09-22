@@ -24,17 +24,17 @@ void main() {
 
     setUpAll(() {
       registerFallbackValue(Uri());
-      registerFallbackValue(const QSuccess<bool?>(true));
+      registerFallbackValue(const QuerySuccess<bool?>(true));
       registerFallbackValue(
-        Future.value(const QSuccess<bool?>(true)),
+        Future.value(const QuerySuccess<bool?>(true)),
       );
-      registerFallbackValue(const CSuccess());
+      registerFallbackValue(const CommandSuccess(null));
       registerFallbackValue(
-        Future.value(const CSuccess()),
+        Future.value(const CommandSuccess(null)),
       );
-      registerFallbackValue(const OSuccess<bool?>(true));
+      registerFallbackValue(const OperationSuccess<bool?>(true));
       registerFallbackValue(
-        Future.value(const OSuccess<bool?>(true)),
+        Future.value(const OperationSuccess<bool?>(true)),
       );
     });
 
@@ -102,7 +102,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const QSuccess<bool?>(true));
+        expect(result, const QuerySuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -131,11 +131,11 @@ void main() {
 
         final result = await cqrs.get(ExampleQuery());
 
-        expect(result, const QSuccess<bool?>(null));
+        expect(result, const QuerySuccess<bool?>(null));
       });
 
       test(
-          'returns QFailure(CqrsError.unknown) on json decoding'
+          'returns QueryFailure(CqrsError.unknown) on json decoding'
           ' failure and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
@@ -143,7 +143,7 @@ void main() {
 
         expect(
           result,
-          const QFailure<bool>(CqrsError.unknown),
+          const QueryFailure<bool>(QueryErrorType.unknown),
         );
 
         verify(
@@ -157,7 +157,7 @@ void main() {
       });
 
       test(
-          'returns QFailure(CqrsError.network) on socket exception'
+          'returns QueryFailure(CqrsError.network) on socket exception'
           ' and logs result', () async {
         mockClientException(
           client,
@@ -168,7 +168,7 @@ void main() {
 
         expect(
           result,
-          const QFailure<bool?>(CqrsError.network),
+          const QueryFailure<bool?>(QueryErrorType.network),
         );
 
         verify(
@@ -181,7 +181,7 @@ void main() {
       });
 
       test(
-          'returns QFailure(CqrsError.unknown) on client exception'
+          'returns QueryFailure(CqrsError.unknown) on client exception'
           ' and logs result', () async {
         final exception = Exception('This is not a socket exception');
         mockClientException(client, exception);
@@ -190,7 +190,7 @@ void main() {
 
         expect(
           result,
-          const QFailure<bool?>(CqrsError.unknown),
+          const QueryFailure<bool?>(QueryErrorType.unknown),
         );
 
         verify(
@@ -203,7 +203,7 @@ void main() {
       });
 
       test(
-          'returns QFailure(CqrsError.authentication) when response'
+          'returns QueryFailure(CqrsError.authentication) when response'
           ' code is 401 and logs result', () async {
         mockClientPost(client, Response('', 401));
 
@@ -211,7 +211,7 @@ void main() {
 
         expect(
           result,
-          const QFailure<bool?>(CqrsError.authentication),
+          const QueryFailure<bool?>(QueryErrorType.authentication),
         );
 
         verify(
@@ -224,7 +224,7 @@ void main() {
       });
 
       test(
-          'returns QFailure(CqrsError.forbiddenAccess) when response'
+          'returns QueryFailure(CqrsError.forbiddenAccess) when response'
           ' code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -232,7 +232,7 @@ void main() {
 
         expect(
           result,
-          const QFailure<bool?>(CqrsError.forbiddenAccess),
+          const QueryFailure<bool?>(QueryErrorType.forbiddenAccess),
         );
 
         verify(
@@ -245,7 +245,7 @@ void main() {
       });
 
       test(
-          'returns QFailure(CqrsError.unknown) for other response'
+          'returns QueryFailure(CqrsError.unknown) for other response'
           ' codes and logs result', () async {
         mockClientPost(client, Response('', 404));
 
@@ -253,7 +253,7 @@ void main() {
 
         expect(
           result,
-          const QFailure<bool?>(CqrsError.unknown),
+          const QueryFailure<bool?>(QueryErrorType.unknown),
         );
 
         verify(
@@ -294,7 +294,7 @@ void main() {
 
         expect(
           result,
-          const CSuccess(),
+          const CommandSuccess(null),
         );
 
         verify(
@@ -315,7 +315,7 @@ void main() {
       });
 
       test(
-          'returns CFailure(CqrsError.validation) if any validation '
+          'returns CommandFailure(CommandErrorType.validation) if any validation '
           'error occured and logs result', () async {
         const validationError = ValidationError(
           400,
@@ -335,8 +335,8 @@ void main() {
 
         expect(
           result,
-          const CFailure(
-            CqrsError.validation,
+          const CommandFailure(
+            CommandErrorType.validation,
             validationErrors: [validationError],
           ),
         );
@@ -360,7 +360,7 @@ void main() {
       });
 
       test(
-          'returns CFailure(CqrsError.unknown) on json decoding'
+          'returns CommandFailure(CommandErrorType.unknown) on json decoding'
           ' failure and logs result', () async {
         mockClientPost(client, Response('this is not a valid json', 200));
 
@@ -368,7 +368,7 @@ void main() {
 
         expect(
           result,
-          const CFailure(CqrsError.unknown),
+          const CommandFailure(CommandErrorType.unknown),
         );
 
         verify(
@@ -381,7 +381,7 @@ void main() {
       });
 
       test(
-          'returns CFailure(CqrsError.network) on socket exception'
+          'returns CommandFailure(CommandErrorType.network) on socket exception'
           ' and logs result', () async {
         mockClientException(
           client,
@@ -392,7 +392,7 @@ void main() {
 
         expect(
           result,
-          const CFailure(CqrsError.network),
+          const CommandFailure(CommandErrorType.network),
         );
 
         verify(
@@ -405,7 +405,7 @@ void main() {
       });
 
       test(
-          'returns CFailure(CqrsError.unknown) on other'
+          'returns CommandFailure(CommandErrorType.unknown) on other'
           ' client exceptions and logs result', () async {
         mockClientException(
           client,
@@ -416,7 +416,7 @@ void main() {
 
         expect(
           result,
-          const CFailure(CqrsError.unknown),
+          const CommandFailure(CommandErrorType.unknown),
         );
 
         verify(
@@ -429,7 +429,7 @@ void main() {
       });
 
       test(
-          'returns CFailure(CqrsError.authentication) when'
+          'returns CommandFailure(CommandErrorType.authentication) when'
           ' response code is 401 and logs result', () async {
         mockClientPost(client, Response('', 401));
 
@@ -437,7 +437,7 @@ void main() {
 
         expect(
           result,
-          const CFailure(CqrsError.authentication),
+          const CommandFailure(CommandErrorType.authentication),
         );
 
         verify(
@@ -450,7 +450,7 @@ void main() {
       });
 
       test(
-          'returns CFailure(CqrsError.forbiddenAccess) when'
+          'returns CommandFailure(CommandErrorType.forbiddenAccess) when'
           ' response code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -458,7 +458,7 @@ void main() {
 
         expect(
           result,
-          const CFailure(CqrsError.forbiddenAccess),
+          const CommandFailure(CommandErrorType.forbiddenAccess),
         );
 
         verify(
@@ -471,7 +471,7 @@ void main() {
       });
 
       test(
-          'returns CFailure(CqrsError.unknown) for other'
+          'returns CommandFailure(CommandErrorType.unknown) for other'
           ' response codes and logs result', () async {
         mockClientPost(client, Response('', 404));
 
@@ -479,7 +479,7 @@ void main() {
 
         expect(
           result,
-          const CFailure(CqrsError.unknown),
+          const CommandFailure(CommandErrorType.unknown),
         );
 
         verify(
@@ -518,7 +518,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const OSuccess<bool?>(true));
+        expect(result, const OperationSuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -548,11 +548,11 @@ void main() {
 
         final result = await cqrs.perform(ExampleOperation());
 
-        expect(result, const OSuccess<bool?>(null));
+        expect(result, const OperationSuccess<bool?>(null));
       });
 
       test(
-          'returns OFailure(CqrsError.unknown) on json decoding'
+          'returns OperationFailure(CqrsError.unknown) on json decoding'
           ' failure and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
@@ -561,7 +561,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool>(CqrsError.unknown),
+          const OperationFailure<bool>(OperationErrorType.unknown),
         );
 
         verify(
@@ -575,7 +575,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.network) on socket exception'
+          'returns OperationFailure(CqrsError.network) on socket exception'
           ' and logs result', () async {
         mockClientException(
           client,
@@ -586,7 +586,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(CqrsError.network),
+          const OperationFailure<bool?>(OperationErrorType.network),
         );
 
         verify(
@@ -599,7 +599,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.unknown) on client exception'
+          'returns OperationFailure(CqrsError.unknown) on client exception'
           ' and logs result', () async {
         final exception = Exception('This is not a socket exception');
         mockClientException(client, exception);
@@ -608,7 +608,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(CqrsError.unknown),
+          const OperationFailure<bool?>(OperationErrorType.unknown),
         );
 
         verify(
@@ -621,7 +621,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.authentication) when response'
+          'returns OperationFailure(CqrsError.authentication) when response'
           ' code is 401 and logs result', () async {
         mockClientPost(client, Response('', 401));
 
@@ -629,9 +629,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(
-            CqrsError.authentication,
-          ),
+          const OperationFailure<bool?>(OperationErrorType.authentication),
         );
 
         verify(
@@ -644,7 +642,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.forbiddenAccess) when response'
+          'returns OperationFailure(CqrsError.forbiddenAccess) when response'
           ' code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -652,9 +650,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(
-            CqrsError.forbiddenAccess,
-          ),
+          const OperationFailure<bool?>(OperationErrorType.forbiddenAccess),
         );
 
         verify(
@@ -667,7 +663,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.unknown) for other response'
+          'returns OperationFailure(CqrsError.unknown) for other response'
           ' codes and logs result', () async {
         mockClientPost(client, Response('', 404));
 
@@ -675,7 +671,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(CqrsError.unknown),
+          const OperationFailure<bool?>(OperationErrorType.unknown),
         );
 
         verify(
@@ -727,7 +723,7 @@ void mockClientException(MockClient client, Exception exception) {
 
 void mockCqrsMiddlewareQueryResult(
   MockCqrsMiddleware middleware,
-  QResult<bool?> result,
+  QueryResult<bool?> result,
 ) {
   when(
     () => middleware.handleQueryResult(result),
@@ -738,7 +734,7 @@ void mockCqrsMiddlewareQueryResult(
 
 void mockCqrsMiddlewareCommandResult(
   MockCqrsMiddleware middleware,
-  CResult result,
+  CommandResult result,
 ) {
   when(
     () => middleware.handleCommandResult(result),
@@ -749,7 +745,7 @@ void mockCqrsMiddlewareCommandResult(
 
 void mockCqrsMiddlewareOperationResult(
   MockCqrsMiddleware middleware,
-  OResult<bool?> result,
+  OperationResult<bool?> result,
 ) {
   when(
     () => middleware.handleOperationResult(result),

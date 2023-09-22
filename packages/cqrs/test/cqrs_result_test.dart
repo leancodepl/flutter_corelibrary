@@ -2,10 +2,10 @@ import 'package:cqrs/cqrs.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('QResult', () {
+  group('QueryResult', () {
     group('fields values are correct', () {
       test('when constructed as success', () {
-        const result = QSuccess(true);
+        const result = QuerySuccess(true);
 
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('when constructed as failure', () {
-        const result = QFailure<bool>(CqrsError.unknown);
+        const result = QueryFailure<bool>(QueryErrorType.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
@@ -22,10 +22,10 @@ void main() {
     });
   });
 
-  group('CResult', () {
+  group('CommandResult', () {
     group('fields values are correct', () {
       test('when constructed as success', () {
-        const result = CSuccess();
+        const result = CommandSuccess(null);
 
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
@@ -34,7 +34,7 @@ void main() {
       });
 
       test('when constructed as failure without validation errors', () {
-        const result = CFailure(CqrsError.unknown);
+        const result = CommandFailure(CommandErrorType.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
@@ -44,8 +44,8 @@ void main() {
       });
 
       test('when constructed as failure with validation errors', () {
-        const result = CFailure(
-          CqrsError.validation,
+        const result = CommandFailure(
+          CommandErrorType.validation,
           validationErrors: [
             ValidationError(123, 'Test message', 'SomeProperty'),
             ValidationError(456, 'Another message', 'OtherProperty')
@@ -59,15 +59,15 @@ void main() {
           ValidationError(123, 'Test message', 'SomeProperty'),
           ValidationError(456, 'Another message', 'OtherProperty')
         ]);
-        expect(result.error, CqrsError.validation);
+        expect(result.error, CommandErrorType.validation);
       });
     });
   });
 
-  group('OResult', () {
+  group('OperationResult', () {
     group('fields values are correct', () {
       test('when constructed as success', () {
-        const result = OSuccess(true);
+        const result = OperationSuccess(true);
 
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
@@ -75,7 +75,7 @@ void main() {
       });
 
       test('when constructed as failure', () {
-        const result = OFailure<bool>(CqrsError.unknown);
+        const result = OperationFailure<bool>(OperationErrorType.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);

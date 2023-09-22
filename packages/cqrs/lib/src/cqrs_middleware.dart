@@ -23,22 +23,22 @@ abstract class CqrsMiddleware {
 
   /// Handle and return query result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<QResult<T>> handleQueryResult<T>(
-    QResult<T> result,
+  Future<QueryResult<T>> handleQueryResult<T>(
+    QueryResult<T> result,
   ) =>
       Future.value(result);
 
   /// Handle and return command result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<CResult> handleCommandResult(
-    CResult result,
+  Future<CommandResult> handleCommandResult(
+    CommandResult result,
   ) =>
       Future.value(result);
 
   /// Handle and return operation result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<OResult<T>> handleOperationResult<T>(
-    OResult<T> result,
+  Future<OperationResult<T>> handleOperationResult<T>(
+    OperationResult<T> result,
   ) =>
       Future.value(result);
 }
