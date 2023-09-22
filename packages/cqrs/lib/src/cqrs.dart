@@ -67,8 +67,8 @@ class Cqrs {
   /// a `middlewares` list with a collection of [CqrsMiddleware] objects. Every
   /// time a result is returned, [Cqrs.get], [Cqrs.run] and [Cqrs.perform] will
   /// execute for each middleware on the list
-  /// [CqrsMiddleware.handleQueryResult], [CqrsMiddleware.handleCommandResult]
-  /// and [CqrsMiddleware.handleOperationResult] accordingly.
+  /// [CqrsMiddleware.handleResult], [CqrsMiddleware.handleResult]
+  /// and [CqrsMiddleware.handleResult] accordingly.
   Cqrs(
     this._client,
     this._apiUri, {
@@ -115,7 +115,7 @@ class Cqrs {
 
     return _middlewares.fold(
       result,
-      (result, middleware) async => middleware.handleQueryResult(await result),
+      (result, middleware) async => middleware.handleResult(await result),
     );
   }
 
@@ -138,8 +138,7 @@ class Cqrs {
 
     return _middlewares.fold(
       result,
-      (result, middleware) async =>
-          middleware.handleCommandResult(await result),
+      (result, middleware) async => middleware.handleResult(await result),
     );
   }
 
@@ -160,8 +159,7 @@ class Cqrs {
 
     return _middlewares.fold(
       result,
-      (result, middleware) async =>
-          middleware.handleOperationResult(await result),
+      (result, middleware) async => middleware.handleResult(await result),
     );
   }
 

@@ -54,13 +54,13 @@ void main() {
         mockClientPost(client, Response('true', 200));
 
         var result = await cqrs.get(ExampleQuery());
-        mockCqrsMiddlewareQueryResult(middleware, result);
-        verifyNever(() => middleware.handleQueryResult(any()));
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verifyNever(() => middleware.handleResult(any()));
 
         cqrs.addMiddleware(middleware);
         result = await cqrs.get(ExampleQuery());
-        mockCqrsMiddlewareQueryResult(middleware, result);
-        verify(() => middleware.handleQueryResult(result)).called(1);
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verify(() => middleware.handleResult(result)).called(1);
 
         cqrs.removeMiddleware(middleware);
       });
@@ -71,22 +71,22 @@ void main() {
         mockClientPost(client, Response('true', 200));
 
         var result = await cqrs.get(ExampleQuery());
-        mockCqrsMiddlewareQueryResult(middleware, result);
+        mockCqrsMiddlewareHandleResult(middleware, result);
 
-        verifyNever(() => middleware.handleQueryResult(result));
+        verifyNever(() => middleware.handleResult(result));
 
         cqrs.addMiddleware(middleware);
         result = await cqrs.get(ExampleQuery());
-        mockCqrsMiddlewareQueryResult(middleware, result);
+        mockCqrsMiddlewareHandleResult(middleware, result);
 
-        verify(() => middleware.handleQueryResult(result)).called(1);
+        verify(() => middleware.handleResult(result)).called(1);
 
         cqrs.removeMiddleware(middleware);
         result = await cqrs.get(ExampleQuery());
-        mockCqrsMiddlewareQueryResult(middleware, result);
+        mockCqrsMiddlewareHandleResult(middleware, result);
 
         verifyNever(
-          () => middleware.handleQueryResult(any()),
+          () => middleware.handleResult(any()),
         );
       });
     });
@@ -266,18 +266,18 @@ void main() {
       });
 
       test(
-          'calls CqrsMiddleware.handleQueryResult for each'
+          'calls CqrsMiddleware.handleResult for each'
           ' middleware present', () async {
         mockClientPost(client, Response('true', 200));
 
         var result = await cqrs.get(ExampleQuery());
-        mockCqrsMiddlewareQueryResult(middleware, result);
-        verifyNever(() => middleware.handleQueryResult(any()));
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verifyNever(() => middleware.handleResult(any()));
 
         cqrs.addMiddleware(middleware);
         result = await cqrs.get(ExampleQuery());
-        mockCqrsMiddlewareQueryResult(middleware, result);
-        verify(() => middleware.handleQueryResult(result)).called(1);
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verify(() => middleware.handleResult(result)).called(1);
       });
     });
 
@@ -492,18 +492,18 @@ void main() {
       });
 
       test(
-          'calls CqrsMiddleware.handleCommandResult for each'
+          'calls CqrsMiddleware.handleResult for each'
           ' middleware present', () async {
         mockClientPost(client, Response('true', 200));
 
         var result = await cqrs.run(ExampleCommand());
-        mockCqrsMiddlewareCommandResult(middleware, result);
-        verifyNever(() => middleware.handleCommandResult(any()));
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verifyNever(() => middleware.handleResult(any()));
 
         cqrs.addMiddleware(middleware);
         result = await cqrs.run(ExampleCommand());
-        mockCqrsMiddlewareCommandResult(middleware, result);
-        verify(() => middleware.handleCommandResult(result)).called(1);
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verify(() => middleware.handleResult(result)).called(1);
       });
     });
 
@@ -684,18 +684,18 @@ void main() {
       });
 
       test(
-          'calls CqrsMiddleware.handleOperationResult for each'
+          'calls CqrsMiddleware.handleResult for each'
           ' middleware present', () async {
         mockClientPost(client, Response('true', 200));
 
         var result = await cqrs.perform(ExampleOperation());
-        mockCqrsMiddlewareOperationResult(middleware, result);
-        verifyNever(() => middleware.handleOperationResult(any()));
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verifyNever(() => middleware.handleResult(any()));
 
         cqrs.addMiddleware(middleware);
         result = await cqrs.perform(ExampleOperation());
-        mockCqrsMiddlewareOperationResult(middleware, result);
-        verify(() => middleware.handleOperationResult(result)).called(1);
+        mockCqrsMiddlewareHandleResult(middleware, result);
+        verify(() => middleware.handleResult(result)).called(1);
       });
     });
   });
@@ -721,34 +721,12 @@ void mockClientException(MockClient client, Exception exception) {
   ).thenAnswer((_) async => throw exception);
 }
 
-void mockCqrsMiddlewareQueryResult(
+void mockCqrsMiddlewareHandleResult<T, E>(
   MockCqrsMiddleware middleware,
-  QueryResult<bool?> result,
+  CqrsMethodResult<T, E> result,
 ) {
   when(
-    () => middleware.handleQueryResult(result),
-  ).thenAnswer(
-    (_) async => Future.value(result),
-  );
-}
-
-void mockCqrsMiddlewareCommandResult(
-  MockCqrsMiddleware middleware,
-  CommandResult result,
-) {
-  when(
-    () => middleware.handleCommandResult(result),
-  ).thenAnswer(
-    (_) async => Future.value(result),
-  );
-}
-
-void mockCqrsMiddlewareOperationResult(
-  MockCqrsMiddleware middleware,
-  OperationResult<bool?> result,
-) {
-  when(
-    () => middleware.handleOperationResult(result),
+    () => middleware.handleResult(result),
   ).thenAnswer(
     (_) async => Future.value(result),
   );

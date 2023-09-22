@@ -21,24 +21,10 @@ abstract class CqrsMiddleware {
   /// Creates [CqrsMiddleware] class.
   const CqrsMiddleware();
 
-  /// Handle and return query result. If no modification of given result
+  /// Handle and return [CqrsMethodResult]. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<QueryResult<T>> handleQueryResult<T>(
-    QueryResult<T> result,
-  ) =>
-      Future.value(result);
-
-  /// Handle and return command result. If no modification of given result
-  /// is needed then return the same `result` that was passed to the method.
-  Future<CommandResult> handleCommandResult(
-    CommandResult result,
-  ) =>
-      Future.value(result);
-
-  /// Handle and return operation result. If no modification of given result
-  /// is needed then return the same `result` that was passed to the method.
-  Future<OperationResult<T>> handleOperationResult<T>(
-    OperationResult<T> result,
+  Future<CqrsMethodResult<T, E>> handleResult<T, E>(
+    CqrsMethodResult<T, E> result,
   ) =>
       Future.value(result);
 }
