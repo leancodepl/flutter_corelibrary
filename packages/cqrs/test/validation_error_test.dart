@@ -9,6 +9,10 @@ void main() {
       expect(error.code, 123);
       expect(error.message, 'Test message');
       expect(error.propertyName, 'SomeProperty');
+      expect(
+        error == const ValidationError(123, 'Test message', 'SomeProperty'),
+        true,
+      );
     });
 
     test('returns correct string value', () {
