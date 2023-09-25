@@ -1,5 +1,3 @@
-library leancode_hooks;
-
 export 'package:flutter_hooks/flutter_hooks.dart';
 
 export 'src/use_bloc.dart';

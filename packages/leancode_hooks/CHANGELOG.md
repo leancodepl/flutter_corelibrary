@@ -1,3 +1,9 @@
+# 0.0.6
+
+- Bump minimum Dart version to 3.0
+- Bump minimum Flutter version to 3.10.0
+- Bump minimum flutter_hooks version to 0.20.1
+
 # 0.0.5
 
 - Add `useBlocListener` hook.
