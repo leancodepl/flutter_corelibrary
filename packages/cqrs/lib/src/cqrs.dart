@@ -319,19 +319,20 @@ class Cqrs {
     StackTrace? stackTrace,
     List<ValidationError> validationErrors = const [],
   ]) {
-    if (_logger == null) {
+    final logger = _logger;
+    if (logger == null) {
       return;
     }
 
     final log = switch (result) {
-      _ResultType.success => _logger?.info,
-      _ResultType.validationError => _logger?.warning,
+      _ResultType.success => logger.info,
+      _ResultType.validationError => logger.warning,
       _ResultType.jsonError ||
       _ResultType.networkError ||
       _ResultType.authenticationError ||
       _ResultType.forbiddenAccessError ||
       _ResultType.unknownError =>
-        _logger?.severe,
+        logger.severe,
     };
 
     final methodTypePrefix = switch (method) {
@@ -352,6 +353,6 @@ class Cqrs {
       _ => '$methodTypePrefix ${method.runtimeType} ${result.description}.',
     };
 
-    log?.call(details, error, stackTrace);
+    log.call(details, error, stackTrace);
   }
 }
