@@ -13,11 +13,11 @@ void main() {
       });
 
       test('when constructed as failure', () {
-        const result = QueryFailure<bool>(CqrsError.unknown);
+        const result = QueryFailure<bool>(QueryError.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
-        expect(result.error, CqrsError.unknown);
+        expect(result.error, QueryError.unknown);
       });
     });
   });
@@ -34,18 +34,18 @@ void main() {
       });
 
       test('when constructed as failure without validation errors', () {
-        const result = CommandFailure(CqrsError.unknown);
+        const result = CommandFailure(CommandError.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
         expect(result.isInvalid, false);
         expect(result.validationErrors.isEmpty, true);
-        expect(result.error, CqrsError.unknown);
+        expect(result.error, CommandError.unknown);
       });
 
       test('when constructed as failure with validation errors', () {
         const result = CommandFailure(
-          CqrsError.validation,
+          CommandError.validation,
           validationErrors: [
             ValidationError(123, 'Test message', 'SomeProperty'),
             ValidationError(456, 'Another message', 'OtherProperty'),
@@ -59,7 +59,7 @@ void main() {
           ValidationError(123, 'Test message', 'SomeProperty'),
           ValidationError(456, 'Another message', 'OtherProperty'),
         ]);
-        expect(result.error, CqrsError.validation);
+        expect(result.error, CommandError.validation);
       });
     });
   });
@@ -75,11 +75,11 @@ void main() {
       });
 
       test('when constructed as failure', () {
-        const result = OperationFailure<bool>(CqrsError.unknown);
+        const result = OperationFailure<bool>(OperationError.unknown);
 
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
-        expect(result.error, CqrsError.unknown);
+        expect(result.error, OperationError.unknown);
       });
     });
   });

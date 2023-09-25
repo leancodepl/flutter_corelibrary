@@ -12,8 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Error types that are recognized by Cqrs.
-enum CqrsError {
+/// Error types of query failure.
+enum QueryError {
+  /// Represents a network/socket error.
+  network,
+
+  /// Represents a HTTP 401 authentication error.
+  authentication,
+
+  /// Represents a HTTP 403 forbidden access error.
+  forbiddenAccess,
+
+  /// Represents a generic error which covers all remaining errors.
+  unknown,
+}
+
+/// Error types of command failure.
+enum CommandError {
   /// Represents a network/socket error.
   network,
 
@@ -25,6 +40,21 @@ enum CqrsError {
 
   /// Represents a HTTP 422 validation error.
   validation,
+
+  /// Represents a generic error which covers all remaining errors.
+  unknown,
+}
+
+/// Error types of operation failure.
+enum OperationError {
+  /// Represents a network/socket error.
+  network,
+
+  /// Represents a HTTP 401 authentication error.
+  authentication,
+
+  /// Represents a HTTP 403 forbidden access error.
+  forbiddenAccess,
 
   /// Represents a generic error which covers all remaining errors.
   unknown,

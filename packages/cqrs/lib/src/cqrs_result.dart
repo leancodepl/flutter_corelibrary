@@ -48,7 +48,7 @@ final class QueryFailure<T> extends QueryResult<T> {
   const QueryFailure(this.error);
 
   /// Error which was the reason of query failure
-  final CqrsError error;
+  final QueryError error;
 
   @override
   List<Object?> get props => [error];
@@ -69,7 +69,7 @@ sealed class CommandResult extends Equatable {
   /// Whether this instance is of final type [CommandFailure] and comes
   /// from validation error.
   bool get isInvalid => switch (this) {
-        CommandFailure(error: CqrsError.validation) => true,
+        CommandFailure(error: CommandError.validation) => true,
         _ => false,
       };
 }
@@ -92,7 +92,7 @@ final class CommandFailure extends CommandResult {
   });
 
   /// Error which was the reason of query failure
-  final CqrsError error;
+  final CommandError error;
 
   /// A list of [ValidationError] errors returned from the backed after
   /// command execution.
@@ -133,7 +133,7 @@ final class OperationFailure<T> extends OperationResult<T> {
   const OperationFailure(this.error);
 
   /// Error which was the reason of operation failure
-  final CqrsError error;
+  final OperationError error;
 
   @override
   List<Object?> get props => [error];

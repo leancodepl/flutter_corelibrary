@@ -106,7 +106,7 @@ class Cqrs {
   ///
   /// After succesfull completion returns [QuerySuccess] with recieved data
   /// of type `T`. A [QueryFailure] will be returned with according
-  /// [CqrsError] in case of an error.
+  /// [QueryError] in case of an error.
   Future<QueryResult<T>> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
@@ -127,7 +127,7 @@ class Cqrs {
   /// will be ignored.
   ///
   /// After succesfull completion returns [CommandSuccess].
-  /// A [CommandFailure] will be returned with according [CqrsError]
+  /// A [CommandFailure] will be returned with according [CommandError]
   /// in case of an error and with list of [ValidationError] errors (in case of
   /// validation error).
   Future<CommandResult> run(
@@ -151,7 +151,7 @@ class Cqrs {
   ///
   /// After succesfull completion returns [OperationSuccess] with recieved
   /// data of type `T`. A [OperationFailure] will be returned with
-  /// according [CqrsError] in case of an error.
+  /// according [OperationError] in case of an error.
   Future<OperationResult<T>> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
@@ -181,28 +181,28 @@ class Cqrs {
           return QuerySuccess(result);
         } catch (e, s) {
           _log(query, _ResultType.jsonError, e, s);
-          return QueryFailure<T>(CqrsError.unknown);
+          return QueryFailure<T>(QueryError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(query, _ResultType.authenticationError);
-        return QueryFailure<T>(CqrsError.authentication);
+        return QueryFailure<T>(QueryError.authentication);
       }
       if (response.statusCode == 403) {
         _log(query, _ResultType.forbiddenAccessError);
-        return QueryFailure<T>(CqrsError.forbiddenAccess);
+        return QueryFailure<T>(QueryError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(query, _ResultType.networkError, e, s);
-      return QueryFailure<T>(CqrsError.network);
+      return QueryFailure<T>(QueryError.network);
     } catch (e, s) {
       _log(query, _ResultType.unknownError, e, s);
-      return QueryFailure<T>(CqrsError.unknown);
+      return QueryFailure<T>(QueryError.unknown);
     }
 
     _log(query, _ResultType.unknownError);
-    return QueryFailure<T>(CqrsError.unknown);
+    return QueryFailure<T>(QueryError.unknown);
   }
 
   Future<CommandResult> _run(
@@ -228,32 +228,32 @@ class Cqrs {
 
           _log(command, _ResultType.validationError, null, null, result.errors);
           return CommandFailure(
-            CqrsError.validation,
+            CommandError.validation,
             validationErrors: result.errors,
           );
         } catch (e, s) {
           _log(command, _ResultType.jsonError, e, s);
-          return const CommandFailure(CqrsError.unknown);
+          return const CommandFailure(CommandError.unknown);
         }
       }
       if (response.statusCode == 401) {
         _log(command, _ResultType.authenticationError);
-        return const CommandFailure(CqrsError.authentication);
+        return const CommandFailure(CommandError.authentication);
       }
       if (response.statusCode == 403) {
         _log(command, _ResultType.forbiddenAccessError);
-        return const CommandFailure(CqrsError.forbiddenAccess);
+        return const CommandFailure(CommandError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(command, _ResultType.networkError, e, s);
-      return const CommandFailure(CqrsError.network);
+      return const CommandFailure(CommandError.network);
     } catch (e, s) {
       _log(command, _ResultType.unknownError, e, s);
-      return const CommandFailure(CqrsError.unknown);
+      return const CommandFailure(CommandError.unknown);
     }
 
     _log(command, _ResultType.unknownError);
-    return const CommandFailure(CqrsError.unknown);
+    return const CommandFailure(CommandError.unknown);
   }
 
   Future<OperationResult<T>> _perform<T>(
@@ -272,28 +272,28 @@ class Cqrs {
           return OperationSuccess<T>(result);
         } catch (e, s) {
           _log(operation, _ResultType.jsonError, e, s);
-          return OperationFailure<T>(CqrsError.unknown);
+          return OperationFailure<T>(OperationError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(operation, _ResultType.authenticationError);
-        return OperationFailure<T>(CqrsError.authentication);
+        return OperationFailure<T>(OperationError.authentication);
       }
       if (response.statusCode == 403) {
         _log(operation, _ResultType.forbiddenAccessError);
-        return OperationFailure<T>(CqrsError.forbiddenAccess);
+        return OperationFailure<T>(OperationError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(operation, _ResultType.networkError, e, s);
-      return OperationFailure<T>(CqrsError.network);
+      return OperationFailure<T>(OperationError.network);
     } catch (e, s) {
       _log(operation, _ResultType.unknownError, e, s);
-      return OperationFailure<T>(CqrsError.unknown);
+      return OperationFailure<T>(OperationError.unknown);
     }
 
     _log(operation, _ResultType.unknownError);
-    return OperationFailure<T>(CqrsError.unknown);
+    return OperationFailure<T>(OperationError.unknown);
   }
 
   Future<http.Response> _send(
