@@ -6,9 +6,9 @@ import 'use_bloc_state_test.dart';
 
 class UseBlocListenerTestWidget extends HookWidget {
   const UseBlocListenerTestWidget({
-    Key? key,
+    super.key,
     required this.cubit,
-  }) : super(key: key);
+  });
 
   final SampleTestCubit cubit;
 

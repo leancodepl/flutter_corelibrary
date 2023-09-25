@@ -8,7 +8,7 @@ const textB = 'B';
 const textC = 'C';
 
 class UseThrottleTestWidget extends HookWidget {
-  const UseThrottleTestWidget({Key? key}) : super(key: key);
+  const UseThrottleTestWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

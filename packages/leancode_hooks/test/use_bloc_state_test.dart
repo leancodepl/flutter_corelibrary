@@ -16,9 +16,9 @@ enum SampleTestCubitState {
 
 class UseBlocStateTestWidget extends HookWidget {
   const UseBlocStateTestWidget({
-    Key? key,
+    super.key,
     required this.cubit,
-  }) : super(key: key);
+  });
 
   final SampleTestCubit cubit;
 

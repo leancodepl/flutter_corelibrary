@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:leancode_hooks/leancode_hooks.dart';
 
 class UsePostFrameEffectTestWidget extends HookWidget {
-  const UsePostFrameEffectTestWidget({Key? key}) : super(key: key);
+  const UsePostFrameEffectTestWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
