@@ -44,12 +44,12 @@
 /// );
 ///
 /// // Handling command result
-/// if (result case CSuccess()) {
+/// if (result case CommandSuccess()) {
 ///   print('Flower added succefully');
-/// } else if (result case CFailure(isInvalid: true, :final validationErrors)) {
+/// } else if (result case CommandFailure(isInvalid: true, :final validationErrors)) {
 ///   print('Validation errors occured');
 ///   handleValidationErrors(validationErrors);
-/// } else if (result case CFailure(:final error)) {
+/// } else if (result case CommandFailure(:final error)) {
 ///   print('Something failed with error ${error}');
 /// }
 /// ```

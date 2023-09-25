@@ -126,11 +126,11 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [CSuccess].
-  /// A [CFailure] will be returned with according [CqrsError]
+  /// After succesfull completion returns [CommandSuccess].
+  /// A [CommandFailure] will be returned with according [CqrsError]
   /// in case of an error and with list of [ValidationError] errors (in case of
   /// validation error).
-  Future<CResult> run(
+  Future<CommandResult> run(
     Command command, {
     Map<String, String> headers = const {},
   }) async {
@@ -205,7 +205,7 @@ class Cqrs {
     return QFailure<T>(CqrsError.unknown);
   }
 
-  Future<CResult> _run(
+  Future<CommandResult> _run(
     Command command, {
     required Map<String, String> headers,
   }) async {
@@ -223,37 +223,37 @@ class Cqrs {
 
           if (response.statusCode == 200) {
             _log(command, _ResultType.success);
-            return const CSuccess();
+            return const CommandSuccess();
           }
 
           _log(command, _ResultType.validationError, null, null, result.errors);
-          return CFailure(
+          return CommandFailure(
             CqrsError.validation,
             validationErrors: result.errors,
           );
         } catch (e, s) {
           _log(command, _ResultType.jsonError, e, s);
-          return const CFailure(CqrsError.unknown);
+          return const CommandFailure(CqrsError.unknown);
         }
       }
       if (response.statusCode == 401) {
         _log(command, _ResultType.authenticationError);
-        return const CFailure(CqrsError.authentication);
+        return const CommandFailure(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(command, _ResultType.forbiddenAccessError);
-        return const CFailure(CqrsError.forbiddenAccess);
+        return const CommandFailure(CqrsError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(command, _ResultType.networkError, e, s);
-      return const CFailure(CqrsError.network);
+      return const CommandFailure(CqrsError.network);
     } catch (e, s) {
       _log(command, _ResultType.unknownError, e, s);
-      return const CFailure(CqrsError.unknown);
+      return const CommandFailure(CqrsError.unknown);
     }
 
     _log(command, _ResultType.unknownError);
-    return const CFailure(CqrsError.unknown);
+    return const CommandFailure(CqrsError.unknown);
   }
 
   Future<OperationResult<T>> _perform<T>(

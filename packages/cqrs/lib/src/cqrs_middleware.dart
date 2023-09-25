@@ -30,8 +30,8 @@ abstract class CqrsMiddleware {
 
   /// Handle and return command result. If no modification of given result
   /// is needed then return the same `result` that was passed to the method.
-  Future<CResult> handleCommandResult(
-    CResult result,
+  Future<CommandResult> handleCommandResult(
+    CommandResult result,
   ) =>
       Future.value(result);
 

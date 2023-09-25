@@ -54,39 +54,39 @@ final class QFailure<T> extends QResult<T> {
   List<Object?> get props => [error];
 }
 
-/// Generic result for CQRS command result. Can be either [CSuccess]
-/// or [CFailure].
-sealed class CResult extends Equatable {
-  /// Creates a [CResult] class.
-  const CResult();
+/// Generic result for CQRS command result. Can be either [CommandSuccess]
+/// or [CommandFailure].
+sealed class CommandResult extends Equatable {
+  /// Creates a [CommandResult] class.
+  const CommandResult();
 
-  /// Whether this instance is of final type [CSuccess].
-  bool get isSuccess => this is CSuccess;
+  /// Whether this instance is of final type [CommandSuccess].
+  bool get isSuccess => this is CommandSuccess;
 
-  /// Whether this instance is of final type [CFailure].
-  bool get isFailure => this is CFailure;
+  /// Whether this instance is of final type [CommandFailure].
+  bool get isFailure => this is CommandFailure;
 
-  /// Whether this instance is of final type [CFailure] and comes
+  /// Whether this instance is of final type [CommandFailure] and comes
   /// from validation error.
   bool get isInvalid => switch (this) {
-        CFailure(error: CqrsError.validation) => true,
+        CommandFailure(error: CqrsError.validation) => true,
         _ => false,
       };
 }
 
 /// Generic class which represents a result of succesful command execution.
-final class CSuccess extends CResult {
-  /// Creates a [CSuccess] class.
-  const CSuccess();
+final class CommandSuccess extends CommandResult {
+  /// Creates a [CommandSuccess] class.
+  const CommandSuccess();
 
   @override
   List<Object?> get props => [];
 }
 
 /// Generic class which represents a result of unsuccesful command execution.
-final class CFailure extends CResult {
-  /// Creates a [CFailure] class.
-  const CFailure(
+final class CommandFailure extends CommandResult {
+  /// Creates a [CommandFailure] class.
+  const CommandFailure(
     this.error, {
     this.validationErrors = const [],
   });
