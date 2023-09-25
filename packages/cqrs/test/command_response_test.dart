@@ -1,8 +1,9 @@
-import 'package:cqrs/src/command_result.dart';
+import 'package:cqrs/src/command_response.dart';
+import 'package:cqrs/src/validation_error.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('CommandResult', () {
+  group('CommandResponse', () {
     const error1 = ValidationError(1, 'First error', 'Property1');
     const error2 = ValidationError(2, 'Second error', 'Property2');
 
