@@ -24,7 +24,7 @@ void main() {
 
     group('handleOperationResult', () {
       test('returns the same result by default', () async {
-        const resultIn = OSuccess(true);
+        const resultIn = OperationSuccess(true);
         final resultOut = await middleware.handleOperationResult(resultIn);
         expect(resultIn, resultOut);
       });

@@ -102,23 +102,23 @@ final class CFailure extends CResult {
   List<Object?> get props => [error, validationErrors];
 }
 
-/// Generic result for CQRS operation result. Can be either [OSuccess]
-/// or [OFailure].
-sealed class OResult<T> extends Equatable {
-  /// Creates a [OResult] class.
-  const OResult();
+/// Generic result for CQRS operation result. Can be either [OperationSuccess]
+/// or [OperationFailure].
+sealed class OperationResult<T> extends Equatable {
+  /// Creates a [OperationResult] class.
+  const OperationResult();
 
-  /// Whether this instance is of final type [OSuccess].
-  bool get isSuccess => this is OSuccess<T>;
+  /// Whether this instance is of final type [OperationSuccess].
+  bool get isSuccess => this is OperationSuccess<T>;
 
-  /// Whether this instance is of final type [OFailure].
-  bool get isFailure => this is OFailure<T>;
+  /// Whether this instance is of final type [OperationFailure].
+  bool get isFailure => this is OperationFailure<T>;
 }
 
 /// Generic class which represents a result of succesful operation execution.
-final class OSuccess<T> extends OResult<T> {
-  /// Creates a [OSuccess] class.
-  const OSuccess(this.data);
+final class OperationSuccess<T> extends OperationResult<T> {
+  /// Creates a [OperationSuccess] class.
+  const OperationSuccess(this.data);
 
   /// Data of type [T] returned from operation execution.
   final T data;
@@ -128,9 +128,9 @@ final class OSuccess<T> extends OResult<T> {
 }
 
 /// Generic class which represents a result of unsuccesful operation execution.
-final class OFailure<T> extends OResult<T> {
-  /// Creates a [OFailure] class.
-  const OFailure(this.error);
+final class OperationFailure<T> extends OperationResult<T> {
+  /// Creates a [OperationFailure] class.
+  const OperationFailure(this.error);
 
   /// Error which was the reason of operation failure
   final CqrsError error;

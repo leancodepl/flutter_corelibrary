@@ -19,7 +19,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
-import 'command_result.dart';
+import 'command_response.dart';
 import 'cqrs_error.dart';
 import 'cqrs_middleware.dart';
 import 'cqrs_result.dart';
@@ -149,10 +149,10 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [OSuccess] with recieved
-  /// data of type `T`. A [OFailure] will be returned with
+  /// After succesfull completion returns [OperationSuccess] with recieved
+  /// data of type `T`. A [OperationFailure] will be returned with
   /// according [CqrsError] in case of an error.
-  Future<OResult<T>> perform<T>(
+  Future<OperationResult<T>> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
   }) async {
@@ -256,7 +256,7 @@ class Cqrs {
     return const CFailure(CqrsError.unknown);
   }
 
-  Future<OResult<T>> _perform<T>(
+  Future<OperationResult<T>> _perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
   }) async {
@@ -269,31 +269,31 @@ class Cqrs {
           final dynamic json = jsonDecode(response.body);
           final result = operation.resultFactory(json);
           _log(operation, _ResultType.success);
-          return OSuccess<T>(result);
+          return OperationSuccess<T>(result);
         } catch (e, s) {
           _log(operation, _ResultType.jsonError, e, s);
-          return OFailure<T>(CqrsError.unknown);
+          return OperationFailure<T>(CqrsError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(operation, _ResultType.authenticationError);
-        return OFailure<T>(CqrsError.authentication);
+        return OperationFailure<T>(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(operation, _ResultType.forbiddenAccessError);
-        return OFailure<T>(CqrsError.forbiddenAccess);
+        return OperationFailure<T>(CqrsError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(operation, _ResultType.networkError, e, s);
-      return OFailure<T>(CqrsError.network);
+      return OperationFailure<T>(CqrsError.network);
     } catch (e, s) {
       _log(operation, _ResultType.unknownError, e, s);
-      return OFailure<T>(CqrsError.unknown);
+      return OperationFailure<T>(CqrsError.unknown);
     }
 
     _log(operation, _ResultType.unknownError);
-    return OFailure<T>(CqrsError.unknown);
+    return OperationFailure<T>(CqrsError.unknown);
   }
 
   Future<http.Response> _send(

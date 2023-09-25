@@ -32,9 +32,9 @@ void main() {
       registerFallbackValue(
         Future.value(const CSuccess()),
       );
-      registerFallbackValue(const OSuccess<bool?>(true));
+      registerFallbackValue(const OperationSuccess<bool?>(true));
       registerFallbackValue(
-        Future.value(const OSuccess<bool?>(true)),
+        Future.value(const OperationSuccess<bool?>(true)),
       );
     });
 
@@ -518,7 +518,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const OSuccess<bool?>(true));
+        expect(result, const OperationSuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -548,11 +548,11 @@ void main() {
 
         final result = await cqrs.perform(ExampleOperation());
 
-        expect(result, const OSuccess<bool?>(null));
+        expect(result, const OperationSuccess<bool?>(null));
       });
 
       test(
-          'returns OFailure(CqrsError.unknown) on json decoding'
+          'returns OperationFailure(CqrsError.unknown) on json decoding'
           ' failure and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
@@ -561,7 +561,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool>(CqrsError.unknown),
+          const OperationFailure<bool>(CqrsError.unknown),
         );
 
         verify(
@@ -575,7 +575,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.network) on socket exception'
+          'returns OperationFailure(CqrsError.network) on socket exception'
           ' and logs result', () async {
         mockClientException(
           client,
@@ -586,7 +586,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(CqrsError.network),
+          const OperationFailure<bool?>(CqrsError.network),
         );
 
         verify(
@@ -599,7 +599,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.unknown) on client exception'
+          'returns OperationFailure(CqrsError.unknown) on client exception'
           ' and logs result', () async {
         final exception = Exception('This is not a socket exception');
         mockClientException(client, exception);
@@ -608,7 +608,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(CqrsError.unknown),
+          const OperationFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -621,7 +621,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.authentication) when response'
+          'returns OperationFailure(CqrsError.authentication) when response'
           ' code is 401 and logs result', () async {
         mockClientPost(client, Response('', 401));
 
@@ -629,7 +629,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(
+          const OperationFailure<bool?>(
             CqrsError.authentication,
           ),
         );
@@ -644,7 +644,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.forbiddenAccess) when response'
+          'returns OperationFailure(CqrsError.forbiddenAccess) when response'
           ' code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -652,7 +652,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(
+          const OperationFailure<bool?>(
             CqrsError.forbiddenAccess,
           ),
         );
@@ -667,7 +667,7 @@ void main() {
       });
 
       test(
-          'returns OFailure(CqrsError.unknown) for other response'
+          'returns OperationFailure(CqrsError.unknown) for other response'
           ' codes and logs result', () async {
         mockClientPost(client, Response('', 404));
 
@@ -675,7 +675,7 @@ void main() {
 
         expect(
           result,
-          const OFailure<bool?>(CqrsError.unknown),
+          const OperationFailure<bool?>(CqrsError.unknown),
         );
 
         verify(
@@ -749,7 +749,7 @@ void mockCqrsMiddlewareCommandResult(
 
 void mockCqrsMiddlewareOperationResult(
   MockCqrsMiddleware middleware,
-  OResult<bool?> result,
+  OperationResult<bool?> result,
 ) {
   when(
     () => middleware.handleOperationResult(result),
