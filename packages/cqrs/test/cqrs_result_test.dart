@@ -48,7 +48,7 @@ void main() {
           CqrsError.validation,
           validationErrors: [
             ValidationError(123, 'Test message', 'SomeProperty'),
-            ValidationError(456, 'Another message', 'OtherProperty')
+            ValidationError(456, 'Another message', 'OtherProperty'),
           ],
         );
 
@@ -57,7 +57,7 @@ void main() {
         expect(result.isInvalid, true);
         expect(result.validationErrors, const <ValidationError>[
           ValidationError(123, 'Test message', 'SomeProperty'),
-          ValidationError(456, 'Another message', 'OtherProperty')
+          ValidationError(456, 'Another message', 'OtherProperty'),
         ]);
         expect(result.error, CqrsError.validation);
       });

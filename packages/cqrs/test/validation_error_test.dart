@@ -1,4 +1,4 @@
-import 'package:cqrs/src/command_result.dart';
+import 'package:cqrs/src/validation_error.dart';
 import 'package:test/test.dart';
 
 void main() {

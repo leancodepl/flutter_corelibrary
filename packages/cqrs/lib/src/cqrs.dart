@@ -24,6 +24,7 @@ import 'cqrs_error.dart';
 import 'cqrs_middleware.dart';
 import 'cqrs_result.dart';
 import 'transport_types.dart';
+import 'validation_error.dart';
 
 enum _ResultType {
   success,
@@ -218,7 +219,7 @@ class Cqrs {
       if ([200, 422].contains(response.statusCode)) {
         try {
           final json = jsonDecode(response.body) as Map<String, dynamic>;
-          final result = CommandResult.fromJson(json);
+          final result = CommandResponse.fromJson(json);
 
           if (response.statusCode == 200) {
             _log(command, _ResultType.success);

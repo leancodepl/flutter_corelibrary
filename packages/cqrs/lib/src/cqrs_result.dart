@@ -14,8 +14,8 @@
 
 import 'package:equatable/equatable.dart';
 
-import 'command_result.dart';
 import 'cqrs_error.dart';
+import 'validation_error.dart';
 
 /// Generic result for CQRS query result. Can be either [QSuccess]
 /// or [QFailure].
