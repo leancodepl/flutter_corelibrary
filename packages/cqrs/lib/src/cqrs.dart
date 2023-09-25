@@ -19,7 +19,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
-import 'command_response.dart';
+import 'command_result.dart';
 import 'cqrs_error.dart';
 import 'cqrs_middleware.dart';
 import 'cqrs_result.dart';
@@ -65,10 +65,9 @@ class Cqrs {
   ///
   /// In case when a global result handling is needed, one might provide
   /// a `middlewares` list with a collection of [CqrsMiddleware] objects. Every
-  /// time a result is returned, [Cqrs.get], [Cqrs.run] and [Cqrs.perform] will
-  /// execute for each middleware on the list
-  /// [CqrsMiddleware.handleResult], [CqrsMiddleware.handleResult]
-  /// and [CqrsMiddleware.handleResult] accordingly.
+  /// time a result is returned, [Cqrs.get] and [Cqrs.run] will execute for
+  /// each middleware on the list [CqrsMiddleware.handleQueryResult]
+  /// and [CqrsMiddleware.handleCommandResult] accordingly.
   Cqrs(
     this._client,
     this._apiUri, {
@@ -104,10 +103,10 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [QuerySuccess] with recieved data
-  /// of type `T`. A [QueryFailure] will be returned with according
+  /// After succesfull completion returns [QSuccess] with recieved data
+  /// of type `T`. A [QFailure] will be returned with according
   /// [CqrsError] in case of an error.
-  Future<QueryResult<T>> get<T>(
+  Future<QResult<T>> get<T>(
     Query<T> query, {
     Map<String, String> headers = const {},
   }) async {
@@ -115,7 +114,7 @@ class Cqrs {
 
     return _middlewares.fold(
       result,
-      (result, middleware) async => middleware.handleResult(await result),
+      (result, middleware) async => middleware.handleQueryResult(await result),
     );
   }
 
@@ -126,11 +125,11 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [CommandSuccess].
-  /// A [CommandFailure] will be returned with according [CqrsError]
+  /// After succesfull completion returns [CSuccess].
+  /// A [CFailure] will be returned with according [CqrsError]
   /// in case of an error and with list of [ValidationError] errors (in case of
   /// validation error).
-  Future<CommandResult> run(
+  Future<CResult> run(
     Command command, {
     Map<String, String> headers = const {},
   }) async {
@@ -138,7 +137,8 @@ class Cqrs {
 
     return _middlewares.fold(
       result,
-      (result, middleware) async => middleware.handleResult(await result),
+      (result, middleware) async =>
+          middleware.handleCommandResult(await result),
     );
   }
 
@@ -148,10 +148,10 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [OperationSuccess] with recieved
-  /// data of type `T`. A [OperationFailure] will be returned with
+  /// After succesfull completion returns [OSuccess] with recieved
+  /// data of type `T`. A [OFailure] will be returned with
   /// according [CqrsError] in case of an error.
-  Future<OperationResult<T>> perform<T>(
+  Future<OResult<T>> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
   }) async {
@@ -159,11 +159,12 @@ class Cqrs {
 
     return _middlewares.fold(
       result,
-      (result, middleware) async => middleware.handleResult(await result),
+      (result, middleware) async =>
+          middleware.handleOperationResult(await result),
     );
   }
 
-  Future<QueryResult<T>> _get<T>(
+  Future<QResult<T>> _get<T>(
     Query<T> query, {
     required Map<String, String> headers,
   }) async {
@@ -176,34 +177,34 @@ class Cqrs {
           final dynamic json = jsonDecode(response.body);
           final result = query.resultFactory(json);
           _log(query, _ResultType.success);
-          return QuerySuccess(result);
+          return QSuccess(result);
         } catch (e, s) {
           _log(query, _ResultType.jsonError, e, s);
-          return QueryFailure<T>(QueryErrorType.unknown);
+          return QFailure<T>(CqrsError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(query, _ResultType.authenticationError);
-        return QueryFailure<T>(QueryErrorType.authentication);
+        return QFailure<T>(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(query, _ResultType.forbiddenAccessError);
-        return QueryFailure<T>(QueryErrorType.forbiddenAccess);
+        return QFailure<T>(CqrsError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(query, _ResultType.networkError, e, s);
-      return QueryFailure<T>(QueryErrorType.network);
+      return QFailure<T>(CqrsError.network);
     } catch (e, s) {
       _log(query, _ResultType.unknownError, e, s);
-      return QueryFailure<T>(QueryErrorType.unknown);
+      return QFailure<T>(CqrsError.unknown);
     }
 
     _log(query, _ResultType.unknownError);
-    return QueryFailure<T>(QueryErrorType.unknown);
+    return QFailure<T>(CqrsError.unknown);
   }
 
-  Future<CommandResult> _run(
+  Future<CResult> _run(
     Command command, {
     required Map<String, String> headers,
   }) async {
@@ -217,44 +218,44 @@ class Cqrs {
       if ([200, 422].contains(response.statusCode)) {
         try {
           final json = jsonDecode(response.body) as Map<String, dynamic>;
-          final result = CommandResponse.fromJson(json);
+          final result = CommandResult.fromJson(json);
 
           if (response.statusCode == 200) {
             _log(command, _ResultType.success);
-            return const CommandSuccess(null);
+            return const CSuccess();
           }
 
           _log(command, _ResultType.validationError, null, null, result.errors);
-          return CommandFailure(
-            CommandErrorType.validation,
+          return CFailure(
+            CqrsError.validation,
             validationErrors: result.errors,
           );
         } catch (e, s) {
           _log(command, _ResultType.jsonError, e, s);
-          return const CommandFailure(CommandErrorType.unknown);
+          return const CFailure(CqrsError.unknown);
         }
       }
       if (response.statusCode == 401) {
         _log(command, _ResultType.authenticationError);
-        return const CommandFailure(CommandErrorType.authentication);
+        return const CFailure(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(command, _ResultType.forbiddenAccessError);
-        return const CommandFailure(CommandErrorType.forbiddenAccess);
+        return const CFailure(CqrsError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(command, _ResultType.networkError, e, s);
-      return const CommandFailure(CommandErrorType.network);
+      return const CFailure(CqrsError.network);
     } catch (e, s) {
       _log(command, _ResultType.unknownError, e, s);
-      return const CommandFailure(CommandErrorType.unknown);
+      return const CFailure(CqrsError.unknown);
     }
 
     _log(command, _ResultType.unknownError);
-    return const CommandFailure(CommandErrorType.unknown);
+    return const CFailure(CqrsError.unknown);
   }
 
-  Future<OperationResult<T>> _perform<T>(
+  Future<OResult<T>> _perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
   }) async {
@@ -267,31 +268,31 @@ class Cqrs {
           final dynamic json = jsonDecode(response.body);
           final result = operation.resultFactory(json);
           _log(operation, _ResultType.success);
-          return OperationSuccess<T>(result);
+          return OSuccess<T>(result);
         } catch (e, s) {
           _log(operation, _ResultType.jsonError, e, s);
-          return OperationFailure<T>(OperationErrorType.unknown);
+          return OFailure<T>(CqrsError.unknown);
         }
       }
 
       if (response.statusCode == 401) {
         _log(operation, _ResultType.authenticationError);
-        return OperationFailure<T>(OperationErrorType.authentication);
+        return OFailure<T>(CqrsError.authentication);
       }
       if (response.statusCode == 403) {
         _log(operation, _ResultType.forbiddenAccessError);
-        return OperationFailure<T>(OperationErrorType.forbiddenAccess);
+        return OFailure<T>(CqrsError.forbiddenAccess);
       }
     } on SocketException catch (e, s) {
       _log(operation, _ResultType.networkError, e, s);
-      return OperationFailure<T>(OperationErrorType.network);
+      return OFailure<T>(CqrsError.network);
     } catch (e, s) {
       _log(operation, _ResultType.unknownError, e, s);
-      return OperationFailure<T>(OperationErrorType.unknown);
+      return OFailure<T>(CqrsError.unknown);
     }
 
     _log(operation, _ResultType.unknownError);
-    return OperationFailure<T>(OperationErrorType.unknown);
+    return OFailure<T>(CqrsError.unknown);
   }
 
   Future<http.Response> _send(
@@ -317,26 +318,25 @@ class Cqrs {
     StackTrace? stackTrace,
     List<ValidationError> validationErrors = const [],
   ]) {
-    final logger = _logger;
-    if (logger == null) {
+    if (_logger == null) {
       return;
     }
 
     final log = switch (result) {
-      _ResultType.success => logger.info,
-      _ResultType.validationError => logger.warning,
+      _ResultType.success => _logger?.info,
+      _ResultType.validationError => _logger?.warning,
       _ResultType.jsonError ||
       _ResultType.networkError ||
       _ResultType.authenticationError ||
       _ResultType.forbiddenAccessError ||
       _ResultType.unknownError =>
-        logger.severe,
+        _logger?.severe,
     };
 
     final methodTypePrefix = switch (method) {
       Query() => 'Query',
       Command() => 'Command',
-      Operation() => 'Operation',
+      Operation() || _ => 'Operation',
     };
 
     final validationErrorsBuffer = StringBuffer();
@@ -351,6 +351,6 @@ class Cqrs {
       _ => '$methodTypePrefix ${method.runtimeType} ${result.description}.',
     };
 
-    log.call(details, error, stackTrace);
+    log?.call(details, error, stackTrace);
   }
 }

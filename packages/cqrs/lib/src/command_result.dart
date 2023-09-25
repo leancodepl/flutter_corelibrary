@@ -17,18 +17,18 @@ import 'package:equatable/equatable.dart';
 import 'transport_types.dart';
 
 /// The result of running a [Command].
-class CommandResponse {
-  /// Creates a [CommandResponse] with [errors];
-  const CommandResponse(this.errors);
+class CommandResult {
+  /// Creates a [CommandResult] with [errors];
+  const CommandResult(this.errors);
 
-  /// Creates a success [CommandResponse] without any errors.
-  const CommandResponse.success() : errors = const [];
+  /// Creates a success [CommandResult] without any errors.
+  const CommandResult.success() : errors = const [];
 
-  /// Creates a failed [CommandResponse] and ensures it has errors.
-  CommandResponse.failed(this.errors) : assert(errors.isNotEmpty);
+  /// Creates a failed [CommandResult] and ensures it has errors.
+  CommandResult.failed(this.errors) : assert(errors.isNotEmpty);
 
-  /// Creates a [CommandResponse] from JSON.
-  CommandResponse.fromJson(Map<String, dynamic> json)
+  /// Creates a [CommandResult] from JSON.
+  CommandResult.fromJson(Map<String, dynamic> json)
       : errors = (json['ValidationErrors'] as List)
             .map(
               (dynamic error) =>
@@ -45,16 +45,16 @@ class CommandResponse {
   /// Validation errors related to the data carried by the [Command].
   final List<ValidationError> errors;
 
-  /// Checks whether this [CommandResponse] contains a provided error `code` in
+  /// Checks whether this [CommandResult] contains a provided error `code` in
   /// its validation errors.
   bool hasError(int code) => errors.any((error) => error.code == code);
 
-  /// Checks whether this [CommandResponse] contains a provided error `code` in
+  /// Checks whether this [CommandResult] contains a provided error `code` in
   /// its validation errors related to the `propertyName`.
   bool hasErrorForProperty(int code, String propertyName) => errors
       .any((error) => error.code == code && error.propertyName == propertyName);
 
-  /// Serializes this [CommandResponse] to JSON.
+  /// Serializes this [CommandResult] to JSON.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'WasSuccessful': success,
         'ValidationErrors': errors.map((error) => error.toJson()).toList(),

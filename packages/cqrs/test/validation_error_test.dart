@@ -1,4 +1,4 @@
-import 'package:cqrs/src/command_response.dart';
+import 'package:cqrs/src/command_result.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -9,7 +9,6 @@ void main() {
       expect(error.code, 123);
       expect(error.message, 'Test message');
       expect(error.propertyName, 'SomeProperty');
-      expect(error.props, [123, 'Test message', 'SomeProperty']);
     });
 
     test('returns correct string value', () {

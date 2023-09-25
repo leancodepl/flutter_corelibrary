@@ -6,10 +6,26 @@ void main() {
   final middleware = ExampleCqrsMiddleware();
 
   group('CqrsMiddleware', () {
-    group('handleResult', () {
+    group('handleQueryResult', () {
       test('returns the same result by default', () async {
-        const resultIn = QuerySuccess(true);
-        final resultOut = await middleware.handleResult(resultIn);
+        const resultIn = QSuccess(true);
+        final resultOut = await middleware.handleQueryResult(resultIn);
+        expect(resultIn, resultOut);
+      });
+    });
+
+    group('handleCommandResult', () {
+      test('returns the same result by default', () async {
+        const resultIn = CSuccess();
+        final resultOut = await middleware.handleCommandResult(resultIn);
+        expect(resultIn, resultOut);
+      });
+    });
+
+    group('handleOperationResult', () {
+      test('returns the same result by default', () async {
+        const resultIn = OSuccess(true);
+        final resultOut = await middleware.handleOperationResult(resultIn);
         expect(resultIn, resultOut);
       });
     });
