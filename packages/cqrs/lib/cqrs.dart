@@ -29,9 +29,9 @@
 /// final flowers = await cqrs.get(AllFlowers(page: 1));
 ///
 /// // Handling query result
-/// if (flowers case QSuccess(:final data)) {
+/// if (flowers case QuerySuccess(:final data)) {
 ///   print(data);
-/// } else if (flowers case QFailure(:final error)) {
+/// } else if (flowers case QueryFailure(:final error)) {
 ///   print('Something failed with error $error');
 /// }
 ///

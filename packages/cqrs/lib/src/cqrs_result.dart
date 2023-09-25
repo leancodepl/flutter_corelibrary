@@ -17,23 +17,23 @@ import 'package:equatable/equatable.dart';
 import 'cqrs_error.dart';
 import 'validation_error.dart';
 
-/// Generic result for CQRS query result. Can be either [QSuccess]
-/// or [QFailure].
-sealed class QResult<T> extends Equatable {
-  /// Creates a [QResult] class.
-  const QResult();
+/// Generic result for CQRS query result. Can be either [QuerySuccess]
+/// or [QueryFailure].
+sealed class QueryResult<T> extends Equatable {
+  /// Creates a [QueryResult] class.
+  const QueryResult();
 
-  /// Whether this instance is of final type [QSuccess].
-  bool get isSuccess => this is QSuccess<T>;
+  /// Whether this instance is of final type [QuerySuccess].
+  bool get isSuccess => this is QuerySuccess<T>;
 
-  /// Whether this instance is of final type [QFailure].
-  bool get isFailure => this is QFailure<T>;
+  /// Whether this instance is of final type [QueryFailure].
+  bool get isFailure => this is QueryFailure<T>;
 }
 
 /// Generic class which represents a result of succesful query execution.
-final class QSuccess<T> extends QResult<T> {
-  /// Creates a [QSuccess] class.
-  const QSuccess(this.data);
+final class QuerySuccess<T> extends QueryResult<T> {
+  /// Creates a [QuerySuccess] class.
+  const QuerySuccess(this.data);
 
   /// Data of type [T] returned from query execution.
   final T data;
@@ -43,9 +43,9 @@ final class QSuccess<T> extends QResult<T> {
 }
 
 /// Generic class which represents a result of unsuccesful query execution.
-final class QFailure<T> extends QResult<T> {
-  /// Creates a [QFailure] class.
-  const QFailure(this.error);
+final class QueryFailure<T> extends QueryResult<T> {
+  /// Creates a [QueryFailure] class.
+  const QueryFailure(this.error);
 
   /// Error which was the reason of query failure
   final CqrsError error;
