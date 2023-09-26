@@ -8,7 +8,7 @@
 - **Breaking:** Rename previous `CommandResult` to `CommandResponse` and make it package private.
 - Mark the `CqrsMethod` as `sealed`.
 - **Breaking:** Make `ValidationError` extend `Equatable` from `equatable` package.
-- **Breaking:** Add ` equatable` (`2.0.5`) and `logging` (`1.2.0`) dependencies.
+- **Breaking:** Add `equatable` (`2.0.5`) and `logging` (`1.2.0`) dependencies.
 
 # 9.0.0
 
