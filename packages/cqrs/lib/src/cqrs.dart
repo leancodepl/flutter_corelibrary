@@ -104,8 +104,8 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [QuerySuccess] with recieved data
-  /// of type `T`. A [QueryFailure] will be returned with according
+  /// After successful completion returns [QuerySuccess] with received data
+  /// of type `T`. A [QueryFailure] will be returned with an according
   /// [QueryError] in case of an error.
   Future<QueryResult<T>> get<T>(
     Query<T> query, {
@@ -126,8 +126,8 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [CommandSuccess].
-  /// A [CommandFailure] will be returned with according [CommandError]
+  /// After successful completion returns [CommandSuccess].
+  /// A [CommandFailure] will be returned with an according [CommandError]
   /// in case of an error and with list of [ValidationError] errors (in case of
   /// validation error).
   Future<CommandResult> run(
@@ -149,9 +149,9 @@ class Cqrs {
   /// constructor, meaning `headers` override `_headers`. `Content-Type` header
   /// will be ignored.
   ///
-  /// After succesfull completion returns [OperationSuccess] with recieved
+  /// After successful completion returns [OperationSuccess] with received
   /// data of type `T`. A [OperationFailure] will be returned with
-  /// according [OperationError] in case of an error.
+  /// an according [OperationError] in case of an error.
   Future<OperationResult<T>> perform<T>(
     Operation<T> operation, {
     Map<String, String> headers = const {},
