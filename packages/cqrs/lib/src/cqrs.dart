@@ -338,7 +338,7 @@ class Cqrs {
     final methodTypePrefix = switch (method) {
       Query() => 'Query',
       Command() => 'Command',
-      Operation() || _ => 'Operation',
+      Operation() => 'Operation',
     };
 
     final validationErrorsBuffer = StringBuffer();
