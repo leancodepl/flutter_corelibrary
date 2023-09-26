@@ -46,10 +46,6 @@ class AddFlower implements Command {
   Map<String, dynamic> toJson() => {'Name': name, 'Pretty': pretty};
 }
 
-abstract class AddFlowerErrorCodes {
-  static const alreadyExists = 1;
-}
-
 // Firstly you need an Uri to which the requests will be sent.
 // Remember about the trailing slash as otherwise resolved paths
 // may be invalid.
@@ -67,11 +63,11 @@ final flowers = await cqrs.get(AllFlowers(page: 1));
 final result = await cqrs.run(AddFlower(name: 'Daisy', pretty: true));
 
 // You can check the command result for its status, whether it successfully ran.
-if (result.success) {
+if (result case CommandSuccess()) {
   print('Added a daisy successfully!');
-} else if (result.hasError(AddFlowerErrorCodes.alreadyExists)) {
-  // Or check for errors in `result.errors`. You can use a `hasError` helper.
-  print('Daisy already exists!');
+} else if (result case CommandFailure(isInvalid: true, :final validationErrors)) {
+  print('Validation errors occured!');
+  handleValidationErrors(validationErrors);
 } else {
   print('Error occured');
 }
