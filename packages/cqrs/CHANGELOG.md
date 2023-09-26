@@ -1,3 +1,15 @@
+# 10.0.0
+
+- **Breaking:** Fundamentaly change overall `Cqrs` API making it no-throw guarantee.
+- **Breaking:** Make `Cqrs.get`, `Cqrs.run` and `Cqrs.perform` return result data in form of `QueryResult`, `CommandResult` and `OperationResult` respectively.
+- Add `logger` parameter (of type `Logger` from `logging` package) to `Cqrs` default constructor. If provided, the `logger` will be used as a debug logging interface in execution of CQRS methods.
+- Add middleware mechanism in form of `CqrsMiddleware` intended to use in processing result from queries, commands and operations.
+- **Breaking:** Remove `CqrsException`.
+- **Breaking:** Rename previous `CommandResult` to `CommandResponse` and make it package private.
+- Mark the `CqrsMethod` as `sealed`.
+- **Breaking:** Make `ValidationError` extend `Equatable` from `equatable` package.
+- **Breaking:** Add `equatable` (`^2.0.5`) and `logging` (`^1.2.0`) dependencies.
+
 # 9.0.0
 
 - Bumped `http` dependency to `1.0.0`. (#105)

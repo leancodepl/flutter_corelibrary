@@ -1,31 +1,100 @@
-import 'package:cqrs/src/command_result.dart';
-import 'package:cqrs/src/cqrs.dart';
-import 'package:cqrs/src/cqrs_exception.dart';
-import 'package:cqrs/src/transport_types.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:cqrs/cqrs.dart';
+import 'package:cqrs/src/cqrs_middleware.dart';
+
 import 'package:http/http.dart';
+import 'package:logging/logging.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 class MockClient extends Mock implements Client {}
 
+class MockLogger extends Mock implements Logger {}
+
+class MockCqrsMiddleware extends Mock implements CqrsMiddleware {}
+
 void main() {
   group('CQRS', () {
     late MockClient client;
+    late MockLogger logger;
+    late MockCqrsMiddleware middleware;
     late Cqrs cqrs;
 
     setUpAll(() {
       registerFallbackValue(Uri());
+      registerFallbackValue(const QuerySuccess<bool?>(true));
+      registerFallbackValue(
+        Future.value(const QuerySuccess<bool?>(true)),
+      );
+      registerFallbackValue(const CommandSuccess());
+      registerFallbackValue(
+        Future.value(const CommandSuccess()),
+      );
+      registerFallbackValue(const OperationSuccess<bool?>(true));
+      registerFallbackValue(
+        Future.value(const OperationSuccess<bool?>(true)),
+      );
     });
 
     setUp(() {
       client = MockClient();
-      cqrs = Cqrs(client, Uri.parse('https://example.org/api/'));
+      logger = MockLogger();
+      middleware = MockCqrsMiddleware();
+      cqrs = Cqrs(
+        client,
+        Uri.parse('https://example.org/api/'),
+        logger: logger,
+      );
+    });
+
+    group('addMiddleware', () {
+      test('adds new middleware to the list', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verifyNever(() => middleware.handleQueryResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verify(() => middleware.handleQueryResult(result)).called(1);
+
+        cqrs.removeMiddleware(middleware);
+      });
+    });
+
+    group('removeMiddleware', () {
+      test('removes given middleware from the list', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+
+        verifyNever(() => middleware.handleQueryResult(result));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+
+        verify(() => middleware.handleQueryResult(result)).called(1);
+
+        cqrs.removeMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+
+        verifyNever(
+          () => middleware.handleQueryResult(any()),
+        );
+      });
     });
 
     group('get', () {
       test(
-          "correctly serializes query, calls client's send and"
-          ' deserializes result', () async {
+          "correctly serializes query, calls client's send,"
+          ' deserializes result and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
         final result = await cqrs.get(
@@ -33,7 +102,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, true);
+        expect(result, const QuerySuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -51,6 +120,10 @@ void main() {
             ),
           ),
         ).called(1);
+
+        verify(
+          () => logger.info('Query ExampleQuery executed successfully.'),
+        ).called(1);
       });
 
       test('correctly deserializes null query result', () async {
@@ -58,49 +131,160 @@ void main() {
 
         final result = await cqrs.get(ExampleQuery());
 
-        expect(result, null);
+        expect(result, const QuerySuccess<bool?>(null));
       });
 
-      test('throws CQRSException on json decoding failure', () async {
+      test(
+          'returns QueryFailure(QueryError.unknown) on json decoding'
+          ' failure and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
-        final result = cqrs.get(ExampleQueryFailingResultFactory());
+        final result = await cqrs.get(ExampleQueryFailingResultFactory());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              'An error occured while decoding response body JSON:\n'
-                  'Exception: This is error.',
-            ),
-          ),
+          const QueryFailure<bool>(QueryError.unknown),
         );
+
+        verify(
+          () => logger.severe(
+            'Query ExampleQueryFailingResultFactory failed while decoding'
+            ' response body JSON.',
+            any(),
+            any(),
+          ),
+        ).called(1);
       });
 
-      test('throws CQRSException when response code is other than 200', () {
-        mockClientPost(client, Response('', 404));
+      test(
+          'returns QueryFailure(QueryError.network) on socket exception'
+          ' and logs result', () async {
+        mockClientException(
+          client,
+          const SocketException('This might be socket exception'),
+        );
 
-        final result = cqrs.get(ExampleQuery());
+        final result = await cqrs.get(ExampleQuery());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              'Invalid, non 200 status code returned by ExampleQuery query.',
-            ),
-          ),
+          const QueryFailure<bool?>(QueryError.network),
         );
+
+        verify(
+          () => logger.severe(
+            'Query ExampleQuery failed with network error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns QueryFailure(QueryError.unknown) on client exception'
+          ' and logs result', () async {
+        final exception = Exception('This is not a socket exception');
+        mockClientException(client, exception);
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const QueryFailure<bool?>(QueryError.unknown),
+        );
+
+        verify(
+          () => logger.severe(
+            'Query ExampleQuery failed unexpectedly.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns QueryFailure(QueryError.authentication) when response'
+          ' code is 401 and logs result', () async {
+        mockClientPost(client, Response('', 401));
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const QueryFailure<bool?>(QueryError.authentication),
+        );
+
+        verify(
+          () => logger.severe(
+            'Query ExampleQuery failed with authentication error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns QueryFailure(QueryError.forbiddenAccess) when response'
+          ' code is 403 and logs result', () async {
+        mockClientPost(client, Response('', 403));
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const QueryFailure<bool?>(QueryError.forbiddenAccess),
+        );
+
+        verify(
+          () => logger.severe(
+            'Query ExampleQuery failed with forbidden access error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns QueryFailure(QueryError.unknown) for other response'
+          ' codes and logs result', () async {
+        mockClientPost(client, Response('', 404));
+
+        final result = await cqrs.get(ExampleQuery());
+
+        expect(
+          result,
+          const QueryFailure<bool?>(QueryError.unknown),
+        );
+
+        verify(
+          () => logger.severe(
+            'Query ExampleQuery failed unexpectedly.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'calls CqrsMiddleware.handleQueryResult for each'
+          ' middleware present', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verifyNever(() => middleware.handleQueryResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.get(ExampleQuery());
+        mockCqrsMiddlewareQueryResult(middleware, result);
+        verify(() => middleware.handleQueryResult(result)).called(1);
       });
     });
 
     group('run', () {
       test(
-          "correctly serializes command, calls client's send and deserializes "
-          'command results', () async {
+          "correctly serializes command, calls client's send, deserializes "
+          'command results and logs result', () async {
         mockClientPost(
           client,
           Response('{"WasSuccessful":true,"ValidationErrors":[]}', 200),
@@ -110,7 +294,7 @@ void main() {
 
         expect(
           result,
-          isA<CommandResult>().having((r) => r.success, 'success', true),
+          const CommandSuccess(),
         );
 
         verify(
@@ -120,49 +304,213 @@ void main() {
             headers: any(named: 'headers'),
           ),
         ).called(1);
+
+        verify(
+          () => logger.info(
+            'Command ExampleCommand executed successfully.',
+            any(),
+            any(),
+          ),
+        ).called(1);
       });
 
-      test('throws CQRSException on json decoding failure', () async {
+      test(
+          'returns CommandFailure(CommandError.validation) if any validation '
+          'error occured and logs result', () async {
+        const validationError = ValidationError(
+          400,
+          'Error message',
+          'invalidProperty',
+        );
+
+        mockClientPost(
+          client,
+          Response(
+            '{"WasSuccessful":false,"ValidationErrors":[${jsonEncode(validationError)}]}',
+            422,
+          ),
+        );
+
+        final result = await cqrs.run(ExampleCommand());
+
+        expect(
+          result,
+          const CommandFailure(
+            CommandError.validation,
+            validationErrors: [validationError],
+          ),
+        );
+
+        verify(
+          () => client.post(
+            Uri.parse('https://example.org/api/command/ExampleCommand'),
+            body: any(named: 'body'),
+            headers: any(named: 'headers'),
+          ),
+        ).called(1);
+
+        verify(
+          () => logger.warning(
+            'Command ExampleCommand failed with validation errors:\n'
+            'Error message (400), ',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns CommandFailure(CommandError.unknown) on json decoding'
+          ' failure and logs result', () async {
         mockClientPost(client, Response('this is not a valid json', 200));
 
-        final result = cqrs.run(ExampleCommand());
+        final result = await cqrs.run(ExampleCommand());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              startsWith('An error occured while decoding response body JSON:'),
-            ),
-          ),
+          const CommandFailure(CommandError.unknown),
         );
+
+        verify(
+          () => logger.severe(
+            'Command ExampleCommand failed while decoding response body JSON.',
+            any(),
+            any(),
+          ),
+        ).called(1);
       });
 
-      test('throws CQRSException when response code is other than 200 and 422',
-          () {
-        mockClientPost(client, Response('', 500));
+      test(
+          'returns CommandFailure(CommandError.network) on socket exception'
+          ' and logs result', () async {
+        mockClientException(
+          client,
+          const SocketException('This might be socket exception'),
+        );
 
-        final result = cqrs.run(ExampleCommand());
+        final result = await cqrs.run(ExampleCommand());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              'Invalid, non 200 or 422 status code returned '
-                  'by ExampleCommand command.',
-            ),
-          ),
+          const CommandFailure(CommandError.network),
         );
+
+        verify(
+          () => logger.severe(
+            'Command ExampleCommand failed with network error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns CommandFailure(CommandError.unknown) on other'
+          ' client exceptions and logs result', () async {
+        mockClientException(
+          client,
+          Exception('This is not a socket exception'),
+        );
+
+        final result = await cqrs.run(ExampleCommand());
+
+        expect(
+          result,
+          const CommandFailure(CommandError.unknown),
+        );
+
+        verify(
+          () => logger.severe(
+            'Command ExampleCommand failed unexpectedly.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns CommandFailure(CommandError.authentication) when'
+          ' response code is 401 and logs result', () async {
+        mockClientPost(client, Response('', 401));
+
+        final result = await cqrs.run(ExampleCommand());
+
+        expect(
+          result,
+          const CommandFailure(CommandError.authentication),
+        );
+
+        verify(
+          () => logger.severe(
+            'Command ExampleCommand failed with authentication error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns CommandFailure(CommandError.forbiddenAccess) when'
+          ' response code is 403 and logs result', () async {
+        mockClientPost(client, Response('', 403));
+
+        final result = await cqrs.run(ExampleCommand());
+
+        expect(
+          result,
+          const CommandFailure(CommandError.forbiddenAccess),
+        );
+
+        verify(
+          () => logger.severe(
+            'Command ExampleCommand failed with forbidden access error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns CommandFailure(CommandError.unknown) for other'
+          ' response codes and logs result', () async {
+        mockClientPost(client, Response('', 404));
+
+        final result = await cqrs.run(ExampleCommand());
+
+        expect(
+          result,
+          const CommandFailure(CommandError.unknown),
+        );
+
+        verify(
+          () => logger.severe(
+            'Command ExampleCommand failed unexpectedly.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'calls CqrsMiddleware.handleCommandResult for each'
+          ' middleware present', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.run(ExampleCommand());
+        mockCqrsMiddlewareCommandResult(middleware, result);
+        verifyNever(() => middleware.handleCommandResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.run(ExampleCommand());
+        mockCqrsMiddlewareCommandResult(middleware, result);
+        verify(() => middleware.handleCommandResult(result)).called(1);
       });
     });
 
     group('perform', () {
       test(
-          "correctly serializes operation, calls client's send and"
-          ' deserializes result', () async {
+          "correctly serializes operation, calls client's send,"
+          ' deserializes result and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
         final result = await cqrs.perform(
@@ -170,7 +518,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, true);
+        expect(result, const OperationSuccess<bool?>(true));
 
         verify(
           () => client.post(
@@ -188,6 +536,11 @@ void main() {
             ),
           ),
         ).called(1);
+
+        verify(
+          () =>
+              logger.info('Operation ExampleOperation executed successfully.'),
+        ).called(1);
       });
 
       test('correctly deserializes null operation result', () async {
@@ -195,42 +548,158 @@ void main() {
 
         final result = await cqrs.perform(ExampleOperation());
 
-        expect(result, null);
+        expect(result, const OperationSuccess<bool?>(null));
       });
 
-      test('throws CQRSException on json decoding failure', () async {
+      test(
+          'returns OperationFailure(OperationError.unknown) on json decoding'
+          ' failure and logs result', () async {
         mockClientPost(client, Response('true', 200));
 
-        final result = cqrs.perform(ExampleOperationFailingResultFactory());
+        final result =
+            await cqrs.perform(ExampleOperationFailingResultFactory());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              'An error occured while decoding response body JSON:\n'
-                  'Exception: This is error.',
-            ),
-          ),
+          const OperationFailure<bool>(OperationError.unknown),
         );
+
+        verify(
+          () => logger.severe(
+            'Operation ExampleOperationFailingResultFactory failed while decoding'
+            ' response body JSON.',
+            any(),
+            any(),
+          ),
+        ).called(1);
       });
 
-      test('throws CQRSException when response code is other than 200', () {
-        mockClientPost(client, Response('', 404));
+      test(
+          'returns OperationFailure(OperationError.network) on socket exception'
+          ' and logs result', () async {
+        mockClientException(
+          client,
+          const SocketException('This might be socket exception'),
+        );
 
-        final result = cqrs.perform(ExampleOperation());
+        final result = await cqrs.perform(ExampleOperation());
 
         expect(
           result,
-          throwsA(
-            isA<CqrsException>().having(
-              (e) => e.message,
-              'message',
-              'Invalid, non 200 status code returned by ExampleOperation operation.',
-            ),
+          const OperationFailure<bool?>(OperationError.network),
+        );
+
+        verify(
+          () => logger.severe(
+            'Operation ExampleOperation failed with network error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns OperationFailure(OperationError.unknown) on client exception'
+          ' and logs result', () async {
+        final exception = Exception('This is not a socket exception');
+        mockClientException(client, exception);
+
+        final result = await cqrs.perform(ExampleOperation());
+
+        expect(
+          result,
+          const OperationFailure<bool?>(OperationError.unknown),
+        );
+
+        verify(
+          () => logger.severe(
+            'Operation ExampleOperation failed unexpectedly.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns OperationFailure(OperationError.authentication) when response'
+          ' code is 401 and logs result', () async {
+        mockClientPost(client, Response('', 401));
+
+        final result = await cqrs.perform(ExampleOperation());
+
+        expect(
+          result,
+          const OperationFailure<bool?>(
+            OperationError.authentication,
           ),
         );
+
+        verify(
+          () => logger.severe(
+            'Operation ExampleOperation failed with authentication error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns OperationFailure(OperationError.forbiddenAccess) when response'
+          ' code is 403 and logs result', () async {
+        mockClientPost(client, Response('', 403));
+
+        final result = await cqrs.perform(ExampleOperation());
+
+        expect(
+          result,
+          const OperationFailure<bool?>(
+            OperationError.forbiddenAccess,
+          ),
+        );
+
+        verify(
+          () => logger.severe(
+            'Operation ExampleOperation failed with forbidden access error.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'returns OperationFailure(OperationError.unknown) for other response'
+          ' codes and logs result', () async {
+        mockClientPost(client, Response('', 404));
+
+        final result = await cqrs.perform(ExampleOperation());
+
+        expect(
+          result,
+          const OperationFailure<bool?>(OperationError.unknown),
+        );
+
+        verify(
+          () => logger.severe(
+            'Operation ExampleOperation failed unexpectedly.',
+            any(),
+            any(),
+          ),
+        ).called(1);
+      });
+
+      test(
+          'calls CqrsMiddleware.handleOperationResult for each'
+          ' middleware present', () async {
+        mockClientPost(client, Response('true', 200));
+
+        var result = await cqrs.perform(ExampleOperation());
+        mockCqrsMiddlewareOperationResult(middleware, result);
+        verifyNever(() => middleware.handleOperationResult(any()));
+
+        cqrs.addMiddleware(middleware);
+        result = await cqrs.perform(ExampleOperation());
+        mockCqrsMiddlewareOperationResult(middleware, result);
+        verify(() => middleware.handleOperationResult(result)).called(1);
       });
     });
   });
@@ -244,6 +713,49 @@ void mockClientPost(MockClient client, Response response) {
       headers: any(named: 'headers'),
     ),
   ).thenAnswer((_) async => response);
+}
+
+void mockClientException(MockClient client, Exception exception) {
+  when(
+    () => client.post(
+      any(),
+      body: any(named: 'body'),
+      headers: any(named: 'headers'),
+    ),
+  ).thenAnswer((_) async => throw exception);
+}
+
+void mockCqrsMiddlewareQueryResult(
+  MockCqrsMiddleware middleware,
+  QueryResult<bool?> result,
+) {
+  when(
+    () => middleware.handleQueryResult(result),
+  ).thenAnswer(
+    (_) async => Future.value(result),
+  );
+}
+
+void mockCqrsMiddlewareCommandResult(
+  MockCqrsMiddleware middleware,
+  CommandResult result,
+) {
+  when(
+    () => middleware.handleCommandResult(result),
+  ).thenAnswer(
+    (_) async => Future.value(result),
+  );
+}
+
+void mockCqrsMiddlewareOperationResult(
+  MockCqrsMiddleware middleware,
+  OperationResult<bool?> result,
+) {
+  when(
+    () => middleware.handleOperationResult(result),
+  ).thenAnswer(
+    (_) async => Future.value(result),
+  );
 }
 
 class ExampleQuery implements Query<bool?> {

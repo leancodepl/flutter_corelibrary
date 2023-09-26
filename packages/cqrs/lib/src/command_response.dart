@@ -13,20 +13,21 @@
 // limitations under the License.
 
 import 'transport_types.dart';
+import 'validation_error.dart';
 
 /// The result of running a [Command].
-class CommandResult {
-  /// Creates a [CommandResult] with [errors];
-  const CommandResult(this.errors);
+class CommandResponse {
+  /// Creates a [CommandResponse] with [errors];
+  const CommandResponse(this.errors);
 
-  /// Creates a success [CommandResult] without any errors.
-  const CommandResult.success() : errors = const [];
+  /// Creates a success [CommandResponse] without any errors.
+  const CommandResponse.success() : errors = const [];
 
-  /// Creates a failed [CommandResult] and ensures it has errors.
-  CommandResult.failed(this.errors) : assert(errors.isNotEmpty);
+  /// Creates a failed [CommandResponse] and ensures it has errors.
+  CommandResponse.failed(this.errors) : assert(errors.isNotEmpty);
 
-  /// Creates a [CommandResult] from JSON.
-  CommandResult.fromJson(Map<String, dynamic> json)
+  /// Creates a [CommandResponse] from JSON.
+  CommandResponse.fromJson(Map<String, dynamic> json)
       : errors = (json['ValidationErrors'] as List)
             .map(
               (dynamic error) =>
@@ -43,16 +44,16 @@ class CommandResult {
   /// Validation errors related to the data carried by the [Command].
   final List<ValidationError> errors;
 
-  /// Checks whether this [CommandResult] contains a provided error `code` in
+  /// Checks whether this [CommandResponse] contains a provided error `code` in
   /// its validation errors.
   bool hasError(int code) => errors.any((error) => error.code == code);
 
-  /// Checks whether this [CommandResult] contains a provided error `code` in
+  /// Checks whether this [CommandResponse] contains a provided error `code` in
   /// its validation errors related to the `propertyName`.
   bool hasErrorForProperty(int code, String propertyName) => errors
       .any((error) => error.code == code && error.propertyName == propertyName);
 
-  /// Serializes this [CommandResult] to JSON.
+  /// Serializes this [CommandResponse] to JSON.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'WasSuccessful': success,
         'ValidationErrors': errors.map((error) => error.toJson()).toList(),
@@ -60,35 +61,4 @@ class CommandResult {
 
   @override
   String toString() => 'CommandResult($errors)';
-}
-
-/// A validation error.
-class ValidationError {
-  /// Creates a [ValidationError] from [code], [message], and [propertyName].
-  const ValidationError(this.code, this.message, this.propertyName);
-
-  /// Creates a [ValidationError] from JSON.
-  ValidationError.fromJson(Map<String, dynamic> json)
-      : code = json['ErrorCode'] as int,
-        message = json['ErrorMessage'] as String,
-        propertyName = json['PropertyName'] as String;
-
-  /// Code of the validation error.
-  final int code;
-
-  /// Message describing the validation error.
-  final String message;
-
-  /// Path to the property which caused the error.
-  final String propertyName;
-
-  /// Serializes this [ValidationError] to JSON.
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'ErrorCode': code,
-        'ErrorMessage': message,
-        'PropertyName': propertyName
-      };
-
-  @override
-  String toString() => '[$propertyName] $code: $message';
 }

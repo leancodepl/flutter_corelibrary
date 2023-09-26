@@ -1,4 +1,4 @@
-import 'package:cqrs/src/command_result.dart';
+import 'package:cqrs/src/validation_error.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('is correctly deserialized from JSON', () {
-      final error = ValidationError.fromJson(<String, dynamic>{
+      final error = ValidationError.fromJson(const <String, dynamic>{
         'ErrorCode': 128,
         'ErrorMessage': 'Some other message',
         'PropertyName': 'Property',
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('is correctly serialized to JSON', () {
-      final json = ValidationError.fromJson(<String, dynamic>{
+      final json = ValidationError.fromJson(const <String, dynamic>{
         'ErrorCode': 128,
         'ErrorMessage': 'Some other message',
         'PropertyName': 'Property',

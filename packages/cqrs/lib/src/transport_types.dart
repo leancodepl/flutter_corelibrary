@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// An interface for contracts that can be serialized and sent to the backend.
-abstract interface class CqrsMethod {
+sealed class CqrsMethod {
   /// Returns a JSON-encoded representation of the data this class carries.
   Map<String, dynamic> toJson();
 

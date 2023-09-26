@@ -28,6 +28,13 @@
 /// // Fetching first page of flowers
 /// final flowers = await cqrs.get(AllFlowers(page: 1));
 ///
+/// // Handling query result
+/// if (flowers case QuerySuccess(:final data)) {
+///   print(data);
+/// } else if (flowers case QueryFailure(:final error)) {
+///   print('Something failed with error $error');
+/// }
+///
 /// // Adding a new flower
 /// final result = await cqrs.run(
 ///   AddFlower(
@@ -36,7 +43,15 @@
 ///   ),
 /// );
 ///
-/// print(result.success); // true
+/// // Handling command result
+/// if (result case CommandSuccess()) {
+///   print('Flower added succefully');
+/// } else if (result case CommandFailure(isInvalid: true, :final validationErrors)) {
+///   print('Validation errors occured');
+///   handleValidationErrors(validationErrors);
+/// } else if (result case CommandFailure(:final error)) {
+///   print('Something failed with error ${error}');
+/// }
 /// ```
 ///
 /// See also:
@@ -49,7 +64,8 @@
 /// code contract generator.
 library;
 
-export 'src/command_result.dart';
 export 'src/cqrs.dart';
-export 'src/cqrs_exception.dart';
+export 'src/cqrs_error.dart';
+export 'src/cqrs_result.dart';
 export 'src/transport_types.dart';
+export 'src/validation_error.dart';
