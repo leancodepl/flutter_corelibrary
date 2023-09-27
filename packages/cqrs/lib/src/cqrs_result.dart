@@ -98,6 +98,16 @@ final class CommandFailure extends CommandResult {
   /// command execution.
   final List<ValidationError> validationErrors;
 
+  /// Checks whether this [CommandFailure] contains a provided validationErrors
+  /// `code` in its validation errors.
+  bool hasError(int code) =>
+      validationErrors.any((error) => error.code == code);
+
+  /// Checks whether this [CommandFailure] contains a provided validationErrors
+  /// `code` in its validation errors related to the `propertyName`.
+  bool hasErrorForProperty(int code, String propertyName) => validationErrors
+      .any((error) => error.code == code && error.propertyName == propertyName);
+
   @override
   List<Object?> get props => [error, validationErrors];
 }

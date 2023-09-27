@@ -44,15 +44,6 @@ class CommandResponse {
   /// Validation errors related to the data carried by the [Command].
   final List<ValidationError> errors;
 
-  /// Checks whether this [CommandResponse] contains a provided error `code` in
-  /// its validation errors.
-  bool hasError(int code) => errors.any((error) => error.code == code);
-
-  /// Checks whether this [CommandResponse] contains a provided error `code` in
-  /// its validation errors related to the `propertyName`.
-  bool hasErrorForProperty(int code, String propertyName) => errors
-      .any((error) => error.code == code && error.propertyName == propertyName);
-
   /// Serializes this [CommandResponse] to JSON.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'WasSuccessful': success,
