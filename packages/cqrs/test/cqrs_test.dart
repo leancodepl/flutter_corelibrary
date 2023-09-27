@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cqrs/cqrs.dart';
-import 'package:cqrs/src/cqrs_middleware.dart';
 
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
