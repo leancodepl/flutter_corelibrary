@@ -3,6 +3,7 @@
 - **Breaking:** Rename `forbiddenAccess` to `authorization` in error enums.
 - Update error enums docs.
 - Fix `CqrsMiddleware` not being exported from the package.
+- Move `hasError` and `hasErrorForProperty` from `CommandResponse` to `CommandFailure`.
 
 # 10.0.0
 
