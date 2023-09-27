@@ -13,9 +13,9 @@
 - Add middleware mechanism in form of `CqrsMiddleware` intended to use in processing result from queries, commands and operations.
 - **Breaking:** Remove `CqrsException`.
 - **Breaking:** Rename previous `CommandResult` to `CommandResponse` and make it package private.
-- Mark the `CqrsMethod` as `sealed`.
-- **Breaking:** Make `ValidationError` extend `Equatable` from `equatable` package.
-- **Breaking:** Add `equatable` (`^2.0.5`) and `logging` (`^1.2.0`) dependencies.
+- **Breaking:** Mark the `CqrsMethod` as `sealed`.
+- Make `ValidationError` extend `Equatable` from `equatable` package.
+- Add `equatable` (`^2.0.5`) and `logging` (`^1.2.0`) dependencies.
 
 # 9.0.0
 
