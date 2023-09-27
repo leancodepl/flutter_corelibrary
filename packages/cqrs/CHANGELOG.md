@@ -7,6 +7,8 @@
 
 # 10.0.0
 
+**Retracted.**
+
 - **Breaking:** Fundamentaly change overall `Cqrs` API making it no-throw guarantee.
 - **Breaking:** Make `Cqrs.get`, `Cqrs.run` and `Cqrs.perform` return result data in form of `QueryResult`, `CommandResult` and `OperationResult` respectively.
 - Add `logger` parameter (of type `Logger` from `logging` package) to `Cqrs` default constructor. If provided, the `logger` will be used as a debug logging interface in execution of CQRS methods.
