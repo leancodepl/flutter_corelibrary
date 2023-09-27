@@ -20,11 +20,11 @@ void main() async {
   registerFallbackValue(MockQuery());
   when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
     (_) async {
-      return VersionSupportDTO(
+      return QuerySuccess(VersionSupportDTO(
         currentlySupportedVersion: '1.0.0',
         minimumRequiredVersion: '1.2.0',
         result: VersionSupportResultDTO.updateSuggested,
-      );
+      ));
     },
   );
 

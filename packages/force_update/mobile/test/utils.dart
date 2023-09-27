@@ -14,7 +14,7 @@ const _suggestUpdateDialogKey = Key('SuggestUpdateKey');
 
 void registerVersionSupportAnswer(Cqrs cqrs, VersionSupportDTO dto) {
   when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
-    (_) async => dto,
+    (_) async => QuerySuccess(dto),
   );
 }
 

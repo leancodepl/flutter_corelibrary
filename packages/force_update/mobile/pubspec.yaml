@@ -10,11 +10,11 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
-  cqrs: ^9.0.0
+  cqrs: ^10.0.1
   flutter:
     sdk: flutter
   in_app_update: ^4.1.4
-  leancode_contracts: ^0.6.0
+  leancode_contracts: ^0.8.0
   logging: ^1.2.0 
   package_info_plus: ^4.0.2
   shared_preferences: ^2.2.0
