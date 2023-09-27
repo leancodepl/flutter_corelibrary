@@ -1,3 +1,9 @@
+# 10.0.1
+
+- **Breaking:** Rename `forbiddenAccess` to `authorization` in error enums.
+- Update error enums docs.
+- Fix `CqrsMiddleware` not being exported from the package.
+
 # 10.0.0
 
 - **Breaking:** Fundamentaly change overall `Cqrs` API making it no-throw guarantee.
