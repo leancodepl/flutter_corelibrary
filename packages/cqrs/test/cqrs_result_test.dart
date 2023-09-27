@@ -55,7 +55,7 @@ void main() {
         expect(result.isSuccess, false);
         expect(result.isFailure, true);
         expect(result.isInvalid, true);
-        expect(result.validationErrors, const [error1, error1]);
+        expect(result.validationErrors, const [error1, error2]);
         expect(result.error, CommandError.validation);
       });
 
