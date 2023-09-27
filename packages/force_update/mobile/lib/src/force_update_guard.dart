@@ -106,28 +106,28 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   Future<void> _updateVersionsInfo() async {
     _logger.info('Looking for updates...');
 
-    try {
-      final platform = switch (defaultTargetPlatform) {
-        TargetPlatform.android => PlatformDTO.android,
-        TargetPlatform.iOS => PlatformDTO.ios,
-        _ => throw StateError('Force update only works for Android & iOS'),
-      };
+    final platform = switch (defaultTargetPlatform) {
+      TargetPlatform.android => PlatformDTO.android,
+      TargetPlatform.iOS => PlatformDTO.ios,
+      _ => throw StateError('Force update only works for Android & iOS'),
+    };
 
-      final response = await widget.cqrs.get(
-        VersionSupport(
-          platform: platform,
-          version: _packageInfo.version,
-        ),
-      );
+    final response = await widget.cqrs.get(
+      VersionSupport(
+        platform: platform,
+        version: _packageInfo.version,
+      ),
+    );
 
+    if (response case QuerySuccess(:final data)) {
       await _storage.writeResult(
         ForceUpdateResult(
           versionAtTimeOfRequest: Version.parse(_packageInfo.version),
-          result: response.result,
+          result: data.result,
         ),
       );
-    } catch (e, st) {
-      _logger.info('Failed to fetch updates info', e, st);
+    } else {
+      _logger.info('Failed to fetch updates info');
     }
   }
 
