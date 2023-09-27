@@ -224,7 +224,7 @@ void main() {
       });
 
       test(
-          'returns QueryFailure(QueryError.forbiddenAccess) when response'
+          'returns QueryFailure(QueryError.authorization) when response'
           ' code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -232,12 +232,12 @@ void main() {
 
         expect(
           result,
-          const QueryFailure<bool?>(QueryError.forbiddenAccess),
+          const QueryFailure<bool?>(QueryError.authorization),
         );
 
         verify(
           () => logger.severe(
-            'Query ExampleQuery failed with forbidden access error.',
+            'Query ExampleQuery failed with authorization error.',
             any(),
             any(),
           ),
@@ -450,7 +450,7 @@ void main() {
       });
 
       test(
-          'returns CommandFailure(CommandError.forbiddenAccess) when'
+          'returns CommandFailure(CommandError.authorization) when'
           ' response code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -458,12 +458,12 @@ void main() {
 
         expect(
           result,
-          const CommandFailure(CommandError.forbiddenAccess),
+          const CommandFailure(CommandError.authorization),
         );
 
         verify(
           () => logger.severe(
-            'Command ExampleCommand failed with forbidden access error.',
+            'Command ExampleCommand failed with authorization error.',
             any(),
             any(),
           ),
@@ -644,7 +644,7 @@ void main() {
       });
 
       test(
-          'returns OperationFailure(OperationError.forbiddenAccess) when response'
+          'returns OperationFailure(OperationError.authorization) when response'
           ' code is 403 and logs result', () async {
         mockClientPost(client, Response('', 403));
 
@@ -653,13 +653,13 @@ void main() {
         expect(
           result,
           const OperationFailure<bool?>(
-            OperationError.forbiddenAccess,
+            OperationError.authorization,
           ),
         );
 
         verify(
           () => logger.severe(
-            'Operation ExampleOperation failed with forbidden access error.',
+            'Operation ExampleOperation failed with authorization error.',
             any(),
             any(),
           ),

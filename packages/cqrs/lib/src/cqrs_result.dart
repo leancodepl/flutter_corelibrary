@@ -54,7 +54,7 @@ final class QueryFailure<T> extends QueryResult<T> {
   List<Object?> get props => [error];
 }
 
-/// Generic result for CQRS command result. Can be either [CommandSuccess]
+/// Result class for CQRS command result. Can be either [CommandSuccess]
 /// or [CommandFailure].
 sealed class CommandResult extends Equatable {
   /// Creates a [CommandResult] class.
@@ -74,7 +74,7 @@ sealed class CommandResult extends Equatable {
       };
 }
 
-/// Generic class which represents a result of succesful command execution.
+/// Class which represents a result of succesful command execution.
 final class CommandSuccess extends CommandResult {
   /// Creates a [CommandSuccess] class.
   const CommandSuccess();
@@ -83,7 +83,7 @@ final class CommandSuccess extends CommandResult {
   List<Object?> get props => [];
 }
 
-/// Generic class which represents a result of unsuccesful command execution.
+/// Class which represents a result of unsuccesful command execution.
 final class CommandFailure extends CommandResult {
   /// Creates a [CommandFailure] class.
   const CommandFailure(

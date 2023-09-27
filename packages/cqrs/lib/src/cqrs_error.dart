@@ -17,11 +17,11 @@ enum QueryError {
   /// Represents a network/socket error.
   network,
 
-  /// Represents a HTTP 401 authentication error.
+  /// Represents an authentication error.
   authentication,
 
-  /// Represents a HTTP 403 forbidden access error.
-  forbiddenAccess,
+  /// Represents an authorization error.
+  authorization,
 
   /// Represents a generic error which covers all remaining errors.
   unknown,
@@ -32,13 +32,13 @@ enum CommandError {
   /// Represents a network/socket error.
   network,
 
-  /// Represents a HTTP 401 authentication error.
+  /// Represents an authentication error.
   authentication,
 
-  /// Represents a HTTP 403 forbidden access error.
-  forbiddenAccess,
+  /// Represents an authorization error.
+  authorization,
 
-  /// Represents a HTTP 422 validation error.
+  /// Represents a validation error.
   validation,
 
   /// Represents a generic error which covers all remaining errors.
@@ -50,11 +50,11 @@ enum OperationError {
   /// Represents a network/socket error.
   network,
 
-  /// Represents a HTTP 401 authentication error.
+  /// Represents an authentication error.
   authentication,
 
-  /// Represents a HTTP 403 forbidden access error.
-  forbiddenAccess,
+  /// Represents an authorization error.
+  authorization,
 
   /// Represents a generic error which covers all remaining errors.
   unknown,

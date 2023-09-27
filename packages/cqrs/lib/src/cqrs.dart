@@ -31,7 +31,7 @@ enum _ResultType {
   jsonError,
   networkError,
   authenticationError,
-  forbiddenAccessError,
+  authorizationError,
   validationError,
   unknownError;
 
@@ -40,7 +40,7 @@ enum _ResultType {
         jsonError => 'failed while decoding response body JSON',
         networkError => 'failed with network error',
         authenticationError => 'failed with authentication error',
-        forbiddenAccessError => 'failed with forbidden access error',
+        authorizationError => 'failed with authorization error',
         validationError => 'failed with validation errors',
         unknownError => 'failed unexpectedly',
       };
@@ -190,8 +190,8 @@ class Cqrs {
         return QueryFailure<T>(QueryError.authentication);
       }
       if (response.statusCode == 403) {
-        _log(query, _ResultType.forbiddenAccessError);
-        return QueryFailure<T>(QueryError.forbiddenAccess);
+        _log(query, _ResultType.authorizationError);
+        return QueryFailure<T>(QueryError.authorization);
       }
     } on SocketException catch (e, s) {
       _log(query, _ResultType.networkError, e, s);
@@ -241,8 +241,8 @@ class Cqrs {
         return const CommandFailure(CommandError.authentication);
       }
       if (response.statusCode == 403) {
-        _log(command, _ResultType.forbiddenAccessError);
-        return const CommandFailure(CommandError.forbiddenAccess);
+        _log(command, _ResultType.authorizationError);
+        return const CommandFailure(CommandError.authorization);
       }
     } on SocketException catch (e, s) {
       _log(command, _ResultType.networkError, e, s);
@@ -281,8 +281,8 @@ class Cqrs {
         return OperationFailure<T>(OperationError.authentication);
       }
       if (response.statusCode == 403) {
-        _log(operation, _ResultType.forbiddenAccessError);
-        return OperationFailure<T>(OperationError.forbiddenAccess);
+        _log(operation, _ResultType.authorizationError);
+        return OperationFailure<T>(OperationError.authorization);
       }
     } on SocketException catch (e, s) {
       _log(operation, _ResultType.networkError, e, s);
@@ -330,7 +330,7 @@ class Cqrs {
       _ResultType.jsonError ||
       _ResultType.networkError ||
       _ResultType.authenticationError ||
-      _ResultType.forbiddenAccessError ||
+      _ResultType.authorizationError ||
       _ResultType.unknownError =>
         logger.severe,
     };
