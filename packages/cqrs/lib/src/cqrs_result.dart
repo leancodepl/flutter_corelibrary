@@ -54,7 +54,7 @@ final class QueryFailure<T> extends QueryResult<T> {
   List<Object?> get props => [error];
 }
 
-/// Generic result for CQRS command result. Can be either [CommandSuccess]
+/// Result class for CQRS command result. Can be either [CommandSuccess]
 /// or [CommandFailure].
 sealed class CommandResult extends Equatable {
   /// Creates a [CommandResult] class.
@@ -74,7 +74,7 @@ sealed class CommandResult extends Equatable {
       };
 }
 
-/// Generic class which represents a result of succesful command execution.
+/// Class which represents a result of succesful command execution.
 final class CommandSuccess extends CommandResult {
   /// Creates a [CommandSuccess] class.
   const CommandSuccess();
@@ -83,7 +83,7 @@ final class CommandSuccess extends CommandResult {
   List<Object?> get props => [];
 }
 
-/// Generic class which represents a result of unsuccesful command execution.
+/// Class which represents a result of unsuccesful command execution.
 final class CommandFailure extends CommandResult {
   /// Creates a [CommandFailure] class.
   const CommandFailure(
@@ -97,6 +97,16 @@ final class CommandFailure extends CommandResult {
   /// A list of [ValidationError] errors returned from the backed after
   /// command execution.
   final List<ValidationError> validationErrors;
+
+  /// Checks whether this [CommandFailure] contains a provided error `code` in
+  /// its validation errors.
+  bool hasError(int code) =>
+      validationErrors.any((error) => error.code == code);
+
+  /// Checks whether this [CommandFailure] contains a provided error `code` in
+  /// its validation errors related to the `propertyName`.
+  bool hasErrorForProperty(int code, String propertyName) => validationErrors
+      .any((error) => error.code == code && error.propertyName == propertyName);
 
   @override
   List<Object?> get props => [error, validationErrors];

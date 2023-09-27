@@ -41,49 +41,6 @@ void main() {
       });
     });
 
-    group('hasError returns correct values', () {
-      test('when there are some errors present', () {
-        const result = CommandResponse([error1, error2]);
-
-        expect(result.hasError(1), true);
-        expect(result.hasError(2), true);
-        expect(result.hasError(3), false);
-      });
-
-      test('when there are no errors present', () {
-        const result = CommandResponse([]);
-
-        expect(result.hasError(1), false);
-        expect(result.hasError(2), false);
-        expect(result.hasError(3), false);
-      });
-    });
-
-    group('hasErrorForProperty returns correct values', () {
-      test('when there are some errors present', () {
-        const result = CommandResponse([error1, error2]);
-
-        expect(result.hasErrorForProperty(1, 'Property1'), true);
-        expect(result.hasErrorForProperty(2, 'Property2'), true);
-      });
-
-      test('when there are errors but for different properties', () {
-        const result = CommandResponse([error1, error2]);
-
-        expect(result.hasErrorForProperty(1, 'Property2'), false);
-        expect(result.hasErrorForProperty(2, 'Property1'), false);
-      });
-
-      test('when there are no errors present', () {
-        const result = CommandResponse([]);
-
-        expect(result.hasErrorForProperty(1, 'Property1'), false);
-        expect(result.hasErrorForProperty(2, 'Property1'), false);
-        expect(result.hasErrorForProperty(2, 'Property1'), false);
-        expect(result.hasErrorForProperty(2, 'Property2'), false);
-      });
-    });
-
     group('is correctly deserialized from JSON', () {
       test('with some validation errors', () {
         final result = CommandResponse.fromJson(<String, dynamic>{

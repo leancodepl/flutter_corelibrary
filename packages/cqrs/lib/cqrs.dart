@@ -66,6 +66,7 @@ library;
 
 export 'src/cqrs.dart';
 export 'src/cqrs_error.dart';
+export 'src/cqrs_middleware.dart';
 export 'src/cqrs_result.dart';
 export 'src/transport_types.dart';
 export 'src/validation_error.dart';

@@ -1,5 +1,4 @@
 import 'package:cqrs/cqrs.dart';
-import 'package:cqrs/src/cqrs_middleware.dart';
 import 'package:test/test.dart';
 
 void main() {
