@@ -8,7 +8,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: cqrs"
@@ -21,7 +21,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: debug_page"
@@ -33,7 +33,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: debug_page"
@@ -46,7 +46,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: enhanced_gradients"
@@ -58,7 +58,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: enhanced_gradients"
@@ -71,7 +71,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: force_update"
@@ -83,7 +83,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: force_update"
@@ -96,7 +96,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: leancode_analytics"
@@ -109,7 +109,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: leancode_flutter_svg_adaptive_loader"
@@ -121,7 +121,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: leancode_flutter_svg_adaptive_loader"
@@ -133,7 +133,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: leancode_flutter_svg_adaptive_loader"
@@ -146,7 +146,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: leancode_hooks"
@@ -159,7 +159,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: leancode_lint"
@@ -171,7 +171,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: leancode_lint"
@@ -184,7 +184,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: login_client"
@@ -197,7 +197,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: login_client_flutter"
@@ -210,7 +210,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    widen_version_constraints: true
+    versioning-strategy: widen
     labels:
       - "Dependencies update"
       - "p: override_api_endpoint"
