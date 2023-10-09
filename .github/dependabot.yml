@@ -27,7 +27,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    versioning-strategy: widen
+    versioning-strategy: increase
       
   - package-ecosystem: "pub"
     directory: "/packages/enhanced_gradients/"
@@ -46,7 +46,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    versioning-strategy: widen
+    versioning-strategy: increase
 
   - package-ecosystem: "pub"
     directory: "/packages/force_update/mobile"
@@ -65,7 +65,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    versioning-strategy: widen
+    versioning-strategy: increase
 
   - package-ecosystem: "pub"
     directory: "/packages/leancode_analytics/"
@@ -94,7 +94,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    versioning-strategy: widen
+    versioning-strategy: increase
   - package-ecosystem: "pub"
     directory: "/packages/leancode_flutter_svg_adaptive_loader/leancode_flutter_svg_adaptive_loader_test"
     groups:
@@ -103,7 +103,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    versioning-strategy: widen
+    versioning-strategy: increase
 
   - package-ecosystem: "pub"
     directory: "/packages/leancode_hooks/"
@@ -132,7 +132,7 @@ updates:
           - "*"
     schedule:
       interval: "daily"
-    versioning-strategy: widen
+    versioning-strategy: increase
 
   - package-ecosystem: "pub"
     directory: "/packages/login_client/"
