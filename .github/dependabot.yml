@@ -1,0 +1,216 @@
+version: 2
+updates:
+  - package-ecosystem: "pub"
+    directory: "/packages/cqrs/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: cqrs"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/debug_page/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: debug_page"
+  - package-ecosystem: "pub"
+    directory: "/packages/debug_page/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: debug_page"
+      
+  - package-ecosystem: "pub"
+    directory: "/packages/enhanced_gradients/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: enhanced_gradients"
+  - package-ecosystem: "pub"
+    directory: "/packages/enhanced_gradients/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: enhanced_gradients"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/force_update/mobile"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: force_update"
+  - package-ecosystem: "pub"
+    directory: "/packages/force_update/mobile/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: force_update"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_analytics/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: leancode_analytics"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_flutter_svg_adaptive_loader/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: leancode_flutter_svg_adaptive_loader"
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_flutter_svg_adaptive_loader/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: leancode_flutter_svg_adaptive_loader"
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_flutter_svg_adaptive_loader/leancode_flutter_svg_adaptive_loader_test"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: leancode_flutter_svg_adaptive_loader"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_hooks/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: leancode_hooks"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_lint/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: leancode_lint"
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_lint/test/lints_test_app"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: leancode_lint"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/login_client/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: login_client"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/login_client_flutter/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: login_client_flutter"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/override_api_endpoint/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    widen_version_constraints: true
+    labels:
+      - "Dependencies update"
+      - "p: override_api_endpoint"
