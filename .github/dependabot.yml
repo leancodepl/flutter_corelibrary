@@ -9,9 +9,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: cqrs"
 
   - package-ecosystem: "pub"
     directory: "/packages/debug_page/"
@@ -22,9 +19,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: debug_page"
   - package-ecosystem: "pub"
     directory: "/packages/debug_page/example"
     groups:
@@ -34,9 +28,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: debug_page"
       
   - package-ecosystem: "pub"
     directory: "/packages/enhanced_gradients/"
@@ -47,9 +38,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: enhanced_gradients"
   - package-ecosystem: "pub"
     directory: "/packages/enhanced_gradients/example"
     groups:
@@ -59,9 +47,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: enhanced_gradients"
 
   - package-ecosystem: "pub"
     directory: "/packages/force_update/mobile"
@@ -72,9 +57,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: force_update"
   - package-ecosystem: "pub"
     directory: "/packages/force_update/mobile/example"
     groups:
@@ -84,9 +66,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: force_update"
 
   - package-ecosystem: "pub"
     directory: "/packages/leancode_analytics/"
@@ -97,9 +76,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: leancode_analytics"
 
   - package-ecosystem: "pub"
     directory: "/packages/leancode_flutter_svg_adaptive_loader/"
@@ -110,9 +86,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: leancode_flutter_svg_adaptive_loader"
   - package-ecosystem: "pub"
     directory: "/packages/leancode_flutter_svg_adaptive_loader/example"
     groups:
@@ -122,9 +95,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: leancode_flutter_svg_adaptive_loader"
   - package-ecosystem: "pub"
     directory: "/packages/leancode_flutter_svg_adaptive_loader/leancode_flutter_svg_adaptive_loader_test"
     groups:
@@ -134,9 +104,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: leancode_flutter_svg_adaptive_loader"
 
   - package-ecosystem: "pub"
     directory: "/packages/leancode_hooks/"
@@ -147,9 +114,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: leancode_hooks"
 
   - package-ecosystem: "pub"
     directory: "/packages/leancode_lint/"
@@ -160,9 +124,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: leancode_lint"
   - package-ecosystem: "pub"
     directory: "/packages/leancode_lint/test/lints_test_app"
     groups:
@@ -172,9 +133,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: leancode_lint"
 
   - package-ecosystem: "pub"
     directory: "/packages/login_client/"
@@ -185,9 +143,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: login_client"
 
   - package-ecosystem: "pub"
     directory: "/packages/login_client_flutter/"
@@ -198,9 +153,6 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: login_client_flutter"
 
   - package-ecosystem: "pub"
     directory: "/packages/override_api_endpoint/"
@@ -211,6 +163,3 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: widen
-    labels:
-      - "Dependencies update"
-      - "p: override_api_endpoint"
