@@ -1,0 +1,165 @@
+version: 2
+updates:
+  - package-ecosystem: "pub"
+    directory: "/packages/cqrs/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/debug_page/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+  - package-ecosystem: "pub"
+    directory: "/packages/debug_page/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+      
+  - package-ecosystem: "pub"
+    directory: "/packages/enhanced_gradients/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+  - package-ecosystem: "pub"
+    directory: "/packages/enhanced_gradients/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/force_update/mobile"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+  - package-ecosystem: "pub"
+    directory: "/packages/force_update/mobile/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_analytics/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_flutter_svg_adaptive_loader/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_flutter_svg_adaptive_loader/example"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_flutter_svg_adaptive_loader/leancode_flutter_svg_adaptive_loader_test"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_hooks/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_lint/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+  - package-ecosystem: "pub"
+    directory: "/packages/leancode_lint/test/lints_test_app"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/login_client/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/login_client_flutter/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/override_api_endpoint/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+    versioning-strategy: widen
