@@ -35,15 +35,12 @@ class DebugPageOverlay extends StatelessWidget {
                     chatIconWidget: _controller.showEntryButton
                         ? FloatingActionButton(
                             backgroundColor: Colors.amber.shade700,
-                            splashColor: Colors.amber.shade400,
-                            hoverColor: Colors.amber.shade800,
+                            splashColor: Colors.amber.shade900,
                             onPressed: () => _controller.visible.value = true,
-                            child: const Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.list_alt_rounded,
-                                color: Colors.black,
-                              ),
+                            child: const Icon(
+                              Icons.bug_report_outlined,
+                              size: 36,
+                              color: Colors.black,
                             ),
                           )
                         : const SizedBox(),
