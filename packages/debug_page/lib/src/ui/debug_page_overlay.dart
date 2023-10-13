@@ -1,5 +1,6 @@
 import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
+import 'package:floating_chat_button/floating_chat_button.dart';
 import 'package:flutter/material.dart';
 
 class DebugPageOverlay extends StatelessWidget {
@@ -24,17 +25,31 @@ class DebugPageOverlay extends StatelessWidget {
         child,
         if (_controller.showEntryButton)
           SafeArea(
-            child: Align(
-              alignment: Alignment.topRight,
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onDoubleTap: () => _controller.visible.value = true,
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  color: Colors.blue.withOpacity(0.2),
+            child: Overlay(
+              clipBehavior: Clip.none,
+              initialEntries: [
+                OverlayEntry(
+                  builder: (context) => FloatingChatButton(
+                    onTap: (_) => _controller.visible.value = true,
+                    shouldPutWidgetInCircle: false,
+                    chatIconWidget: _controller.showEntryButton
+                        ? FloatingActionButton(
+                            backgroundColor: Colors.amber.shade700,
+                            splashColor: Colors.amber.shade400,
+                            hoverColor: Colors.amber.shade800,
+                            onPressed: () => _controller.visible.value = true,
+                            child: const Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Icon(
+                                Icons.list_alt_rounded,
+                                color: Colors.black,
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ValueListenableBuilder(
@@ -48,8 +63,10 @@ class DebugPageOverlay extends StatelessWidget {
           },
           child: MaterialApp(
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.deepPurple,
+              ),
             ),
             home: LogsInspector(
               controller: _controller,
