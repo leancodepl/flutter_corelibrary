@@ -49,7 +49,7 @@ updates:
     versioning-strategy: increase
 
   - package-ecosystem: "pub"
-    directory: "/packages/force_update"
+    directory: "/packages/force_update/mobile"
     groups:
       all_dependencies:
         patterns:
@@ -58,7 +58,7 @@ updates:
       interval: "daily"
     versioning-strategy: widen
   - package-ecosystem: "pub"
-    directory: "/packages/force_update/example"
+    directory: "/packages/force_update/mobile/example"
     groups:
       all_dependencies:
         patterns:
