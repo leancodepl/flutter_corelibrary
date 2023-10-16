@@ -8,8 +8,9 @@ class LoggerLogsSummarizer extends LogsSummarizer<LogRecord> {
     final buffer = StringBuffer();
 
     for (final logRecord in logs) {
-      buffer.writeln(logRecord.format());
-      buffer.writeln(LogsSummarizer.recordsDivider);
+      buffer
+        ..writeln(logRecord.format())
+        ..writeln(LogsSummarizer.recordsDivider);
     }
 
     return buffer.toString();

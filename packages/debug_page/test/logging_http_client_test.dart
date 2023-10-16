@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,7 +55,7 @@ void main() {
         () async {
           await loggingHttpClient.get(homeUrl);
 
-          expectLater(
+          await expectLater(
             loggingHttpClient.logStream,
             emits(const TypeMatcher<List<RequestLogRecord>>()),
           );
@@ -65,7 +67,7 @@ void main() {
         () async {
           final response = await loggingHttpClient.send(request);
 
-          expect(response.stream, isA<Stream>());
+          expect(response.stream, isA<Stream<dynamic>>());
           expect(response.statusCode, statusCode);
           expect(response.contentLength, contentLength);
           expect(response.request, request);

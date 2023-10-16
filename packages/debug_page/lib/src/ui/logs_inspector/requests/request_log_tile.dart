@@ -55,7 +55,7 @@ class RequestLogTile extends StatelessWidget {
                 style: DebugPageTypography.small,
               ),
             ],
-          )
+          ),
         ],
       ),
     );

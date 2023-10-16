@@ -27,7 +27,7 @@ class LoggerTabFiltersMenu extends StatefulWidget {
 
 class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
   Level? logLevel;
-  var searchType = LogSearchType.all;
+  LogSearchType searchType = LogSearchType.all;
   String searchPhrase = '';
 
   @override

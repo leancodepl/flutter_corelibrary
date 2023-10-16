@@ -27,7 +27,7 @@ class RequestDetailsScreen extends StatelessWidget {
       const RequestSharingConfiguration(includeResponse: true),
     );
 
-    Share.share(summary);
+    await Share.share(summary);
   }
 
   @override

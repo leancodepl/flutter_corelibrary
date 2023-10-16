@@ -36,7 +36,7 @@ void main() {
     );
 
     test('logs logger logs', () async {
-      expectLater(
+      await expectLater(
         controller.loggerLogStream,
         emits(const TypeMatcher<List<LogRecord>>()),
       );
@@ -47,7 +47,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.FINE),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       // Should include logs at levels: fine, finer, finest
       expect(controller.loggerLogs.length, 3);
     });
@@ -57,7 +57,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.SEVERE),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 2);
     });
 
@@ -69,7 +69,7 @@ void main() {
         ),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 2);
     });
 
@@ -82,7 +82,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.SEVERE),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 1);
     });
 
@@ -95,7 +95,7 @@ void main() {
         const LoggerLevelFilter(desiredLevel: Level.SEVERE),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 1);
     });
   });

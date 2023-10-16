@@ -29,7 +29,7 @@ class RequestsTabFiltersMenu extends StatefulWidget {
 
 class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
   RequestStatus? requestStatus;
-  var searchType = RequestSearchType.url;
+  RequestSearchType searchType = RequestSearchType.url;
   String searchPhrase = '';
 
   @override
