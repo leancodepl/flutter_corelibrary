@@ -13,8 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_secure_storage: '>=4.2.0 <6.0.0'
+  flutter_secure_storage: ">=4.2.0 <9.0.0"
   login_client: ^2.0.1
 
 dev_dependencies:
-  leancode_lint: '>=1.0.2 <1.1.0'
+  leancode_lint: ">=1.0.2 <4.0.0"
