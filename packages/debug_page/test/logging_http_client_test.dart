@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,6 +42,9 @@ void main() {
             statusCode,
             contentLength: contentLength,
             request: request,
+            headers: headers,
+            isRedirect: isRedirect,
+            persistentConnection: persistentConnection,
             reasonPhrase: reasonPhrase,
           ),
         );
