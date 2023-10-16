@@ -5,3 +5,4 @@ packages/override_api_endpoint @lukaszgarstecki @Xezolpl
 packages/leancode_lint @RobertOdrowaz @shilangyu
 packages/leancode_hooks @bartekpacia
 packages/enhanced_gradients @kotertom
+packages/leancode_flutter_svg_adaptive_loader @Xezolpl
