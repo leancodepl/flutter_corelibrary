@@ -40,7 +40,7 @@ class LogsInspectorShareButton extends StatelessWidget {
           throw StateError('Unknown tab');
         }
 
-        Share.share(sharedData);
+        await Share.share(sharedData);
       },
     );
   }

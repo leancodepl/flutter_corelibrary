@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:debug_page/debug_page.dart';
 import 'package:debug_page/src/core/filters/request_filters.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
-import 'package:debug_page/debug_page.dart';
 
 import '../util/mock_http_client.dart';
 
@@ -30,8 +30,11 @@ void main() {
 
         final mockClient = MockHttpClient();
 
-        void registerResponseForUri(Uri uri, int statusCode,
-            [String? response]) {
+        void registerResponseForUri(
+          Uri uri,
+          int statusCode, [
+          String? response,
+        ]) {
           when(
             () => mockClient.send(
               any(that: predicate<http.BaseRequest>((r) => r.url == uri)),
@@ -81,10 +84,10 @@ void main() {
       ]);
 
       controller.requestsFilters.value = [
-        const RequestStatusFilter(desiredStatus: RequestStatus.success)
+        const RequestStatusFilter(desiredStatus: RequestStatus.success),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       expect(controller.requestsLogs.length, 1);
     });
 
@@ -102,7 +105,7 @@ void main() {
         ),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       expect(controller.requestsLogs.length, 1);
     });
 
@@ -122,7 +125,7 @@ void main() {
         ),
       ];
 
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
       expect(controller.requestsLogs.length, 1);
     });
   });

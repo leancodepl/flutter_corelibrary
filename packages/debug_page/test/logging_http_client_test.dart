@@ -40,9 +40,6 @@ void main() {
             statusCode,
             contentLength: contentLength,
             request: request,
-            headers: headers,
-            isRedirect: isRedirect,
-            persistentConnection: persistentConnection,
             reasonPhrase: reasonPhrase,
           ),
         );
@@ -53,7 +50,7 @@ void main() {
         () async {
           await loggingHttpClient.get(homeUrl);
 
-          expectLater(
+          await expectLater(
             loggingHttpClient.logStream,
             emits(const TypeMatcher<List<RequestLogRecord>>()),
           );
@@ -65,7 +62,7 @@ void main() {
         () async {
           final response = await loggingHttpClient.send(request);
 
-          expect(response.stream, isA<Stream>());
+          expect(response.stream, isA<Stream<dynamic>>());
           expect(response.statusCode, statusCode);
           expect(response.contentLength, contentLength);
           expect(response.request, request);

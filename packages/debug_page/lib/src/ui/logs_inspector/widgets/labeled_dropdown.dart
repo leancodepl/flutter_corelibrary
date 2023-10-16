@@ -54,7 +54,7 @@ class _LabeledDropdownState<T> extends State<LabeledDropdown<T>> {
                 )
                 .toList(),
           ),
-        )
+        ),
       ],
     );
   }

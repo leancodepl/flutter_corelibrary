@@ -47,7 +47,7 @@ class _LogsInspectorState extends State<LogsInspector> {
             IconButton(
               icon: const Icon(Icons.tune),
               onPressed: () => setState(() => showFilters = !showFilters),
-            )
+            ),
           ],
           bottom: TabBar(
             labelPadding: const EdgeInsets.only(bottom: 8),

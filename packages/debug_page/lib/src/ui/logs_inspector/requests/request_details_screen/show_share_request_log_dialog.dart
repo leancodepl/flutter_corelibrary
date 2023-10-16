@@ -7,7 +7,8 @@ class RequestSharingConfiguration {
 }
 
 Future<RequestSharingConfiguration?> showShareRequestLogDialog(
-    BuildContext context) {
+  BuildContext context,
+) {
   return showDialog<RequestSharingConfiguration>(
     context: context,
     builder: (context) => const _ShareRequestLogDialog(),
@@ -37,7 +38,6 @@ class _ShareRequestLogDialogState extends State<_ShareRequestLogDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CheckboxListTile(
-              tristate: false,
               title: const Text('Include response'),
               value: includeResponse,
               onChanged: (value) => setState(

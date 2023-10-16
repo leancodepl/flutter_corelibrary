@@ -12,8 +12,9 @@ class RequestsLogsSummarizer extends LogsSummarizer<RequestLogRecord> {
     final buffer = StringBuffer();
 
     for (final log in logs) {
-      buffer.writeln(await log.toSummary(configuration));
-      buffer.writeln(LogsSummarizer.recordsDivider);
+      buffer
+        ..writeln(await log.toSummary(configuration))
+        ..writeln(LogsSummarizer.recordsDivider);
     }
 
     return buffer.toString();

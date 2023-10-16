@@ -40,7 +40,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
               map: {
                 'Logger name': logRecord.loggerName,
                 'Level': logRecord.level,
-                'Time': logRecord.time
+                'Time': logRecord.time,
               },
             ),
             const SizedBox(height: 16),
