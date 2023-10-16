@@ -42,6 +42,9 @@ void main() {
             statusCode,
             contentLength: contentLength,
             request: request,
+            headers: headers,
+            isRedirect: isRedirect,
+            persistentConnection: persistentConnection,
             reasonPhrase: reasonPhrase,
           ),
         );
