@@ -3,16 +3,16 @@ name: enhanced_gradients test
 on:
   push:
     branches: [master]
-    tags-ignore: ["enhanced_gradients-v*"]
+    tags-ignore: ['enhanced_gradients-v*']
     paths:
-      - "packages/enhanced_gradients/**"
+      - 'packages/enhanced_gradients/**'
   pull_request:
     branches: [master]
     paths:
-      - "packages/enhanced_gradients/**"
+      - 'packages/enhanced_gradients/**'
   # Run a check daily due to the dependency on `material_color_utilities: any`
   schedule:
-    - cron: "0 17 * * *"
+    - cron: '0 17 * * *'
 
 jobs:
   test:
@@ -23,8 +23,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: "3.10.0"
-          - channel: "stable"
+          - version: '3.13.x'
+          - channel: 'stable'
 
     defaults:
       run:

@@ -1,8 +1,8 @@
-name: enhanced_gradients publish
+name: leancode_flutter_svg_adaptive_loader publish
 
 on:
   push:
-    tags: ['enhanced_gradients-v*']
+    tags: ['leancode_flutter_svg_adaptive_loader-v*']
 
 jobs:
   publish:
@@ -12,11 +12,10 @@ jobs:
 
     permissions:
       id-token: write
-      contents: write
 
     defaults:
       run:
-        working-directory: packages/enhanced_gradients
+        working-directory: packages/leancode_flutter_svg_adaptive_loader
 
     steps:
       - name: Checkout
@@ -36,4 +35,4 @@ jobs:
       - name: Publish and release
         uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
         with:
-          path: packages/enhanced_gradients
+          path: packages/leancode_flutter_svg_adaptive_loader

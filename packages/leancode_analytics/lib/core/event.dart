@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Basic [AnalyticsEvent] - you can send directly this event with
 /// predefined parameters or extend this class to create more specific events
 class AnalyticsEvent {

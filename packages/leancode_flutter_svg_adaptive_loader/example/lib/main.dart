@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
                   child: _SvgPictureWithTitle(
                     text: 'XML-based foo',
                     svgPicture: SvgPicture(
-                      LeancodeFlutterSvgAdaptiveLoader('assets/foo.svg'),
+                      FlutterSvgAdaptiveLoader('assets/foo.svg'),
                     ),
                   ),
                 ),
@@ -36,7 +36,7 @@ class MainApp extends StatelessWidget {
                   child: _SvgPictureWithTitle(
                     text: 'Binary compiled foo',
                     svgPicture: SvgPicture(
-                      LeancodeFlutterSvgAdaptiveLoader(
+                      FlutterSvgAdaptiveLoader(
                         'assets/foo_compiled.svg',
                       ),
                     ),

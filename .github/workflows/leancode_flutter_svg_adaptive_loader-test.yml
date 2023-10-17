@@ -1,15 +1,15 @@
-name: leancode_lint test
+name: leancode_flutter_svg_adaptive_loader test
 
 on:
   push:
     branches: [master]
-    tags-ignore: ['leancode_lint-v*']
+    tags-ignore: ['leancode_flutter_svg_adaptive_loader-v*']
     paths:
-      - 'packages/leancode_lint/**'
+      - 'packages/leancode_flutter_svg_adaptive_loader/**'
   pull_request:
     branches: [master]
     paths:
-      - 'packages/leancode_lint/**'
+      - 'packages/leancode_flutter_svg_adaptive_loader/**'
 
 jobs:
   test:
@@ -24,7 +24,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: packages/leancode_lint
+        working-directory: packages/leancode_flutter_svg_adaptive_loader
 
     steps:
       - name: Checkout
@@ -46,12 +46,12 @@ jobs:
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
-      - name: Run lint rules tests
-        run: |
-          cd test/lints_test_app/
-          flutter pub get
-          dart run custom_lint
+      - name: Download pub dependencies
+        run: flutter pub get
 
-      - uses: codecov/codecov-action@v1
-        with:
-          flags: leancode_lint
+      - name: Run analyzer
+        run: flutter analyze
+
+      - name: Dry run pub publish
+        # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
+        run: flutter pub publish --dry-run || true
