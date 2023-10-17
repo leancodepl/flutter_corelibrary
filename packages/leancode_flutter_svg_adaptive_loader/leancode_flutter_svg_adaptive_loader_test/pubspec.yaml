@@ -16,7 +16,7 @@ dev_dependencies:
     sdk: flutter
   leancode_flutter_svg_adaptive_loader:
     path: ../
-  leancode_lint: ^4.0.0
+  leancode_lint: ^6.0.0
   meta: ^1.9.1
 
 flutter:
