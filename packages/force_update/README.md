@@ -1,7 +1,7 @@
 # force_update
 
 This is an internal Leancode package for quickly implementing Force Update. To use it, just wrap your `MaterialApp` in a `ForceUpdateGuard`
-widget and pass an instance to CQRS.
+widget and pass an instance of CQRS.
 
 # Behavior
 
