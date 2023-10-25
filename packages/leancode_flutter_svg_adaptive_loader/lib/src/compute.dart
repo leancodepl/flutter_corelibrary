@@ -31,10 +31,6 @@ Future<R> _testCompute<Q, R>(
   Q message, {
   String? debugLabel,
 }) {
-  if (foundation.kDebugMode) {
-    final bindingType = foundation.BindingBase.debugBindingType();
-    if (bindingType.toString() == 'AutomatedTestWidgetsFlutterBinding') {}
-  }
   final result = callback(message);
   if (result is Future<R>) {
     return result;
