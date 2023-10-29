@@ -12,6 +12,15 @@ void main() {
   group('Force update', () {
     late Cqrs cqrs;
 
+    Future<void> pumpGuard(WidgetTester tester, int key) {
+      return pumpForceUpdateGuard(
+        cqrs: cqrs,
+        tester: tester,
+        applyResponseImmediately: false,
+        key: ValueKey(key),
+      );
+    }
+
     setUp(() {
       cqrs = MockCqrs();
       registerFallbackValue(MockQuery());
@@ -34,10 +43,15 @@ void main() {
         (tester) async {
       registerUpdateRequired(cqrs);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
+      await pumpGuard(tester, 1);
       expectForceUpdatePage(value: false);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
+      await pumpForceUpdateGuard(
+        cqrs: cqrs,
+        tester: tester,
+        applyResponseImmediately: false,
+        key: const ValueKey(2),
+      );
       expectForceUpdatePage(value: true);
 
       // Unfortunately, this cannot be reset in teardown / teardownAll, but has
@@ -50,10 +64,15 @@ void main() {
         (tester) async {
       registerUpToDate(cqrs);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
+      await pumpForceUpdateGuard(
+        cqrs: cqrs,
+        tester: tester,
+        applyResponseImmediately: false,
+        key: const ValueKey(1),
+      );
       expectForceUpdatePage(value: false);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
+      await pumpGuard(tester, 2);
       expectForceUpdatePage(value: false);
 
       debugDefaultTargetPlatformOverride = null;
@@ -64,17 +83,17 @@ void main() {
         (tester) async {
       registerUpToDate(cqrs);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
+      await pumpGuard(tester, 1);
       expectForceUpdatePage(value: false);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
+      await pumpGuard(tester, 2);
       expectForceUpdatePage(value: false);
 
       registerUpdateRequired(cqrs);
 
       await tester.pump(ForceUpdateGuard.updateCheckingInterval);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(3));
+      await pumpGuard(tester, 3);
       expectForceUpdatePage(value: true);
 
       debugDefaultTargetPlatformOverride = null;
@@ -83,10 +102,15 @@ void main() {
     testWidgets('Suggest update when needed', (tester) async {
       registerUpdateSuggested(cqrs);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
+      await pumpGuard(tester, 1);
       expectSuggestUpdateDialog(value: false);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
+      await pumpForceUpdateGuard(
+        cqrs: cqrs,
+        tester: tester,
+        applyResponseImmediately: false,
+        key: const ValueKey(2),
+      );
       expectSuggestUpdateDialog(value: false);
 
       debugDefaultTargetPlatformOverride = null;
@@ -95,10 +119,10 @@ void main() {
     testWidgets('Do not suggest update when not needed', (tester) async {
       registerUpToDate(cqrs);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(1));
+      await pumpGuard(tester, 1);
       expectSuggestUpdateDialog(value: false);
 
-      await pumpForceUpdateGuard(cqrs, tester, const ValueKey(2));
+      await pumpGuard(tester, 2);
       expectSuggestUpdateDialog(value: false);
 
       debugDefaultTargetPlatformOverride = null;

@@ -45,11 +45,12 @@ void registerUpToDate(Cqrs cqrs) => registerVersionSupportAnswer(
       ),
     );
 
-Future<void> pumpForceUpdateGuard(
-  Cqrs cqrs,
-  WidgetTester tester,
-  Key key,
-) async {
+Future<void> pumpForceUpdateGuard({
+  required Cqrs cqrs,
+  required WidgetTester tester,
+  required Key key,
+  required bool applyResponseImmediately,
+}) async {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   await tester.pumpWidget(
@@ -60,6 +61,7 @@ Future<void> pumpForceUpdateGuard(
           key: key,
           dialogContextKey: scaffoldKey,
           cqrs: cqrs,
+          applyResponseImmediately: false,
           forceUpdateScreen: const Text(
             key: Key('ForceUpdateScreen'),
             'Update required',

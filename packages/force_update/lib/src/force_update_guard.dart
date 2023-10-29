@@ -19,6 +19,7 @@ class ForceUpdateGuard extends StatefulWidget {
     this.useAndroidSystemUI = false,
     this.androidSystemUILoadingIndicator,
     required this.dialogContextKey,
+    this.applyResponseImmediately = true,
     required this.child,
   });
 
@@ -28,6 +29,7 @@ class ForceUpdateGuard extends StatefulWidget {
   final bool useAndroidSystemUI;
   final Widget? androidSystemUILoadingIndicator;
   final GlobalKey dialogContextKey;
+  final bool applyResponseImmediately;
   final Widget child;
 
   static const updateCheckingInterval = Duration(minutes: 5);
@@ -56,16 +58,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     init();
   }
 
-  Future<void> init() async {
-    _packageInfo = await PackageInfo.fromPlatform();
-
-    unawaited(_updateVersionsInfo());
-
-    _checkForEnforcedUpdateTimer = Timer.periodic(
-      ForceUpdateGuard.updateCheckingInterval,
-      (_) => _updateVersionsInfo(),
-    );
-
+  Future<void> _applyMostRecentResult() async {
     final mostRecentForceUpdateResult = await _storage.readMostRecentResult();
     final currentVersion = Version.parse(_packageInfo.version);
 
@@ -100,6 +93,29 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
         context: context,
         builder: (context) => widget.suggestUpdateDialog,
       );
+    }
+  }
+
+  Future<void> _updateAndMaybeApplyVersionsInfo() async {
+    await _updateVersionsInfo();
+
+    if (widget.applyResponseImmediately) {
+      return _applyMostRecentResult();
+    }
+  }
+
+  Future<void> init() async {
+    _packageInfo = await PackageInfo.fromPlatform();
+
+    unawaited(_updateAndMaybeApplyVersionsInfo());
+
+    _checkForEnforcedUpdateTimer = Timer.periodic(
+      ForceUpdateGuard.updateCheckingInterval,
+      (_) => _updateAndMaybeApplyVersionsInfo(),
+    );
+
+    if (!widget.applyResponseImmediately) {
+      await _applyMostRecentResult();
     }
   }
 
