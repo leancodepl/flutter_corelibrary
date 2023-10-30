@@ -1,4 +1,4 @@
-## 1.1.0
+## 1.1.1
 
 - Fix error caused by resolving DefaultAssetBundle
 
