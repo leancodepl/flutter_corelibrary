@@ -10,7 +10,7 @@ class MockCqrs extends Mock implements Cqrs {}
 class MockQuery extends Mock implements Query<VersionSupportDTO> {}
 
 const _forceUpdateScreenKey = Key('ForceUpdateScreen');
-const _suggestUpdateDialogKey = Key('SuggestUpdateKey');
+const _suggestUpdateDialogKey = Key('SuggestUpdateDialog');
 
 void registerVersionSupportAnswer(Cqrs cqrs, VersionSupportDTO dto) {
   when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
@@ -61,13 +61,14 @@ Future<void> pumpForceUpdateGuard({
           key: key,
           dialogContextKey: scaffoldKey,
           cqrs: cqrs,
-          applyResponseImmediately: false,
+          showForceUpdateScreenImmediately: applyResponseImmediately,
+          showSuggestUpdateDialogImmediately: applyResponseImmediately,
           forceUpdateScreen: const Text(
-            key: Key('ForceUpdateScreen'),
+            key: _forceUpdateScreenKey,
             'Update required',
           ),
           suggestUpdateDialog: const Dialog(
-            key: Key('SuggestUpdateDialog'),
+            key: _suggestUpdateDialogKey,
             child: Text('Update suggested'),
           ),
           child: const SizedBox(),

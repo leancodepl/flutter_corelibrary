@@ -12,11 +12,15 @@ void main() {
   group('Force update', () {
     late Cqrs cqrs;
 
-    Future<void> pumpGuard(WidgetTester tester, int key) {
+    Future<void> pumpGuard(
+      WidgetTester tester,
+      int key, {
+      bool applyResponseImmediately = false,
+    }) {
       return pumpForceUpdateGuard(
         cqrs: cqrs,
         tester: tester,
-        applyResponseImmediately: false,
+        applyResponseImmediately: applyResponseImmediately,
         key: ValueKey(key),
       );
     }
@@ -46,12 +50,7 @@ void main() {
       await pumpGuard(tester, 1);
       expectForceUpdatePage(value: false);
 
-      await pumpForceUpdateGuard(
-        cqrs: cqrs,
-        tester: tester,
-        applyResponseImmediately: false,
-        key: const ValueKey(2),
-      );
+      await pumpGuard(tester, 2);
       expectForceUpdatePage(value: true);
 
       // Unfortunately, this cannot be reset in teardown / teardownAll, but has
@@ -60,16 +59,22 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     });
 
+    testWidgets(
+        'show force update screen on first launch if update should be enforced and showForceUpdateScreenImmediately == true',
+        (tester) async {
+      registerUpdateRequired(cqrs);
+
+      await pumpGuard(tester, 1, applyResponseImmediately: true);
+      expectForceUpdatePage(value: true);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
+
     testWidgets('do not show force update screen if not required',
         (tester) async {
       registerUpToDate(cqrs);
 
-      await pumpForceUpdateGuard(
-        cqrs: cqrs,
-        tester: tester,
-        applyResponseImmediately: false,
-        key: const ValueKey(1),
-      );
+      await pumpGuard(tester, 1);
       expectForceUpdatePage(value: false);
 
       await pumpGuard(tester, 2);
@@ -99,19 +104,25 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('Suggest update when needed', (tester) async {
+    testWidgets('Suggest update on second launch when needed', (tester) async {
       registerUpdateSuggested(cqrs);
 
       await pumpGuard(tester, 1);
       expectSuggestUpdateDialog(value: false);
 
-      await pumpForceUpdateGuard(
-        cqrs: cqrs,
-        tester: tester,
-        applyResponseImmediately: false,
-        key: const ValueKey(2),
-      );
-      expectSuggestUpdateDialog(value: false);
+      await pumpGuard(tester, 2);
+      expectSuggestUpdateDialog(value: true);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets(
+        'Suggest update on first launch when needed and showSuggestUpdateDialogImmediately == true',
+        (tester) async {
+      registerUpdateSuggested(cqrs);
+
+      await pumpGuard(tester, 1, applyResponseImmediately: true);
+      expectSuggestUpdateDialog(value: true);
 
       debugDefaultTargetPlatformOverride = null;
     });

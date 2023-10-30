@@ -19,7 +19,8 @@ class ForceUpdateGuard extends StatefulWidget {
     this.useAndroidSystemUI = false,
     this.androidSystemUILoadingIndicator,
     required this.dialogContextKey,
-    this.applyResponseImmediately = true,
+    this.showForceUpdateScreenImmediately = true,
+    this.showSuggestUpdateDialogImmediately = true,
     required this.child,
   });
 
@@ -29,7 +30,8 @@ class ForceUpdateGuard extends StatefulWidget {
   final bool useAndroidSystemUI;
   final Widget? androidSystemUILoadingIndicator;
   final GlobalKey dialogContextKey;
-  final bool applyResponseImmediately;
+  final bool showForceUpdateScreenImmediately;
+  final bool showSuggestUpdateDialogImmediately;
   final Widget child;
 
   static const updateCheckingInterval = Duration(minutes: 5);
@@ -58,7 +60,12 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     init();
   }
 
-  Future<void> _applyMostRecentResult() async {
+  Future<void> _applyMostRecentResult({required bool conditional}) async {
+    final applyResponseIfSuggested =
+        !conditional || widget.showSuggestUpdateDialogImmediately;
+    final applyResponseIfForce =
+        !conditional || widget.showForceUpdateScreenImmediately;
+
     final mostRecentForceUpdateResult = await _storage.readMostRecentResult();
     final currentVersion = Version.parse(_packageInfo.version);
 
@@ -67,11 +74,14 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
       return;
     }
 
-    force.value = mostRecentForceUpdateResult.result ==
-        VersionSupportResultDTO.updateRequired;
+    if (applyResponseIfForce) {
+      force.value = mostRecentForceUpdateResult.result ==
+          VersionSupportResultDTO.updateRequired;
+    }
 
     if (mostRecentForceUpdateResult.result ==
-        VersionSupportResultDTO.updateSuggested) {
+            VersionSupportResultDTO.updateSuggested &&
+        applyResponseIfSuggested) {
       if (widget._actuallyUseAndroidSystemUI) {
         await InAppUpdate.checkForUpdate();
         await InAppUpdate.startFlexibleUpdate();
@@ -98,10 +108,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
 
   Future<void> _updateAndMaybeApplyVersionsInfo() async {
     await _updateVersionsInfo();
-
-    if (widget.applyResponseImmediately) {
-      return _applyMostRecentResult();
-    }
+    return _applyMostRecentResult(conditional: true);
   }
 
   Future<void> init() async {
@@ -114,9 +121,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
       (_) => _updateAndMaybeApplyVersionsInfo(),
     );
 
-    if (!widget.applyResponseImmediately) {
-      await _applyMostRecentResult();
-    }
+    return _applyMostRecentResult(conditional: false);
   }
 
   Future<void> _updateVersionsInfo() async {
