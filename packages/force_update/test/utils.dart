@@ -50,6 +50,7 @@ Future<void> pumpForceUpdateGuard({
   required WidgetTester tester,
   required Key key,
   required bool applyResponseImmediately,
+  ForceUpdateController? controller,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -59,6 +60,11 @@ Future<void> pumpForceUpdateGuard({
           cqrs: cqrs,
           showForceUpdateScreenImmediately: applyResponseImmediately,
           showSuggestUpdateDialogImmediately: applyResponseImmediately,
+          controller: controller ??
+              ForceUpdateController(
+                androidBundleId: '',
+                appleAppId: '',
+              ),
           forceUpdateScreen: const Text(
             key: _forceUpdateScreenKey,
             'Update required',

@@ -11,23 +11,16 @@ import 'utils.dart';
 void main() {
   group('Force update', () {
     late Cqrs cqrs;
-
-    Future<void> pumpGuard(
-      WidgetTester tester,
-      int key, {
-      bool applyResponseImmediately = false,
-    }) {
-      return pumpForceUpdateGuard(
-        cqrs: cqrs,
-        tester: tester,
-        applyResponseImmediately: applyResponseImmediately,
-        key: ValueKey(key),
-      );
-    }
+    late ForceUpdateController controller;
 
     setUp(() {
       cqrs = MockCqrs();
       registerFallbackValue(MockQuery());
+
+      controller = ForceUpdateController(
+        androidBundleId: '',
+        appleAppId: '',
+      );
 
       PackageInfo.setMockInitialValues(
         appName: '',
@@ -41,6 +34,20 @@ void main() {
 
       SharedPreferences.setMockInitialValues({});
     });
+
+    Future<void> pumpGuard(
+      WidgetTester tester,
+      int key, {
+      bool applyResponseImmediately = false,
+    }) {
+      return pumpForceUpdateGuard(
+        cqrs: cqrs,
+        tester: tester,
+        applyResponseImmediately: applyResponseImmediately,
+        controller: controller,
+        key: ValueKey(key),
+      );
+    }
 
     testWidgets(
         'show force update screen on second launch if update should be enforced',
@@ -117,12 +124,20 @@ void main() {
     });
 
     testWidgets(
-        'Suggest update on first launch when needed, showSuggestUpdateDialogImmediately == true',
+        'Suggest update on first launch when needed and showSuggestUpdateDialogImmediately == true, hide dialog properly',
         (tester) async {
       registerUpdateSuggested(cqrs);
 
-      await pumpGuard(tester, 1, applyResponseImmediately: true);
+      await pumpGuard(
+        tester,
+        1,
+        applyResponseImmediately: true,
+      );
       expectSuggestUpdateDialog(value: true);
+
+      controller.hideSuggestDialog();
+      await tester.pump();
+      expectSuggestUpdateDialog(value: false);
 
       debugDefaultTargetPlatformOverride = null;
     });

@@ -1,14 +1,19 @@
-import 'package:flutter/foundation.dart';
-import 'package:url_launcher/url_launcher.dart';
+part of 'force_update_guard.dart';
 
-class ForceUpdate {
-  const ForceUpdate({
+class ForceUpdateController {
+  ForceUpdateController({
     required this.androidBundleId,
     required this.appleAppId,
   });
 
   final String androidBundleId;
   final String appleAppId;
+
+  final _suggest = ValueNotifier(false);
+
+  void hideSuggestDialog() {
+    _suggest.value = false;
+  }
 
   Future<bool> openStore() {
     final url = switch (defaultTargetPlatform) {

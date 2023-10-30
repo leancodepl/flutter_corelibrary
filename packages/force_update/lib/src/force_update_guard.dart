@@ -8,36 +8,10 @@ import 'package:force_update/src/force_update_storage.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
 
-class ForceUpdateGuardController extends InheritedWidget {
-  const ForceUpdateGuardController({
-    super.key,
-    required this.onPop,
-    required super.child,
-  });
-
-  final VoidCallback onPop;
-
-  void hideSuggestDialog() => onPop();
-
-  static ForceUpdateGuardController? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<ForceUpdateGuardController>();
-  }
-
-  static ForceUpdateGuardController of(BuildContext context) {
-    final result = maybeOf(context);
-    assert(result != null, 'No ForceUpdateGuardController found in context');
-
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(covariant ForceUpdateGuardController oldWidget) {
-    return false;
-  }
-}
+part 'package:force_update/src/force_update_controller.dart';
 
 class ForceUpdateGuard extends StatefulWidget {
   const ForceUpdateGuard({
@@ -49,6 +23,7 @@ class ForceUpdateGuard extends StatefulWidget {
     this.androidSystemUILoadingIndicator,
     this.showForceUpdateScreenImmediately = true,
     this.showSuggestUpdateDialogImmediately = true,
+    required this.controller,
     required this.child,
   });
 
@@ -65,6 +40,7 @@ class ForceUpdateGuard extends StatefulWidget {
   /// Set this to false to show suggest update dialog on next app launch instead
   /// of showing it immediately once the version support info is obtained
   final bool showSuggestUpdateDialogImmediately;
+  final ForceUpdateController controller;
   final Widget child;
 
   static const updateCheckingInterval = Duration(minutes: 5);
@@ -82,7 +58,6 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   final ForceUpdateStorage _storage;
   late PackageInfo _packageInfo;
   final force = ValueNotifier<bool?>(null);
-  final suggest = ValueNotifier<bool?>(null);
   late Listenable listenable;
   Timer? _checkForEnforcedUpdateTimer;
 
@@ -123,7 +98,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
         return InAppUpdate.completeFlexibleUpdate();
       }
 
-      suggest.value = true;
+      widget.controller._suggest.value = true;
     }
   }
 
@@ -133,7 +108,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   }
 
   Future<void> init() async {
-    listenable = Listenable.merge([force, suggest]);
+    listenable = Listenable.merge([force, widget.controller._suggest]);
     _packageInfo = await PackageInfo.fromPlatform();
 
     unawaited(_updateAndMaybeApplyVersionsInfo());
@@ -176,40 +151,37 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
 
   @override
   Widget build(BuildContext context) {
-    return ForceUpdateGuardController(
-      onPop: () => suggest.value = false,
-      child: ListenableBuilder(
-        listenable: listenable,
-        child: widget.child,
-        builder: (context, child) {
-          if (force.value != true) {
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                child!,
-                if (suggest.value ?? false) widget.suggestUpdateDialog,
-              ],
-            );
-          }
-
-          if (!widget._actuallyUseAndroidSystemUI) {
-            return widget.forceUpdateScreen;
-          }
-
-          return FutureBuilder(
-            future: InAppUpdate.checkForUpdate(),
-            builder: (context, snapshot) {
-              final data = snapshot.data;
-              if (data?.immediateUpdateAllowed ?? false) {
-                InAppUpdate.performImmediateUpdate();
-              }
-
-              return widget.androidSystemUILoadingIndicator ??
-                  const CircularProgressIndicator();
-            },
+    return ListenableBuilder(
+      listenable: listenable,
+      child: widget.child,
+      builder: (context, child) {
+        if (force.value != true) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              child!,
+              if (widget.controller._suggest.value) widget.suggestUpdateDialog,
+            ],
           );
-        },
-      ),
+        }
+
+        if (!widget._actuallyUseAndroidSystemUI) {
+          return widget.forceUpdateScreen;
+        }
+
+        return FutureBuilder(
+          future: InAppUpdate.checkForUpdate(),
+          builder: (context, snapshot) {
+            final data = snapshot.data;
+            if (data?.immediateUpdateAllowed ?? false) {
+              InAppUpdate.performImmediateUpdate();
+            }
+
+            return widget.androidSystemUILoadingIndicator ??
+                const CircularProgressIndicator();
+          },
+        );
+      },
     );
   }
 

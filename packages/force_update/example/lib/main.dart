@@ -11,7 +11,7 @@ class MockCqrs extends Mock implements Cqrs {}
 class MockQuery extends Mock implements Query<VersionSupportDTO> {}
 
 void main() async {
-  const forceUpdate = ForceUpdate(
+  final forceUpdate = ForceUpdateController(
     androidBundleId: 'com.example.example',
     appleAppId: '1111111111',
   );
@@ -37,20 +37,22 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required ForceUpdate forceUpdate,
+    required ForceUpdateController forceUpdate,
     required Cqrs cqrs,
   })  : _forceUpdate = forceUpdate,
         _cqrs = cqrs;
 
-  final ForceUpdate _forceUpdate;
+  final ForceUpdateController _forceUpdate;
   final Cqrs _cqrs;
 
   @override
   Widget build(BuildContext context) {
     return ForceUpdateGuard(
       cqrs: _cqrs,
-      suggestUpdateDialog: SuggestUpdateDialog(forceUpdate: _forceUpdate),
-      forceUpdateScreen: ForceUpdateScreen(forceUpdate: _forceUpdate),
+      suggestUpdateDialog:
+          SuggestUpdateDialog(forceUpdateController: _forceUpdate),
+      forceUpdateScreen: ForceUpdateScreen(forceUpdateController: _forceUpdate),
+      controller: _forceUpdate,
       child: MaterialApp(
         title: 'Force update demo',
         theme: ThemeData(
