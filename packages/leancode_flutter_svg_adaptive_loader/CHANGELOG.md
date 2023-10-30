@@ -1,6 +1,6 @@
 ## 1.1.1
 
-- Fix error caused by resolving DefaultAssetBundle
+- Fix error caused by resolving `DefaultAssetBundle` from context
 
 ## 1.1.0
 
