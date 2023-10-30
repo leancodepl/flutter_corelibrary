@@ -57,6 +57,8 @@ class FlutterSvgAdaptiveLoader extends BytesLoader {
   /// loop turns. This is meant to to help tests in particular.
   @override
   Future<ByteData> loadBytes(BuildContext? context) {
+    final key = cacheKey(context);
+
     return _prepareMessage(context).then((message) {
       // Dart encodes strings in UTF-16 so one codepoint is 2 bytes
       final first100Chars = _decode(message, min(200, message.lengthInBytes));
@@ -73,7 +75,7 @@ class FlutterSvgAdaptiveLoader extends BytesLoader {
       } else {
         // Valid UTF-8 encoded string - process as a svg vector
         return svg.cache.putIfAbsent(
-          cacheKey(context),
+          key,
           () => _loadSvg(message),
         );
       }
