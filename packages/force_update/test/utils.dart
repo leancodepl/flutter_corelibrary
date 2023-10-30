@@ -51,15 +51,11 @@ Future<void> pumpForceUpdateGuard({
   required Key key,
   required bool applyResponseImmediately,
 }) async {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
-        key: scaffoldKey,
         body: ForceUpdateGuard(
           key: key,
-          dialogContextKey: scaffoldKey,
           cqrs: cqrs,
           showForceUpdateScreenImmediately: applyResponseImmediately,
           showSuggestUpdateDialogImmediately: applyResponseImmediately,

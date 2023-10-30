@@ -11,43 +11,46 @@ class SuggestUpdateDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: DefaultTextStyle(
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text('Update suggested'),
-              const SizedBox(height: 8),
-              const Text(
-                'A new version is available, please update the app',
-              ),
-              const SizedBox(height: 32),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: Navigator.of(context).pop,
-                      child: const Text('Skip'),
+    return MaterialApp(
+      home: Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: DefaultTextStyle(
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text('Update suggested'),
+                const SizedBox(height: 8),
+                const Text(
+                  'A new version is available, please update the app',
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: ForceUpdateGuardController.of(context)
+                            .hideSuggestDialog,
+                        child: const Text('Skip'),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _forceUpdate.openStore,
-                      child: const Text('Update'),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _forceUpdate.openStore,
+                        child: const Text('Update'),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -34,8 +34,6 @@ void main() async {
   ));
 }
 
-final _navigatorKey = GlobalKey<NavigatorState>();
-
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
@@ -50,12 +48,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ForceUpdateGuard(
-      dialogContextKey: _navigatorKey,
       cqrs: _cqrs,
       suggestUpdateDialog: SuggestUpdateDialog(forceUpdate: _forceUpdate),
       forceUpdateScreen: ForceUpdateScreen(forceUpdate: _forceUpdate),
       child: MaterialApp(
-        navigatorKey: _navigatorKey,
         title: 'Force update demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
