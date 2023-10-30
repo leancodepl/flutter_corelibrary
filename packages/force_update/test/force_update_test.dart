@@ -60,7 +60,7 @@ void main() {
     });
 
     testWidgets(
-        'show force update screen on first launch if update should be enforced and showForceUpdateScreenImmediately == true',
+        'show force update screen on first launch if update should be enforced, showForceUpdateScreenImmediately == true',
         (tester) async {
       registerUpdateRequired(cqrs);
 
@@ -117,7 +117,7 @@ void main() {
     });
 
     testWidgets(
-        'Suggest update on first launch when needed and showSuggestUpdateDialogImmediately == true',
+        'Suggest update on first launch when needed, showSuggestUpdateDialogImmediately == true',
         (tester) async {
       registerUpdateSuggested(cqrs);
 

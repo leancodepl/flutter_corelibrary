@@ -30,7 +30,13 @@ class ForceUpdateGuard extends StatefulWidget {
   final bool useAndroidSystemUI;
   final Widget? androidSystemUILoadingIndicator;
   final GlobalKey dialogContextKey;
+
+  /// Set this to false to show force update screen on next app launch instead
+  /// of showing it immediately once the version support info is obtained
   final bool showForceUpdateScreenImmediately;
+
+  /// Set this to false to show suggest update dialog on next app launch instead
+  /// of showing it immediately once the version support info is obtained
   final bool showSuggestUpdateDialogImmediately;
   final Widget child;
 
