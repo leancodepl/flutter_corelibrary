@@ -70,41 +70,42 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     init();
   }
 
-  Future<void> _applyMostRecentResult({required bool conditional}) async {
-    final applyResponseIfSuggested =
-        !conditional || widget.showSuggestUpdateDialogImmediately;
-    final applyResponseIfForce =
-        !conditional || widget.showForceUpdateScreenImmediately;
-
-    final mostRecentForceUpdateResult = await _storage.readMostRecentResult();
+  Future<void> _applyResult({
+    required ForceUpdateResult? result,
+  }) async {
     final currentVersion = Version.parse(_packageInfo.version);
 
-    if (mostRecentForceUpdateResult == null ||
-        mostRecentForceUpdateResult.versionAtTimeOfRequest < currentVersion) {
+    if (result == null || result.versionAtTimeOfRequest < currentVersion) {
       return;
     }
 
-    if (applyResponseIfForce) {
-      force.value = mostRecentForceUpdateResult.result ==
-          VersionSupportResultDTO.updateRequired;
-    }
+    force.value = result.conclusion == VersionSupportResultDTO.updateRequired;
 
-    if (mostRecentForceUpdateResult.result ==
-            VersionSupportResultDTO.updateSuggested &&
-        applyResponseIfSuggested) {
+    if (result.conclusion == VersionSupportResultDTO.updateSuggested) {
       if (widget._actuallyUseAndroidSystemUI) {
         await InAppUpdate.checkForUpdate();
         await InAppUpdate.startFlexibleUpdate();
         return InAppUpdate.completeFlexibleUpdate();
+      } else {
+        widget.controller._suggest.value = true;
       }
-
-      widget.controller._suggest.value = true;
     }
   }
 
   Future<void> _updateAndMaybeApplyVersionsInfo() async {
     await _updateVersionsInfo();
-    return _applyMostRecentResult(conditional: true);
+
+    final recentResult = await _storage.readMostRecentResult();
+    return switch ((
+      recentResult?.conclusion,
+      widget.showForceUpdateScreenImmediately,
+      widget.showSuggestUpdateDialogImmediately
+    )) {
+      (VersionSupportResultDTO.updateRequired, true, _) ||
+      (VersionSupportResultDTO.updateSuggested, _, true) =>
+        _applyResult(result: recentResult),
+      _ => null,
+    };
   }
 
   Future<void> init() async {
@@ -118,7 +119,8 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
       (_) => _updateAndMaybeApplyVersionsInfo(),
     );
 
-    return _applyMostRecentResult(conditional: false);
+    final recentResult = await _storage.readMostRecentResult();
+    return _applyResult(result: recentResult);
   }
 
   Future<void> _updateVersionsInfo() async {
@@ -141,7 +143,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
       await _storage.writeResult(
         ForceUpdateResult(
           versionAtTimeOfRequest: Version.parse(_packageInfo.version),
-          result: data.result,
+          conclusion: data.result,
         ),
       );
     } else {

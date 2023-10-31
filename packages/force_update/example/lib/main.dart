@@ -23,7 +23,7 @@ void main() async {
       return QuerySuccess(VersionSupportDTO(
         currentlySupportedVersion: '1.0.0',
         minimumRequiredVersion: '1.2.0',
-        result: VersionSupportResultDTO.updateSuggested,
+        result: VersionSupportResultDTO.upToDate,
       ));
     },
   );
