@@ -112,15 +112,15 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     listenable = Listenable.merge([force, widget.controller._suggest]);
     _packageInfo = await PackageInfo.fromPlatform();
 
-    unawaited(_updateAndMaybeApplyVersionsInfo());
-
     _checkForEnforcedUpdateTimer = Timer.periodic(
       ForceUpdateGuard.updateCheckingInterval,
       (_) => _updateAndMaybeApplyVersionsInfo(),
     );
 
     final recentResult = await _storage.readMostRecentResult();
-    return _applyResult(result: recentResult);
+    await _applyResult(result: recentResult);
+
+    unawaited(_updateAndMaybeApplyVersionsInfo());
   }
 
   Future<void> _updateVersionsInfo() async {
