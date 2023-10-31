@@ -1,10 +1,13 @@
 import 'package:cqrs/cqrs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:force_update/data/contracts/contracts.dart';
 import 'package:force_update/src/force_update_guard.dart';
+import 'package:force_update/src/force_update_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:version/version.dart';
 
 import 'utils.dart';
 
@@ -12,6 +15,7 @@ void main() {
   group('Force update', () {
     late Cqrs cqrs;
     late ForceUpdateController controller;
+    const currentVersion = '1.0.0';
 
     setUp(() {
       cqrs = MockCqrs();
@@ -25,7 +29,7 @@ void main() {
       PackageInfo.setMockInitialValues(
         appName: '',
         packageName: '',
-        version: '1.0.0',
+        version: currentVersion,
         buildNumber: '0',
         buildSignature: '',
       );
@@ -38,7 +42,7 @@ void main() {
     Future<void> pumpGuard(
       WidgetTester tester,
       int key, {
-      bool applyResponseImmediately = false,
+      required bool applyResponseImmediately,
     }) {
       return pumpForceUpdateGuard(
         cqrs: cqrs,
@@ -54,10 +58,10 @@ void main() {
         (tester) async {
       registerUpdateRequired(cqrs);
 
-      await pumpGuard(tester, 1);
+      await pumpGuard(tester, 1, applyResponseImmediately: false);
       expectForceUpdatePage(value: false);
 
-      await pumpGuard(tester, 2);
+      await pumpGuard(tester, 2, applyResponseImmediately: false);
       expectForceUpdatePage(value: true);
 
       // Unfortunately, this cannot be reset in teardown / teardownAll, but has
@@ -81,10 +85,10 @@ void main() {
         (tester) async {
       registerUpToDate(cqrs);
 
-      await pumpGuard(tester, 1);
+      await pumpGuard(tester, 1, applyResponseImmediately: false);
       expectForceUpdatePage(value: false);
 
-      await pumpGuard(tester, 2);
+      await pumpGuard(tester, 2, applyResponseImmediately: false);
       expectForceUpdatePage(value: false);
 
       debugDefaultTargetPlatformOverride = null;
@@ -95,17 +99,17 @@ void main() {
         (tester) async {
       registerUpToDate(cqrs);
 
-      await pumpGuard(tester, 1);
+      await pumpGuard(tester, 1, applyResponseImmediately: false);
       expectForceUpdatePage(value: false);
 
-      await pumpGuard(tester, 2);
+      await pumpGuard(tester, 2, applyResponseImmediately: false);
       expectForceUpdatePage(value: false);
 
       registerUpdateRequired(cqrs);
 
       await tester.pump(ForceUpdateGuard.updateCheckingInterval);
 
-      await pumpGuard(tester, 3);
+      await pumpGuard(tester, 3, applyResponseImmediately: false);
       expectForceUpdatePage(value: true);
 
       debugDefaultTargetPlatformOverride = null;
@@ -114,10 +118,10 @@ void main() {
     testWidgets('Suggest update on second launch when needed', (tester) async {
       registerUpdateSuggested(cqrs);
 
-      await pumpGuard(tester, 1);
+      await pumpGuard(tester, 1, applyResponseImmediately: false);
       expectSuggestUpdateDialog(value: false);
 
-      await pumpGuard(tester, 2);
+      await pumpGuard(tester, 2, applyResponseImmediately: false);
       expectSuggestUpdateDialog(value: true);
 
       debugDefaultTargetPlatformOverride = null;
@@ -145,11 +149,32 @@ void main() {
     testWidgets('Do not suggest update when not needed', (tester) async {
       registerUpToDate(cqrs);
 
-      await pumpGuard(tester, 1);
+      await pumpGuard(tester, 1, applyResponseImmediately: false);
       expectSuggestUpdateDialog(value: false);
 
-      await pumpGuard(tester, 2);
+      await pumpGuard(tester, 2, applyResponseImmediately: false);
       expectSuggestUpdateDialog(value: false);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets(
+        'Show force update screen if currently fetched result says to do it and showForceUpdateScreenImmediately == true, regardless of stored result',
+        (tester) async {
+      registerUpdateRequired(cqrs);
+      await ForceUpdateStorage().writeResult(
+        ForceUpdateResult(
+          versionAtTimeOfRequest: Version.parse(currentVersion),
+          conclusion: VersionSupportResultDTO.updateSuggested,
+        ),
+      );
+
+      await pumpGuard(
+        tester,
+        1,
+        applyResponseImmediately: true,
+      );
+      expectForceUpdatePage(value: true);
 
       debugDefaultTargetPlatformOverride = null;
     });
