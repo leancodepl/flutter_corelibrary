@@ -39,20 +39,23 @@ class MyApp extends StatelessWidget {
     super.key,
     required ForceUpdateController forceUpdateController,
     required Cqrs cqrs,
-  })  : _forceUpdate = forceUpdateController,
+  })  : _forceUpdateController = forceUpdateController,
         _cqrs = cqrs;
 
-  final ForceUpdateController _forceUpdate;
+  final ForceUpdateController _forceUpdateController;
   final Cqrs _cqrs;
 
   @override
   Widget build(BuildContext context) {
     return ForceUpdateGuard(
       cqrs: _cqrs,
-      suggestUpdateDialog:
-          SuggestUpdateDialog(forceUpdateController: _forceUpdate),
-      forceUpdateScreen: ForceUpdateScreen(forceUpdateController: _forceUpdate),
-      controller: _forceUpdate,
+      suggestUpdateDialog: SuggestUpdateDialog(
+        forceUpdateController: _forceUpdateController,
+      ),
+      forceUpdateScreen: ForceUpdateScreen(
+        forceUpdateController: _forceUpdateController,
+      ),
+      controller: _forceUpdateController,
       child: MaterialApp(
         title: 'Force update demo',
         theme: ThemeData(
