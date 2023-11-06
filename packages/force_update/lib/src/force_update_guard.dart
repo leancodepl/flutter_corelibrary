@@ -96,16 +96,13 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     await _updateVersionsInfo();
 
     final recentResult = await _storage.readMostRecentResult();
-    return switch ((
-      recentResult?.conclusion,
-      widget.showForceUpdateScreenImmediately,
-      widget.showSuggestUpdateDialogImmediately
-    )) {
-      (VersionSupportResultDTO.updateRequired, true, _) ||
-      (VersionSupportResultDTO.updateSuggested, _, true) =>
-        _applyResult(result: recentResult),
-      _ => null,
-    };
+
+    if ((recentResult?.conclusion == VersionSupportResultDTO.updateRequired &&
+            widget.showForceUpdateScreenImmediately) ||
+        (recentResult?.conclusion == VersionSupportResultDTO.updateSuggested &&
+            widget.showSuggestUpdateDialogImmediately)) {
+      return _applyResult(result: recentResult);
+    }
   }
 
   Future<void> init() async {
