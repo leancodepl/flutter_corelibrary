@@ -7,20 +7,20 @@ import 'package:version/version.dart';
 class ForceUpdateResult {
   const ForceUpdateResult({
     required this.versionAtTimeOfRequest,
-    required this.result,
+    required this.conclusion,
   });
 
   ForceUpdateResult.fromJson(Map<String, dynamic> json)
       : versionAtTimeOfRequest =
             Version.parse(json['versionAtTimeOfRequest'] as String),
-        result = VersionSupportResultDTO.values[json['result'] as int];
+        conclusion = VersionSupportResultDTO.values[json['conclusion'] as int];
 
   final Version versionAtTimeOfRequest;
-  final VersionSupportResultDTO result;
+  final VersionSupportResultDTO conclusion;
 
   Map<String, dynamic> toJson() => {
         'versionAtTimeOfRequest': versionAtTimeOfRequest.toString(),
-        'result': result.index,
+        'conclusion': conclusion.index,
       };
 }
 

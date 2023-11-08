@@ -11,7 +11,7 @@ class MockCqrs extends Mock implements Cqrs {}
 class MockQuery extends Mock implements Query<VersionSupportDTO> {}
 
 void main() async {
-  const forceUpdate = ForceUpdate(
+  final forceUpdateController = ForceUpdateController(
     androidBundleId: 'com.example.example',
     appleAppId: '1111111111',
   );
@@ -23,39 +23,40 @@ void main() async {
       return QuerySuccess(VersionSupportDTO(
         currentlySupportedVersion: '1.0.0',
         minimumRequiredVersion: '1.2.0',
-        result: VersionSupportResultDTO.updateSuggested,
+        result: VersionSupportResultDTO.upToDate,
       ));
     },
   );
 
   runApp(MyApp(
-    forceUpdate: forceUpdate,
+    forceUpdateController: forceUpdateController,
     cqrs: cqrs,
   ));
 }
 
-final _navigatorKey = GlobalKey<NavigatorState>();
-
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required ForceUpdate forceUpdate,
+    required ForceUpdateController forceUpdateController,
     required Cqrs cqrs,
-  })  : _forceUpdate = forceUpdate,
+  })  : _forceUpdateController = forceUpdateController,
         _cqrs = cqrs;
 
-  final ForceUpdate _forceUpdate;
+  final ForceUpdateController _forceUpdateController;
   final Cqrs _cqrs;
 
   @override
   Widget build(BuildContext context) {
     return ForceUpdateGuard(
-      dialogContextKey: _navigatorKey,
       cqrs: _cqrs,
-      suggestUpdateDialog: SuggestUpdateDialog(forceUpdate: _forceUpdate),
-      forceUpdateScreen: ForceUpdateScreen(forceUpdate: _forceUpdate),
+      suggestUpdateDialog: SuggestUpdateDialog(
+        forceUpdateController: _forceUpdateController,
+      ),
+      forceUpdateScreen: ForceUpdateScreen(
+        forceUpdateController: _forceUpdateController,
+      ),
+      controller: _forceUpdateController,
       child: MaterialApp(
-        navigatorKey: _navigatorKey,
         title: 'Force update demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

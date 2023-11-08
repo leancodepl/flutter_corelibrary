@@ -4,10 +4,10 @@ import 'package:force_update/force_update.dart';
 class ForceUpdateScreen extends StatelessWidget {
   const ForceUpdateScreen({
     super.key,
-    required ForceUpdate forceUpdate,
-  }) : _forceUpdate = forceUpdate;
+    required ForceUpdateController forceUpdateController,
+  }) : _forceUpdateController = forceUpdateController;
 
-  final ForceUpdate _forceUpdate;
+  final ForceUpdateController _forceUpdateController;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ForceUpdateScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
-                      onPressed: _forceUpdate.openStore,
+                      onPressed: _forceUpdateController.openStore,
                       child: const Text('Update'),
                     ),
                   ],

@@ -10,7 +10,7 @@ class MockCqrs extends Mock implements Cqrs {}
 class MockQuery extends Mock implements Query<VersionSupportDTO> {}
 
 const _forceUpdateScreenKey = Key('ForceUpdateScreen');
-const _suggestUpdateDialogKey = Key('SuggestUpdateKey');
+const _suggestUpdateDialogKey = Key('SuggestUpdateDialog');
 
 void registerVersionSupportAnswer(Cqrs cqrs, VersionSupportDTO dto) {
   when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
@@ -45,27 +45,32 @@ void registerUpToDate(Cqrs cqrs) => registerVersionSupportAnswer(
       ),
     );
 
-Future<void> pumpForceUpdateGuard(
-  Cqrs cqrs,
-  WidgetTester tester,
-  Key key,
-) async {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
+Future<void> pumpForceUpdateGuard({
+  required Cqrs cqrs,
+  required WidgetTester tester,
+  required Key key,
+  required bool applyResponseImmediately,
+  ForceUpdateController? controller,
+}) async {
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
-        key: scaffoldKey,
         body: ForceUpdateGuard(
           key: key,
-          dialogContextKey: scaffoldKey,
           cqrs: cqrs,
+          showForceUpdateScreenImmediately: applyResponseImmediately,
+          showSuggestUpdateDialogImmediately: applyResponseImmediately,
+          controller: controller ??
+              ForceUpdateController(
+                androidBundleId: '',
+                appleAppId: '',
+              ),
           forceUpdateScreen: const Text(
-            key: Key('ForceUpdateScreen'),
+            key: _forceUpdateScreenKey,
             'Update required',
           ),
           suggestUpdateDialog: const Dialog(
-            key: Key('SuggestUpdateDialog'),
+            key: _suggestUpdateDialogKey,
             child: Text('Update suggested'),
           ),
           child: const SizedBox(),

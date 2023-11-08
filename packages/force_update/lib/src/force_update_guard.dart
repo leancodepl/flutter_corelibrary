@@ -8,7 +8,10 @@ import 'package:force_update/src/force_update_storage.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
+
+part 'package:force_update/src/force_update_controller.dart';
 
 class ForceUpdateGuard extends StatefulWidget {
   const ForceUpdateGuard({
@@ -18,7 +21,9 @@ class ForceUpdateGuard extends StatefulWidget {
     required this.forceUpdateScreen,
     this.useAndroidSystemUI = false,
     this.androidSystemUILoadingIndicator,
-    required this.dialogContextKey,
+    this.showForceUpdateScreenImmediately = true,
+    this.showSuggestUpdateDialogImmediately = true,
+    required this.controller,
     required this.child,
   });
 
@@ -27,7 +32,15 @@ class ForceUpdateGuard extends StatefulWidget {
   final Widget forceUpdateScreen;
   final bool useAndroidSystemUI;
   final Widget? androidSystemUILoadingIndicator;
-  final GlobalKey dialogContextKey;
+
+  /// Set this to false to show force update screen on next app launch instead
+  /// of showing it immediately once the version support info is obtained
+  final bool showForceUpdateScreenImmediately;
+
+  /// Set this to false to show suggest update dialog on next app launch instead
+  /// of showing it immediately once the version support info is obtained
+  final bool showSuggestUpdateDialogImmediately;
+  final ForceUpdateController controller;
   final Widget child;
 
   static const updateCheckingInterval = Duration(minutes: 5);
@@ -45,6 +58,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   final ForceUpdateStorage _storage;
   late PackageInfo _packageInfo;
   final force = ValueNotifier<bool?>(null);
+  late Listenable listenable;
   Timer? _checkForEnforcedUpdateTimer;
 
   final _logger = Logger('ForceUpdateGuard');
@@ -56,51 +70,54 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     init();
   }
 
-  Future<void> init() async {
-    _packageInfo = await PackageInfo.fromPlatform();
-
-    unawaited(_updateVersionsInfo());
-
-    _checkForEnforcedUpdateTimer = Timer.periodic(
-      ForceUpdateGuard.updateCheckingInterval,
-      (_) => _updateVersionsInfo(),
-    );
-
-    final mostRecentForceUpdateResult = await _storage.readMostRecentResult();
+  Future<void> _applyResult({
+    required ForceUpdateResult? result,
+  }) async {
     final currentVersion = Version.parse(_packageInfo.version);
 
-    if (mostRecentForceUpdateResult == null ||
-        mostRecentForceUpdateResult.versionAtTimeOfRequest < currentVersion) {
+    if (result == null || result.versionAtTimeOfRequest < currentVersion) {
       return;
     }
 
-    force.value = mostRecentForceUpdateResult.result ==
-        VersionSupportResultDTO.updateRequired;
+    force.value = result.conclusion == VersionSupportResultDTO.updateRequired;
 
-    if (mostRecentForceUpdateResult.result ==
-        VersionSupportResultDTO.updateSuggested) {
+    if (result.conclusion == VersionSupportResultDTO.updateSuggested) {
       if (widget._actuallyUseAndroidSystemUI) {
         await InAppUpdate.checkForUpdate();
         await InAppUpdate.startFlexibleUpdate();
         return InAppUpdate.completeFlexibleUpdate();
+      } else {
+        widget.controller._suggest.value = true;
       }
-
-      final context = widget.dialogContextKey.currentContext;
-
-      // ignore: use_build_context_synchronously
-      if (context == null || !context.mounted) {
-        _logger.warning(
-          'Failed to show SuggestUpdateDialog: context is null or not mounted',
-        );
-
-        return;
-      }
-
-      return showDialog(
-        context: context,
-        builder: (context) => widget.suggestUpdateDialog,
-      );
     }
+  }
+
+  Future<void> _updateAndMaybeApplyVersionsInfo() async {
+    await _updateVersionsInfo();
+
+    final recentResult = await _storage.readMostRecentResult();
+
+    if ((recentResult?.conclusion == VersionSupportResultDTO.updateRequired &&
+            widget.showForceUpdateScreenImmediately) ||
+        (recentResult?.conclusion == VersionSupportResultDTO.updateSuggested &&
+            widget.showSuggestUpdateDialogImmediately)) {
+      return _applyResult(result: recentResult);
+    }
+  }
+
+  Future<void> init() async {
+    listenable = Listenable.merge([force, widget.controller._suggest]);
+    _packageInfo = await PackageInfo.fromPlatform();
+
+    _checkForEnforcedUpdateTimer = Timer.periodic(
+      ForceUpdateGuard.updateCheckingInterval,
+      (_) => _updateAndMaybeApplyVersionsInfo(),
+    );
+
+    final recentResult = await _storage.readMostRecentResult();
+    await _applyResult(result: recentResult);
+
+    unawaited(_updateAndMaybeApplyVersionsInfo());
   }
 
   Future<void> _updateVersionsInfo() async {
@@ -123,7 +140,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
       await _storage.writeResult(
         ForceUpdateResult(
           versionAtTimeOfRequest: Version.parse(_packageInfo.version),
-          result: data.result,
+          conclusion: data.result,
         ),
       );
     } else {
@@ -133,12 +150,18 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: force,
+    return ListenableBuilder(
+      listenable: listenable,
       child: widget.child,
-      builder: (context, force, child) {
-        if (force != true) {
-          return child!;
+      builder: (context, child) {
+        if (force.value != true) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              child!,
+              if (widget.controller._suggest.value) widget.suggestUpdateDialog,
+            ],
+          );
         }
 
         if (!widget._actuallyUseAndroidSystemUI) {
