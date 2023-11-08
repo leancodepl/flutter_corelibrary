@@ -1,8 +1,8 @@
 name: leancode_lint
-version: 7.0.0
+version: 7.0.0+1
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint
 repository: https://github.com/leancodepl/flutter_corelibrary
-description: Lint rules used at LeanCode.
+description: Robust, high-quality lint rules used at LeanCode.
 
 topics:
   - analysis
