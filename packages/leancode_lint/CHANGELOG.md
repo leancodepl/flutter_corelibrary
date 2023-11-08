@@ -1,3 +1,7 @@
+# 7.0.0+1
+
+- Change package description on pub.dev and in README
+
 # 7.0.0
 
 - Implement LeanCode custom lints
