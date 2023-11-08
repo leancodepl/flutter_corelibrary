@@ -2,7 +2,7 @@
 
 [![leancode_lint pub.dev badge][pub-badge]][pub-badge-link]
 
-A high-quality, robust, and up-to-date set of lint rules used at LeanCode.
+An opinionated set of high-quality, robust, and up-to-date lint rules used at LeanCode.
 
 ## Installation
 
