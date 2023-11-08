@@ -2,7 +2,7 @@
 
 [![leancode_lint pub.dev badge][pub-badge]][pub-badge-link]
 
-Lint rules used internally in LeanCode projects.
+A high-quality, robust, and up-to-date set of lint rules used at LeanCode.
 
 ## Installation
 
