@@ -48,7 +48,9 @@ jobs:
         run: dart pub get
 
       - name: Run analyzer
-        run: dart analyze
+        run: |
+          dart analyze
+          dart run custom_lint
 
       - name: Run tests with coverage
         run: |
