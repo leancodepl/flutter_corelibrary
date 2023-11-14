@@ -4,7 +4,7 @@ homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
   A package providing a debug page which shows outgoing http requests and Logger logs
-  
+
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: ">=3.10.0"
@@ -20,9 +20,10 @@ dependencies:
   share_plus: ^7.0.2
 
 dev_dependencies:
+  custom_lint: ^0.5.6
   flutter_test:
     sdk: flutter
-  leancode_lint: ^6.0.0
+  leancode_lint: ^7.0.0
   mocktail: ^1.0.1
 
 # For information on the generic Dart part of this file, see the
