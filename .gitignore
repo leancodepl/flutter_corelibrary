@@ -1,8 +1,9 @@
 # Miscellaneous
 **.DS_Store
 
-# Melos-generated pubspec overrides
+# Melos
 pubspec_overrides.yaml
+/.dart_tool
 
 # IntelliJ
 *.iml
