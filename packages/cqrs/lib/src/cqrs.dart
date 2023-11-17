@@ -179,8 +179,8 @@ class Cqrs {
           final result = query.resultFactory(json);
           _log(query, _ResultType.success);
           return QuerySuccess(result);
-        } catch (e, s) {
-          _log(query, _ResultType.jsonError, e, s);
+        } catch (err, st) {
+          _log(query, _ResultType.jsonError, err, st);
           return QueryFailure<T>(QueryError.unknown);
         }
       }
@@ -193,11 +193,11 @@ class Cqrs {
         _log(query, _ResultType.authorizationError);
         return QueryFailure<T>(QueryError.authorization);
       }
-    } on SocketException catch (e, s) {
-      _log(query, _ResultType.networkError, e, s);
+    } on SocketException catch (err, st) {
+      _log(query, _ResultType.networkError, err, st);
       return QueryFailure<T>(QueryError.network);
-    } catch (e, s) {
-      _log(query, _ResultType.unknownError, e, s);
+    } catch (err, st) {
+      _log(query, _ResultType.unknownError, err, st);
       return QueryFailure<T>(QueryError.unknown);
     }
 
@@ -231,8 +231,8 @@ class Cqrs {
             CommandError.validation,
             validationErrors: result.errors,
           );
-        } catch (e, s) {
-          _log(command, _ResultType.jsonError, e, s);
+        } catch (err, st) {
+          _log(command, _ResultType.jsonError, err, st);
           return const CommandFailure(CommandError.unknown);
         }
       }
@@ -244,11 +244,11 @@ class Cqrs {
         _log(command, _ResultType.authorizationError);
         return const CommandFailure(CommandError.authorization);
       }
-    } on SocketException catch (e, s) {
-      _log(command, _ResultType.networkError, e, s);
+    } on SocketException catch (err, st) {
+      _log(command, _ResultType.networkError, err, st);
       return const CommandFailure(CommandError.network);
-    } catch (e, s) {
-      _log(command, _ResultType.unknownError, e, s);
+    } catch (err, st) {
+      _log(command, _ResultType.unknownError, err, st);
       return const CommandFailure(CommandError.unknown);
     }
 
@@ -270,8 +270,8 @@ class Cqrs {
           final result = operation.resultFactory(json);
           _log(operation, _ResultType.success);
           return OperationSuccess<T>(result);
-        } catch (e, s) {
-          _log(operation, _ResultType.jsonError, e, s);
+        } catch (err, st) {
+          _log(operation, _ResultType.jsonError, err, st);
           return OperationFailure<T>(OperationError.unknown);
         }
       }
@@ -284,11 +284,11 @@ class Cqrs {
         _log(operation, _ResultType.authorizationError);
         return OperationFailure<T>(OperationError.authorization);
       }
-    } on SocketException catch (e, s) {
-      _log(operation, _ResultType.networkError, e, s);
+    } on SocketException catch (err, st) {
+      _log(operation, _ResultType.networkError, err, st);
       return OperationFailure<T>(OperationError.network);
-    } catch (e, s) {
-      _log(operation, _ResultType.unknownError, e, s);
+    } catch (err, st) {
+      _log(operation, _ResultType.unknownError, err, st);
       return OperationFailure<T>(OperationError.unknown);
     }
 
