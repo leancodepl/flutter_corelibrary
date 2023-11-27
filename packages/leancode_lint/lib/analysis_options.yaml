@@ -8,6 +8,7 @@ analyzer:
     always_declare_return_types: warning
     always_put_control_body_on_new_line: warning
     annotate_overrides: warning
+    annotate_redeclares: warning
     avoid_bool_literals_in_conditional_expressions: warning
     avoid_catching_errors: warning
     avoid_double_and_int_checks: warning
@@ -210,6 +211,7 @@ linter:
     always_specify_types: false
     always_use_package_imports: false
     annotate_overrides: true
+    annotate_redeclares: true
     avoid_annotating_with_dynamic: false
     avoid_bool_literals_in_conditional_expressions: true
     avoid_catches_without_on_clauses: false
