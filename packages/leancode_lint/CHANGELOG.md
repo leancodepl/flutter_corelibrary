@@ -1,3 +1,9 @@
+# 8.0.0
+
+- Enable the following lints:
+  - [`annotate_redeclares`](https://dart.dev/tools/linter-rules/annotate_redeclares)
+  - [`use_build_context_synchronously`](https://dart.dev/tools/linter-rules/use_build_context_synchronously)
+
 # 7.0.0+1
 
 - Change package description on pub.dev and in README
