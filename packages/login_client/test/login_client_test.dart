@@ -102,6 +102,23 @@ void main() {
       },
     );
 
+    test('get credentials returns not null value from storage', () async {
+      final credentials = Credentials('access token');
+      when(() => credentialsStorage.read()).thenAnswer((_) async {
+        return credentials;
+      });
+
+      expect(await loginClient.credentials, credentials);
+    });
+
+    test('get credentials returns null from storage', () async {
+      when(() => credentialsStorage.read()).thenAnswer((_) async {
+        return null;
+      });
+
+      expect(await loginClient.credentials, null);
+    });
+
     test(
       'logIn() logs out, logs and rethrows on AuthorizationException',
       () async {

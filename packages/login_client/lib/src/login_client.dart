@@ -83,7 +83,7 @@ class LoginClient extends http.BaseClient {
   Stream<oauth2.Credentials?> get onCredentialsChanged =>
       _onCredentialsChanged.stream;
 
-  /// Read current credentials, if they exist
+  /// Read current credentials, if they exist.
   Future<oauth2.Credentials?> get credentials => _credentialsStorage.read();
 
   /// Restores saved credentials from the credentials storage.
