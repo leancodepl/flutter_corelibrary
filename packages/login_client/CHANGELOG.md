@@ -1,3 +1,7 @@
+# 3.1.0
+
+- Add `credentials` getter to `LoginClient`. (#109)
+
 # 3.0.0
 
 - Bumped `http` dependency to `1.0.0`. (#105)
