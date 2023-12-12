@@ -1,6 +1,6 @@
 # 3.1.0
 
-- Add `credentials` getter to `LoginClient`. (#109)
+- Add `credentials` getter to `LoginClient`. (#227)
 
 # 3.0.0
 
