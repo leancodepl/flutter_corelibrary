@@ -1,3 +1,7 @@
+# Unreleased
+
+- Bump `leancode_lint` dev dependency to `8.0.0`. (#230)
+
 # 10.0.1
 
 - **Breaking:** Rename `forbiddenAccess` to `authorization` in error enums.

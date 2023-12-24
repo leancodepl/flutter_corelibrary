@@ -1,3 +1,7 @@
+# Unreleased
+
+- Bump `leancode_lint` dev dependency to `8.0.0`. (#230)
+
 # 3.1.0
 
 - Add `credentials` getter to `LoginClient`. (#227)
