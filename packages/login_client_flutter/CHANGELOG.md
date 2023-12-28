@@ -1,3 +1,7 @@
+# Unreleased
+
+- Bump `leancode_lint` dev dependency to `8.0.0`. (#230)
+
 # 2.0.1+1
 
 - Fix build badge in README.

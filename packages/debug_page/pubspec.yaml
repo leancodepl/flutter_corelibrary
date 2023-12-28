@@ -23,7 +23,7 @@ dev_dependencies:
   custom_lint: ^0.5.6
   flutter_test:
     sdk: flutter
-  leancode_lint: ^7.0.0
+  leancode_lint: ^8.0.0
   mocktail: ^1.0.1
 
 # For information on the generic Dart part of this file, see the

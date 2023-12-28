@@ -1,3 +1,7 @@
+# Unreleased
+
+- Bump `leancode_lint` dev dependency to `8.0.0`. (#230)
+
 # 0.0.6
 
 - Bump minimum Dart version to 3.0

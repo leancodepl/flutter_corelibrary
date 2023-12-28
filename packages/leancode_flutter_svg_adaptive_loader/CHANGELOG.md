@@ -1,3 +1,7 @@
+## Unreleased
+
+- Bump `leancode_lint` dev dependency to `8.0.0`. (#230)
+
 ## 1.1.1
 
 - Fix error caused by resolving `DefaultAssetBundle` from context
