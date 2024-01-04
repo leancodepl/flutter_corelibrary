@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:leancode_markup/src/ui/markup_tag_style.dart';
 
+/// MarkupTagStyle equivalent of DefaultTextStyle.
+/// Keeps default tags to use in child MarkupText widgets.
 class DefaultMarkupStyle extends InheritedTheme {
   const DefaultMarkupStyle({
     super.key,
@@ -27,6 +29,24 @@ class DefaultMarkupStyle extends InheritedTheme {
     return context.dependOnInheritedWidgetOfExactType<DefaultMarkupStyle>() ??
         const DefaultMarkupStyle._fallback();
   }
+
+  /// List of basic tags, that provide support for bold, italic and underlined
+  /// text styles. Prepared for quick use.
+  static final List<MarkupTagStyle> basicTags = [
+    MarkupTagStyle.delegate(
+      tagName: 'b',
+      styleCreator: (_) => const TextStyle(fontWeight: FontWeight.bold),
+    ),
+    MarkupTagStyle.delegate(
+      tagName: 'i',
+      styleCreator: (_) => const TextStyle(fontStyle: FontStyle.italic),
+    ),
+    MarkupTagStyle.delegate(
+      tagName: 'u',
+      styleCreator: (_) =>
+          const TextStyle(decoration: TextDecoration.underline),
+    ),
+  ];
 
   static Widget merge({
     Key? key,
