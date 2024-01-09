@@ -16,6 +16,7 @@ dependencies:
 
 dev_dependencies:
   benchmark_harness: ^2.2.2
+  custom_lint: ^0.5.8
   flutter_test:
     sdk: flutter
   leancode_lint: ^7.0.0+1
