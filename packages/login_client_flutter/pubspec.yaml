@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_secure_storage: '>=4.2.0 <6.0.0'
+  flutter_secure_storage: ^9.0.0
   login_client: ^3.0.0
 
 dev_dependencies:
