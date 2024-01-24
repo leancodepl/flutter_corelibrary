@@ -21,10 +21,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          sdk: 3.2
+          flutter-version: '3.16.x'
 
       - name: Publish
         run: dart pub publish -f
