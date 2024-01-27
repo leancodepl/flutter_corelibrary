@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_markup/leancode_markup.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,11 +36,39 @@ class MyApp extends StatelessWidget {
                   styleCreator: (_) =>
                       const TextStyle(decoration: TextDecoration.underline),
                 ),
+                MarkupTagStyle.delegate(
+                  tagName: 'url',
+                  styleCreator: (_) => const TextStyle(color: Colors.lightBlue),
+                ),
               ],
+              // TODO: add tag factory usage description
+              tagFactories: {
+                'url': (child, parameter) {
+                  return WidgetSpan(
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (parameter != null &&
+                            await canLaunchUrl(Uri.parse(parameter))) {
+                          await launchUrl(Uri.parse(parameter));
+                        }
+                      },
+                      child: child,
+                    ),
+                  );
+                },
+                'sup': (child, parameter) {
+                  return WidgetSpan(
+                    child: Transform.translate(
+                      offset: const Offset(2, -4),
+                      child: child,
+                    ),
+                  );
+                },
+              },
               child: Column(
                 children: [
                   const MarkupText(
-                    '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
+                    '[u]underline[/u][i][b]Italic, bold text[url="https://google.com"][sup]go[/sup][u]ogle[/u][/url][/b][/i]',
                   ),
                   MarkupText(
                     '[green][u]underline[/u][/green][i][b]Italic, bold text[/b][/i]',

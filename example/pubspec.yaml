@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   leancode_markup:
     path: ..
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   custom_lint: ^0.5.8
