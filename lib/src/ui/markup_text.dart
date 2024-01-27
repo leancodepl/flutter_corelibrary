@@ -2,16 +2,14 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:leancode_markup/src/parser/markup_parser.dart';
-import 'package:leancode_markup/src/parser/tagged_text.dart';
-import 'package:leancode_markup/src/ui/default_markup_style.dart';
-import 'package:leancode_markup/src/ui/markup_tag_style.dart';
+import 'package:leancode_markup/leancode_markup.dart';
 
 class MarkupText extends StatelessWidget {
   const MarkupText(
     this.markup, {
     super.key,
     this.tags = const [],
+    this.tagFactories = const {},
     this.strutStyle,
     this.textAlign,
     this.textDirection,
@@ -29,6 +27,7 @@ class MarkupText extends StatelessWidget {
   /// The markup text to display.
   final String markup;
   final List<MarkupTagStyle> tags;
+  final Map<String, MarkupWrapSpanFactory> tagFactories;
 
   final StrutStyle? strutStyle;
   final TextAlign? textAlign;
@@ -49,14 +48,7 @@ class MarkupText extends StatelessWidget {
 
     final spans = [
       for (final taggedText in parseMarkup(markup))
-        TextSpan(
-          text: taggedText.text,
-          style: _effectiveStyle(
-            defaultMarkupStyle,
-            tags,
-            taggedText.tags,
-          ),
-        ),
+        _inlineSpanFor(taggedText, defaultMarkupStyle, tags, tagFactories),
     ];
 
     return Text.rich(
@@ -100,6 +92,35 @@ class MarkupText extends StatelessWidget {
     }
 
     return computedStyle;
+  }
+
+  InlineSpan _inlineSpanFor(
+    TaggedText taggedText,
+    DefaultMarkupStyle defaultMarkupStyle,
+    List<MarkupTagStyle> extraTags,
+    Map<String, MarkupWrapSpanFactory> tagFactories,
+  ) {
+    final child = TextSpan(
+      text: taggedText.text,
+      style: _effectiveStyle(defaultMarkupStyle, tags, taggedText.tags),
+    );
+
+    final effectiveTagFactories = {
+      ...defaultMarkupStyle.tagFactories,
+      ...tagFactories,
+    };
+
+    return taggedText.tags.reversed.fold(
+      child,
+      (acc, tag) =>
+          effectiveTagFactories[tag.name]
+              ?.call(_wrapSpan(acc), tag.parameter) ??
+          acc,
+    );
+  }
+
+  Widget _wrapSpan(InlineSpan span) {
+    return RichText(text: TextSpan(children: [span]));
   }
 
   @override

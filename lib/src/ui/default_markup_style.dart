@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:leancode_markup/src/ui/markup_tag_style.dart';
+import 'package:leancode_markup/leancode_markup.dart';
 
 /// MarkupTagStyle equivalent of DefaultTextStyle.
 /// Keeps default tags to use in child MarkupText widgets.
@@ -8,11 +8,13 @@ class DefaultMarkupStyle extends InheritedTheme {
   const DefaultMarkupStyle({
     super.key,
     required this.tags,
+    required this.tagFactories,
     required super.child,
   });
 
   const DefaultMarkupStyle._fallback()
       : tags = const [],
+        tagFactories = const {},
         super(child: const SizedBox());
 
   /// The closest instance of this class that encloses the given context.
@@ -51,6 +53,7 @@ class DefaultMarkupStyle extends InheritedTheme {
   static Widget merge({
     Key? key,
     required List<MarkupTagStyle> tags,
+    required Map<String, MarkupWrapSpanFactory> tagFactories,
     required Widget child,
   }) {
     return Builder(
@@ -59,6 +62,7 @@ class DefaultMarkupStyle extends InheritedTheme {
         return DefaultMarkupStyle(
           key: key,
           tags: [...parent.tags, ...tags],
+          tagFactories: {...parent.tagFactories, ...tagFactories},
           child: child,
         );
       },
@@ -67,6 +71,9 @@ class DefaultMarkupStyle extends InheritedTheme {
 
   /// The text style to apply.
   final List<MarkupTagStyle> tags;
+
+  /// Tag factories to apply.
+  final Map<String, MarkupWrapSpanFactory> tagFactories;
 
   @override
   bool updateShouldNotify(DefaultMarkupStyle oldWidget) {
@@ -77,6 +84,7 @@ class DefaultMarkupStyle extends InheritedTheme {
   Widget wrap(BuildContext context, Widget child) {
     return DefaultMarkupStyle(
       tags: tags,
+      tagFactories: tagFactories,
       child: child,
     );
   }
