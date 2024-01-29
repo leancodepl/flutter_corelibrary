@@ -23,6 +23,7 @@ class SampleWidget extends StatelessWidget {
           children: [
             // expect_lint: use_design_system_item_LftText
             RichText(text: const TextSpan(text: 'abc')),
+            const SizedBox(),
           ],
         ),
       ),
