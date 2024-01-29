@@ -1,3 +1,7 @@
+# 8.1.0
+
+- Enable custom lint `avoid_single_child_in_multi_child_widgets` for `Column`, `Row`, `Flex`, and `Wrap`
+
 # 8.0.0
 
 - Enable the following lints:
