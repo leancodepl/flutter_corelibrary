@@ -32,9 +32,16 @@ MarkupTagStyle.delegate(
 ),
 ```
 
+### MarkupWrapSpanFactory
+
+You could wrap your tagged text into any widgets. To do so, define tag factory for specified tag. Tag factory could be only defined in the tagFactories parameter in `DefaultMarkupStyle`, that take as argument Map of pairs `tag`:`MarkupWrapSpanFactory`. It's done like that, so there's a guarantee that every tag has only one factory.
+`MarkupWrapSpanFactory` takes as parameters child `Widget`, that needs to be wraped with desired widgets and optional `parameter` taken from tag parsing.
+It returns WidgetSpan.
+
 ### DefaultMarkupStyle
 
 `DefaultMarkupStyle` is equivalent of well known `DefaultTextStyle`, but for the `MarkupTagStyle`. It apply markup tags styles to descendant `MarkupText` widgets. 
+`DefaultMarkupStyle` also has `Map<String, MarkupWrapSpanFactory> tagFactories` parameter to wrap specified tagged text with Widgets.
 
 ```dart
 DefaultMarkupStyle(
@@ -48,6 +55,17 @@ DefaultMarkupStyle(
             styleCreator: (_) => const TextStyle(fontStyle: FontStyle.italic),
         ),
     ],
+    tagFactories: {
+        'url': (child, parameter) {
+            return WidgetSpan(
+                child: GestureDetector(
+                    onTap: () => launchUrl(Uri.parse(parameter!)),
+                    child: child,
+                ),
+            );
+        },
+        ...
+    }
     child: ...
 ),
 ```
@@ -114,6 +132,17 @@ Column(
     // You can use `DefaultMarkupStyle` to define common tags for children.
     DefaultMarkupStyle(
         tags: DefaultMarkupStyle.basicTags,
+        // Add tag factory to launch link passed in url tags
+        tagFactories: {
+            'url': (child, parameter) {
+                return WidgetSpan(
+                    child: GestureDetector(
+                        onTap: () => launchUrl(Uri.parse(parameter!)),
+                        child: child,
+                    ),
+                );
+            },
+        }
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -155,11 +184,5 @@ Column(
 ## TODOs:
 
 1. Flutter tests
-2. Add support for tags: `url` and `sup`
-3. Optimize rendering. Some style computations can be cached/precomputed at `DefaultMarkupStyle` level
-4. Better error reporting
-
-### Internal conflu docs:
-
-- "Text styling syntax in Flutter brainstorm"
-- "Text styling syntax research"
+2. Optimize rendering. Some style computations can be cached/precomputed at `DefaultMarkupStyle` level
+3. Better error reporting

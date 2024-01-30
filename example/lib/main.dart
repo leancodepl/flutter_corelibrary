@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
                   styleCreator: (_) => const TextStyle(color: Colors.lightBlue),
                 ),
               ],
-              // TODO: add tag factory usage description
+              // Add tag factories to wrap your tagged text into any widget
               tagFactories: {
                 'url': (child, parameter) {
                   return WidgetSpan(
