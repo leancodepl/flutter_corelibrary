@@ -8,7 +8,7 @@ class DefaultMarkupStyle extends InheritedTheme {
   const DefaultMarkupStyle({
     super.key,
     required this.tags,
-    required this.tagFactories,
+    this.tagFactories = const {},
     required super.child,
   });
 
