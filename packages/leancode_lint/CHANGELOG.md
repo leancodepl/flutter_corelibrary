@@ -1,6 +1,6 @@
 # 8.1.0
 
-- Enable custom lint `avoid_single_child_in_multi_child_widgets` for `Column`, `Row`, `Flex`, and `Wrap`
+- Enable custom lint `avoid_single_child_in_multi_child_widgets` for `Column`, `Row`, `Flex`, `Wrap`, `Stack`, `SliverMainAxisGroup`, and `SliverCrossAxisGroup`
 
 # 8.0.0
 

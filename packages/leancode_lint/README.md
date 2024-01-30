@@ -311,7 +311,7 @@ custom_lint:
 
 ### `avoid_single_child_in_multi_child_widgets`
 
-**AVOID** using `Column`, `Row`, `Flex`, and `Wrap` with a single child.
+**AVOID** using `Column`, `Row`, `Flex`, `Wrap`, `Stack`, `SliverMainAxisGroup`, and `SliverCrossAxisGroup` with a single child.
 
 **BAD:**
 

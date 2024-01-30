@@ -59,6 +59,48 @@ class WrapIsMarked extends StatelessWidget {
   }
 }
 
+class StackIsMarked extends StatelessWidget {
+  const StackIsMarked({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // expect_lint: avoid_single_child_in_multi_child_widgets
+    return Stack(
+      children: [
+        Container(),
+      ],
+    );
+  }
+}
+
+class SliverMainAxisGroupIsMarked extends StatelessWidget {
+  const SliverMainAxisGroupIsMarked({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // expect_lint: avoid_single_child_in_multi_child_widgets
+    return const SliverMainAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(),
+      ],
+    );
+  }
+}
+
+class SliverCrossAxisGroupIsMarked extends StatelessWidget {
+  const SliverCrossAxisGroupIsMarked({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // expect_lint: avoid_single_child_in_multi_child_widgets
+    return const SliverCrossAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(),
+      ],
+    );
+  }
+}
+
 class ZeroChildrenIsNotMarked extends StatelessWidget {
   const ZeroChildrenIsNotMarked({super.key});
 

@@ -17,21 +17,54 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
       );
 
   static const _complain = [
-    TypeChecker.fromName(
-      'Column',
-      packageName: 'flutter',
+    (
+      'children',
+      TypeChecker.fromName(
+        'Column',
+        packageName: 'flutter',
+      )
     ),
-    TypeChecker.fromName(
-      'Row',
-      packageName: 'flutter',
+    (
+      'children',
+      TypeChecker.fromName(
+        'Row',
+        packageName: 'flutter',
+      )
     ),
-    TypeChecker.fromName(
-      'Wrap',
-      packageName: 'flutter',
+    (
+      'children',
+      TypeChecker.fromName(
+        'Wrap',
+        packageName: 'flutter',
+      )
     ),
-    TypeChecker.fromName(
-      'Flex',
-      packageName: 'flutter',
+    (
+      'children',
+      TypeChecker.fromName(
+        'Flex',
+        packageName: 'flutter',
+      )
+    ),
+    (
+      'children',
+      TypeChecker.fromName(
+        'Stack',
+        packageName: 'flutter',
+      )
+    ),
+    (
+      'slivers',
+      TypeChecker.fromName(
+        'SliverMainAxisGroup',
+        packageName: 'flutter',
+      )
+    ),
+    (
+      'slivers',
+      TypeChecker.fromName(
+        'SliverCrossAxisGroup',
+        packageName: 'flutter',
+      )
     ),
   ];
 
@@ -45,16 +78,16 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
       final constructorName = node.constructorName.type;
       if (constructorName.element case final typeElement?) {
         // is it something we want to complain about?
-        final matchingChecker = _complain
-            .firstWhereOrNull((checker) => checker.isExactly(typeElement));
-        if (matchingChecker == null) {
+        final match =
+            _complain.firstWhereOrNull((e) => e.$2.isExactly(typeElement));
+        if (match == null) {
           return;
         }
 
         // does it have a children argument?
         final children = node.argumentList.arguments
             .whereType<NamedExpression>()
-            .firstWhereOrNull((e) => e.name.label.name == 'children')
+            .firstWhereOrNull((e) => e.name.label.name == match.$1)
             ?.expression;
         if (children == null) {
           return;
