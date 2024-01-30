@@ -81,13 +81,14 @@ class MarkupText extends StatelessWidget {
           .where((e) => e.tagName == tag.name)
           .fold<TextStyle?>(null, (acc, curr) {
         final style = curr.tagStyle(tag.parameter);
+
         if (acc == null || !style.inherit) {
           return style;
         }
+
         return acc.merge(style);
       });
 
-      // TODO: tags with no styles are ignored. Do we want to react somehow?
       computedStyle = computedStyle?.merge(style) ?? style;
     }
 
