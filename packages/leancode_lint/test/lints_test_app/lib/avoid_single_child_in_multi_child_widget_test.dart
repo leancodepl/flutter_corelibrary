@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class ColumnIsMarked extends StatelessWidget {
   const ColumnIsMarked({super.key});
@@ -59,13 +60,29 @@ class WrapIsMarked extends StatelessWidget {
   }
 }
 
-class StackIsMarked extends StatelessWidget {
-  const StackIsMarked({super.key});
+class SliverChildListDelegateIsMarked extends StatelessWidget {
+  const SliverChildListDelegateIsMarked({super.key});
 
   @override
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
-    return Stack(
+    final _ = SliverChildListDelegate(
+      [
+        Container(),
+      ],
+    );
+
+    return const SizedBox();
+  }
+}
+
+class SliverListIsMarked extends StatelessWidget {
+  const SliverListIsMarked({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // expect_lint: avoid_single_child_in_multi_child_widgets
+    return SliverList.list(
       children: [
         Container(),
       ],
@@ -96,6 +113,20 @@ class SliverCrossAxisGroupIsMarked extends StatelessWidget {
     return const SliverCrossAxisGroup(
       slivers: [
         SliverToBoxAdapter(),
+      ],
+    );
+  }
+}
+
+class MultiSliverIsMarked extends StatelessWidget {
+  const MultiSliverIsMarked({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // expect_lint: avoid_single_child_in_multi_child_widgets
+    return MultiSliver(
+      children: [
+        Container(),
       ],
     );
   }

@@ -48,7 +48,7 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
     (
       'children',
       TypeChecker.fromName(
-        'Stack',
+        'SliverList',
         packageName: 'flutter',
       )
     ),
@@ -63,6 +63,20 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
       'slivers',
       TypeChecker.fromName(
         'SliverCrossAxisGroup',
+        packageName: 'flutter',
+      )
+    ),
+    (
+      'children',
+      TypeChecker.fromName(
+        'MultiSliver',
+        packageName: 'sliver_tools',
+      )
+    ),
+    (
+      'children',
+      TypeChecker.fromName(
+        'SliverChildListDelegate',
         packageName: 'flutter',
       )
     ),
@@ -85,12 +99,13 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
         }
 
         // does it have a children argument?
-        final children = node.argumentList.arguments
-            .whereType<NamedExpression>()
-            .firstWhereOrNull((e) => e.name.label.name == match.$1)
-            ?.expression;
+        var children = node.argumentList.arguments.firstWhereOrNull(
+          (e) => e.staticParameterElement?.name == match.$1,
+        );
         if (children == null) {
           return;
+        } else if (children is NamedExpression) {
+          children = children.expression;
         }
 
         _checkInstanceCreation(constructorName, children, reporter);
