@@ -14,9 +14,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('tag-parser example app'),
+          backgroundColor: Colors.white,
+          title: MarkupText(
+            '[appbar]tag-parser example app[/appbar]',
+            tags: [
+              MarkupTagStyle.delegate(
+                tagName: 'appbar',
+                styleCreator: (_) => const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // You can use `DefaultMarkupStyle` to define common tags for children.
             DefaultMarkupStyle(
@@ -43,6 +56,7 @@ class MyApp extends StatelessWidget {
               ],
               // Add tag factories to wrap your tagged text into any widget
               tagFactories: {
+                // Make clickable link
                 'url': (child, parameter) {
                   return WidgetSpan(
                     child: GestureDetector(
@@ -56,6 +70,7 @@ class MyApp extends StatelessWidget {
                     ),
                   );
                 },
+                // Transform text
                 'sup': (child, parameter) {
                   return WidgetSpan(
                     child: Transform.translate(
@@ -64,21 +79,32 @@ class MyApp extends StatelessWidget {
                     ),
                   );
                 },
+                // Add custom text background
+                'yellow': (child, parameter) {
+                  return WidgetSpan(
+                    child: Container(
+                      color: Colors.black,
+                      child: child,
+                    ),
+                  );
+                },
               },
               child: Column(
                 children: [
+                  // Use tags from `DefaultMarkupStyle` parent
                   const MarkupText(
-                    '[u]underline[/u][i][b]Italic, bold text[url="https://google.com"][sup]go[/sup][u]ogle[/u][/url][/b][/i]',
+                    '[i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i]',
                   ),
+                  const SizedBox(height: 8),
                   MarkupText(
-                    '[green][u]underline[/u][/green][i][b]Italic, bold text[/b][/i]',
+                    '[yellow][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/yellow]',
                     tags: [
                       // You can add custom tags just for `MarkupText`.
                       // The rest of the tags will still be taken from the parent.
                       MarkupTagStyle.delegate(
-                        tagName: 'green',
+                        tagName: 'yellow',
                         styleCreator: (_) =>
-                            const TextStyle(color: Colors.green),
+                            const TextStyle(color: Color(0xFFFEFF00)),
                       ),
                       // You can overwrite tags from `DefaultMarkupStyle` parent
                       MarkupTagStyle.delegate(
@@ -88,13 +114,19 @@ class MyApp extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                  // Use tag factories to create e.g. clickable text to open link
+                  const MarkupText(
+                    '[url="https://leancode.co"][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/url]',
+                  ),
                 ],
               ),
             ),
+            const SizedBox(height: 8),
             // You can use `basicTags` just in `MarkupText` widget.
             Center(
               child: MarkupText(
-                '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
+                '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
                 tags: DefaultMarkupStyle.basicTags,
               ),
             ),
