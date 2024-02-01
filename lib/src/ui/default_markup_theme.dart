@@ -77,7 +77,8 @@ class DefaultMarkupTheme extends InheritedTheme {
 
   @override
   bool updateShouldNotify(DefaultMarkupTheme oldWidget) {
-    return tagStyles != oldWidget.tagStyles;
+    return tagStyles != oldWidget.tagStyles ||
+        tagFactories != oldWidget.tagFactories;
   }
 
   @override
