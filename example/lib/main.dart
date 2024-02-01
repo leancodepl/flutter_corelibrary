@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_markup/leancode_markup.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +14,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('tag-parser example app'),
+          backgroundColor: Colors.white,
+          title: MarkupText(
+            '[appbar]tag-parser example app[/appbar]',
+            tagStyles: [
+              MarkupTagStyle.delegate(
+                tagName: 'appbar',
+                styleCreator: (_) => const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // You can use `DefaultMarkupStyle` to define common tags for children.
-            DefaultMarkupStyle(
-              tags: [
+            // You can use `DefaultMarkupTheme` to define common tag styles for children.
+            DefaultMarkupTheme(
+              tagStyles: [
                 MarkupTagStyle.delegate(
                   tagName: 'b',
                   styleCreator: (_) =>
@@ -35,23 +49,61 @@ class MyApp extends StatelessWidget {
                   styleCreator: (_) =>
                       const TextStyle(decoration: TextDecoration.underline),
                 ),
+                MarkupTagStyle.delegate(
+                  tagName: 'url',
+                  styleCreator: (_) => const TextStyle(color: Colors.lightBlue),
+                ),
+                MarkupTagStyle.delegate(
+                  tagName: 'yellow',
+                  styleCreator: (_) => const TextStyle(
+                    backgroundColor: Colors.black,
+                  ),
+                ),
               ],
+              // Add tag factories to wrap your tagged text into any widget
+              tagFactories: {
+                // Make clickable link
+                'url': (child, parameter) {
+                  return WidgetSpan(
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (parameter != null &&
+                            await canLaunchUrl(Uri.parse(parameter))) {
+                          await launchUrl(Uri.parse(parameter));
+                        }
+                      },
+                      child: child,
+                    ),
+                  );
+                },
+                // Transform text
+                'sup': (child, parameter) {
+                  return WidgetSpan(
+                    child: Transform.translate(
+                      offset: const Offset(2, -4),
+                      child: child,
+                    ),
+                  );
+                },
+              },
               child: Column(
                 children: [
+                  // Use tag styles from `DefaultMarkupTheme` parent
                   const MarkupText(
-                    '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
+                    '[i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i]',
                   ),
+                  const SizedBox(height: 8),
                   MarkupText(
-                    '[green][u]underline[/u][/green][i][b]Italic, bold text[/b][/i]',
-                    tags: [
-                      // You can add custom tags just for `MarkupText`.
-                      // The rest of the tags will still be taken from the parent.
+                    '[yellow][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/yellow]',
+                    tagStyles: [
+                      // You can add custom tag styles just for `MarkupText`.
+                      // The rest of the tag styles will still be taken from the parent.
                       MarkupTagStyle.delegate(
-                        tagName: 'green',
+                        tagName: 'yellow',
                         styleCreator: (_) =>
-                            const TextStyle(color: Colors.green),
+                            const TextStyle(color: Color(0xFFFEFF00)),
                       ),
-                      // You can overwrite tags from `DefaultMarkupStyle` parent
+                      // You can overwrite tag styles from `DefaultMarkupTheme` parent
                       MarkupTagStyle.delegate(
                         tagName: 'b',
                         styleCreator: (_) =>
@@ -59,14 +111,20 @@ class MyApp extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                  // Use tag factories to create e.g. clickable text to open link
+                  const MarkupText(
+                    '[url="https://leancode.co"][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/url]',
+                  ),
                 ],
               ),
             ),
+            const SizedBox(height: 8),
             // You can use `basicTags` just in `MarkupText` widget.
             Center(
               child: MarkupText(
-                '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
-                tags: DefaultMarkupStyle.basicTags,
+                '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
+                tagStyles: DefaultMarkupTheme.basicTags,
               ),
             ),
           ],

@@ -2,16 +2,14 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:leancode_markup/src/parser/markup_parser.dart';
-import 'package:leancode_markup/src/parser/tagged_text.dart';
-import 'package:leancode_markup/src/ui/default_markup_style.dart';
-import 'package:leancode_markup/src/ui/markup_tag_style.dart';
+import 'package:leancode_markup/leancode_markup.dart';
 
 class MarkupText extends StatelessWidget {
   const MarkupText(
     this.markup, {
     super.key,
-    this.tags = const [],
+    this.tagStyles = const [],
+    this.tagFactories = const {},
     this.strutStyle,
     this.textAlign,
     this.textDirection,
@@ -28,7 +26,8 @@ class MarkupText extends StatelessWidget {
 
   /// The markup text to display.
   final String markup;
-  final List<MarkupTagStyle> tags;
+  final List<MarkupTagStyle> tagStyles;
+  final Map<String, MarkupTagSpanFactory> tagFactories;
 
   final StrutStyle? strutStyle;
   final TextAlign? textAlign;
@@ -45,18 +44,11 @@ class MarkupText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultMarkupStyle = DefaultMarkupStyle.of(context);
+    final defaultMarkupStyle = DefaultMarkupTheme.of(context);
 
     final spans = [
       for (final taggedText in parseMarkup(markup))
-        TextSpan(
-          text: taggedText.text,
-          style: _effectiveStyle(
-            defaultMarkupStyle,
-            tags,
-            taggedText.tags,
-          ),
-        ),
+        _inlineSpanFor(taggedText, defaultMarkupStyle, tagStyles, tagFactories),
     ];
 
     return Text.rich(
@@ -77,21 +69,23 @@ class MarkupText extends StatelessWidget {
   }
 
   TextStyle? _effectiveStyle(
-    DefaultMarkupStyle defaultMarkupStyle,
+    DefaultMarkupTheme defaultMarkupStyle,
     List<MarkupTagStyle> extraTags,
-    Iterable<MarkupTag> tags,
+    Iterable<MarkupTag> tagStyles,
   ) {
     TextStyle? computedStyle;
 
-    for (final tag in tags) {
-      final style = defaultMarkupStyle.tags
+    for (final tag in tagStyles) {
+      final style = defaultMarkupStyle.tagStyles
           .followedBy(extraTags)
           .where((e) => e.tagName == tag.name)
           .fold<TextStyle?>(null, (acc, curr) {
         final style = curr.tagStyle(tag.parameter);
+
         if (acc == null || !style.inherit) {
           return style;
         }
+
         return acc.merge(style);
       });
 
@@ -102,13 +96,48 @@ class MarkupText extends StatelessWidget {
     return computedStyle;
   }
 
+  InlineSpan _inlineSpanFor(
+    TaggedText taggedText,
+    DefaultMarkupTheme defaultMarkupStyle,
+    List<MarkupTagStyle> extraTags,
+    Map<String, MarkupTagSpanFactory> tagFactories,
+  ) {
+    final child = TextSpan(
+      text: taggedText.text,
+      style: _effectiveStyle(defaultMarkupStyle, tagStyles, taggedText.tags),
+    );
+
+    final effectiveTagFactories = {
+      ...defaultMarkupStyle.tagFactories,
+      ...tagFactories,
+    };
+
+    return taggedText.tags.reversed.fold(
+      child,
+      (acc, tag) =>
+          effectiveTagFactories[tag.name]
+              ?.call(_wrapSpan(acc), tag.parameter) ??
+          acc,
+    );
+  }
+
+  Widget _wrapSpan(InlineSpan span) {
+    return RichText(text: TextSpan(children: [span]));
+  }
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
       ..add(StringProperty('markup', markup))
       ..add(
-        IterableProperty<MarkupTagStyle>('tags', tags),
+        IterableProperty<MarkupTagStyle>('tagStyles', tagStyles),
+      )
+      ..add(
+        DiagnosticsProperty<Map<String, MarkupTagSpanFactory>>(
+          'tagFactories',
+          tagFactories,
+        ),
       )
       ..add(
         EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: null),

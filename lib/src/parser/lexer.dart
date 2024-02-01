@@ -18,7 +18,7 @@ class MarkupDefinition extends GrammarDefinition<Tokens> {
         pattern('a-z').plus(),
         seq2(char('='), ref0(quotedString))
             .optional()
-            .map((value) => value?.second),
+            .map((value) => value?.$2),
         char(']'),
       ).map4((_, tag, param, ___) => TagOpenToken(tag.join(), param));
 
