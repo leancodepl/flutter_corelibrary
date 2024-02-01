@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // You can use `DefaultMarkupStyle` to define common tag styles for children.
-            DefaultMarkupStyle(
+            // You can use `DefaultMarkupTheme` to define common tag styles for children.
+            DefaultMarkupTheme(
               tagStyles: [
                 MarkupTagStyle.delegate(
                   tagName: 'b',
@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
               },
               child: Column(
                 children: [
-                  // Use tag styles from `DefaultMarkupStyle` parent
+                  // Use tag styles from `DefaultMarkupTheme` parent
                   const MarkupText(
                     '[i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i]',
                   ),
@@ -106,7 +106,7 @@ class MyApp extends StatelessWidget {
                         styleCreator: (_) =>
                             const TextStyle(color: Color(0xFFFEFF00)),
                       ),
-                      // You can overwrite tag styles from `DefaultMarkupStyle` parent
+                      // You can overwrite tag styles from `DefaultMarkupTheme` parent
                       MarkupTagStyle.delegate(
                         tagName: 'b',
                         styleCreator: (_) =>
@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
             Center(
               child: MarkupText(
                 '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
-                tagStyles: DefaultMarkupStyle.basicTags,
+                tagStyles: DefaultMarkupTheme.basicTags,
               ),
             ),
           ],

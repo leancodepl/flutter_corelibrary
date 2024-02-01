@@ -4,15 +4,15 @@ import 'package:leancode_markup/leancode_markup.dart';
 
 /// MarkupTagStyle equivalent of DefaultTextStyle.
 /// Keeps default tag styles to use in child MarkupText widgets.
-class DefaultMarkupStyle extends InheritedTheme {
-  const DefaultMarkupStyle({
+class DefaultMarkupTheme extends InheritedTheme {
+  const DefaultMarkupTheme({
     super.key,
     required this.tagStyles,
     this.tagFactories = const {},
     required super.child,
   });
 
-  const DefaultMarkupStyle._fallback()
+  const DefaultMarkupTheme._fallback()
       : tagStyles = const [],
         tagFactories = const {},
         super(child: const SizedBox());
@@ -20,16 +20,16 @@ class DefaultMarkupStyle extends InheritedTheme {
   /// The closest instance of this class that encloses the given context.
   ///
   /// If no such instance exists, returns an instance created by
-  /// [DefaultMarkupStyle._fallback], which contains fallback values.
+  /// [DefaultMarkupTheme._fallback], which contains fallback values.
   ///
   /// Typical usage is as follows:
   ///
   /// ```dart
-  /// DefaultMarkupStyle style = DefaultMarkupStyle.of(context);
+  /// DefaultMarkupTheme style = DefaultMarkupTheme.of(context);
   /// ```
-  factory DefaultMarkupStyle.of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<DefaultMarkupStyle>() ??
-        const DefaultMarkupStyle._fallback();
+  factory DefaultMarkupTheme.of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<DefaultMarkupTheme>() ??
+        const DefaultMarkupTheme._fallback();
   }
 
   /// List of basic tag styles, that provide support for bold, italic and underlined
@@ -58,8 +58,8 @@ class DefaultMarkupStyle extends InheritedTheme {
   }) {
     return Builder(
       builder: (context) {
-        final parent = DefaultMarkupStyle.of(context);
-        return DefaultMarkupStyle(
+        final parent = DefaultMarkupTheme.of(context);
+        return DefaultMarkupTheme(
           key: key,
           tagStyles: [...parent.tagStyles, ...tagStyles],
           tagFactories: {...parent.tagFactories, ...tagFactories},
@@ -76,13 +76,13 @@ class DefaultMarkupStyle extends InheritedTheme {
   final Map<String, MarkupTagSpanFactory> tagFactories;
 
   @override
-  bool updateShouldNotify(DefaultMarkupStyle oldWidget) {
+  bool updateShouldNotify(DefaultMarkupTheme oldWidget) {
     return tagStyles != oldWidget.tagStyles;
   }
 
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return DefaultMarkupStyle(
+    return DefaultMarkupTheme(
       tagStyles: tagStyles,
       tagFactories: tagFactories,
       child: child,

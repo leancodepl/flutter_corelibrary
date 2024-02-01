@@ -44,7 +44,7 @@ class MarkupText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultMarkupStyle = DefaultMarkupStyle.of(context);
+    final defaultMarkupStyle = DefaultMarkupTheme.of(context);
 
     final spans = [
       for (final taggedText in parseMarkup(markup))
@@ -69,7 +69,7 @@ class MarkupText extends StatelessWidget {
   }
 
   TextStyle? _effectiveStyle(
-    DefaultMarkupStyle defaultMarkupStyle,
+    DefaultMarkupTheme defaultMarkupStyle,
     List<MarkupTagStyle> extraTags,
     Iterable<MarkupTag> tagStyles,
   ) {
@@ -98,7 +98,7 @@ class MarkupText extends StatelessWidget {
 
   InlineSpan _inlineSpanFor(
     TaggedText taggedText,
-    DefaultMarkupStyle defaultMarkupStyle,
+    DefaultMarkupTheme defaultMarkupStyle,
     List<MarkupTagStyle> extraTags,
     Map<String, MarkupTagSpanFactory> tagFactories,
   ) {

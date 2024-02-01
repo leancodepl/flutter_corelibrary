@@ -13,10 +13,10 @@ However, we provide a list of basic tag styles for quick use. Read more in [usag
 ## Usage
 
 * [MarkupTagStyle](#markuptagstyle) - define custom tag style
-* [DefaultMarkupStyle](#defaultmarkupstyle) - apply tag styles to descendant
+* [DefaultMarkupTheme](#defaultmarkuptheme) - apply tag styles to descendant
 * [MarkupText](#markuptext) - widget for markup text
-  * [Use tag styles from ancestor `DefaultMarkupStyle`](#use-tag-styles-from-ancestor-defaultmarkupstyle)
-  * [Use predefined `DefaultMarkupStyle.basicTag`](#use-predefined-defaultmarkupstylebasictag)
+  * [Use tag styles from ancestor `DefaultMarkupTheme`](#use-tag-styles-from-ancestor-defaultmarkupstyle)
+  * [Use predefined `DefaultMarkupTheme.basicTag`](#use-predefined-defaultmarkupstylebasictag)
   * [Use custom tag styles](#use-custom-tag-styles)
   * [Overwrite tag styles from ancestor](#overwrite-tag-styles-from-ancestor)
 * [Example](#example) 
@@ -34,17 +34,17 @@ MarkupTagStyle.delegate(
 
 ### MarkupTagSpanFactory
 
-You could wrap your tagged text into any widgets. To do so, define tag factory for specified tag. Tag factory could be only defined in the tagFactories parameter in `DefaultMarkupStyle`, that take as argument Map of pairs `tag`:`MarkupTagSpanFactory`. It's done like that, so there's a guarantee that every tag has only one factory.
+You could wrap your tagged text into any widgets. To do so, define tag factory for specified tag. Tag factory could be only defined in the tagFactories parameter in `DefaultMarkupTheme`, that take as argument Map of pairs `tag`:`MarkupTagSpanFactory`. It's done like that, so there's a guarantee that every tag has only one factory.
 `MarkupTagSpanFactory` takes as parameters child `Widget`, that needs to be wraped with desired widgets and optional `parameter` taken from tag parsing.
 It returns WidgetSpan.
 
-### DefaultMarkupStyle
+### DefaultMarkupTheme
 
-`DefaultMarkupStyle` is equivalent of well known `DefaultTextStyle`, but for the `MarkupTagStyle`. It apply markup tag styles to descendant `MarkupText` widgets. 
-`DefaultMarkupStyle` also has `Map<String, MarkupTagSpanFactory> tagFactories` parameter to wrap specified tagged text with Widgets.
+`DefaultMarkupTheme` is equivalent of well known `DefaultTextStyle`, but for the `MarkupTagStyle`. It apply markup tag styles to descendant `MarkupText` widgets. 
+`DefaultMarkupTheme` also has `Map<String, MarkupTagSpanFactory> tagFactories` parameter to wrap specified tagged text with Widgets.
 
 ```dart
-DefaultMarkupStyle(
+DefaultMarkupTheme(
     tagStyles: [
         MarkupTagStyle.delegate(
             tagName: 'b',
@@ -74,7 +74,7 @@ DefaultMarkupStyle(
 
 Converts passed `String` into `Text.rich` with applied `TextStyles`.
 
-#### Use tag styles from ancestor `DefaultMarkupStyle`
+#### Use tag styles from ancestor `DefaultMarkupTheme`
 
 ```dart 
 const MarkupText(
@@ -82,12 +82,12 @@ const MarkupText(
 ),
 ```
 
-#### Use predefined `DefaultMarkupStyle.basicTag`  
+#### Use predefined `DefaultMarkupTheme.basicTag`  
 
 ```dart 
 MarkupText(
     '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
-    tagStyles: DefaultMarkupStyle.basicTags,
+    tagStyles: DefaultMarkupTheme.basicTags,
 ),
 ```
 
@@ -108,8 +108,8 @@ MarkupText(
 #### Overwrite tag styles from ancestor
   
 ```dart 
-DefaultMarkupStyle(
-    tagStyles: DefaultMarkupStyle.basicTags,
+DefaultMarkupTheme(
+    tagStyles: DefaultMarkupTheme.basicTags,
     child: MarkupText(
         '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
         tagStyles: [
@@ -124,14 +124,14 @@ DefaultMarkupStyle(
 
 ## Example
 
-This code shows an example of usage `DefaultMarkupStyle` and `MarkupText`.
+This code shows an example of usage `DefaultMarkupTheme` and `MarkupText`.
 
 ```dart
 Column(
   mainAxisAlignment: MainAxisAlignment.center,
   children: [
-    // You can use `DefaultMarkupStyle` to define common tag styles for children.
-    DefaultMarkupStyle(
+    // You can use `DefaultMarkupTheme` to define common tag styles for children.
+    DefaultMarkupTheme(
       tagStyles: [
         MarkupTagStyle.delegate(
           tagName: 'b',
@@ -190,7 +190,7 @@ Column(
       },
       child: Column(
         children: [
-          // Use tag styles from `DefaultMarkupStyle` parent
+          // Use tag styles from `DefaultMarkupTheme` parent
           const MarkupText(
             '[i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i]',
           ),
@@ -205,7 +205,7 @@ Column(
                 styleCreator: (_) =>
                     const TextStyle(color: Color(0xFFFEFF00)),
               ),
-              // You can overwrite tag styles from `DefaultMarkupStyle` parent
+              // You can overwrite tag styles from `DefaultMarkupTheme` parent
               MarkupTagStyle.delegate(
                 tagName: 'b',
                 styleCreator: (_) =>
@@ -226,7 +226,7 @@ Column(
     Center(
       child: MarkupText(
         '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
-        tagStyles: DefaultMarkupStyle.basicTags,
+        tagStyles: DefaultMarkupTheme.basicTags,
       ),
     ),
   ],
@@ -236,5 +236,5 @@ Column(
 ## TODOs:
 
 1. Flutter tests
-2. Optimize rendering. Some style computations can be cached/precomputed at `DefaultMarkupStyle` level
+2. Optimize rendering. Some style computations can be cached/precomputed at `DefaultMarkupTheme` level
 3. Better error reporting
