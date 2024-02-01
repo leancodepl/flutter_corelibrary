@@ -89,6 +89,7 @@ class MarkupText extends StatelessWidget {
         return acc.merge(style);
       });
 
+      // TODO: tags with no styles are ignored. Do we want to react somehow?
       computedStyle = computedStyle?.merge(style) ?? style;
     }
 
