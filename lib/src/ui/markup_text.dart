@@ -27,7 +27,7 @@ class MarkupText extends StatelessWidget {
   /// The markup text to display.
   final String markup;
   final List<MarkupTagStyle> tags;
-  final Map<String, MarkupWrapSpanFactory> tagFactories;
+  final Map<String, MarkupTagSpanFactory> tagFactories;
 
   final StrutStyle? strutStyle;
   final TextAlign? textAlign;
@@ -99,7 +99,7 @@ class MarkupText extends StatelessWidget {
     TaggedText taggedText,
     DefaultMarkupStyle defaultMarkupStyle,
     List<MarkupTagStyle> extraTags,
-    Map<String, MarkupWrapSpanFactory> tagFactories,
+    Map<String, MarkupTagSpanFactory> tagFactories,
   ) {
     final child = TextSpan(
       text: taggedText.text,

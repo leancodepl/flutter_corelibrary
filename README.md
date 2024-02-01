@@ -32,16 +32,16 @@ MarkupTagStyle.delegate(
 ),
 ```
 
-### MarkupWrapSpanFactory
+### MarkupTagSpanFactory
 
-You could wrap your tagged text into any widgets. To do so, define tag factory for specified tag. Tag factory could be only defined in the tagFactories parameter in `DefaultMarkupStyle`, that take as argument Map of pairs `tag`:`MarkupWrapSpanFactory`. It's done like that, so there's a guarantee that every tag has only one factory.
-`MarkupWrapSpanFactory` takes as parameters child `Widget`, that needs to be wraped with desired widgets and optional `parameter` taken from tag parsing.
+You could wrap your tagged text into any widgets. To do so, define tag factory for specified tag. Tag factory could be only defined in the tagFactories parameter in `DefaultMarkupStyle`, that take as argument Map of pairs `tag`:`MarkupTagSpanFactory`. It's done like that, so there's a guarantee that every tag has only one factory.
+`MarkupTagSpanFactory` takes as parameters child `Widget`, that needs to be wraped with desired widgets and optional `parameter` taken from tag parsing.
 It returns WidgetSpan.
 
 ### DefaultMarkupStyle
 
 `DefaultMarkupStyle` is equivalent of well known `DefaultTextStyle`, but for the `MarkupTagStyle`. It apply markup tags styles to descendant `MarkupText` widgets. 
-`DefaultMarkupStyle` also has `Map<String, MarkupWrapSpanFactory> tagFactories` parameter to wrap specified tagged text with Widgets.
+`DefaultMarkupStyle` also has `Map<String, MarkupTagSpanFactory> tagFactories` parameter to wrap specified tagged text with Widgets.
 
 ```dart
 DefaultMarkupStyle(

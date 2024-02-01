@@ -53,7 +53,7 @@ class DefaultMarkupStyle extends InheritedTheme {
   static Widget merge({
     Key? key,
     required List<MarkupTagStyle> tags,
-    required Map<String, MarkupWrapSpanFactory> tagFactories,
+    required Map<String, MarkupTagSpanFactory> tagFactories,
     required Widget child,
   }) {
     return Builder(
@@ -73,7 +73,7 @@ class DefaultMarkupStyle extends InheritedTheme {
   final List<MarkupTagStyle> tags;
 
   /// Tag factories to apply.
-  final Map<String, MarkupWrapSpanFactory> tagFactories;
+  final Map<String, MarkupTagSpanFactory> tagFactories;
 
   @override
   bool updateShouldNotify(DefaultMarkupStyle oldWidget) {
