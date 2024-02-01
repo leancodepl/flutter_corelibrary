@@ -152,6 +152,12 @@ Column(
           tagName: 'url',
           styleCreator: (_) => const TextStyle(color: Colors.lightBlue),
         ),
+        MarkupTagStyle.delegate(
+          tagName: 'yellow',
+          styleCreator: (_) => const TextStyle(
+            backgroundColor: Colors.black,
+          ),
+        ),
       ],
       // Add tag factories to wrap your tagged text into any widget
       tagFactories: {
@@ -174,15 +180,6 @@ Column(
           return WidgetSpan(
             child: Transform.translate(
               offset: const Offset(2, -4),
-              child: child,
-            ),
-          );
-        },
-        // Add custom text background
-        'yellow': (child, parameter) {
-          return WidgetSpan(
-            child: Container(
-              color: Colors.black,
               child: child,
             ),
           );
