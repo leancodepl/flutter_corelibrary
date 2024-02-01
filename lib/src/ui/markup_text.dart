@@ -134,6 +134,12 @@ class MarkupText extends StatelessWidget {
         IterableProperty<MarkupTagStyle>('tagStyles', tagStyles),
       )
       ..add(
+        DiagnosticsProperty<Map<String, MarkupTagSpanFactory>>(
+          'tagFactories',
+          tagFactories,
+        ),
+      )
+      ..add(
         EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: null),
       )
       ..add(

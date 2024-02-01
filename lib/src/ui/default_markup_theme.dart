@@ -92,8 +92,15 @@ class DefaultMarkupTheme extends InheritedTheme {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      IterableProperty<MarkupTagStyle>('tagStyles', tagStyles),
-    );
+    properties
+      ..add(
+        IterableProperty<MarkupTagStyle>('tagStyles', tagStyles),
+      )
+      ..add(
+        DiagnosticsProperty<Map<String, MarkupTagSpanFactory>>(
+          'tagFactories',
+          tagFactories,
+        ),
+      );
   }
 }
