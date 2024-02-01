@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-typedef MarkupWrapSpanFactory = WidgetSpan Function(
+typedef MarkupWrapSpanFactory = InlineSpan Function(
   Widget child,
   String? parameter,
 );
