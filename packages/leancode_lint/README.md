@@ -309,6 +309,30 @@ custom_lint:
           from_package: flutter
 ```
 
+### `avoid_single_child_in_multi_child_widgets`
+
+**AVOID** using `Column`, `Row`, `Flex`, `Wrap`, `SliverList`, `MultiSliver`, `SliverChildListDelegate`, `SliverMainAxisGroup`, and `SliverCrossAxisGroup` with a single child.
+
+**BAD:**
+
+```dart
+Column(
+  children: [
+    Container(),
+  ]
+)
+```
+
+**GOOD:**
+
+```dart
+Container(),
+```
+
+#### Configuration
+
+None.
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.
