@@ -8,7 +8,7 @@ class MarkupText extends StatelessWidget {
   const MarkupText(
     this.markup, {
     super.key,
-    this.tags = const [],
+    this.tagStyles = const [],
     this.tagFactories = const {},
     this.strutStyle,
     this.textAlign,
@@ -26,7 +26,7 @@ class MarkupText extends StatelessWidget {
 
   /// The markup text to display.
   final String markup;
-  final List<MarkupTagStyle> tags;
+  final List<MarkupTagStyle> tagStyles;
   final Map<String, MarkupTagSpanFactory> tagFactories;
 
   final StrutStyle? strutStyle;
@@ -48,7 +48,7 @@ class MarkupText extends StatelessWidget {
 
     final spans = [
       for (final taggedText in parseMarkup(markup))
-        _inlineSpanFor(taggedText, defaultMarkupStyle, tags, tagFactories),
+        _inlineSpanFor(taggedText, defaultMarkupStyle, tagStyles, tagFactories),
     ];
 
     return Text.rich(
@@ -71,12 +71,12 @@ class MarkupText extends StatelessWidget {
   TextStyle? _effectiveStyle(
     DefaultMarkupStyle defaultMarkupStyle,
     List<MarkupTagStyle> extraTags,
-    Iterable<MarkupTag> tags,
+    Iterable<MarkupTag> tagStyles,
   ) {
     TextStyle? computedStyle;
 
-    for (final tag in tags) {
-      final style = defaultMarkupStyle.tags
+    for (final tag in tagStyles) {
+      final style = defaultMarkupStyle.tagStyles
           .followedBy(extraTags)
           .where((e) => e.tagName == tag.name)
           .fold<TextStyle?>(null, (acc, curr) {
@@ -103,7 +103,7 @@ class MarkupText extends StatelessWidget {
   ) {
     final child = TextSpan(
       text: taggedText.text,
-      style: _effectiveStyle(defaultMarkupStyle, tags, taggedText.tags),
+      style: _effectiveStyle(defaultMarkupStyle, tagStyles, taggedText.tags),
     );
 
     final effectiveTagFactories = {
@@ -130,7 +130,7 @@ class MarkupText extends StatelessWidget {
     properties
       ..add(StringProperty('markup', markup))
       ..add(
-        IterableProperty<MarkupTagStyle>('tags', tags),
+        IterableProperty<MarkupTagStyle>('tagStyles', tagStyles),
       )
       ..add(
         EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: null),

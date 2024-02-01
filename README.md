@@ -6,19 +6,19 @@ Simple package that allows you parse text with predefined tags, and returns styl
 
 None. Dart part of this package is agnostic to any semantics of tags.
 
-### Basic tags
+### Basic tag styles
 
-However, we provide a list of basic tags for quick use. Read more in [usage](#usage).
+However, we provide a list of basic tag styles for quick use. Read more in [usage](#usage).
 
 ## Usage
 
-* [MarkupTagStyle](#markuptagstyle) - define custom tag
-* [DefaultMarkupStyle](#defaultmarkupstyle) - apply tags to descendant
+* [MarkupTagStyle](#markuptagstyle) - define custom tag style
+* [DefaultMarkupStyle](#defaultmarkupstyle) - apply tag styles to descendant
 * [MarkupText](#markuptext) - widget for markup text
-  * [Use tags from ancestor `DefaultMarkupStyle`](#use-tags-from-ancestor-defaultmarkupstyle)
+  * [Use tag styles from ancestor `DefaultMarkupStyle`](#use-tag-styles-from-ancestor-defaultmarkupstyle)
   * [Use predefined `DefaultMarkupStyle.basicTag`](#use-predefined-defaultmarkupstylebasictag)
-  * [Use custom tags](#use-custom-tags)
-  * [Overwrite tags from ancestor](#overwrite-tags-from-ancestor)
+  * [Use custom tag styles](#use-custom-tag-styles)
+  * [Overwrite tag styles from ancestor](#overwrite-tag-styles-from-ancestor)
 * [Example](#example) 
 
 ### MarkupTagStyle
@@ -40,12 +40,12 @@ It returns WidgetSpan.
 
 ### DefaultMarkupStyle
 
-`DefaultMarkupStyle` is equivalent of well known `DefaultTextStyle`, but for the `MarkupTagStyle`. It apply markup tags styles to descendant `MarkupText` widgets. 
+`DefaultMarkupStyle` is equivalent of well known `DefaultTextStyle`, but for the `MarkupTagStyle`. It apply markup tag styles to descendant `MarkupText` widgets. 
 `DefaultMarkupStyle` also has `Map<String, MarkupTagSpanFactory> tagFactories` parameter to wrap specified tagged text with Widgets.
 
 ```dart
 DefaultMarkupStyle(
-    tags: [
+    tagStyles: [
         MarkupTagStyle.delegate(
             tagName: 'b',
             styleCreator: (_) => const TextStyle(fontWeight: FontWeight.bold),
@@ -74,7 +74,7 @@ DefaultMarkupStyle(
 
 Converts passed `String` into `Text.rich` with applied `TextStyles`.
 
-#### Use tags from ancestor `DefaultMarkupStyle`
+#### Use tag styles from ancestor `DefaultMarkupStyle`
 
 ```dart 
 const MarkupText(
@@ -87,16 +87,16 @@ const MarkupText(
 ```dart 
 MarkupText(
     '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
-    tags: DefaultMarkupStyle.basicTags,
+    tagStyles: DefaultMarkupStyle.basicTags,
 ),
 ```
 
-#### Use custom tags
+#### Use custom tag styles
 
 ```dart 
 MarkupText(
     '[green][u]underline[/u][/green][i][b]Italic, bold text[/b][/i]',
-    tags: [
+    tagStyles: [
         MarkupTagStyle.delegate(
             tagName: 'green',
             styleCreator: (_) => const TextStyle(color: Colors.green),
@@ -105,14 +105,14 @@ MarkupText(
 ),
 ```
 
-#### Overwrite tags from ancestor
+#### Overwrite tag styles from ancestor
   
 ```dart 
 DefaultMarkupStyle(
-    tags: DefaultMarkupStyle.basicTags,
+    tagStyles: DefaultMarkupStyle.basicTags,
     child: MarkupText(
         '[u]underline[/u][i][b]Italic, bold text[/b][/i]',
-        tags: [
+        tagStyles: [
             MarkupTagStyle.delegate(
                 tagName: 'b',
                 styleCreator: (_) => const TextStyle(fontWeight: FontWeight.w900),
@@ -130,9 +130,9 @@ This code shows an example of usage `DefaultMarkupStyle` and `MarkupText`.
 Column(
   mainAxisAlignment: MainAxisAlignment.center,
   children: [
-    // You can use `DefaultMarkupStyle` to define common tags for children.
+    // You can use `DefaultMarkupStyle` to define common tag styles for children.
     DefaultMarkupStyle(
-      tags: [
+      tagStyles: [
         MarkupTagStyle.delegate(
           tagName: 'b',
           styleCreator: (_) =>
@@ -190,22 +190,22 @@ Column(
       },
       child: Column(
         children: [
-          // Use tags from `DefaultMarkupStyle` parent
+          // Use tag styles from `DefaultMarkupStyle` parent
           const MarkupText(
             '[i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i]',
           ),
           const SizedBox(height: 8),
           MarkupText(
             '[yellow][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/yellow]',
-            tags: [
-              // You can add custom tags just for `MarkupText`.
-              // The rest of the tags will still be taken from the parent.
+            tagStyles: [
+              // You can add custom tag styles just for `MarkupText`.
+              // The rest of the tag styles will still be taken from the parent.
               MarkupTagStyle.delegate(
                 tagName: 'yellow',
                 styleCreator: (_) =>
                     const TextStyle(color: Color(0xFFFEFF00)),
               ),
-              // You can overwrite tags from `DefaultMarkupStyle` parent
+              // You can overwrite tag styles from `DefaultMarkupStyle` parent
               MarkupTagStyle.delegate(
                 tagName: 'b',
                 styleCreator: (_) =>
@@ -226,7 +226,7 @@ Column(
     Center(
       child: MarkupText(
         '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
-        tags: DefaultMarkupStyle.basicTags,
+        tagStyles: DefaultMarkupStyle.basicTags,
       ),
     ),
   ],

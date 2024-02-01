@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.white,
           title: MarkupText(
             '[appbar]tag-parser example app[/appbar]',
-            tags: [
+            tagStyles: [
               MarkupTagStyle.delegate(
                 tagName: 'appbar',
                 styleCreator: (_) => const TextStyle(
@@ -31,9 +31,9 @@ class MyApp extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // You can use `DefaultMarkupStyle` to define common tags for children.
+            // You can use `DefaultMarkupStyle` to define common tag styles for children.
             DefaultMarkupStyle(
-              tags: [
+              tagStyles: [
                 MarkupTagStyle.delegate(
                   tagName: 'b',
                   styleCreator: (_) =>
@@ -91,22 +91,22 @@ class MyApp extends StatelessWidget {
               },
               child: Column(
                 children: [
-                  // Use tags from `DefaultMarkupStyle` parent
+                  // Use tag styles from `DefaultMarkupStyle` parent
                   const MarkupText(
                     '[i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i]',
                   ),
                   const SizedBox(height: 8),
                   MarkupText(
                     '[yellow][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/yellow]',
-                    tags: [
-                      // You can add custom tags just for `MarkupText`.
-                      // The rest of the tags will still be taken from the parent.
+                    tagStyles: [
+                      // You can add custom tag styles just for `MarkupText`.
+                      // The rest of the tag styles will still be taken from the parent.
                       MarkupTagStyle.delegate(
                         tagName: 'yellow',
                         styleCreator: (_) =>
                             const TextStyle(color: Color(0xFFFEFF00)),
                       ),
-                      // You can overwrite tags from `DefaultMarkupStyle` parent
+                      // You can overwrite tag styles from `DefaultMarkupStyle` parent
                       MarkupTagStyle.delegate(
                         tagName: 'b',
                         styleCreator: (_) =>
@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
             Center(
               child: MarkupText(
                 '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
-                tags: DefaultMarkupStyle.basicTags,
+                tagStyles: DefaultMarkupStyle.basicTags,
               ),
             ),
           ],
