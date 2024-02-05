@@ -76,6 +76,8 @@ class AvoidConditionalHooks extends DartLintRule {
         )
             when rightHandSide == child =>
           true,
+        // don't escape function bodies
+        FunctionBody() => false,
         _ => switch (node.parent) {
             final parent? => isConditional(parent, child: node),
             _ => false,
