@@ -48,13 +48,21 @@ analyzer:
 
 ## Usage in libraries
 
-If your package is a library rather than a binary application, you will expose some public API for users of your library. Therefore, you should use lint rules optimized for this case by changing your `include` entry in `analysis_options.yaml`:
+If your package is a library rather than a binary application, you will expose some public API for users of your library. Therefore, you should use lint rules optimized for this case by just changing your `include` entry in `analysis_options.yaml`:
 
 ```yaml
 include: package:leancode_lint/analysis_options_package.yaml
 ```
 
 ## Custom lint rules
+
+To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
+
+```yaml
+custom_lint:
+  rules:
+    - prefix_widgets_returning_slivers: false
+```
 
 ### `add_cubit_suffix_for_your_cubits`
 
