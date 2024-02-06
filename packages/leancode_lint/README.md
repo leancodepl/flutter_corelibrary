@@ -56,7 +56,7 @@ include: package:leancode_lint/analysis_options_package.yaml
 
 ## Custom lint rules
 
-To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example to disable `prefix_widgets_returning_slivers`:
+To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
 
 ```yaml
 custom_lint:
