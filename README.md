@@ -19,6 +19,7 @@ However, we provide a list of basic tag styles for quick use. Read more in [usag
   * [Use predefined `DefaultMarkupTheme.basicTag`](#use-predefined-defaultmarkupstylebasictag)
   * [Use custom tag styles](#use-custom-tag-styles)
   * [Overwrite tag styles from ancestor](#overwrite-tag-styles-from-ancestor)
+  * [Escape tag](#escape-tag)
 * [Example](#example) 
 
 ### MarkupTagStyle
@@ -119,6 +120,17 @@ DefaultMarkupTheme(
             ),
         ],
     ),
+),
+```
+
+#### Escape tag
+
+```dart
+Center(
+  child: MarkupText(
+    r'[u][i]Lorem ipsum dolor sit amet, \[b]consectetur adipiscing elit\[/b][/i][/u]',
+    tagStyles: DefaultMarkupTheme.basicTags,
+  ),
 ),
 ```
 
@@ -223,6 +235,14 @@ Column(
     Center(
       child: MarkupText(
         '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
+        tagStyles: DefaultMarkupTheme.basicTags,
+      ),
+    ),
+    const SizedBox(height: 8),
+    // You can escape tags using "\".
+    Center(
+      child: MarkupText(
+        r'[u][i]Lorem ipsum dolor sit amet, \[b]consectetur adipiscing elit\[/b][/i][/u]',
         tagStyles: DefaultMarkupTheme.basicTags,
       ),
     ),

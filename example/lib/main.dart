@@ -127,6 +127,14 @@ class MyApp extends StatelessWidget {
                 tagStyles: DefaultMarkupTheme.basicTags,
               ),
             ),
+            const SizedBox(height: 8),
+            // You can escape tags using "\".
+            Center(
+              child: MarkupText(
+                r'[u][i]Lorem ipsum dolor sit amet, \[b]consectetur adipiscing elit\[/b][/i][/u]',
+                tagStyles: DefaultMarkupTheme.basicTags,
+              ),
+            ),
           ],
         ),
       ),
