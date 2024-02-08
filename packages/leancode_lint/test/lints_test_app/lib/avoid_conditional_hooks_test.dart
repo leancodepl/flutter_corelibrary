@@ -230,14 +230,14 @@ class HookBuilderInIfIsOk extends StatelessWidget {
   }
 }
 
-class IifeIsDetected extends HookWidget {
-  const IifeIsDetected({super.key});
+class ImmediatelyInvokedFunctionExpressionIsDetected extends HookWidget {
+  const ImmediatelyInvokedFunctionExpressionIsDetected({super.key});
 
   @override
   Widget build(BuildContext context) {
     if (Random().nextBool()) {
       return () {
-        // ignore: avoid_conditional_hooks
+        // expect_lint: avoid_conditional_hooks
         useState(1);
         return const SizedBox();
       }();
