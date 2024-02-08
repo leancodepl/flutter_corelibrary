@@ -229,3 +229,20 @@ class HookBuilderInIfIsOk extends StatelessWidget {
     return const SizedBox();
   }
 }
+
+class IifeIsDetected extends HookWidget {
+  const IifeIsDetected({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (Random().nextBool()) {
+      return () {
+        // ignore: avoid_conditional_hooks
+        useState(1);
+        return const SizedBox();
+      }();
+    }
+
+    return const SizedBox();
+  }
+}
