@@ -34,7 +34,7 @@ class AvoidConditionalHooks extends DartLintRule {
               .reduce((acc, curr) => acc.offset < curr.offset ? acc : curr);
 
       final hooksCalledConditionally =
-          hookExpressions.where((e) => _isConditional(firstReturn, e));
+          hookExpressions.where((e) => _isConditional(firstReturn, e, node));
 
       for (final hookExpression in hooksCalledConditionally) {
         reporter.reportErrorForNode(_getLintCode(), hookExpression);
@@ -43,7 +43,11 @@ class AvoidConditionalHooks extends DartLintRule {
   }
 
   /// Check if node is present in any conditional branch
-  bool _isConditional(Expression? firstReturn, InvocationExpression node) {
+  bool _isConditional(
+    Expression? firstReturn,
+    InvocationExpression node,
+    FunctionBody body,
+  ) {
     bool isConditional(
       AstNode node, {
       required AstNode child,
@@ -76,6 +80,8 @@ class AvoidConditionalHooks extends DartLintRule {
         )
             when rightHandSide == child =>
           true,
+        // don't escape defining function bodies
+        _ when node == body => false,
         _ => switch (node.parent) {
             final parent? => isConditional(parent, child: node),
             _ => false,

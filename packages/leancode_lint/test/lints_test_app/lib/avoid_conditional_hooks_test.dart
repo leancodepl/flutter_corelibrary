@@ -211,3 +211,38 @@ final a = HookBuilder(
     return const SizedBox();
   },
 );
+
+class HookBuilderInIfIsOk extends StatelessWidget {
+  const HookBuilderInIfIsOk({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (Random().nextBool()) {
+      return HookBuilder(
+        builder: (context) {
+          useState(1);
+          return const SizedBox();
+        },
+      );
+    }
+
+    return const SizedBox();
+  }
+}
+
+class ImmediatelyInvokedFunctionExpressionIsDetected extends HookWidget {
+  const ImmediatelyInvokedFunctionExpressionIsDetected({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (Random().nextBool()) {
+      return () {
+        // expect_lint: avoid_conditional_hooks
+        useState(1);
+        return const SizedBox();
+      }();
+    }
+
+    return const SizedBox();
+  }
+}
