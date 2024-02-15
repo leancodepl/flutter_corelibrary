@@ -184,12 +184,12 @@ analyzer:
     use_to_and_as_if_applicable: warning
     valid_regexps: warning
     void_checks: warning
-    # todo disagnostic messages
+    # todo diagnostic messages
     fixme: warning
     hack: ignore
     todo: info
     undone: info
-    # hint diagnostic mesages
+    # hint diagnostic messages
     deprecated_colon_for_default_value: warning
     deprecated_export_use: info
     deprecated_member_use: info
