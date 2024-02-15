@@ -184,13 +184,12 @@ analyzer:
     use_to_and_as_if_applicable: warning
     valid_regexps: warning
     void_checks: warning
-    # todo disagnostic messages
+    # todo diagnostic messages
     fixme: warning
     hack: ignore
     todo: info
     undone: info
-    # hint diagnostic mesages
-    can_be_null_after_null_aware: warning
+    # hint diagnostic messages
     deprecated_colon_for_default_value: warning
     deprecated_export_use: info
     deprecated_member_use: info
@@ -208,7 +207,6 @@ linter:
     always_declare_return_types: true
     always_put_control_body_on_new_line: true
     always_put_required_named_parameters_first: false
-    always_require_non_null_named_parameters: false
     always_specify_types: false
     always_use_package_imports: false
     annotate_overrides: true
@@ -238,9 +236,7 @@ linter:
     avoid_relative_lib_imports: true
     avoid_renaming_method_parameters: true
     avoid_return_types_on_setters: true
-    avoid_returning_null_for_future: true
     avoid_returning_null_for_void: true
-    avoid_returning_null: true
     avoid_returning_this: true
     avoid_setters_without_getters: false
     avoid_shadowing_type_parameters: true

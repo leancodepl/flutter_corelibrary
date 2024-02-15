@@ -1,5 +1,6 @@
-# 8.1.0
-
+# 9.0.0
+- Disable lints deprecated in Dart 3.3.0
+- Bump minimum Dart version to 3.3
 - Enable custom lint `avoid_single_child_in_multi_child_widgets` for `Column`, `Row`, `Flex`, `Wrap`, `SliverList`, `MultiSliver`, `SliverChildListDelegate`, `SliverMainAxisGroup`, and `SliverCrossAxisGroup`
 - Fix `avoid_conditional_hooks` false positive
 
