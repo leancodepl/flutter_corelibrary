@@ -6,6 +6,8 @@ import 'package:equatable/equatable.dart';
 /// For example a tag like `[b]` or [/b] that identify start and end of tag with a name `'b'`.
 sealed class Token {
   const Token();
+
+  String get token;
 }
 
 class TagOpenToken extends Token with EquatableMixin {
@@ -16,6 +18,15 @@ class TagOpenToken extends Token with EquatableMixin {
 
   @override
   List<Object?> get props => [name, parameter];
+
+  @override
+  String get token {
+    if (parameter != null) {
+      return '[$name="$parameter"]';
+    } else {
+      return '[$name]';
+    }
+  }
 }
 
 class TagCloseToken extends Token with EquatableMixin {
@@ -25,6 +36,9 @@ class TagCloseToken extends Token with EquatableMixin {
 
   @override
   List<Object?> get props => [name];
+
+  @override
+  String get token => '[/$name]';
 }
 
 class TextToken extends Token with EquatableMixin {
@@ -34,4 +48,7 @@ class TextToken extends Token with EquatableMixin {
 
   @override
   List<Object?> get props => [content];
+
+  @override
+  String get token => content;
 }

@@ -22,6 +22,7 @@ class MarkupText extends StatelessWidget {
     this.textWidthBasis,
     this.textHeightBehavior,
     this.selectionColor,
+    this.tactic,
   });
 
   /// The markup text to display.
@@ -41,13 +42,14 @@ class MarkupText extends StatelessWidget {
   final TextWidthBasis? textWidthBasis;
   final ui.TextHeightBehavior? textHeightBehavior;
   final Color? selectionColor;
+  final ParsingAloneTagTactic? tactic;
 
   @override
   Widget build(BuildContext context) {
     final defaultMarkupStyle = DefaultMarkupTheme.of(context);
-
+    final tactic = this.tactic ?? defaultMarkupStyle.tactic;
     final spans = [
-      for (final taggedText in parseMarkup(markup))
+      for (final taggedText in parseMarkup(markup, tactic: tactic))
         _inlineSpanFor(taggedText, defaultMarkupStyle, tagStyles, tagFactories),
     ];
 
