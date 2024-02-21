@@ -10,7 +10,7 @@ Iterable<TaggedText> parseMarkup(
   final tokens = lexer.parse(markup).value;
   final cleanTokens = cleanUpTokens(tokens, markup, tactic: tactic);
 
-  return parseTokens(cleanTokens, markup, tactic: tactic);
+  return parseTokens(cleanTokens, markup);
 }
 
 /// Iterate through tokens, to verify, if all open and close tokens,
@@ -101,11 +101,7 @@ Tokens cleanUpTokens(
 /// Parses tokens into tagged texts.
 /// Assumes [tokens] were constructed from [source] with [lexer].
 @internal
-Iterable<TaggedText> parseTokens(
-  Tokens tokens,
-  String source, {
-  ParsingAloneTagTactic tactic = ParsingAloneTagTactic.hide,
-}) sync* {
+Iterable<TaggedText> parseTokens(Tokens tokens, String source) sync* {
   // stack with tag names
   final tagStack = <MarkupTag>[];
 
