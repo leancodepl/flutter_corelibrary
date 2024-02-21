@@ -100,6 +100,29 @@ void main() {
 
       expect(result, expected);
     });
+
+    test('with valid two tag pairs and one invalid opening tag', () {
+      final result = cleanUp(
+        const [
+          TagOpenToken('u'),
+          TagOpenToken('b'),
+          TagOpenToken('u'),
+          TextToken('Underline, text'),
+          TagCloseToken('b'),
+          TagCloseToken('u'),
+        ],
+      );
+
+      const expected = [
+        TagOpenToken('u'),
+        TagOpenToken('b'),
+        TextToken('Underline, text'),
+        TagCloseToken('b'),
+        TagCloseToken('u'),
+      ];
+
+      expect(result, expected);
+    });
   });
 
   group('Clean up parses tokens with ParsingAloneTagTactic.show', () {
@@ -200,6 +223,30 @@ void main() {
         TextToken('[u]'),
         TextToken('Underline, text'),
         TagCloseToken('b'),
+      ];
+
+      expect(result, expected);
+    });
+
+    test('with valid two tag pairs and one invalid opening tag', () {
+      final result = cleanUp(
+        const [
+          TagOpenToken('u'),
+          TagOpenToken('b'),
+          TagOpenToken('u'),
+          TextToken('Underline, text'),
+          TagCloseToken('b'),
+          TagCloseToken('u'),
+        ],
+      );
+
+      const expected = [
+        TagOpenToken('u'),
+        TagOpenToken('b'),
+        TextToken('[u]'),
+        TextToken('Underline, text'),
+        TagCloseToken('b'),
+        TagCloseToken('u'),
       ];
 
       expect(result, expected);

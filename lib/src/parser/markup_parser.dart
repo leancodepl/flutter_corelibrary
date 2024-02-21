@@ -25,24 +25,25 @@ Tokens cleanUpTokens(
   String source, {
   ParsingAloneTagTactic tactic = ParsingAloneTagTactic.show,
 }) {
-  final openingTokens = <TagOpenToken>[];
-  final invalidTokens = <Token>[];
+  final openingTokens = <(TagOpenToken, int)>[];
+  final invalidTokens = <(Token, int)>[];
 
+  var counter = 0;
   // Iterate through tags to verify if all have matching pair
   for (final token in tokens) {
     switch (token) {
       case TagOpenToken():
-        openingTokens.add(token);
+        openingTokens.add((token, counter));
       case TagCloseToken(:final name):
         if (openingTokens.isEmpty) {
-          invalidTokens.add(token);
-        } else if (openingTokens.last.name != name) {
+          invalidTokens.add((token, counter));
+        } else if (openingTokens.last.$1.name != name) {
           final lastIndex = openingTokens
-              .lastIndexWhere((openingToken) => openingToken.name == name);
+              .lastIndexWhere((openingToken) => openingToken.$1.name == name);
 
           if (lastIndex == -1) {
             /// If there's no matching opening token, add closing token to invalid tokens
-            invalidTokens.add(token);
+            invalidTokens.add((token, counter));
           } else {
             /// If there's matching opening token, add tokens that are after it,
             /// on list to invalid tokens
@@ -60,22 +61,41 @@ Tokens cleanUpTokens(
         }
       case TextToken():
     }
+    counter++;
   }
 
   /// Add remaining opening tokens as invalid
   invalidTokens.addAll(openingTokens);
 
+  final toReturn = <Token>[];
+  counter = 0;
+
   /// Modify list based on tactic
   switch (tactic) {
     case ParsingAloneTagTactic.hide:
-      return tokens.where((e) => !invalidTokens.contains(e)).toList();
+      for (final token in tokens) {
+        if (!invalidTokens.contains((token, counter))) {
+          toReturn.add(token);
+        }
+        counter++;
+      }
     case ParsingAloneTagTactic.show:
-      return tokens
-          .map((e) => invalidTokens.contains(e) ? TextToken(e.token) : e)
-          .toList();
+      for (final token in tokens) {
+        if (invalidTokens.contains((token, counter))) {
+          toReturn.add(TextToken(token.token));
+        } else {
+          toReturn.add(token);
+        }
+        counter++;
+      }
     case ParsingAloneTagTactic.throwException:
-      throw MarkupParsingException('Something to throw', source);
+      throw MarkupParsingException(
+        'Something tokens do not have matching pair',
+        source,
+      );
   }
+
+  return toReturn;
 }
 
 /// Parses tokens into tagged texts.
