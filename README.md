@@ -74,7 +74,7 @@ DefaultMarkupTheme(
 
 #### Logging
 
-If you wan to log invalid tags, pass logging method as `DefaultMarkupTheme` param. 
+If you want to log invalid tags, pass logging method as `DefaultMarkupTheme` param. 
 
 ### MarkupText
 
