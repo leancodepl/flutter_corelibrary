@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           children: [
             // You can use `DefaultMarkupTheme` to define common tag styles for children.
             DefaultMarkupTheme(
+              log: debugPrint,
               tagStyles: [
                 MarkupTagStyle.delegate(
                   tagName: 'b',
@@ -116,6 +117,13 @@ class MyApp extends StatelessWidget {
                   const MarkupText(
                     '[url="https://leancode.co"][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/url]',
                   ),
+                  // Show invalid tokens.
+                  Center(
+                    child: MarkupText(
+                      '[u][i]Lorem ipsum dolor sit amet,[/u] [/u][b]consectetur adipiscing elit[/b][c]',
+                      tagStyles: DefaultMarkupTheme.basicTags,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -124,13 +132,6 @@ class MyApp extends StatelessWidget {
             Center(
               child: MarkupText(
                 '[u][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/u]',
-                tagStyles: DefaultMarkupTheme.basicTags,
-              ),
-            ),
-            // Show invalid tokens.
-            Center(
-              child: MarkupText(
-                '[u][i]Lorem ipsum dolor sit amet,[/u] [/u][b]consectetur adipiscing elit[/b][c]',
                 tagStyles: DefaultMarkupTheme.basicTags,
               ),
             ),

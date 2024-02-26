@@ -45,6 +45,7 @@ It returns WidgetSpan.
 
 ```dart
 DefaultMarkupTheme(
+    log: debugPrint,
     tagStyles: [
         MarkupTagStyle.delegate(
             tagName: 'b',
@@ -69,6 +70,10 @@ DefaultMarkupTheme(
     child: ...
 ),
 ```
+
+#### Logging
+
+If you wan to log invalid tags, pass logging method as `DefaultMarkupTheme` param. 
 
 ### MarkupText
 
