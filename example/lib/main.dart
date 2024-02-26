@@ -127,6 +127,13 @@ class MyApp extends StatelessWidget {
                 tagStyles: DefaultMarkupTheme.basicTags,
               ),
             ),
+            // Show invalid tokens.
+            Center(
+              child: MarkupText(
+                '[u][i]Lorem ipsum dolor sit amet,[/u] [/u][b]consectetur adipiscing elit[/b][c]',
+                tagStyles: DefaultMarkupTheme.basicTags,
+              ),
+            ),
           ],
         ),
       ),
