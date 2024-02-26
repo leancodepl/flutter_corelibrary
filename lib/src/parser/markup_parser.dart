@@ -3,28 +3,17 @@ import 'package:leancode_markup/src/parser/tagged_text.dart';
 import 'package:leancode_markup/src/parser/tokens.dart';
 import 'package:meta/meta.dart';
 
-Iterable<TaggedText> parseMarkup(
-  String markup, {
-  ParsingAloneTagTactic tactic = ParsingAloneTagTactic.hide,
-}) {
+Iterable<TaggedText> parseMarkup(String markup) {
   final tokens = lexer.parse(markup).value;
-  final cleanTokens = cleanUpTokens(tokens, markup, tactic: tactic);
+  final cleanTokens = cleanUpTokens(tokens, markup);
 
   return parseTokens(cleanTokens, markup);
 }
 
 /// Iterate through tokens, to verify, if all open and close tokens,
-/// have matching pair.
-/// The result should be different based on ParsingAloneTagTactic. It could
-/// - show invalid tokens as text,
-/// - hide invalid tokens,
-/// - throw Exception
+/// have matching pair. Show invalid tokens as text,
 @internal
-Tokens cleanUpTokens(
-  Tokens tokens,
-  String source, {
-  ParsingAloneTagTactic tactic = ParsingAloneTagTactic.show,
-}) {
+Tokens cleanUpTokens(Tokens tokens, String source) {
   final openingTokens = <(TagOpenToken, int)>[];
   final invalidTokens = <(Token, int)>[];
 
@@ -70,29 +59,14 @@ Tokens cleanUpTokens(
   final toReturn = <Token>[];
   counter = 0;
 
-  /// Modify list based on tactic
-  switch (tactic) {
-    case ParsingAloneTagTactic.hide:
-      for (final token in tokens) {
-        if (!invalidTokens.contains((token, counter))) {
-          toReturn.add(token);
-        }
-        counter++;
-      }
-    case ParsingAloneTagTactic.show:
-      for (final token in tokens) {
-        if (invalidTokens.contains((token, counter))) {
-          toReturn.add(TextToken(token.token));
-        } else {
-          toReturn.add(token);
-        }
-        counter++;
-      }
-    case ParsingAloneTagTactic.throwException:
-      throw MarkupParsingException(
-        'Something tokens do not have matching pair',
-        source,
-      );
+  /// Modify list
+  for (final token in tokens) {
+    if (invalidTokens.contains((token, counter))) {
+      toReturn.add(TextToken(token.token));
+    } else {
+      toReturn.add(token);
+    }
+    counter++;
   }
 
   return toReturn;
@@ -127,11 +101,4 @@ class MarkupParsingException extends FormatException {
   String toString() {
     return 'MarkupParsingException: ${super.toString()}';
   }
-}
-
-/// Tactic for handling left alone opening and closing tags during parsing.
-enum ParsingAloneTagTactic {
-  hide,
-  show,
-  throwException,
 }

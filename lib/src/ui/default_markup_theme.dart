@@ -9,14 +9,12 @@ class DefaultMarkupTheme extends InheritedTheme {
     super.key,
     required this.tagStyles,
     this.tagFactories = const {},
-    this.tactic = ParsingAloneTagTactic.show,
     required super.child,
   });
 
   const DefaultMarkupTheme._fallback()
       : tagStyles = const [],
         tagFactories = const {},
-        tactic = ParsingAloneTagTactic.show,
         super(child: const SizedBox());
 
   /// The closest instance of this class that encloses the given context.
@@ -76,9 +74,6 @@ class DefaultMarkupTheme extends InheritedTheme {
 
   /// Tag factories to apply.
   final Map<String, MarkupTagSpanFactory> tagFactories;
-
-  /// Tactic for parsing alone tags.
-  final ParsingAloneTagTactic tactic;
 
   @override
   bool updateShouldNotify(DefaultMarkupTheme oldWidget) {
