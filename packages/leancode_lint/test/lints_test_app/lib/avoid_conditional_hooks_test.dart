@@ -138,14 +138,14 @@ class ShortCircuits extends HookWidget {
         // expect_lint: avoid_conditional_hooks
         useState(1);
 
-    if (useIsMounted()() || Random().nextBool()) {}
+    if (useContext().mounted || Random().nextBool()) {}
     if (Random().nextBool() ||
         // expect_lint: avoid_conditional_hooks
-        useIsMounted()()) {}
-    if (useIsMounted()() && Random().nextBool()) {}
+        useContext().mounted) {}
+    if (useContext().mounted && Random().nextBool()) {}
     if (Random().nextBool() &&
         // expect_lint: avoid_conditional_hooks
-        useIsMounted()()) {}
+        useContext().mounted) {}
 
     ValueNotifier<int>? b;
     b ??=
@@ -155,13 +155,13 @@ class ShortCircuits extends HookWidget {
     var c = true;
     c |=
         // expect_lint: avoid_conditional_hooks
-        useIsMounted()();
+        useContext().mounted;
     c &=
         // expect_lint: avoid_conditional_hooks
-        useIsMounted()();
+        useContext().mounted;
     c ^=
         // expect_lint: avoid_conditional_hooks
-        useIsMounted()();
+        useContext().mounted;
 
     throw Exception('$a1$a2$c');
   }
