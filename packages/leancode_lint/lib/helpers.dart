@@ -139,10 +139,16 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
         return;
       }
 
-      final isHookBuilder = const TypeChecker.fromName(
-        'HookBuilder',
-        packageName: 'flutter_hooks',
-      ).isExactly(classElement);
+      final isHookBuilder = const TypeChecker.any([
+        TypeChecker.fromName(
+          'HookBuilder',
+          packageName: 'flutter_hooks',
+        ),
+        TypeChecker.fromName(
+          'HookConsumer',
+          packageName: 'hooks_riverpod',
+        ),
+      ]).isExactly(classElement);
       if (!isHookBuilder) {
         return;
       }
@@ -161,10 +167,16 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
         return;
       }
 
-      const checker = TypeChecker.fromName(
-        'HookWidget',
-        packageName: 'flutter_hooks',
-      );
+      const checker = TypeChecker.any([
+        TypeChecker.fromName(
+          'HookWidget',
+          packageName: 'flutter_hooks',
+        ),
+        TypeChecker.fromName(
+          'HookConsumerWidget',
+          packageName: 'hooks_riverpod',
+        ),
+      ]);
 
       final AstNode diagnosticNode;
       if (isExactly) {
