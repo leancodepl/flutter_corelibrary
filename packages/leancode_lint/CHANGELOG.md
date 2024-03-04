@@ -1,3 +1,7 @@
+# 11.0.0
+
+- Treat `HookConsumer` and `HookConsumerWidget` from `package:hooks_riverpod` as hook widgets
+
 # 10.0.0
 
 - Bump `custom_lint_builder` dependency to 0.6.2
