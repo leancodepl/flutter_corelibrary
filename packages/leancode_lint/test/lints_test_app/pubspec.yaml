@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_hooks: ^0.20.2
+  hooks_riverpod: ^2.4.10
   sliver_tools: ^0.2.12
 
 dev_dependencies:

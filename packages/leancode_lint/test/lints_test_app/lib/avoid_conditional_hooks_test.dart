@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void someOtherFunction() {
   final b = Random().nextBool() ? useState(true) : useState(false);
@@ -76,6 +77,18 @@ class SampleConditionalExpressionHookWidget2 extends HookWidget {
 
   @override
   Widget build(BuildContext context) => Random().nextBool()
+      ? TextField(
+          controller: // expect_lint: avoid_conditional_hooks
+              useTextEditingController(),
+        )
+      : Container();
+}
+
+class HookConsumerWidgetIsSeenAsAHookWidget extends HookConsumerWidget {
+  const HookConsumerWidgetIsSeenAsAHookWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => Random().nextBool()
       ? TextField(
           controller: // expect_lint: avoid_conditional_hooks
               useTextEditingController(),
@@ -203,6 +216,17 @@ class CollectionIf extends HookWidget {
 
 final a = HookBuilder(
   builder: (context) {
+    if (Random().nextBool()) {
+      // expect_lint: avoid_conditional_hooks
+      useState(1);
+    }
+    useState(2);
+    return const SizedBox();
+  },
+);
+
+final b = HookConsumer(
+  builder: (context, ref, child) {
     if (Random().nextBool()) {
       // expect_lint: avoid_conditional_hooks
       useState(1);
