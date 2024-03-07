@@ -84,14 +84,28 @@ Iterable<TaggedText> parseTokens(Tokens tokens, String source) sync* {
     switch (token) {
       case TagOpenToken(:final name, :final parameter):
         tagStack.add(MarkupTag(name, parameter));
-      case TagCloseToken():
-        tagStack.removeLast();
+      case TagCloseToken(:final name):
+        if (tagStack.isEmpty || tagStack.last.name != name) {
+          throw MarkupParsingException(
+            'Found a closing tag without a matching opening one.',
+            source,
+          );
+        } else {
+          tagStack.removeLast();
+        }
       case TextToken(:final content):
         yield TaggedText(
           content,
           tags: [...tagStack],
         );
     }
+  }
+
+  if (tagStack.isNotEmpty) {
+    throw MarkupParsingException(
+      'Not all opening tags have a matching closing one.',
+      source,
+    );
   }
 }
 
