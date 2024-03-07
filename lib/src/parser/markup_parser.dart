@@ -30,15 +30,15 @@ Tokens cleanUpTokens(Tokens tokens, String source, {LoggerMethod? log}) {
               .lastIndexWhere((openingToken) => openingToken.$1.name == name);
 
           if (lastIndex == -1) {
-            /// If there's no matching opening token, add closing token to invalid tokens
+            // If there's no matching opening token, add closing token to invalid tokens
             invalidTokens.add((token, index));
           } else {
-            /// If there's matching opening token, add tokens that are after it,
-            /// on list to invalid tokens
+            // If there's matching opening token, add tokens that are after it,
+            // on list to invalid tokens
             invalidTokens.addAll(openingTokens.sublist(lastIndex + 1));
 
-            /// Remove from openingTokens invalid tokens and one valid,
-            /// matching to closing token
+            // Remove from openingTokens invalid tokens and one valid,
+            // matching to closing token
             openingTokens.removeRange(
               lastIndex,
               openingTokens.length,
