@@ -3,7 +3,7 @@ import 'package:leancode_markup/src/parser/markup_parser.dart';
 import 'package:leancode_markup/src/parser/tokens.dart';
 
 void main() {
-  group('Clean up parses tokens with ParsingAloneTagTactic.show', () {
+  group('Clean up parsed tokens', () {
     List<Token> cleanUp(List<Token> tokens) => cleanUpTokens(tokens, '');
 
     test('just text', () {
