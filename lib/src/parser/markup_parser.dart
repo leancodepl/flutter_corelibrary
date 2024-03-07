@@ -17,22 +17,21 @@ Tokens cleanUpTokens(Tokens tokens, String source, {LoggerMethod? log}) {
   final openingTokens = <(TagOpenToken, int)>[];
   final invalidTokens = <(Token, int)>[];
 
-  var counter = 0;
   // Iterate through tags to verify if all have matching pair
-  for (final token in tokens) {
+  for (final (index, token) in tokens.indexed) {
     switch (token) {
       case TagOpenToken():
-        openingTokens.add((token, counter));
+        openingTokens.add((token, index));
       case TagCloseToken(:final name):
         if (openingTokens.isEmpty) {
-          invalidTokens.add((token, counter));
+          invalidTokens.add((token, index));
         } else if (openingTokens.last.$1.name != name) {
           final lastIndex = openingTokens
               .lastIndexWhere((openingToken) => openingToken.$1.name == name);
 
           if (lastIndex == -1) {
             /// If there's no matching opening token, add closing token to invalid tokens
-            invalidTokens.add((token, counter));
+            invalidTokens.add((token, index));
           } else {
             /// If there's matching opening token, add tokens that are after it,
             /// on list to invalid tokens
@@ -50,24 +49,21 @@ Tokens cleanUpTokens(Tokens tokens, String source, {LoggerMethod? log}) {
         }
       case TextToken():
     }
-    counter++;
   }
 
   /// Add remaining opening tokens as invalid
   invalidTokens.addAll(openingTokens);
 
   final toReturn = <Token>[];
-  counter = 0;
 
   /// Modify list
-  for (final token in tokens) {
-    if (invalidTokens.contains((token, counter))) {
+  for (final (index, token) in tokens.indexed) {
+    if (invalidTokens.contains((token, index))) {
       log?.call('Invalid token ${token.token}');
       toReturn.add(TextToken(token.token));
     } else {
       toReturn.add(token);
     }
-    counter++;
   }
 
   return toReturn;
