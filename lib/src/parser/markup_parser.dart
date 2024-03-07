@@ -10,8 +10,8 @@ Iterable<TaggedText> parseMarkup(String markup, {LoggerMethod? log}) {
   return parseTokens(cleanTokens, markup);
 }
 
-/// Iterate through tokens, to verify, if all open and close tokens,
-/// have matching pair. Show invalid tokens as text,
+/// Transform [tokens] into a balanced list of open and close tokens.
+/// Shows invalid tokens as text.
 @internal
 Tokens cleanUpTokens(Tokens tokens, String source, {LoggerMethod? log}) {
   final openingTokens = <(TagOpenToken, int)>[];
