@@ -16,7 +16,7 @@ Iterable<TaggedText> parseMarkup(String markup, {Logger? logger}) {
 @internal
 Tokens cleanUpTokens(Tokens tokens, String source, {Logger? logger}) {
   final openingTokens = <(TagOpenToken, int)>[];
-  final invalidTokens = <(Token, int)>[];
+  final balanced = tokens.toList();
 
   // Iterate through tags to verify if all have matching pair
   for (final (index, token) in tokens.indexed) {
@@ -25,20 +25,22 @@ Tokens cleanUpTokens(Tokens tokens, String source, {Logger? logger}) {
         openingTokens.add((token, index));
       case TagCloseToken(:final name):
         if (openingTokens.isEmpty) {
-          invalidTokens.add((token, index));
+          balanced[index] = TextToken(token.token);
         } else if (openingTokens.last.$1.name != name) {
           final lastIndex = openingTokens
               .lastIndexWhere((openingToken) => openingToken.$1.name == name);
 
           if (lastIndex == -1) {
-            // If there's no matching opening token, add closing token to invalid tokens
-            invalidTokens.add((token, index));
+            // If there's no matching opening token, change closing token to TextToken
+            balanced[index] = TextToken(token.token);
           } else {
-            // If there's matching opening token, add tokens that are after it,
-            // on list to invalid tokens
-            invalidTokens.addAll(openingTokens.sublist(lastIndex + 1));
+            // If there's matching opening token, change tokens that are after it,
+            // on list to TextTokens
+            openingTokens.sublist(lastIndex + 1).forEach((element) {
+              balanced[element.$2] = TextToken(element.$1.token);
+            });
 
-            // Remove from openingTokens invalid tokens and one valid,
+            // Remove from openingTokens invalid tokens and one valid token,
             // matching to closing token
             openingTokens.removeRange(
               lastIndex,
@@ -52,22 +54,12 @@ Tokens cleanUpTokens(Tokens tokens, String source, {Logger? logger}) {
     }
   }
 
-  /// Add remaining opening tokens as invalid
-  invalidTokens.addAll(openingTokens);
-
-  final toReturn = <Token>[];
-
-  /// Modify list
-  for (final (index, token) in tokens.indexed) {
-    if (invalidTokens.contains((token, index))) {
-      logger?.warning('Invalid token ${token.token}');
-      toReturn.add(TextToken(token.token));
-    } else {
-      toReturn.add(token);
-    }
+  /// Change remaining opening tokens to TextToken
+  for (final element in openingTokens) {
+    balanced[element.$2] = TextToken(element.$1.token);
   }
 
-  return toReturn;
+  return balanced;
 }
 
 /// Parses tokens into tagged texts.
