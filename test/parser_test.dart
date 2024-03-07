@@ -148,5 +148,23 @@ void main() {
       ];
       expect(result, expected);
     });
+
+    test('fails for unclosed tags', () {
+      List<TaggedText> result() => parse(const [
+            TagOpenToken('u'),
+            TextToken('Start'),
+          ]);
+
+      expect(result, throwsA(isA<MarkupParsingException>()));
+    });
+
+    test('fails to close unopened tags', () {
+      List<TaggedText> result() => parse(const [
+            TextToken('Start'),
+            TagCloseToken('u'),
+          ]);
+
+      expect(result, throwsA(isA<MarkupParsingException>()));
+    });
   });
 }
