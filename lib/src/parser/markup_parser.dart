@@ -1,11 +1,12 @@
 import 'package:leancode_markup/leancode_markup.dart';
 import 'package:leancode_markup/src/parser/lexer.dart';
 import 'package:leancode_markup/src/parser/tokens.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
-Iterable<TaggedText> parseMarkup(String markup, {LoggerMethod? log}) {
+Iterable<TaggedText> parseMarkup(String markup, {Logger? logger}) {
   final tokens = lexer.parse(markup).value;
-  final cleanTokens = cleanUpTokens(tokens, markup, log: log);
+  final cleanTokens = cleanUpTokens(tokens, markup, logger: logger);
 
   return parseTokens(cleanTokens, markup);
 }
@@ -13,7 +14,7 @@ Iterable<TaggedText> parseMarkup(String markup, {LoggerMethod? log}) {
 /// Transform [tokens] into a balanced list of open and close tokens.
 /// Shows invalid tokens as text.
 @internal
-Tokens cleanUpTokens(Tokens tokens, String source, {LoggerMethod? log}) {
+Tokens cleanUpTokens(Tokens tokens, String source, {Logger? logger}) {
   final openingTokens = <(TagOpenToken, int)>[];
   final invalidTokens = <(Token, int)>[];
 
@@ -59,7 +60,7 @@ Tokens cleanUpTokens(Tokens tokens, String source, {LoggerMethod? log}) {
   /// Modify list
   for (final (index, token) in tokens.indexed) {
     if (invalidTokens.contains((token, index))) {
-      log?.call('Invalid token ${token.token}');
+      logger?.warning('Invalid token ${token.token}');
       toReturn.add(TextToken(token.token));
     } else {
       toReturn.add(token);

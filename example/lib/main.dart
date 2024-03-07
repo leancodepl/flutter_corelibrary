@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_markup/leancode_markup.dart';
+import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           children: [
             // You can use `DefaultMarkupTheme` to define common tag styles for children.
             DefaultMarkupTheme(
-              log: debugPrint,
+              logger: Logger('MarkupLogger'),
               tagStyles: [
                 MarkupTagStyle.delegate(
                   tagName: 'b',
