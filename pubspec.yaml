@@ -11,6 +11,7 @@ dependencies:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
+  logging: ^1.2.0
   meta: ^1.9.1
   petitparser: ^6.0.1
 

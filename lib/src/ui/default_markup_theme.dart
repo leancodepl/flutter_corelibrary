@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:leancode_markup/leancode_markup.dart';
+import 'package:logging/logging.dart';
 
 /// MarkupTagStyle equivalent of DefaultTextStyle.
 /// Keeps default tag styles to use in child MarkupText widgets.
@@ -9,12 +10,14 @@ class DefaultMarkupTheme extends InheritedTheme {
     super.key,
     required this.tagStyles,
     this.tagFactories = const {},
+    this.logger,
     required super.child,
   });
 
   const DefaultMarkupTheme._fallback()
       : tagStyles = const [],
         tagFactories = const {},
+        logger = null,
         super(child: const SizedBox());
 
   /// The closest instance of this class that encloses the given context.
@@ -31,6 +34,9 @@ class DefaultMarkupTheme extends InheritedTheme {
     return context.dependOnInheritedWidgetOfExactType<DefaultMarkupTheme>() ??
         const DefaultMarkupTheme._fallback();
   }
+
+  /// Optional logger.
+  final Logger? logger;
 
   /// List of basic tag styles, that provide support for bold, italic and underlined
   /// text styles. Prepared for quick use.

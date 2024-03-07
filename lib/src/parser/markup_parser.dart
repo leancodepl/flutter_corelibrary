@@ -1,12 +1,65 @@
+import 'package:leancode_markup/leancode_markup.dart';
 import 'package:leancode_markup/src/parser/lexer.dart';
-import 'package:leancode_markup/src/parser/tagged_text.dart';
 import 'package:leancode_markup/src/parser/tokens.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
-Iterable<TaggedText> parseMarkup(String markup) {
+Iterable<TaggedText> parseMarkup(String markup, {Logger? logger}) {
   final tokens = lexer.parse(markup).value;
+  final cleanTokens = cleanUpTokens(tokens, markup, logger: logger);
 
-  return parseTokens(tokens, markup);
+  return parseTokens(cleanTokens, markup);
+}
+
+/// Transform [tokens] into a balanced list of open and close tokens.
+/// Shows invalid tokens as text.
+@internal
+Tokens cleanUpTokens(Tokens tokens, String source, {Logger? logger}) {
+  final openingTokens = <(TagOpenToken, int)>[];
+  final balanced = tokens.toList();
+
+  // Iterate through tags to verify if all have matching pair
+  for (final (index, token) in tokens.indexed) {
+    switch (token) {
+      case TagOpenToken():
+        openingTokens.add((token, index));
+      case TagCloseToken(:final name):
+        if (openingTokens.isEmpty) {
+          balanced[index] = TextToken(token.token);
+        } else if (openingTokens.last.$1.name != name) {
+          final lastIndex = openingTokens
+              .lastIndexWhere((openingToken) => openingToken.$1.name == name);
+
+          if (lastIndex == -1) {
+            // If there's no matching opening token, change closing token to TextToken
+            balanced[index] = TextToken(token.token);
+          } else {
+            // If there's matching opening token, change tokens that are after it,
+            // on list to TextTokens
+            openingTokens.sublist(lastIndex + 1).forEach((element) {
+              balanced[element.$2] = TextToken(element.$1.token);
+            });
+
+            // Remove from openingTokens invalid tokens and one valid token,
+            // matching to closing token
+            openingTokens.removeRange(
+              lastIndex,
+              openingTokens.length,
+            );
+          }
+        } else {
+          openingTokens.removeLast();
+        }
+      case TextToken():
+    }
+  }
+
+  /// Change remaining opening tokens to TextToken
+  for (final element in openingTokens) {
+    balanced[element.$2] = TextToken(element.$1.token);
+  }
+
+  return balanced;
 }
 
 /// Parses tokens into tagged texts.

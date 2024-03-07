@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_markup/leancode_markup.dart';
+import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           children: [
             // You can use `DefaultMarkupTheme` to define common tag styles for children.
             DefaultMarkupTheme(
+              logger: Logger('MarkupLogger'),
               tagStyles: [
                 MarkupTagStyle.delegate(
                   tagName: 'b',
@@ -115,6 +117,13 @@ class MyApp extends StatelessWidget {
                   // Use tag factories to create e.g. clickable text to open link
                   const MarkupText(
                     '[url="https://leancode.co"][i]Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b][/i][/url]',
+                  ),
+                  // Show invalid tokens.
+                  Center(
+                    child: MarkupText(
+                      '[u][i]Lorem ipsum dolor sit amet,[/u] [/u][b]consectetur adipiscing elit[/b][c]',
+                      tagStyles: DefaultMarkupTheme.basicTags,
+                    ),
                   ),
                 ],
               ),
