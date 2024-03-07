@@ -35,7 +35,7 @@ class DefaultMarkupTheme extends InheritedTheme {
         const DefaultMarkupTheme._fallback();
   }
 
-  /// Optional log method
+  /// Optional logger.
   final Logger? logger;
 
   /// List of basic tag styles, that provide support for bold, italic and underlined
