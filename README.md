@@ -1,4 +1,4 @@
-# Tag-parser
+# Leancode markup
 
 Simple package that allows you parse text with predefined tags, and returns styled Flutter text.
 

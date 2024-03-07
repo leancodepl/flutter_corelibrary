@@ -1,3 +1,3 @@
 # example
 
-It's a tag-parser example app.
+It's a leancode_markup example app.
