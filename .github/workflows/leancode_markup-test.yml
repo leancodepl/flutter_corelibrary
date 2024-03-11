@@ -47,16 +47,16 @@ jobs:
           restore-keys: ${{ runner.os }}-pub-
 
       - name: Download pub dependencies
-        run: dart pub get
+        run: flutter pub get
 
       - name: Run analyzer
         run: |
-          dart analyze
+          flutter analyze
           dart run custom_lint
 
       - name: Run tests with coverage
         run: |
-          dart test --coverage=coverage
+          flutter test --coverage=coverage
           dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
 
       - name: Dry run pub publish
