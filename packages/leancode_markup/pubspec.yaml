@@ -1,6 +1,6 @@
 name: leancode_markup
 version: 0.0.1
-homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_hooks
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_markup
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
   Simple package that allows you parse text with predefined tags, and
