@@ -1,0 +1,38 @@
+name: leancode_markup publish
+
+on:
+  push:
+    tags: ['leancode_markup-v*']
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: packages/leancode_markup
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.x'
+          cache: true
+
+      - name: Publish and release
+        uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
+        with:
+          path: packages/leancode_markup
