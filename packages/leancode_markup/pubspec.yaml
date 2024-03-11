@@ -1,7 +1,10 @@
 name: leancode_markup
-description: A new Flutter package project.
 version: 0.0.1
-homepage:
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_hooks
+repository: https://github.com/leancodepl/flutter_corelibrary
+description: >-
+  Simple package that allows you parse text with predefined tags, and
+  returns styled Flutter text.
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
