@@ -3,7 +3,7 @@ name: leancode_markup test
 on:
   push:
     branches: [master]
-    ignore-tags: ['leancode_markup-v*']
+    tags-ignore: ['leancode_markup-v*']
     paths:
       - 'packages/leancode_markup/**'
   pull_request:
@@ -13,13 +13,14 @@ on:
 
 jobs:
   test:
-    name: Dart ${{ matrix.dart_release }}
+    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        dart_release: ['3.2']
+        include:
+          - version: '3.16.x'
 
     defaults:
       run:
@@ -27,20 +28,21 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
         with:
-          sdk: ${{ matrix.dart_release }}
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
 
-      - name: Dart version
-        run: dart --version
+      - name: Flutter version
+        run: flutter --version
 
       - name: Cache pub dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.pub-cache
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
