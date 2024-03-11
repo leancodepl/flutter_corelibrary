@@ -54,15 +54,10 @@ jobs:
           flutter analyze
           dart run custom_lint
 
-      - name: Run tests with coverage
+      - name: Run tests
         run: |
-          flutter test --coverage=coverage
-          dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
-
+          flutter test
+          
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
         run: dart pub publish --dry-run || true
-
-      - uses: codecov/codecov-action@v1
-        with:
-          flags: leancode_markup
