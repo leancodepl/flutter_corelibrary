@@ -16,7 +16,7 @@ class MarkupText extends StatelessWidget {
     this.locale,
     this.softWrap,
     this.overflow,
-    this.textScaleFactor,
+    this.textScaler,
     this.maxLines,
     this.semanticsLabel,
     this.textWidthBasis,
@@ -35,7 +35,7 @@ class MarkupText extends StatelessWidget {
   final Locale? locale;
   final bool? softWrap;
   final TextOverflow? overflow;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
   final int? maxLines;
   final String? semanticsLabel;
   final TextWidthBasis? textWidthBasis;
@@ -59,7 +59,7 @@ class MarkupText extends StatelessWidget {
       locale: locale,
       softWrap: softWrap,
       overflow: overflow,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
       maxLines: maxLines,
       semanticsLabel: semanticsLabel,
       textWidthBasis: textWidthBasis,
@@ -163,7 +163,11 @@ class MarkupText extends StatelessWidget {
         EnumProperty<TextOverflow>('overflow', overflow, defaultValue: null),
       )
       ..add(
-        DoubleProperty('textScaleFactor', textScaleFactor, defaultValue: null),
+        DiagnosticsProperty<TextScaler>(
+          'textScaler',
+          textScaler,
+          defaultValue: null,
+        ),
       )
       ..add(IntProperty('maxLines', maxLines, defaultValue: null))
       ..add(
