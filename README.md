@@ -7,6 +7,7 @@
 | [`override_api_endpoint`][override_api_endpoint-link] | [Documentation][override_api_endpoint-documentation] | [![override_api_endpoint pub.dev badge][override_api_endpoint-pub-badge]][override_api_endpoint-pub-badge-link] | [![][override_api_endpoint-build-badge]][override_api_endpoint-build-badge-link] |
 | [`leancode_hooks`][leancode_hooks-link]               |    [Documentation][leancode_hooks-documentation]     |           [![leancode_hooks pub.dev badge][leancode_hooks-pub-badge]][leancode_hooks-pub-badge-link]            |        [![][leancode_hooks-build-badge]][leancode_hooks-build-badge-link]        |
 | [`enhanced_gradients`][enhanced_gradients-link]       |  [Documentation][enhanced_gradients-documentation]   |     [![enhanced_gradients pub.dev badge][enhanced_gradients-pub-badge]][enhanced_gradients-pub-badge-link]      |    [![][enhanced_gradients-build-badge]][enhanced_gradients-build-badge-link]    |
+| [`leancode_markup`][leancode_markup-link]       |  [Documentation][leancode_markup-documentation]   |     [![leancode_markup pub.dev badge][leancode_markup-pub-badge]][leancode_markup-pub-badge-link]      |    [![][leancode_markup-build-badge]][leancode_markup-build-badge-link]    |
 
 ## pub.dev release process
 
@@ -52,3 +53,9 @@ Tag your desired commit with `<package_name>-v<version>` and let the GitHub Acti
 [enhanced_gradients-pub-badge-link]: https://pub.dev/packages/enhanced_gradients
 [enhanced_gradients-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/enhanced_gradients-test.yml?branch=master
 [enhanced_gradients-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/enhanced_gradients-test.yml
+[leancode_markup-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_markup
+[leancode_markup-documentation]: https://pub.dev/documentation/leancode_markup/latest/
+[leancode_markup-pub-badge]: https://img.shields.io/pub/v/leancode_markup
+[leancode_markup-pub-badge-link]: https://pub.dev/packages/leancode_markup
+[leancode_markup-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_markup-test.yml?branch=master
+[leancode_markup-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_markup-test.yml
