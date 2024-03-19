@@ -3,6 +3,6 @@ packages/login_client @Albert221
 packages/login_client_flutter @Albert221
 packages/override_api_endpoint @lukaszgarstecki @Xezolpl
 packages/leancode_lint @shilangyu
-packages/leancode_hooks @bartekpacia
+packages/leancode_hooks @kotertom
 packages/enhanced_gradients @kotertom
 packages/leancode_flutter_svg_adaptive_loader @Xezolpl
