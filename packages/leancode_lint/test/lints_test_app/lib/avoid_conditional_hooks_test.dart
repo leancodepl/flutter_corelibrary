@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_string_literals_in_widgets
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';

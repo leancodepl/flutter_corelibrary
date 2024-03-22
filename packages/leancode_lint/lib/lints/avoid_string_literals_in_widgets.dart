@@ -1,11 +1,11 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
-/// Displays warning for cubits which do not have the `Cubit` suffix in their
-/// class name.
+/// Displays warning for string literals used inside Widget classes.
 class AvoidStringLiteralsInWidgets extends DartLintRule {
   AvoidStringLiteralsInWidgets() : super(code: _getLintCode());
 
@@ -24,11 +24,6 @@ class AvoidStringLiteralsInWidgets extends DartLintRule {
           return;
         }
 
-        final buildMethod = getBuildMethod(node);
-        if (buildMethod == null) {
-          return;
-        }
-
         final stringLiterals = _getDescendantStringLiterals(node);
 
         for (final stringLiteral in stringLiterals) {
@@ -38,8 +33,12 @@ class AvoidStringLiteralsInWidgets extends DartLintRule {
     );
   }
 
-  static List<AstNode> _getDescendantStringLiterals(node) {
-    return [];
+  static List<AstNode> _getDescendantStringLiterals(
+    AstNode node,
+  ) {
+    final stringLiterals = <StringLiteral>[];
+    node.visitChildren(_StringLiteralVisitor(stringLiterals));
+    return stringLiterals;
   }
 
   static LintCode _getLintCode() {
@@ -49,5 +48,24 @@ class AvoidStringLiteralsInWidgets extends DartLintRule {
       correctionMessage: 'Prefer a localized message.',
       errorSeverity: ErrorSeverity.WARNING,
     );
+  }
+}
+
+class _StringLiteralVisitor extends GeneralizingAstVisitor<void> {
+  _StringLiteralVisitor(this.acc);
+
+  final List<StringLiteral> acc;
+
+  @override
+  void visitStringLiteral(StringLiteral node) {
+    final insideCatchClause =
+        node.thisOrAncestorMatching((n) => n is CatchClause) != null;
+    final insideThrowExpression =
+        node.thisOrAncestorMatching((n) => n is ThrowExpression) != null;
+    if (!insideCatchClause && !insideThrowExpression) {
+      acc.add(node);
+    }
+
+    super.visitStringLiteral(node);
   }
 }

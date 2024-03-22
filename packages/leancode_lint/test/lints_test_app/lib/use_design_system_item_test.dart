@@ -1,4 +1,5 @@
 // ignore_for_file: unused_local_variable
+// ignore_for_file: avoid_string_literals_in_widgets
 
 import 'package:flutter/material.dart';
 
