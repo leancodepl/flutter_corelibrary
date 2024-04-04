@@ -195,7 +195,6 @@ analyzer:
     deprecated_member_use: info
     division_optimization: warning
     import_deferred_library_with_load_function: warning
-    import_of_legacy_library_into_null_safe: warning
     unignorable_ignore: warning
     unnecessary_cast: warning
     unnecessary_import: warning
