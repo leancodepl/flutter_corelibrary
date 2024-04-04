@@ -1,3 +1,7 @@
+# 12.0.0
+
+- Remove deprecated `import_of_legacy_library_into_null_safe` error code
+
 # 11.0.0
 
 - Treat `HookConsumer` and `HookConsumerWidget` from `package:hooks_riverpod` as hook widgets
