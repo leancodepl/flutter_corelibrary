@@ -17,13 +17,13 @@ dependencies:
   logging: ^1.2.0
   rxdart: ^0.27.7
   shake: ^2.2.0
-  share_plus: ^7.0.2
+  share_plus: ">=7.0.2 <9.0.0"
 
 dev_dependencies:
-  custom_lint: ^0.5.6
+  custom_lint: ">=0.5.6 <0.7.0"
   flutter_test:
     sdk: flutter
-  leancode_lint: ^8.0.0
+  leancode_lint: ">=8.0.0 <13.0.0"
   mocktail: ^1.0.1
 
 # For information on the generic Dart part of this file, see the
