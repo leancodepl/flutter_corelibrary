@@ -1,7 +1,12 @@
+# Unreleased
+
+- Bump `leancode_lint` dev dependency to `12.0.0`.
+- Bump `custom_lint` dev dependency to `0.6.4`.
+
 # 3.0.0
 
 - Bump `flutter` version range to `>=3.10.0`.
-- Bump `login_client` dependency to `3.0.0`.  
+- Bump `login_client` dependency to `3.0.0`.
 - Bump `leancode_lint` dev dependency to `8.0.0`. (#230)
 
 # 2.0.1+1
