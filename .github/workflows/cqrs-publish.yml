@@ -24,7 +24,7 @@ jobs:
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: 3.2
+          sdk: 3.3
 
       - name: Publish
         run: dart pub publish -f
