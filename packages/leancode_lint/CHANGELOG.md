@@ -1,3 +1,7 @@
+# 12.1.0
+
+- Treat `HookWidget` as a new hook context. This should remove some false positives in `avoid_conditional_hooks` and catch new cases in `hook_widget_does_not_use_hooks`.
+
 # 12.0.0
 
 - Remove deprecated `import_of_legacy_library_into_null_safe` error code
