@@ -116,3 +116,21 @@ final c =
     return const SizedBox();
   },
 );
+
+// expect_lint: hook_widget_does_not_use_hooks
+class HookBuilderIsASeparateHookContext extends HookWidget {
+  const HookBuilderIsASeparateHookContext({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // expect_lint: hook_widget_does_not_use_hooks
+    return HookBuilder(
+      builder: (context) => HookBuilder(
+        builder: (context) {
+          useState(1);
+          return const SizedBox();
+        },
+      ),
+    );
+  }
+}
