@@ -38,12 +38,24 @@ class _HookExpressionsGatherer extends GeneralizingAstVisitor<void> {
 
   static List<InvocationExpression> gather(AstNode node) {
     final visitor = _HookExpressionsGatherer();
-    node.visitChildren(visitor);
+    node.accept(visitor);
     return visitor._hookExpressions;
   }
 
   // use + upper case letter to avoid cases like "user"
   static final _isHookRegex = RegExp('^_?use[0-9A-Z]');
+
+  @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    switch (maybeHookBuilderBody(node)) {
+      case null:
+        // It is not a hook builder, let's continue searching
+        return super.visitInstanceCreationExpression(node);
+      case final _:
+        // this is a hook builder, so it has a new hook context for used hooks: stop recursing
+        return;
+    }
+  }
 
   @override
   void visitInvocationExpression(InvocationExpression node) {
@@ -57,6 +69,38 @@ class _HookExpressionsGatherer extends GeneralizingAstVisitor<void> {
 
 List<InvocationExpression> getAllInnerHookExpressions(AstNode node) {
   return _HookExpressionsGatherer.gather(node);
+}
+
+/// Given an instance creation, returns the builder function body if the node is a HookBuilder.
+FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
+  final classElement = node.constructorName.type.element;
+  if (classElement == null) {
+    return null;
+  }
+
+  final isHookBuilder = const TypeChecker.any([
+    TypeChecker.fromName(
+      'HookBuilder',
+      packageName: 'flutter_hooks',
+    ),
+    TypeChecker.fromName(
+      'HookConsumer',
+      packageName: 'hooks_riverpod',
+    ),
+  ]).isExactly(classElement);
+  if (!isHookBuilder) {
+    return null;
+  }
+
+  final builderParameter = node.argumentList.arguments
+      .whereType<NamedExpression>()
+      .firstWhereOrNull((e) => e.name.label.name == 'builder');
+  if (builderParameter
+      case NamedExpression(expression: FunctionExpression(:final body))) {
+    return body;
+  }
+
+  return null;
 }
 
 class _ReturnExpressionGatherer extends GeneralizingAstVisitor<void> {
@@ -134,30 +178,7 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
     bool isExactly = false,
   }) {
     addInstanceCreationExpression((node) {
-      final classElement = node.constructorName.type.element;
-      if (classElement == null) {
-        return;
-      }
-
-      final isHookBuilder = const TypeChecker.any([
-        TypeChecker.fromName(
-          'HookBuilder',
-          packageName: 'flutter_hooks',
-        ),
-        TypeChecker.fromName(
-          'HookConsumer',
-          packageName: 'hooks_riverpod',
-        ),
-      ]).isExactly(classElement);
-      if (!isHookBuilder) {
-        return;
-      }
-
-      final builderParameter = node.argumentList.arguments
-          .whereType<NamedExpression>()
-          .firstWhereOrNull((e) => e.name.label.name == 'builder');
-      if (builderParameter
-          case NamedExpression(expression: FunctionExpression(:final body))) {
+      if (maybeHookBuilderBody(node) case final body?) {
         listener(body, node.constructorName);
       }
     });

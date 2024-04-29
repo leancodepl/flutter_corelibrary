@@ -270,3 +270,22 @@ class ImmediatelyInvokedFunctionExpressionIsDetected extends HookWidget {
     return const SizedBox();
   }
 }
+
+class HookBuilderInHookWidgetShouldBeOk extends HookWidget {
+  const HookBuilderInHookWidgetShouldBeOk({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    useState(1);
+    if (Random().nextBool()) {
+      return const SizedBox();
+    }
+
+    return HookBuilder(
+      builder: (context) {
+        useState(1);
+        return const SizedBox();
+      },
+    );
+  }
+}
