@@ -52,3 +52,6 @@ ios/Flutter/
 local.properties
 
 /coverage
+
+# FVM Version Cache
+.fvm/
