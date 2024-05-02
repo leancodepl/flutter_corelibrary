@@ -1,3 +1,7 @@
+## 2.0.0
+
+- BREAKING CHANGE: Raise minimum Flutter version to 3.19.0. Previous versions of enhanced_gradients were incompatible with Flutter 3.19 due to dependency constraints.
+
 ## 1.0.2
 
 - Remove dependency on HctSolver and use Hct instead.
