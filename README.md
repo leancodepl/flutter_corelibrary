@@ -9,9 +9,15 @@
 | [`enhanced_gradients`][enhanced_gradients-link]       |  [Documentation][enhanced_gradients-documentation]   |     [![enhanced_gradients pub.dev badge][enhanced_gradients-pub-badge]][enhanced_gradients-pub-badge-link]      |    [![][enhanced_gradients-build-badge]][enhanced_gradients-build-badge-link]    |
 | [`leancode_markup`][leancode_markup-link]       |  [Documentation][leancode_markup-documentation]   |     [![leancode_markup pub.dev badge][leancode_markup-pub-badge]][leancode_markup-pub-badge-link]      |    [![][leancode_markup-build-badge]][leancode_markup-build-badge-link]    |
 
-## pub.dev release process
+## For maintainers
 
-Tag your desired commit with `<package_name>-v<version>` and let the GitHub Actions do the rest.
+### pub.dev release process
+
+1. Create a pull request with your changes
+2. Gather approvals and ensure CI passes
+3. Update `pubspec.yaml` with appropriate package version and add an entry to your package's `CHANGELOG.md`
+4. Merge
+5. Tag your merge commit on `master` with `<package_name>-v<version>` and let the GitHub Actions do the rest.
 
 [cqrs-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/cqrs
 [cqrs-documentation]: https://pub.dev/documentation/cqrs/latest/
