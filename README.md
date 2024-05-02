@@ -14,8 +14,8 @@
 ### pub.dev release process
 
 1. Create a pull request with your changes
-2. Gather approvals and ensure CI passes
-3. Update `pubspec.yaml` with appropriate package version and add an entry to your package's `CHANGELOG.md`
+2. Update `pubspec.yaml` with appropriate package version and add an entry to your package's `CHANGELOG.md`
+3. Gather approvals and ensure CI passes
 4. Merge
 5. Tag your merge commit on `master` with `<package_name>-v<version>` and let the GitHub Actions do the rest.
 
