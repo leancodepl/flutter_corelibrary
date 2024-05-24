@@ -10,7 +10,6 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
-  floating_chat_button: ^1.0.1
   flutter:
     sdk: flutter
   http: ^1.1.0
