@@ -18,6 +18,7 @@ void main() {
         final mockClient = MockHttpClient();
         controller = DebugPageController(
           loggingHttpClient: LoggingHttpClient(client: mockClient),
+          showOnShake: false,
         );
 
         Logger.root.level = Level.ALL;

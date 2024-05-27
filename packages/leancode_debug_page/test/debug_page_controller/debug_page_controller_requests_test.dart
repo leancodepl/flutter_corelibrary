@@ -66,7 +66,10 @@ void main() {
         );
 
         loggingHttpClient = LoggingHttpClient(client: mockClient);
-        controller = DebugPageController(loggingHttpClient: loggingHttpClient);
+        controller = DebugPageController(
+          loggingHttpClient: loggingHttpClient,
+          showOnShake: false,
+        );
       },
     );
 
