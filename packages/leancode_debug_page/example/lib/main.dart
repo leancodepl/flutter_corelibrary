@@ -1,10 +1,9 @@
 import 'dart:math';
 
 import 'package:example/util.dart';
-
 import 'package:flutter/material.dart';
-import 'package:debug_page/debug_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:leancode_debug_page/leancode_debug_page.dart';
 import 'package:logging/logging.dart';
 
 void main() {

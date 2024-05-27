@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_redundant_argument_values
 
-import 'package:debug_page/debug_page.dart';
+import 'package:debug_page/leancode_debug_page.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';

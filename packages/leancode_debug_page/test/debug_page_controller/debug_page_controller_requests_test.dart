@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:debug_page/debug_page.dart';
+import 'package:debug_page/leancode_debug_page.dart';
 import 'package:debug_page/src/core/filters/request_filters.dart';
 import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';

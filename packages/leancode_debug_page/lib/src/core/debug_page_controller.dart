@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:debug_page/debug_page.dart';
+import 'package:debug_page/leancode_debug_page.dart';
 import 'package:debug_page/src/core/logger_listener.dart';
 import 'package:debug_page/src/models/filter.dart';
 import 'package:debug_page/src/models/request_log_record.dart';

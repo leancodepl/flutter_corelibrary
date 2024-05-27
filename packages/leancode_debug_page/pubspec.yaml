@@ -1,5 +1,5 @@
-name: debug_page
-version: 1.0.0-alpha
+name: leancode_debug_page
+version: 1.0.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/debug_page
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-

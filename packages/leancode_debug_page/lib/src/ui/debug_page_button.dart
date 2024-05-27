@@ -1,5 +1,5 @@
-import 'package:debug_page/debug_page.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/leancode_debug_page.dart';
 
 class DebugPageButton extends StatelessWidget {
   const DebugPageButton({
