@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:debug_page/leancode_debug_page.dart';
-import 'package:debug_page/src/core/logger_listener.dart';
-import 'package:debug_page/src/models/filter.dart';
-import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/core/logger_listener.dart';
+import 'package:leancode_debug_page/src/core/logging_http_client.dart';
+import 'package:leancode_debug_page/src/models/filter.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shake/shake.dart';

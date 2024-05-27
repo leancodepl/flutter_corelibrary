@@ -1,6 +1,6 @@
-import 'package:debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
-import 'package:debug_page/src/ui/logs_inspector/widgets/search_field.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/search_field.dart';
 
 class FilteredSearchField<T> extends StatelessWidget {
   const FilteredSearchField({

@@ -1,10 +1,10 @@
-import 'package:debug_page/src/core/debug_page_controller.dart';
-import 'package:debug_page/src/ui/colors.dart';
-import 'package:debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/widgets/logs_inspector_share_button.dart';
-import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/leancode_debug_page.dart';
+import 'package:leancode_debug_page/src/ui/colors.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/logs_inspector_share_button.dart';
+import 'package:leancode_debug_page/src/ui/typography.dart';
 
 enum LogsInspectorTab {
   requests,

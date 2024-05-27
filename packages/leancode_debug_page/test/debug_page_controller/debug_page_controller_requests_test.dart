@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:debug_page/leancode_debug_page.dart';
-import 'package:debug_page/src/core/filters/request_filters.dart';
-import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:leancode_debug_page/src/core/debug_page_controller.dart';
+import 'package:leancode_debug_page/src/core/filters/request_filters.dart';
+import 'package:leancode_debug_page/src/core/logging_http_client.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../util/mock_http_client.dart';

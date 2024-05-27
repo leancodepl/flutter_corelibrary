@@ -1,7 +1,7 @@
-import 'package:debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
-import 'package:debug_page/src/ui/logs_inspector/map_view.dart';
-import 'package:debug_page/src/ui/logs_inspector/widgets/share_button.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/share_button.dart';
 import 'package:logging/logging.dart';
 import 'package:share_plus/share_plus.dart';
 

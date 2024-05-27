@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_redundant_argument_values
 
-import 'package:debug_page/leancode_debug_page.dart';
-import 'package:debug_page/src/models/request_log_record.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
+import 'package:leancode_debug_page/src/core/logging_http_client.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'util/mock_http_client.dart';

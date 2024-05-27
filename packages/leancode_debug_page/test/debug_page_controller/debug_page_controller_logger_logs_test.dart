@@ -1,8 +1,8 @@
-import 'package:debug_page/src/core/debug_page_controller.dart';
-import 'package:debug_page/src/core/filters/logger_filters.dart';
-import 'package:debug_page/src/core/logging_http_client.dart';
-import 'package:debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:leancode_debug_page/src/core/debug_page_controller.dart';
+import 'package:leancode_debug_page/src/core/filters/logger_filters.dart';
+import 'package:leancode_debug_page/src/core/logging_http_client.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.dart';
 import 'package:logging/logging.dart';
 
 import '../util/mock_http_client.dart';

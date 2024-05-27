@@ -1,6 +1,6 @@
-import 'package:debug_page/src/models/filter.dart';
-import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
+import 'package:leancode_debug_page/src/models/filter.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/requests_tab_filters_menu.dart';
 
 class RequestStatusFilter implements Filter<RequestLogRecord> {
   const RequestStatusFilter({required this.desiredStatus});

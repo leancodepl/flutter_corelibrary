@@ -1,5 +1,5 @@
-import 'package:debug_page/src/models/filter.dart';
-import 'package:debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.dart';
+import 'package:leancode_debug_page/src/models/filter.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/logger/logger_tab_filters_menu.dart';
 import 'package:logging/logging.dart';
 
 class LoggerLevelFilter implements Filter<LogRecord> {

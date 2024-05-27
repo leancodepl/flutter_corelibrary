@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/ui/logs_inspector/map_view.dart';
-import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
+import 'package:leancode_debug_page/src/ui/typography.dart';
 
 class RequestDetailsScreenResponseTab extends StatelessWidget {
   const RequestDetailsScreenResponseTab({

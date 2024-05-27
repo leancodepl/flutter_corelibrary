@@ -1,10 +1,10 @@
-import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_overview_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_request_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_response_tab.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
-import 'package:debug_page/src/ui/logs_inspector/widgets/share_button.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_overview_tab.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_request_tab.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_response_tab.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/share_button.dart';
 import 'package:share_plus/share_plus.dart';
 
 class RequestDetailsRoute extends MaterialPageRoute<void> {

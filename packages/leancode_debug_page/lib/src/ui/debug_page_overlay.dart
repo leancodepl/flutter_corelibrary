@@ -1,7 +1,7 @@
-import 'package:debug_page/leancode_debug_page.dart';
-import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/leancode_debug_page.dart';
 import 'package:leancode_debug_page/src/ui/debug_page_button.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/logs_inspector.dart';
 
 class DebugPageOverlay extends StatelessWidget {
   const DebugPageOverlay({

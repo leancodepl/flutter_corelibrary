@@ -1,5 +1,5 @@
-import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/ui/typography.dart';
 
 class MapView extends StatelessWidget {
   const MapView({

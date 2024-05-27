@@ -1,5 +1,5 @@
-import 'package:debug_page/src/models/log_record_format_extension.dart';
-import 'package:debug_page/src/models/logs_summarizer.dart';
+import 'package:leancode_debug_page/src/models/log_record_format_extension.dart';
+import 'package:leancode_debug_page/src/models/logs_summarizer.dart';
 import 'package:logging/logging.dart';
 
 class LoggerLogsSummarizer extends LogsSummarizer<LogRecord> {

@@ -1,7 +1,7 @@
-import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen.dart';
-import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen.dart';
+import 'package:leancode_debug_page/src/ui/typography.dart';
 
 extension _ColorExtension on RequestStatus {
   Color get color {

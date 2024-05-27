@@ -1,11 +1,11 @@
-import 'package:debug_page/src/core/debug_page_controller.dart';
-import 'package:debug_page/src/core/filters/request_filters.dart';
-import 'package:debug_page/src/models/request_log_record.dart';
-import 'package:debug_page/src/ui/colors.dart';
-import 'package:debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
-import 'package:debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
-import 'package:debug_page/src/ui/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/leancode_debug_page.dart';
+import 'package:leancode_debug_page/src/core/filters/request_filters.dart';
+import 'package:leancode_debug_page/src/models/request_log_record.dart';
+import 'package:leancode_debug_page/src/ui/colors.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
+import 'package:leancode_debug_page/src/ui/typography.dart';
 
 enum RequestSearchType {
   url,
