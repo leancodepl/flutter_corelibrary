@@ -48,13 +48,9 @@ class RequestLogTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(url, style: DebugPageTypography.medium),
-          Row(
-            children: [
-              Text(
-                '${log.method}, ${_formatTime(log.startTime)}',
-                style: DebugPageTypography.small,
-              ),
-            ],
+          Text(
+            '${log.method}, ${_formatTime(log.startTime)}',
+            style: DebugPageTypography.small,
           ),
         ],
       ),

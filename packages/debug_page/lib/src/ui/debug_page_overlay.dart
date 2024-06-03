@@ -1,6 +1,6 @@
 import 'package:debug_page/debug_page.dart';
+import 'package:debug_page/src/ui/debug_page_button.dart';
 import 'package:debug_page/src/ui/logs_inspector/logs_inspector.dart';
-import 'package:floating_chat_button/floating_chat_button.dart';
 import 'package:flutter/material.dart';
 
 class DebugPageOverlay extends StatelessWidget {
@@ -24,31 +24,7 @@ class DebugPageOverlay extends StatelessWidget {
       children: [
         child,
         if (_controller.showEntryButton)
-          SafeArea(
-            child: Overlay(
-              clipBehavior: Clip.none,
-              initialEntries: [
-                OverlayEntry(
-                  builder: (context) => FloatingChatButton(
-                    onTap: (_) => _controller.visible.value = true,
-                    shouldPutWidgetInCircle: false,
-                    chatIconWidget: _controller.showEntryButton
-                        ? FloatingActionButton(
-                            backgroundColor: Colors.amber.shade700,
-                            splashColor: Colors.amber.shade900,
-                            onPressed: () => _controller.visible.value = true,
-                            child: const Icon(
-                              Icons.bug_report_outlined,
-                              size: 36,
-                              color: Colors.black,
-                            ),
-                          )
-                        : const SizedBox(),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          DebugPageButton(controller: _controller),
         ValueListenableBuilder(
           valueListenable: _controller.visible,
           builder: (context, visible, child) {
