@@ -25,11 +25,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share_plus/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   sensors_plus: 5717760720f7e6acd96fdbd75b7428f5ad755ec2
-  share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
+  share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
 
-PODFILE CHECKSUM: d4b1e61d92195dbae4de5691d6fcd85ff6450632
+PODFILE CHECKSUM: 23c5db403a9f2d103e08afd68b26a1601b49de37
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2
