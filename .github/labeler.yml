@@ -1,0 +1,48 @@
+p:cqrs:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/cqrs/**
+p:leancode_debug_page:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_debug_page/**
+p:enhanced_gradients:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/enhanced_gradients/**
+p:force_update:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/force_update/**
+p:leancode_analytics:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_analytics/**
+p:leancode_flutter_svg_adaptive_loader:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_flutter_svg_adaptive_loader/**
+p:leancode_hooks:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_hooks/**
+p:leancode_lint:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_lint/**
+p:leancode_markup:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_markup/**
+p:login_client:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/login_client/**
+p:login_client_flutter:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/login_client_flutter/**
+p:override_api_endpoint:
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/override_api_endpoint/**
