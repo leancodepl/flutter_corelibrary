@@ -16,7 +16,7 @@ dependencies:
   logging: ^1.2.0
   rxdart: ^0.27.7
   shake: ^2.2.0
-  share_plus: ^7.0.2
+  share_plus: ">=7.0.2 <10.0.0"
 
 dev_dependencies:
   custom_lint: ^0.6.4
