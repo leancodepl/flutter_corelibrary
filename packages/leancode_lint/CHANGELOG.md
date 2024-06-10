@@ -1,3 +1,10 @@
+# 13.0.0
+
+- Bump minimum Dart version to 3.4
+- Enable the following lints:
+  - [`unnecessary_library_name`](https://dart.dev/tools/linter-rules/unnecessary_library_name)
+  - [`missing_code_block_language_in_doc_comment`](https://dart.dev/tools/linter-rules/missing_code_block_language_in_doc_comment)
+
 # 12.1.0
 
 - Treat `HookWidget` as a new hook context. This should remove some false positives in `avoid_conditional_hooks` and catch new cases in `hook_widget_does_not_use_hooks`.
