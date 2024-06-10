@@ -73,6 +73,7 @@ analyzer:
     library_names: warning
     library_prefixes: warning
     literal_only_boolean_expressions: warning
+    missing_code_block_language_in_doc_comment: warning
     no_adjacent_strings_in_list: warning
     no_duplicate_case_values: warning
     no_leading_underscores_for_library_prefixes: warning
@@ -151,6 +152,7 @@ analyzer:
     unnecessary_lambdas: warning
     unnecessary_late: warning
     unnecessary_library_directive: warning
+    unnecessary_library_name: warning
     unnecessary_new: warning
     unnecessary_null_aware_assignments: warning
     unnecessary_null_aware_operator_on_extension_on_nullable: warning
@@ -291,6 +293,7 @@ linter:
     lines_longer_than_80_chars: false
     literal_only_boolean_expressions: true
     matching_super_parameters: false
+    missing_code_block_language_in_doc_comment: true
     missing_whitespace_between_adjacent_strings: false
     no_adjacent_strings_in_list: true
     no_default_cases: false
@@ -382,6 +385,7 @@ linter:
     unnecessary_lambdas: true
     unnecessary_late: true
     unnecessary_library_directive: true
+    unnecessary_library_name: true
     unnecessary_new: true
     unnecessary_null_aware_assignments: true
     unnecessary_null_aware_operator_on_extension_on_nullable: true
