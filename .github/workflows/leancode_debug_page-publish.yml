@@ -1,0 +1,39 @@
+name: leancode_debug_page publish
+
+on:
+  push:
+    tags: ['leancode_debug_page-v*']
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: write
+
+    defaults:
+      run:
+        working-directory: packages/leancode_debug_page
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.19.x
+          cache: true
+
+      - name: Publish and release
+        uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
+        with:
+          path: packages/leancode_debug_page
