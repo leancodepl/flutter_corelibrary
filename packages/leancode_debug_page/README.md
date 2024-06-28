@@ -1,6 +1,6 @@
 # leancode_debug_page
 
-A debug page that gathers http requests and logger logs. Features:
+A debug page that gathers HTTP requests and logger logs. Features:
 
 - Detailed information about requests (request, response) and logs
 - Filtering requests by
@@ -16,9 +16,26 @@ A debug page that gathers http requests and logger logs. Features:
   - Draggable floating action button
   - Device shake
 
-![Inspector](images/requests.png "Inspector")
-![Request details](images/request_details.png "Request details")
-![Logs](images/logs.png "Logs")
+<br>
+<img style="display: block; margin: auto;" src="images/requests.png" alt="Requests list">
+
+<p style="text-align: center;">
+Requests list
+</p>
+<br>
+
+<img style="display: block; margin: auto;" src="images/request_details.png" alt="Request details">
+
+<p style="text-align: center;">
+Request details
+</p>
+<br>
+
+<img style="display: block; margin: auto;" src="images/logs.png" alt="Logs list">
+
+<p style="text-align: center;">
+Logs list
+</p>
 
 
 ## Usage
@@ -86,4 +103,4 @@ You can configure debug page's entry points by setting ```showEntryButton``` (de
 
 ## Warning
 
-For gathering loggers logs, this package relies on listening to `Logger.root`. This means that changing `Logger.root.level` affects this package behavior and the logs are only collected from the current isolate.
+For gathering logs from loggers, this package relies on listening to `Logger.root`. This means that changing `Logger.root.level` affects this package's behavior, and the logs are only collected from the current isolate.
