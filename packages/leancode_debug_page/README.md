@@ -25,9 +25,9 @@ A debug page that gathers http requests and logger logs. Features:
     </ul>
 </ul>
 
-![alt text](images/requests.png "Inspector")
-![alt text](images/request_details.png "Request details")
-![alt text](images/logs.png "Logs")
+![Inspector](images/requests.png "Inspector")
+![Request details](images/request_details.png "Request details")
+![Logs](images/logs.png "Logs")
 
 
 ## Usage
