@@ -177,6 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: FloatingActionButton.extended(
         label: const Text('Send request'),
         icon: const Icon(Icons.send),
