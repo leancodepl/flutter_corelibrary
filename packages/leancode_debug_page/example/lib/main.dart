@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
     return DebugPageOverlay(
       controller: _debugPageController,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Debug Page Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

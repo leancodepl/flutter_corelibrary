@@ -35,6 +35,7 @@ class DebugPageOverlay extends StatelessWidget {
             return child;
           },
           child: MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               useMaterial3: true,
               colorScheme: ColorScheme.fromSeed(

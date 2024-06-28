@@ -1,6 +1,34 @@
 # leancode_debug_page
 
-A debug page that logs http requests and logger logs.
+A debug page that gathers http requests and logger logs. Features:
+<ul>
+  <li>Detailed information about requests (request, response) and logs
+  <li>Filtering requests by</li>
+    <ul>
+        <li>Status code</li>
+        <li>Search</li>
+    </ul>
+  <li>Filtering logs by</li>
+    <ul>
+        <li>Log level</li>
+        <li>Search</li>
+    </ul>
+  <li>Sharing</li>
+    <ul>
+        <li>All logs / requests</li>
+        <li>Individual items</li>
+    </ul>
+  <li>Two configurable entry points</li>
+    <ul>
+        <li>Draggable floating action button</li>
+        <li>Device shake</li>
+    </ul>
+</ul>
+
+![alt text](images/requests.png "Inspector")
+![alt text](images/request_details.png "Request details")
+![alt text](images/logs.png "Logs")
+
 
 ## Usage
 
