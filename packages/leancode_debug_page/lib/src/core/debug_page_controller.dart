@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:leancode_debug_page/src/core/logger_listener.dart';
 import 'package:leancode_debug_page/src/core/logging_http_client.dart';
 import 'package:leancode_debug_page/src/models/filter.dart';
@@ -8,6 +8,10 @@ import 'package:leancode_debug_page/src/models/request_log_record.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shake/shake.dart';
+
+bool get _isMobile =>
+    defaultTargetPlatform == TargetPlatform.android ||
+    defaultTargetPlatform == TargetPlatform.iOS;
 
 class DebugPageController {
   DebugPageController({
@@ -34,7 +38,10 @@ class DebugPageController {
       () => _updateLoggerLogsStream(loggerListener.logs),
     );
 
-    if (showOnShake) {
+    // Platform check is necessary due shake package dependency on an obsolete
+    // version of sensors_plus. Without the check, an exception is thrown on
+    // platforms where accelerometer is not available.
+    if (showOnShake && _isMobile) {
       _shakeDetector = ShakeDetector.autoStart(
         shakeThresholdGravity: 4,
         onPhoneShake: () => visible.value = true,
