@@ -80,14 +80,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState() : loggingHttpClient = LoggingHttpClient() {
-    debugPageController = DebugPageController(
-      loggingHttpClient: loggingHttpClient,
-    );
-  }
+  _MyHomePageState() : loggingHttpClient = LoggingHttpClient();
 
   final LoggingHttpClient loggingHttpClient;
-  late DebugPageController debugPageController;
   final _logger = Logger('MyHomePage');
 
   static final _requests = [
