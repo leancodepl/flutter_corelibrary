@@ -95,10 +95,10 @@ For gathering logs from loggers, this package relies on listening to `Logger.roo
 ---
 
 <p style="text-align: center;">
-   <a href="https://leancode.co/?utm_source=readme&utm_medium=bloc_lens_package">
+   <a href="https://leancode.co/?utm_source=readme&utm_medium=leancode_debug_page_package">
       <img alt="LeanCode" src="https://leancodepublic.blob.core.windows.net/public/wide.png" width="300"/>
    </a>
    <p style="text-align: center;">
-   Built with ☕️ by <a href="https://leancode.co/?utm_source=readme&utm_medium=bloc_lens_package">LeanCode</a>
+   Built with ☕️ by <a href="https://leancode.co/?utm_source=readme&utm_medium=leancode_debug_page_package">LeanCode</a>
    </p>
 </p>
