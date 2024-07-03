@@ -8,10 +8,9 @@ import 'package:leancode_debug_page/src/models/request_log_record.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shake/shake.dart';
+import 'package:universal_io/io.dart';
 
-bool get _isMobile =>
-    defaultTargetPlatform == TargetPlatform.android ||
-    defaultTargetPlatform == TargetPlatform.iOS;
+bool get _isMobile => Platform.isAndroid || Platform.isIOS;
 
 class DebugPageController {
   DebugPageController({
