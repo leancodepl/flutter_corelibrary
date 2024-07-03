@@ -16,27 +16,14 @@ A debug page that gathers HTTP requests and logger logs. Features:
   - Draggable floating action button
   - Device shake
 
-<br>
-<img style="display: block; margin: auto;" src="images/requests.png" alt="Requests list">
+#### Requests list
+![Requests list](images/requests.png)
 
-<p style="text-align: center;">
-Requests list
-</p>
-<br>
+#### Request details
+![Request details](images/request_details.png)
 
-<img style="display: block; margin: auto;" src="images/request_details.png" alt="Request details">
-
-<p style="text-align: center;">
-Request details
-</p>
-<br>
-
-<img style="display: block; margin: auto;" src="images/logs.png" alt="Logs list">
-
-<p style="text-align: center;">
-Logs list
-</p>
-
+#### Logs list
+![Logs list](images/logs.png)
 
 ## Usage
 
@@ -104,3 +91,14 @@ You can configure debug page's entry points by setting ```showEntryButton``` (de
 ## Warning
 
 For gathering logs from loggers, this package relies on listening to `Logger.root`. This means that changing `Logger.root.level` affects this package's behavior, and the logs are only collected from the current isolate.
+
+---
+
+<p style="text-align: center;">
+   <a href="https://leancode.co/?utm_source=readme&utm_medium=leancode_debug_page_package">
+      <img alt="LeanCode" src="https://leancodepublic.blob.core.windows.net/public/wide.png" width="300"/>
+   </a>
+   <p style="text-align: center;">
+   Built with ☕️ by <a href="https://leancode.co/?utm_source=readme&utm_medium=leancode_debug_page_package">LeanCode</a>
+   </p>
+</p>
