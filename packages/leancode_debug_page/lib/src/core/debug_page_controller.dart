@@ -34,10 +34,6 @@ class DebugPageController {
       () => _updateLoggerLogsStream(loggerListener.logs),
     );
 
-    // Platform check is necessary due shake package dependency on an obsolete
-    // version of sensors_plus. Without the check, an exception is thrown on
-    // platforms where accelerometer is not available. Can be removed when
-    // https://github.com/deven98/shake/pull/32 is merged.
     if (showOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
         shakeThresholdGravity: 4,
