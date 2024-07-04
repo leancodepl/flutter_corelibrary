@@ -1,3 +1,9 @@
+// This file mostly consists of code copied from https://pub.dev/packages/shake
+// The package must have been vendored in order to bump dependency on
+// sensors_plus and avoid exceptions caused by the old version of that package.
+// Shake dependency can be brought back once https://github.com/deven98/shake/pull/32
+// is merged
+
 import 'dart:async';
 import 'dart:math';
 
