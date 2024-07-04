@@ -3,14 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:leancode_debug_page/src/core/logger_listener.dart';
 import 'package:leancode_debug_page/src/core/logging_http_client.dart';
+import 'package:leancode_debug_page/src/core/shake_detector.dart';
 import 'package:leancode_debug_page/src/models/filter.dart';
 import 'package:leancode_debug_page/src/models/request_log_record.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shake/shake.dart';
-import 'package:universal_io/io.dart';
-
-bool get _isMobile => Platform.isAndroid || Platform.isIOS;
 
 class DebugPageController {
   DebugPageController({
@@ -41,7 +38,7 @@ class DebugPageController {
     // version of sensors_plus. Without the check, an exception is thrown on
     // platforms where accelerometer is not available. Can be removed when
     // https://github.com/deven98/shake/pull/32 is merged.
-    if (showOnShake && _isMobile) {
+    if (showOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
         shakeThresholdGravity: 4,
         onPhoneShake: () => visible.value = true,
