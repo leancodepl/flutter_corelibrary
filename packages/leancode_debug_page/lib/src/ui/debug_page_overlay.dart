@@ -37,9 +37,7 @@ class DebugPageOverlay extends StatelessWidget {
           child: MaterialApp(
             theme: ThemeData(
               useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.deepPurple,
-              ),
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             ),
             home: LogsInspector(
               controller: _controller,

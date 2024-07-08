@@ -1,5 +1,5 @@
 name: leancode_debug_page
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_debug_page
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
@@ -15,9 +15,8 @@ dependencies:
   http: ^1.1.0
   logging: ^1.2.0
   rxdart: ^0.27.7
-  shake: ^2.2.0
+  sensors_plus: ^5.0.1
   share_plus: ^9.0.0
-  universal_io: ^2.2.2
 
 dev_dependencies:
   custom_lint: ^0.6.4
