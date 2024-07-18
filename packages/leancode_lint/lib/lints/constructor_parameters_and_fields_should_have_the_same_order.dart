@@ -54,7 +54,8 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     ConstructorDeclaration constructor,
     List<FieldDeclaration> fields,
   ) {
-    final parameters = constructor.parameters.parameters;
+    final parameters =
+        constructor.parameters.parameters.where((p) => !p.isExplicitlyTyped);
     if (parameters.isEmpty) {
       return true;
     }
