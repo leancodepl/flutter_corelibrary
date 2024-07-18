@@ -54,21 +54,19 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     ConstructorDeclaration constructor,
     List<FieldDeclaration> fields,
   ) {
-    final parameters =
-        constructor.parameters.parameters.where((p) => !p.isExplicitlyTyped);
+    final parameters = constructor.parameters.parameters.where(
+      (parameter) =>
+          !parameter.isExplicitlyTyped && _isNotSuperFormal(parameter),
+    );
     if (parameters.isEmpty) {
       return true;
     }
 
-    final namedParameters = parameters
-        .where((parameter) => parameter.isNamed && _isNotSuperFormal(parameter))
-        .toList();
+    final namedParameters =
+        parameters.where((parameter) => parameter.isNamed).toList();
 
-    final unnamedParameters = parameters
-        .where(
-          (parameter) => !parameter.isNamed && _isNotSuperFormal(parameter),
-        )
-        .toList();
+    final unnamedParameters =
+        parameters.where((parameter) => !parameter.isNamed).toList();
 
     final fieldsWithNamedParameters = fields
         .where(
