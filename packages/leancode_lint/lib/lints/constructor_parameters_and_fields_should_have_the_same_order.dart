@@ -34,10 +34,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         final constructors = node.members.whereType<ConstructorDeclaration>();
         for (final constructor in constructors) {
           if (!_hasValidOrder(constructor, fields)) {
-            reporter.reportErrorForNode(
-              _getLintCode(),
-              constructor,
-            );
+            reporter.reportErrorForNode(_getLintCode(), constructor);
           }
         }
       },
