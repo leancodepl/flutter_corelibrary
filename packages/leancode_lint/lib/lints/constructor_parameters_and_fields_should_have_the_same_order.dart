@@ -34,16 +34,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         final constructors = node.members.whereType<ConstructorDeclaration>();
         for (final constructor in constructors) {
           if (!_hasValidOrder(constructor, fields)) {
-            final firstParameter = constructor.parameters.parameters.first;
-            final lastParameter = constructor.parameters.parameters.last;
-
-            reporter.reportErrorForOffset(
-              _getLintCode(),
-              firstParameter.offset,
-              lastParameter.offset +
-                  lastParameter.length -
-                  firstParameter.offset,
-            );
+            reporter.reportErrorForNode(_getLintCode(), constructor);
           }
         }
       },
