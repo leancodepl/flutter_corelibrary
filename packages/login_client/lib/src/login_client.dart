@@ -15,6 +15,7 @@
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
+import 'package:login_client/login_client.dart';
 import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 
@@ -87,9 +88,21 @@ class LoginClient extends http.BaseClient {
   Future<oauth2.Credentials?> get credentials => _credentialsStorage.read();
 
   /// Restores saved credentials from the credentials storage.
-  Future<void> initialize() async {
-    final credentials = await _credentialsStorage.read();
+  Future<void> initialize({Uri? tokenEndpoint}) async {
+    var credentials = await _credentialsStorage.read();
+
     if (credentials != null) {
+      if (tokenEndpoint != null) {
+        credentials = Credentials(
+          credentials.accessToken,
+          refreshToken: credentials.refreshToken,
+          idToken: credentials.idToken,
+          tokenEndpoint: tokenEndpoint,
+          scopes: credentials.scopes,
+          expiration: credentials.expiration,
+        );
+      }
+
       _oAuthClient = buildOAuth2ClientFromCredentials(
         credentials,
         oAuthSettings: _oAuthSettings,
