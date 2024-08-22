@@ -19,11 +19,6 @@ import 'package:login_client/login_client.dart';
 import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 
-import 'credentials_storage/credentials_storage.dart';
-import 'credentials_storage/in_memory_credentials_storage.dart';
-import 'oauth_settings.dart';
-import 'refresh_exception.dart';
-import 'strategies/authorization_strategy.dart';
 import 'utils.dart';
 
 typedef _LoggerCallback = void Function(String);
