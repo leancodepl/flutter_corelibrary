@@ -87,20 +87,10 @@ class LoginClient extends http.BaseClient {
   /// You can provide a custom `tokenEndpoint` to override the one stored in
   /// the credentials. This is useful when the token endpoint changes.
   Future<void> initialize({Uri? tokenEndpoint}) async {
-    var credentials = await _credentialsStorage.read();
+    final credentials =
+        await _getCredentialsToInitialize(tokenEndpoint: tokenEndpoint);
 
     if (credentials != null) {
-      if (tokenEndpoint != null) {
-        credentials = Credentials(
-          credentials.accessToken,
-          refreshToken: credentials.refreshToken,
-          idToken: credentials.idToken,
-          tokenEndpoint: tokenEndpoint,
-          scopes: credentials.scopes,
-          expiration: credentials.expiration,
-        );
-      }
-
       _oAuthClient = buildOAuth2ClientFromCredentials(
         credentials,
         oAuthSettings: _oAuthSettings,
@@ -116,6 +106,27 @@ class LoginClient extends http.BaseClient {
     } else {
       _logger('Successfully initialized with no credentials.');
     }
+  }
+
+  Future<Credentials?> _getCredentialsToInitialize({Uri? tokenEndpoint}) async {
+    final credentials = await _credentialsStorage.read();
+
+    if (credentials != null) {
+      if (tokenEndpoint != null) {
+        return Credentials(
+          credentials.accessToken,
+          refreshToken: credentials.refreshToken,
+          idToken: credentials.idToken,
+          tokenEndpoint: tokenEndpoint,
+          scopes: credentials.scopes,
+          expiration: credentials.expiration,
+        );
+      }
+
+      return credentials;
+    }
+
+    return null;
   }
 
   /// Authorizes the [LoginClient] using the passed `strategy`.
