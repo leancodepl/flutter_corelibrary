@@ -93,10 +93,8 @@ void main() {
         loginClient.onCredentialsChanged.listen(
           expectAsync1((credentials) {
             expect(
-              credentials?.toJson(),
-              credentials
-                  ?.copyWithTokenEndpoint(Uri.parse('https://leancode.co'))
-                  .toJson(),
+              credentials?.tokenEndpoint,
+              Uri.parse('https://leancode.co'),
             );
           }),
         );
