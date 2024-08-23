@@ -8,6 +8,7 @@ import 'package:http/http.dart'
         StreamedRequest,
         StreamedResponse;
 import 'package:login_client/login_client.dart';
+import 'package:login_client/src/utils.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:test/test.dart';
@@ -31,7 +32,10 @@ void main() {
 
     setUpAll(() {
       registerFallbackValue(
-        OAuthSettings(authorizationUri: Uri(), clientId: ''),
+        OAuthSettings(
+          authorizationUri: Uri.parse('https://leancode.co'),
+          clientId: '',
+        ),
       );
       registerFallbackValue(MockClient());
       registerFallbackValue(Credentials(''));
@@ -42,6 +46,8 @@ void main() {
       oAuthSettings = MockOAuthSettings();
       when(() => oAuthSettings.clientId).thenReturn('client id');
       when(() => oAuthSettings.clientSecret).thenReturn('client secret');
+      when(() => oAuthSettings.authorizationUri)
+          .thenReturn(Uri.parse('https://leancode.co'));
       credentialsStorage = MockCredentialsStorage();
       logger = MockLogger();
       loginClient = LoginClient(
@@ -68,6 +74,40 @@ void main() {
         expect(loginClient.loggedIn, true);
 
         verify(() => credentialsStorage.read()).called(1);
+        verify(() => logger('Successfully initialized with credentials.'))
+            .called(1);
+      },
+    );
+
+    test(
+      'initialize() reads from storage, tokenEndpoint has been replaced',
+      () async {
+        final credentials = Credentials(
+          'some token',
+          tokenEndpoint: Uri.parse('https://example.com'),
+        );
+
+        when(() => credentialsStorage.read())
+            .thenAnswer((_) async => credentials);
+
+        loginClient.onCredentialsChanged.listen(
+          expectAsync1((credentials) {
+            expect(
+              credentials?.toJson(),
+              Credentials(
+                'some token',
+                tokenEndpoint: Uri.parse('https://leancode.co'),
+              ).toJson(),
+            );
+          }),
+        );
+
+        await loginClient.initialize();
+
+        expect(loginClient.loggedIn, true);
+
+        verify(() => credentialsStorage.read()).called(1);
+        verify(() => oAuthSettings.authorizationUri).called(1);
         verify(() => logger('Successfully initialized with credentials.'))
             .called(1);
       },
