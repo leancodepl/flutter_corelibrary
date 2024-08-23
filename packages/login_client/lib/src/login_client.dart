@@ -107,8 +107,8 @@ class LoginClient extends http.BaseClient {
     }
   }
 
-  /// Restores saved credentials from the credentials storage and set
-  /// `tokenEndpoint`to the one provided in the `oAuthSettings`.
+  /// Restores saved credentials from the credentials storage and sets
+  /// `tokenEndpoint` to the one provided in the `oAuthSettings`.
   Future<Credentials?> get _credentialsToInitialize async {
     final credentials = await _credentialsStorage.read();
 
