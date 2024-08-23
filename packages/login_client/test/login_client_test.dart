@@ -8,7 +8,6 @@ import 'package:http/http.dart'
         StreamedRequest,
         StreamedResponse;
 import 'package:login_client/login_client.dart';
-import 'package:login_client/src/utils.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:test/test.dart';
