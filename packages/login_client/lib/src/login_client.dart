@@ -84,10 +84,9 @@ class LoginClient extends http.BaseClient {
 
   /// Restores saved credentials from the credentials storage.
   ///
-  /// You can provide a custom `tokenEndpoint` to override the one stored in
-  /// the credentials. This is useful when the token endpoint changes.
+  /// `_oAuthSettings.authorizationUri` is used as the `tokenEndpoint`.
   Future<void> initialize() async {
-    final credentials = await _credentialsToInitialize;
+    final credentials = await getCredentialsToInitialize();
 
     if (credentials != null) {
       _oAuthClient = buildOAuth2ClientFromCredentials(
@@ -109,7 +108,7 @@ class LoginClient extends http.BaseClient {
 
   /// Restores saved credentials from the credentials storage and sets
   /// `tokenEndpoint` to the one provided in the `oAuthSettings`.
-  Future<Credentials?> get _credentialsToInitialize async {
+  Future<Credentials?> getCredentialsToInitialize() async {
     final credentials = await _credentialsStorage.read();
 
     if (credentials != null) {
