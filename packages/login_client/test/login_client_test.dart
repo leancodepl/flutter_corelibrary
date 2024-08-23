@@ -94,10 +94,9 @@ void main() {
           expectAsync1((credentials) {
             expect(
               credentials?.toJson(),
-              Credentials(
-                'some token',
-                tokenEndpoint: Uri.parse('https://leancode.co'),
-              ).toJson(),
+              credentials
+                  ?.copyWithTokenEndpoint(Uri.parse('https://leancode.co'))
+                  .toJson(),
             );
           }),
         );
