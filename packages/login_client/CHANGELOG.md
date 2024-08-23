@@ -1,6 +1,6 @@
 # 3.2.0
 
-- Add option to override `tokenEndpoint` from saved `Credentials` during initialization.
+- Always set `tokenEndpoint` using value of `authorizationUri` from `OAuthSettings` during `LoginClient` initialization.
 - Bump `leancode_lint` dev dependency to `12.0.0`.
 - Bump `custom_lint` dev dependency to `0.6.4`.
 
