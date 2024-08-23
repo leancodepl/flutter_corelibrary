@@ -14,6 +14,7 @@
 
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
+import 'package:oauth2/oauth2.dart';
 
 import 'oauth_settings.dart';
 
@@ -34,4 +35,19 @@ oauth2.Client buildOAuth2ClientFromCredentials(
     httpClient: httpClient,
     onCredentialsRefreshed: onCredentialsRefreshed,
   );
+}
+
+/// Extension methods for the [Credentials] class.
+extension CredentialsExt on Credentials {
+  /// Creates a copy of the current [Credentials] with the provided [tokenEndpoint].
+  Credentials copyWithTokenEndpoint(Uri newTokenEndpoint) {
+    return Credentials(
+      accessToken,
+      refreshToken: refreshToken,
+      idToken: idToken,
+      tokenEndpoint: newTokenEndpoint,
+      scopes: scopes,
+      expiration: expiration,
+    );
+  }
 }

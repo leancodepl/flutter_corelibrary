@@ -15,14 +15,10 @@
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
+import 'package:login_client/login_client.dart';
 import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 
-import 'credentials_storage/credentials_storage.dart';
-import 'credentials_storage/in_memory_credentials_storage.dart';
-import 'oauth_settings.dart';
-import 'refresh_exception.dart';
-import 'strategies/authorization_strategy.dart';
 import 'utils.dart';
 
 typedef _LoggerCallback = void Function(String);
@@ -87,8 +83,11 @@ class LoginClient extends http.BaseClient {
   Future<oauth2.Credentials?> get credentials => _credentialsStorage.read();
 
   /// Restores saved credentials from the credentials storage.
+  ///
+  /// `_oAuthSettings.authorizationUri` is used as the `tokenEndpoint`.
   Future<void> initialize() async {
-    final credentials = await _credentialsStorage.read();
+    final credentials = await getCredentialsToInitialize();
+
     if (credentials != null) {
       _oAuthClient = buildOAuth2ClientFromCredentials(
         credentials,
@@ -105,6 +104,25 @@ class LoginClient extends http.BaseClient {
     } else {
       _logger('Successfully initialized with no credentials.');
     }
+  }
+
+  /// Restores saved credentials from the credentials storage and sets
+  /// `tokenEndpoint` to the one provided in the `oAuthSettings`.
+  Future<Credentials?> getCredentialsToInitialize() async {
+    final credentials = await _credentialsStorage.read();
+
+    if (credentials != null) {
+      // Based on oauth package documentation, `Credentials` `tokenEndpoint` may
+      // be `null`, indicating that the credentials can't be refreshed.
+      if (credentials.tokenEndpoint != null) {
+        return credentials
+            .copyWithTokenEndpoint(_oAuthSettings.authorizationUri);
+      }
+
+      return credentials;
+    }
+
+    return null;
   }
 
   /// Authorizes the [LoginClient] using the passed `strategy`.
