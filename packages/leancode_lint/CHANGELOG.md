@@ -1,3 +1,11 @@
+# 14.0.0
+
+- Enable the following lints:
+  - [`unintended_html_in_doc_comment`](https://dart.dev/lints/unintended_html_in_doc_comment)
+  - [`invalid_runtime_check_with_js_interop_types`](https://dart.dev/lints/invalid_runtime_check_with_js_interop_types)
+  - [`document_ignores`](https://dart.dev/lints/document_ignores)
+- Disable the [`avoid_positional_boolean_parameters`](https://dart.dev/tools/linter-rules/avoid_positional_boolean_parameters) lint
+
 # 13.0.0
 
 - Bump minimum Dart version to 3.4
