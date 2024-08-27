@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
@@ -29,10 +29,10 @@ class StartCommentsWithSpace extends DartLintRule {
   ) {
     context.registry.addRegularComment((token) {
       if (_commentErrorOffset(token) case final contentStart?) {
-        reporter.reportErrorForOffset(
-          _createCode(_CommentType.comment),
-          token.offset + contentStart,
-          0,
+        reporter.atOffset(
+          offset: token.offset + contentStart,
+          length: 0,
+          errorCode: _createCode(_CommentType.comment),
         );
       }
     });
@@ -40,10 +40,10 @@ class StartCommentsWithSpace extends DartLintRule {
     context.registry.addComment((node) {
       for (final token in node.tokens) {
         if (_commentErrorOffset(token) case final contentStart?) {
-          reporter.reportErrorForOffset(
-            _createCode(_CommentType.doc),
-            token.offset + contentStart,
-            0,
+          reporter.atOffset(
+            offset: token.offset + contentStart,
+            length: 0,
+            errorCode: _createCode(_CommentType.doc),
           );
         }
       }

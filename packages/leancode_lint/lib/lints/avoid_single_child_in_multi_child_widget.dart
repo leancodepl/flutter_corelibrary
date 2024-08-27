@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
@@ -120,9 +120,9 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
   ) {
     if (children case final ListLiteral list) {
       if (_hasSingleElement(list)) {
-        reporter.reportErrorForNode(
-          _createCode(constructorName.name2.lexeme),
+        reporter.atNode(
           constructorName,
+          _createCode(constructorName.name2.lexeme),
         );
       }
     }

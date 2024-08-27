@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -34,7 +34,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         final constructors = node.members.whereType<ConstructorDeclaration>();
         for (final constructor in constructors) {
           if (!_hasValidOrder(constructor, fields)) {
-            reporter.reportErrorForNode(_getLintCode(), constructor);
+            reporter.atNode(constructor, _getLintCode());
           }
         }
       },

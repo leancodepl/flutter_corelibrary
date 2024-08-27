@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
@@ -83,12 +83,12 @@ abstract base class UseInsteadType extends DartLintRule {
     for (final (preferredItemName, checker) in _checkers) {
       try {
         if (checker.isExactly(element)) {
-          reporter.reportErrorForNode(
+          reporter.atNode(
+            node,
             _createCode(
               itemName: element.displayName,
               preferredItemName: preferredItemName,
             ),
-            node,
           );
         }
       } catch (err) {
