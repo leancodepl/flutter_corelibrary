@@ -57,6 +57,7 @@ analyzer:
     deprecated_consistency: warning
     deprecated_member_use_from_same_package: info
     directives_ordering: warning
+    document_ignores: warning
     empty_catches: warning
     empty_constructor_bodies: warning
     empty_statements: warning
@@ -67,6 +68,7 @@ analyzer:
     implementation_imports: warning
     implicit_reopen: warning
     invalid_case_patterns: warning
+    invalid_runtime_check_with_js_interop_types: warning
     leading_newlines_in_multiline_strings: warning
     library_annotations: warning
     library_names: warning
@@ -142,6 +144,7 @@ analyzer:
     type_init_formals: warning
     type_literal_in_constant_pattern: warning
     unawaited_futures: warning
+    unintended_html_in_doc_comment: warning
     unnecessary_await_in_return: warning
     unnecessary_brace_in_string_interps: warning
     unnecessary_breaks: warning
@@ -270,6 +273,7 @@ linter:
     diagnostic_describe_all_properties: false
     directives_ordering: true
     discarded_futures: false
+    document_ignores: true
     do_not_use_environment: false
     empty_catches: true
     empty_constructor_bodies: true
@@ -283,6 +287,7 @@ linter:
     implicit_call_tearoffs: false
     implicit_reopen: true
     invalid_case_patterns: true
+    invalid_runtime_check_with_js_interop_types: true
     join_return_with_assignment: false
     leading_newlines_in_multiline_strings: true
     library_annotations: true
@@ -374,6 +379,7 @@ linter:
     type_init_formals: true
     type_literal_in_constant_pattern: true
     unawaited_futures: true
+    unintended_html_in_doc_comment: true
     unnecessary_await_in_return: true
     unnecessary_brace_in_string_interps: true
     unnecessary_breaks: true
