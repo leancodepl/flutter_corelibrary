@@ -1,3 +1,6 @@
+// for tests
+// ignore_for_file: unused_field
+
 class ClassWithInvalidUnnamedParametersOrder {
   // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
   const ClassWithInvalidUnnamedParametersOrder(
@@ -106,7 +109,6 @@ class ClassWithInvalidNamedParametersOrderAndWithNonThisParameter {
   final int fourth;
   final int fifth;
 
-  // ignore: unused_field
   final String _otherParameter;
 }
 
@@ -126,7 +128,6 @@ class ClassWithValidNamedParametersOrderAndWithNonThisParameter {
   final int fourth;
   final int fifth;
 
-  // ignore: unused_field
   final String _otherParameter;
 }
 
@@ -147,7 +148,6 @@ class ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter {
   final int fourth;
   final int fifth;
 
-  // ignore: unused_field
   final String _otherParameter;
 }
 
@@ -167,7 +167,6 @@ class ClassWithValidUnnamedParametersOrderAndWithNonThisParameter {
   final int fourth;
   final int fifth;
 
-  // ignore: unused_field
   final String _otherParameter;
 }
 
@@ -212,7 +211,6 @@ class ClassWithMixedParametersWithValidOrder extends _AbstractClassWithField {
   final int fourth;
   final int fifth;
 
-  // ignore: unused_field
   final String _test;
 }
 
@@ -234,7 +232,6 @@ class ClassWithMixedParametersWithInvalidOrder extends _AbstractClassWithField {
   final int fourth;
   final int fifth;
 
-  // ignore: unused_field
   final String _test;
 }
 
