@@ -19,5 +19,5 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   glados: ^1.1.6
-  leancode_lint: ">=12.1.0 <14.0.0"
+  leancode_lint: ">=12.1.0 <15.0.0"
   meta: ^1.9.1
