@@ -11,6 +11,9 @@ custom_lint:
       LftScaffold:
         - instead_of: Scaffold
           from_package: flutter
+      LftPlaceholder:
+        - instead_of: Placeholder
+          from_package: flutter
     - prefix_widgets_returning_slivers:
       application_prefix: Lncd
     # TODO: remove explicit enable once enabled by default
