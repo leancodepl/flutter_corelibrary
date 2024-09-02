@@ -1,3 +1,7 @@
+# 14.1.0
+
+- Allow usage of a forbidden item in a `hide` combinator in `use_design_system_item`
+
 # 14.0.0
 
 - Enable the following lints:
