@@ -80,6 +80,10 @@ abstract base class UseInsteadType extends DartLintRule {
     Element element,
     AstNode node,
   ) {
+    if (_isInHide(node)) {
+      return;
+    }
+
     for (final (preferredItemName, checker) in _checkers) {
       try {
         if (checker.isExactly(element)) {
@@ -94,6 +98,17 @@ abstract base class UseInsteadType extends DartLintRule {
       } catch (err) {
         // isExactly crashes sometimes
       }
+    }
+  }
+
+  bool _isInHide(AstNode node) {
+    if (node.parent case final parent?) {
+      if (parent is HideCombinator) {
+        return true;
+      }
+      return _isInHide(parent);
+    } else {
+      return false;
     }
   }
 }
