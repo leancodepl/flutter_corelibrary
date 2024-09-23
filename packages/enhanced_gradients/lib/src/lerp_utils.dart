@@ -11,8 +11,10 @@ double? lerpDegrees(num? a, num? b, double t) {
     return null;
   }
 
+  // Reason: adding a new variable would be less readable
   // ignore: parameter_assignments
   a %= 360;
+  // Reason: adding a new variable would be less readable
   // ignore: parameter_assignments
   b %= 360;
 
