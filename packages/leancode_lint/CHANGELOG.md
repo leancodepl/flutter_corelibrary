@@ -4,6 +4,7 @@
 
 # 14.0.0
 
+- Bump minimum Dart version to 3.5
 - Enable the following lints:
   - [`unintended_html_in_doc_comment`](https://dart.dev/lints/unintended_html_in_doc_comment)
   - [`invalid_runtime_check_with_js_interop_types`](https://dart.dev/lints/invalid_runtime_check_with_js_interop_types)
