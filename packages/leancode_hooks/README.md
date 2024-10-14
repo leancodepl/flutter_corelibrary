@@ -18,6 +18,8 @@ so you won't have to depend on it.
 ## Hooks
 
 - [useBloc](lib/src/use_bloc.dart)
+- [useBlocListener](lib/src/use_bloc_listener.dart)
+- [useBlocState](lib/src/use_bloc_state.dart)
 - [useDebounce](lib/src/use_debounce.dart)
 - [useDeclarativeTextEditingController](lib/src/use_decarative_text_editing_controller.dart)
 - [useFocused](lib/src/use_focused.dart)
