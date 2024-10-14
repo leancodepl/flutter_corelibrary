@@ -1,6 +1,6 @@
 # 14.2.0
 
-- Remove `division_optimization` hint.
+- Remove deprecated `division_optimization` hint
 
 # 14.1.0
 
