@@ -197,7 +197,6 @@ analyzer:
     deprecated_colon_for_default_value: warning
     deprecated_export_use: info
     deprecated_member_use: info
-    division_optimization: warning
     import_deferred_library_with_load_function: warning
     unignorable_ignore: warning
     unnecessary_cast: warning
