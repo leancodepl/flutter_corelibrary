@@ -1,5 +1,6 @@
-## Unreleased
+## 0.0.2
 
+- Added `style` parameter to `MarkupText`.
 - Bump `leancode_lint` dev dependency to `12.0.0`.
 - Bump `custom_lint` dev dependency to `0.6.4`.
 
