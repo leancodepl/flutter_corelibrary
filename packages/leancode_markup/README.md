@@ -46,7 +46,7 @@ It returns WidgetSpan.
 
 ```dart
 DefaultMarkupTheme(
-    log: debugPrint,
+    logger: debugPrint,
     tagStyles: [
         MarkupTagStyle.delegate(
             tagName: 'b',
@@ -66,8 +66,8 @@ DefaultMarkupTheme(
                 ),
             );
         },
-        ...
-    }
+        // More factories...
+    },
     child: ...
 ),
 ```
