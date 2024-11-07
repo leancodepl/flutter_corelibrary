@@ -144,6 +144,15 @@ class MyApp extends StatelessWidget {
                 tagStyles: DefaultMarkupTheme.basicTags,
               ),
             ),
+            const SizedBox(height: 8),
+            // Use MarkupText with custom font
+            Center(
+              child: MarkupText(
+                'Lorem ipsum dolor sit amet, [b]consectetur adipiscing elit[/b]',
+                tagStyles: DefaultMarkupTheme.basicTags,
+                style: const TextStyle(fontFamily: 'DeliusUnicase'),
+              ),
+            ),
           ],
         ),
       ),

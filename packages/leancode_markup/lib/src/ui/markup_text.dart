@@ -10,6 +10,7 @@ class MarkupText extends StatelessWidget {
     super.key,
     this.tagStyles = const [],
     this.tagFactories = const {},
+    this.style,
     this.strutStyle,
     this.textAlign,
     this.textDirection,
@@ -29,6 +30,7 @@ class MarkupText extends StatelessWidget {
   final List<MarkupTagStyle> tagStyles;
   final Map<String, MarkupTagSpanFactory> tagFactories;
 
+  final TextStyle? style;
   final StrutStyle? strutStyle;
   final TextAlign? textAlign;
   final TextDirection? textDirection;
@@ -53,6 +55,7 @@ class MarkupText extends StatelessWidget {
 
     return Text.rich(
       TextSpan(children: spans),
+      style: style,
       strutStyle: strutStyle,
       textAlign: textAlign,
       textDirection: textDirection,

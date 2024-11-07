@@ -24,3 +24,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    # "Delius Unicase" under SIL Open Font License from Google Fonts
+    # https://fonts.google.com/specimen/Delius+Unicase
+    - family: DeliusUnicase
+      fonts:
+        - asset: fonts/DeliusUnicase-Regular.ttf
+        - asset: fonts/DeliusUnicase-Bold.ttf
+          weight: 700
