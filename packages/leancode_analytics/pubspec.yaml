@@ -3,6 +3,7 @@ description: Package provides wrapper for base analytics functionality for Flutt
 version: 0.0.2
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics
 repository: https://github.com/leancodepl/flutter_corelibrary
+publish_to: none 
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
