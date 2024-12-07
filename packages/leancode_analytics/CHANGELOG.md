@@ -1,4 +1,4 @@
-## Unreleased
+## 0.0.2
 
 - Bump `leancode_lint` dev dependency to `8.0.0`. (#230)
 
