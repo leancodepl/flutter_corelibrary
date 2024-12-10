@@ -22,6 +22,7 @@ so you won't have to depend on it.
 - [useBlocState](lib/src/use_bloc_state.dart)
 - [useDebounce](lib/src/use_debounce.dart)
 - [useDeclarativeTextEditingController](lib/src/use_decarative_text_editing_controller.dart)
+- [useDisposable](lib/src/use_disposable.dart)
 - [useFocused](lib/src/use_focused.dart)
 - [usePostFrameEffect](lib/src/use_post_frame_effect.dart)
 - [useStreamListener](lib/src/use_stream_listener.dart)
