@@ -11,7 +11,7 @@ void useStreamListener<T>(
   Stream<T> stream,
   ValueChanged<T> onData, {
   Function? onError,
-  void Function()? onDone,
+  VoidCallback? onDone,
   bool? cancelOnError,
   List<Object?> keys = const [],
 }) {

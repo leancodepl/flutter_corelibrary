@@ -5,9 +5,9 @@ export 'package:flutter/gestures.dart' show TapGestureRecognizer;
 
 /// Creates a [TapGestureRecognizer] that will be disposed automatically.
 TapGestureRecognizer useTapGestureRecognizer(
-  TapGestureRecognizer Function() builder, [
+  TapGestureRecognizer Function() builder, {
   List<Object?> keys = const [],
-]) {
+}) {
   final tapGestureRecognizer = useMemoized(builder, keys);
 
   useEffect(() => tapGestureRecognizer.dispose, [tapGestureRecognizer]);
