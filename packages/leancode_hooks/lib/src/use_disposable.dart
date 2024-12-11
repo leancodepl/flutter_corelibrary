@@ -12,7 +12,7 @@ T useDisposable<T>({
 
   useEffect(
     () => () => dispose(value),
-    [value],
+    keys,
   );
 
   return value;
