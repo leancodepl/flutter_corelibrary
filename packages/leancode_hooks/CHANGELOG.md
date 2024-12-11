@@ -1,5 +1,6 @@
 # Unreleased
 
+- **Breaking**: Replace all `keys` that were declared as [optional positional parameter](https://dart.dev/language/functions#optional-positional-parameters) with a [named parameter](https://dart.dev/language/functions#named-parameters) that defaults to `const List<Object?>[]`. Affected hooks: `useBloc`, `usePostFrameEffect`, `useTapGestureRecognizer`.
 - Bump `leancode_lint` dev dependency to `12.0.0`.
 - Bump `custom_lint` dev dependency to `0.6.4`.
 
