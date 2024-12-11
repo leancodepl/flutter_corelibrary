@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 T useDisposable<T>({
   required ValueGetter<T> builder,
   required void Function(T) dispose,
-  List<Object?> keys = const <Object>[],
+  List<Object?> keys = const [],
 }) {
   final value = useMemoized(builder, keys);
 
