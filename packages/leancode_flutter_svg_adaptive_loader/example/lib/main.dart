@@ -19,7 +19,7 @@ class MainApp extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-                'Assets created by SvgPicture(LeanCodeFlutterSvgAdaptiveLoader("asset_path"))'),
+                'Assets created by SvgPicture(FlutterSvgAdaptiveLoader("asset_path"))'),
             const SizedBox(height: 8),
             const Row(
               children: [
