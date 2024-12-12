@@ -9,6 +9,7 @@
 | [`enhanced_gradients`][enhanced_gradients-link]       |  [Documentation][enhanced_gradients-documentation]   |     [![enhanced_gradients pub.dev badge][enhanced_gradients-pub-badge]][enhanced_gradients-pub-badge-link]      |    [![][enhanced_gradients-build-badge]][enhanced_gradients-build-badge-link]    |
 | [`leancode_markup`][leancode_markup-link]             |  [Documentation][leancode_markup-documentation]   |     [![leancode_markup pub.dev badge][leancode_markup-pub-badge]][leancode_markup-pub-badge-link]      |    [![][leancode_markup-build-badge]][leancode_markup-build-badge-link]    |
 | [`leancode_debug_page`][leancode_debug_page-link]         |  [Documentation][leancode_debug_page-documentation]   |     [![leancode_debug_page pub.dev badge][leancode_debug_page-pub-badge]][leancode_debug_page-pub-badge-link]      |    [![][leancode_debug_page-build-badge]][leancode_debug_page-build-badge-link]    |
+| [`leancode_analytics`][leancode_analytics-link]         |  [Documentation][leancode_analytics-documentation]   |     [![leancode_analytics pub.dev badge][leancode_analytics-pub-badge]][leancode_analytics-pub-badge-link]      |    [![][leancode_analytics-build-badge]][leancode_analytics-build-badge-link]    |
 
 ## For maintainers
 
@@ -72,3 +73,9 @@
 [leancode_debug_page-pub-badge-link]: https://pub.dev/packages/leancode_debug_page
 [leancode_debug_page-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_debug_page-test.yml?branch=master
 [leancode_debug_page-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_debug_page-test.yml
+[leancode_analytics-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics
+[leancode_analytics-documentation]: https://pub.dev/documentation/leancode_analytics/latest/
+[leancode_analytics-pub-badge]: https://img.shields.io/pub/v/leancode_analytics
+[leancode_analytics-pub-badge-link]: https://pub.dev/packages/leancode_analytics
+[leancode_analytics-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_analytics-test.yml?branch=master
+[leancode_analytics-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_analytics-test.yml
