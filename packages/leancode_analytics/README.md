@@ -1,6 +1,6 @@
 # leancode_analytics
 
-This is Leancode package to add base analytics in flutter app. 
+This is LeanCode package to add base analytics in flutter app. 
 
 ## Features
 
