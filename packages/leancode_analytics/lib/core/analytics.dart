@@ -1,6 +1,6 @@
 import 'event.dart';
 
-/// Main abstraction for Leancode Analytics
+/// Main abstraction for LeanCode Analytics
 abstract interface class LeanAnalytics {
   /// Register [AnalyticsEvent]
   void register(AnalyticsEvent event);

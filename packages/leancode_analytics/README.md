@@ -1,6 +1,6 @@
 # leancode_analytics
 
-This is Leancode package to add base analytics in flutter app. 
+This is LeanCode package to add base analytics in flutter app. 
 
 ## Features
 
@@ -9,12 +9,10 @@ This is Leancode package to add base analytics in flutter app.
 
 ## Getting started
 
-Add leancode_analytics package to your app
+Add leancode_analytics package to your app, by running this command:
 
-```yaml
-git:
-    url: ssh://git@github.com/leancodepl/flutter_corelibrary.git
-    path: packages/leancode_analytics
+```bash
+flutter pub add leancode_analytics
 ```
 
 Create Google analytics project and add Firebase to your app based on this documentation:

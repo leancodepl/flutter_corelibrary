@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: MarkupText(
-            '[appbar]Leancode markup example app[/appbar]',
+            '[appbar]LeanCode markup example app[/appbar]',
             tagStyles: [
               MarkupTagStyle.delegate(
                 tagName: 'appbar',
