@@ -135,15 +135,14 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
     }
 
     bool checkExpression(CollectionElement expression) {
-      switch (expression) {
-        case Expression():
-          return true;
-        case ForElement() || MapLiteralEntry() || SpreadElement():
-          return false;
-        case IfElement(:final thenElement, :final elseElement):
-          return checkExpression(thenElement) &&
-              (elseElement == null || checkExpression(elseElement));
-      }
+      return switch (expression) {
+        Expression() => true,
+        ForElement() || MapLiteralEntry() || SpreadElement() => false,
+        IfElement(:final thenElement, :final elseElement) =>
+          checkExpression(thenElement) &&
+              (elseElement == null || checkExpression(elseElement)),
+        NullAwareElement(:final value) => checkExpression(value)
+      };
     }
 
     return checkExpression(list.elements.first);
