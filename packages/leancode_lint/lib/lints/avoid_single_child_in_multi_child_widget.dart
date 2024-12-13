@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
@@ -135,15 +135,14 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
     }
 
     bool checkExpression(CollectionElement expression) {
-      switch (expression) {
-        case Expression():
-          return true;
-        case ForElement() || MapLiteralEntry() || SpreadElement():
-          return false;
-        case IfElement(:final thenElement, :final elseElement):
-          return checkExpression(thenElement) &&
-              (elseElement == null || checkExpression(elseElement));
-      }
+      return switch (expression) {
+        Expression() => true,
+        ForElement() || MapLiteralEntry() || SpreadElement() => false,
+        IfElement(:final thenElement, :final elseElement) =>
+          checkExpression(thenElement) &&
+              (elseElement == null || checkExpression(elseElement)),
+        NullAwareElement(:final value) => checkExpression(value)
+      };
     }
 
     return checkExpression(list.elements.first);
