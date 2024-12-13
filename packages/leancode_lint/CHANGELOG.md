@@ -1,3 +1,7 @@
+# 14.3.0
+
+- Support `custom_lint` 0.7.0
+
 # 14.2.0
 
 - Remove deprecated `division_optimization` hint
