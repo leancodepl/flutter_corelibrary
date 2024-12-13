@@ -21,6 +21,7 @@ jobs:
       matrix:
         include:
           - version: 3.24.x
+          - version: 3.27.x
 
     defaults:
       run:
