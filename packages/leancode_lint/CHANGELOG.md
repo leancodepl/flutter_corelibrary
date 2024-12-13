@@ -1,3 +1,7 @@
+# 14.4.0
+
+- Support Flutter 3.27 and Dart 3.6
+
 # 14.3.0
 
 - Support `custom_lint` 0.7.0
