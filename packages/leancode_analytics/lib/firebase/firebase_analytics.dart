@@ -9,16 +9,9 @@ class FirebaseLeanAnalytics implements LeanAnalytics {
   @override
   Future<void> register(AnalyticsEvent event) async {
     if (event is ScreenViewAnalyticsEvent) {
-      // Don't use firebase logScreenView method
-      // because there you can't pass additional params
-      await _instance.logEvent(
-        name: 'screen_view',
-        parameters: event.params,
-      );
-
-      /// sets context for other events
-      await _instance.setCurrentScreen(
+      await _instance.logScreenView(
         screenName: event.name,
+        parameters: event.params,
       );
     } else {
       await _instance.logEvent(
