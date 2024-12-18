@@ -5,8 +5,8 @@ homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages
 repository: https://github.com/leancodepl/flutter_corelibrary
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.10.0"
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   firebase_analytics: ^10.10.0
@@ -17,4 +17,4 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  leancode_lint: ^14.4.0
+  leancode_lint: ^14.0.0
