@@ -1,20 +1,20 @@
 name: leancode_analytics
 description: Package provides wrapper for base analytics functionality for Flutter apps.
-version: 0.0.2
+version: 0.1.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics
 repository: https://github.com/leancodepl/flutter_corelibrary
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.10.0"
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
 
 dependencies:
-  firebase_analytics: ^10.4.3
-  firebase_core: ^2.1.1
+  firebase_analytics: ^10.10.0
+  firebase_core: ^2.32.0
   flutter:
     sdk: flutter
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  leancode_lint: ^12.1.0
+  leancode_lint: ^14.0.0
