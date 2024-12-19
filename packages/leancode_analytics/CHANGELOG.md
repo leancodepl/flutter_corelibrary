@@ -1,4 +1,4 @@
-## 0.10.0
+## 0.1.0
 
 - Use `logScreenView` instead of `setCurrentScreen`.
 - Bump `firebase_core` and `firebase_analytics` versions.
