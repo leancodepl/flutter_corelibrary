@@ -1,5 +1,6 @@
 // for tests
 // ignore_for_file: unused_local_variable
+// ignore_for_file: avoid_string_literals_in_widgets
 
 import 'package:flutter/material.dart'
 // `Placeholder` is forbidden, we check that no lint is raised for a `hide`
