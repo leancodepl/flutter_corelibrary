@@ -1,3 +1,11 @@
+# 15.0.0
+
+- Enable the following lints:
+  - [`use_truncating_division`](https://dart.dev/tools/linter-rules/use_truncating_division)
+  - [`avoid_futureor_void`](https://dart.dev/tools/linter-rules/avoid_futureor_void)
+  - [`omit_obvious_local_variable_types`](https://dart.dev/tools/linter-rules/omit_obvious_local_variable_types)
+- Disable the [`omit_local_variable_types`](https://dart.dev/tools/linter-rules/omit_local_variable_types)
+
 # 14.4.0
 
 - Support Flutter 3.27 and Dart 3.6
