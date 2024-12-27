@@ -17,6 +17,7 @@ analyzer:
     avoid_escaping_inner_quotes: warning
     avoid_final_parameters: warning
     avoid_function_literals_in_foreach_calls: warning
+    avoid_futureor_void: warning
     avoid_implementing_value_types: warning
     avoid_init_to_null: warning
     avoid_js_rounded_ints: warning
@@ -87,7 +88,7 @@ analyzer:
     noop_primitive_operations: warning
     null_check_on_nullable_type_parameter: warning
     null_closures: warning
-    omit_local_variable_types: warning
+    omit_obvious_local_variable_types: warning
     only_throw_errors: warning
     overridden_fields: warning
     package_names: warning
@@ -186,6 +187,7 @@ analyzer:
     use_super_parameters: warning
     use_test_throws_matchers: warning
     use_to_and_as_if_applicable: warning
+    use_truncating_division: warning
     valid_regexps: warning
     void_checks: warning
     # todo diagnostic messages
@@ -226,6 +228,7 @@ linter:
     avoid_field_initializers_in_const_classes: false
     avoid_final_parameters: true
     avoid_function_literals_in_foreach_calls: true
+    avoid_futureor_void: true
     avoid_implementing_value_types: true
     avoid_init_to_null: true
     avoid_js_rounded_ints: true
@@ -312,7 +315,7 @@ linter:
     noop_primitive_operations: true
     null_check_on_nullable_type_parameter: true
     null_closures: true
-    omit_local_variable_types: true
+    omit_obvious_local_variable_types: true
     one_member_abstracts: false
     only_throw_errors: true
     overridden_fields: true
@@ -426,5 +429,6 @@ linter:
     use_super_parameters: true
     use_test_throws_matchers: true
     use_to_and_as_if_applicable: true
+    use_truncating_division: true
     valid_regexps: true
     void_checks: true
