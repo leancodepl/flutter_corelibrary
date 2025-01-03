@@ -6,23 +6,23 @@ description: >-
   A package providing a debug page which shows outgoing http requests and Logger logs
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.10.0"
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.0
   logging: ^1.2.0
-  rxdart: ^0.27.7
+  rxdart: ^0.28.0
   sensors_plus: ^5.0.1
   share_plus: ^9.0.0
 
 dev_dependencies:
-  custom_lint: ^0.6.4
+  custom_lint: ^0.7.0
   flutter_test:
     sdk: flutter
-  leancode_lint: ^12.1.0
+  leancode_lint: ^14.0.0
   mocktail: ^1.0.3
 
 flutter:
