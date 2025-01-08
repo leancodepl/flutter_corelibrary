@@ -1,5 +1,8 @@
 # leancode_debug_page
 
+[![leancode_debug_page pub.dev badge][pub-badge]][pub-badge-link]
+[![][build-badge]][build-badge-link]
+
 A debug page that gathers HTTP requests and logger logs. Features:
 
 - Detailed information about requests (request, response) and logs
@@ -102,3 +105,10 @@ For gathering logs from loggers, this package relies on listening to `Logger.roo
    Built with ☕️ by <a href="https://leancode.co/?utm_source=readme&utm_medium=leancode_debug_page_package">LeanCode</a>
    </p>
 </p>
+
+
+
+[pub-badge]: https://img.shields.io/pub/v/leancode_debug_page
+[pub-badge-link]: https://pub.dev/packages/leancode_debug_page
+[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_debug_page-test.yml?branch=master
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_debug_page-test.yml
