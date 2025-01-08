@@ -1,10 +1,9 @@
-
 ## 2.0.0
 
-- Bumped `rxdart` dependency to `^0.28.0`
+- Bump `rxdart` dependency to `^0.28.0`
 - **Breaking:** Bump minimum Dart vesion to 3.5.0
-- Bumped `custom_lint` dependency to `^0.7.0`
-- Bumped `leancode_lint` dependency to `^14.0.0`
+- Bump `custom_lint` dependency to `^0.7.0`
+- Bump `leancode_lint` dependency to `^14.0.0`
 
 ## 1.0.2
 
