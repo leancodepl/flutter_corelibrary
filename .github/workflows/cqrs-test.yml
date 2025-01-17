@@ -3,7 +3,7 @@ name: cqrs test
 on:
   push:
     branches: [master]
-    ignore-tags: ['cqrs-v*']
+    tags-ignore: ['cqrs-v*']
     paths:
       - 'packages/cqrs/**'
   pull_request:
