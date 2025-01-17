@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 3.19.x
+          - version: 3.27.x
 
     defaults:
       run:
