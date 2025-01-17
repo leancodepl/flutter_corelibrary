@@ -10,10 +10,10 @@ environment:
   flutter: ">=3.10.0 <4.0.0"
 
 dependencies:
-  bloc: ^8.0.3
+  bloc: ^9.0.0
   flutter:
     sdk: flutter
-  flutter_hooks: ^0.20.1
+  flutter_hooks: ^0.20.5
 
 dev_dependencies:
   coverage: ^1.2.0
