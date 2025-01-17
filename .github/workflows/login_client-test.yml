@@ -37,13 +37,6 @@ jobs:
       - name: Dart version
         run: dart --version
 
-      - name: Cache pub dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-pub-
-
       - name: Download pub dependencies
         run: dart pub get
 
