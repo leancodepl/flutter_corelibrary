@@ -1,3 +1,8 @@
+# 0.1.1
+
+- Bump `bloc` to `9.0.0`.
+- Bump `flutter_hooks` to `0.20.5`.
+
 # 0.1.0
 
 - **Breaking**: Replace all `keys` that were declared as [optional positional parameter](https://dart.dev/language/functions#optional-positional-parameters) with a [named parameter](https://dart.dev/language/functions#named-parameters) that defaults to `const List<Object?>[]`. Affected hooks: `useBloc`, `usePostFrameEffect`, `useTapGestureRecognizer`.
