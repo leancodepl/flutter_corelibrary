@@ -3,7 +3,7 @@ name: cqrs test
 on:
   push:
     branches: [master]
-    ignore-tags: ['cqrs-v*']
+    tags-ignore: ['cqrs-v*']
     paths:
       - 'packages/cqrs/**'
   pull_request:
@@ -38,7 +38,7 @@ jobs:
         run: dart --version
 
       - name: Cache pub dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
