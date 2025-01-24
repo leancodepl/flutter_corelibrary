@@ -1,5 +1,5 @@
 name: enhanced_gradients
-version: 2.0.0
+version: 3.0.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/enhanced_gradients
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
@@ -10,14 +10,14 @@ environment:
   flutter: ">=3.19.0"
 
 dependencies:
-  collection: ^1.17.1
+  collection: ^1.19.0
   flutter:
     sdk: flutter
-  material_color_utilities: any
+  material_color_utilities: ^0.11.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   glados: ^1.1.6
-  leancode_lint: ">=12.1.0 <15.0.0"
+  leancode_lint: ^15.0.0
   meta: ^1.9.1
