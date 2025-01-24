@@ -4,8 +4,8 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.10.0"
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.27.0"
 
 dependencies:
   enhanced_gradients:
@@ -16,7 +16,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  leancode_lint: ^15.0.0
 
 flutter:
   uses-material-design: true

@@ -26,8 +26,8 @@ void main() {
         (colorB, t) {
       final result = lerpHct(null, colorB, t);
 
-      final resultAlpha = result!.alpha;
-      final expectedAlpha = colorB.alpha * t;
+      final resultAlpha = result!.a;
+      final expectedAlpha = colorB.a * t;
 
       expect(resultAlpha, closeTo(expectedAlpha, 1));
     });
@@ -37,8 +37,8 @@ void main() {
         (colorA, t) {
       final result = lerpHct(colorA, null, t);
 
-      final resultAlpha = result!.alpha;
-      final expectedAlpha = colorA.alpha * (1 - t);
+      final resultAlpha = result!.a;
+      final expectedAlpha = colorA.a * (1 - t);
 
       expect(resultAlpha, closeTo(expectedAlpha, 1));
     });

@@ -27,19 +27,31 @@ Color? lerpHct(Color? colorA, Color? colorB, double t) =>
     };
 
 Color _lerpHctNonNullable(Color colorA, Color colorB, double t) {
-  final beginHct = Hct.fromInt(colorA.value);
-  final endHct = Hct.fromInt(colorB.value);
+  final beginHct = Hct.fromInt(_colorToInt(colorA));
+  final endHct = Hct.fromInt(_colorToInt(colorB));
 
-  final opacity = lerpDouble(colorA.opacity, colorB.opacity, t)!;
+  final alpha = lerpDouble(colorA.a, colorB.a, t)!;
   final hue = lerpDegrees(beginHct.hue, endHct.hue, t)!;
   final chroma = lerpDouble(beginHct.chroma, endHct.chroma, t)!;
   final tone = lerpDouble(beginHct.tone, endHct.tone, t)!;
 
   return Color(
     Hct.from(hue, chroma, tone).toInt(),
-  ).withOpacity(opacity);
+  ).withValues(alpha: alpha);
 }
 
-Color _scaleAlpha(Color a, double factor) {
-  return a.withAlpha((a.alpha * factor).round().clamp(0, 255));
+Color _scaleAlpha(Color color, double factor) {
+  return color.withValues(alpha: color.a * factor);
+}
+
+/// [Hct] requires int values, so we need to convert [Color].
+int _colorToInt(Color color) {
+  return _floatToInt8(color.a) << 24 |
+      _floatToInt8(color.r) << 16 |
+      _floatToInt8(color.g) << 8 |
+      _floatToInt8(color.b) << 0;
+}
+
+int _floatToInt8(double x) {
+  return (x * 255.0).round() & 0xff;
 }
