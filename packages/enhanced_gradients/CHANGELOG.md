@@ -1,6 +1,6 @@
 ## 3.0.0
 
-- BREAKING CHANGE: Raise minimum Flutter version to 3.27.0 which supports wide gamut color spaces.
+- BREAKING CHANGE: Raise minimum Flutter version to 3.27.0, which supports wide gamut color spaces.
 
 ## 2.0.0
 
