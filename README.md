@@ -5,6 +5,7 @@
 | [`force_update`][force_update-link]                                   |         [Documentation][force_update-documentation]          |                          [![force_update pub.dev badge][force_update-pub-badge]][force_update-pub-badge-link]                           |                  [![][force_update-build-badge]][force_update-build-badge-link]                  |
 | [`leancode_analytics`][leancode_analytics-link]         |  [Documentation][leancode_analytics-documentation]   |     [![leancode_analytics pub.dev badge][leancode_analytics-pub-badge]][leancode_analytics-pub-badge-link]      |    [![][leancode_analytics-build-badge]][leancode_analytics-build-badge-link]    |
 | [`leancode_debug_page`][leancode_debug_page-link]         |  [Documentation][leancode_debug_page-documentation]   |     [![leancode_debug_page pub.dev badge][leancode_debug_page-pub-badge]][leancode_debug_page-pub-badge-link]      |    [![][leancode_debug_page-build-badge]][leancode_debug_page-build-badge-link]    |
+| [`leancode_flutter_svg_adaptive_loader`][leancode_flutter_svg_adaptive_loader-link]               |    [Documentation][leancode_flutter_svg_adaptive_loader-documentation]     |           [![leancode_flutter_svg_adaptive_loader pub.dev badge][leancode_flutter_svg_adaptive_loader-pub-badge]][leancode_flutter_svg_adaptive_loader-pub-badge-link]            |        [![][leancode_flutter_svg_adaptive_loader-build-badge]][leancode_flutter_svg_adaptive_loader-build-badge-link]        |
 | [`leancode_hooks`][leancode_hooks-link]               |    [Documentation][leancode_hooks-documentation]     |           [![leancode_hooks pub.dev badge][leancode_hooks-pub-badge]][leancode_hooks-pub-badge-link]            |        [![][leancode_hooks-build-badge]][leancode_hooks-build-badge-link]        |
 | [`leancode_lint`][leancode_lint-link]                 |     [Documentation][leancode_lint-documentation]     |             [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link]             |         [![][leancode_lint-build-badge]][leancode_lint-build-badge-link]         |
 | [`leancode_markup`][leancode_markup-link]             |  [Documentation][leancode_markup-documentation]   |     [![leancode_markup pub.dev badge][leancode_markup-pub-badge]][leancode_markup-pub-badge-link]      |    [![][leancode_markup-build-badge]][leancode_markup-build-badge-link]    |
@@ -56,6 +57,13 @@
 [leancode_debug_page-pub-badge-link]: https://pub.dev/packages/leancode_debug_page
 [leancode_debug_page-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_debug_page-test.yml?branch=master
 [leancode_debug_page-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_debug_page-test.yml
+
+[leancode_flutter_svg_adaptive_loader-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_flutter_svg_adaptive_loader
+[leancode_flutter_svg_adaptive_loader-documentation]: https://pub.dev/documentation/leancode_flutter_svg_adaptive_loader/latest/
+[leancode_flutter_svg_adaptive_loader-pub-badge]: https://img.shields.io/pub/v/leancode_flutter_svg_adaptive_loader
+[leancode_flutter_svg_adaptive_loader-pub-badge-link]: https://pub.dev/packages/leancode_flutter_svg_adaptive_loader
+[leancode_flutter_svg_adaptive_loader-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_flutter_svg_adaptive_loader-test.yml?branch=master
+[leancode_flutter_svg_adaptive_loader-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_flutter_svg_adaptive_loader-test.yml
 
 [leancode_hooks-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_hooks
 [leancode_hooks-documentation]: https://pub.dev/documentation/leancode_hooks/latest/
