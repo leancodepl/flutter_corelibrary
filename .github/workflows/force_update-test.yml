@@ -1,0 +1,53 @@
+name: force_update test
+
+on:
+  push:
+    branches: [master]
+    tags-ignore: ['force_update-v*']
+    paths:
+      - 'packages/force_update/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/force_update/**'
+
+jobs:
+  test:
+    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: 3.24.x
+    defaults:
+      run:
+        working-directory: packages/force_update
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Download pub dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Dry run pub publish
+        # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
+        run: flutter pub publish --dry-run || true
