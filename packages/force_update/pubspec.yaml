@@ -6,8 +6,8 @@ description: >-
   An internal package that speeds up implementation of Force Update
   
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.10.0"
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: ">=3.24.0"
 
 dependencies:
   cqrs: ^10.0.1
