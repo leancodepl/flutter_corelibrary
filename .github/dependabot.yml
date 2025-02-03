@@ -31,7 +31,7 @@ updates:
     versioning-strategy: widen
 
   - package-ecosystem: "pub"
-    directory: "/packages/force_update"
+    directory: "/packages/leancode_force_update"
     groups:
       all_dependencies:
         patterns:

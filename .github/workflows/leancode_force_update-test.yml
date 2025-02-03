@@ -1,15 +1,15 @@
-name: force_update test
+name: leancode_force_update test
 
 on:
   push:
     branches: [master]
-    tags-ignore: ['force_update-v*']
+    tags-ignore: ['leancode_force_update-v*']
     paths:
-      - 'packages/force_update/**'
+      - 'packages/leancode_force_update/**'
   pull_request:
     branches: [master]
     paths:
-      - 'packages/force_update/**'
+      - 'packages/leancode_force_update/**'
 
 jobs:
   test:
@@ -23,7 +23,7 @@ jobs:
           - version: 3.24.x
     defaults:
       run:
-        working-directory: packages/force_update
+        working-directory: packages/leancode_force_update
 
     steps:
       - name: Checkout

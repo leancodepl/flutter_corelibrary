@@ -10,10 +10,10 @@ p:enhanced_gradients:
   - changed-files:
     - any-glob-to-any-file:
       - packages/enhanced_gradients/**
-p:force_update:
+p:leancode_force_update:
   - changed-files:
     - any-glob-to-any-file:
-      - packages/force_update/**
+      - packages/leancode_force_update/**
 p:leancode_analytics:
   - changed-files:
     - any-glob-to-any-file:

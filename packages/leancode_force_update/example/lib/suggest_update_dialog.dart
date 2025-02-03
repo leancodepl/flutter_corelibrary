@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:force_update/force_update.dart';
+import 'package:leancode_force_update/leancode_force_update.dart';
 
 class SuggestUpdateDialog extends StatelessWidget {
   const SuggestUpdateDialog({

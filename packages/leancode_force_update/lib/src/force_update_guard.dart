@@ -3,15 +3,15 @@ import 'dart:async';
 import 'package:cqrs/cqrs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:force_update/data/contracts/contracts.dart';
-import 'package:force_update/src/force_update_storage.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:leancode_force_update/data/contracts/contracts.dart';
+import 'package:leancode_force_update/src/force_update_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
 
-part 'package:force_update/src/force_update_controller.dart';
+part 'package:leancode_force_update/src/force_update_controller.dart';
 
 class ForceUpdateGuard extends StatefulWidget {
   const ForceUpdateGuard({
