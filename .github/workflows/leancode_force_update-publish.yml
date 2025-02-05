@@ -1,8 +1,8 @@
-name: force_update publish
+name: leancode_force_update publish
 
 on:
   push:
-    tags: ['force_update-v*']
+    tags: ['leancode_force_update-v*']
 
 jobs:
   publish:
@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: packages/force_update
+        working-directory: packages/leancode_force_update
 
     steps:
       - name: Checkout
@@ -36,4 +36,4 @@ jobs:
       - name: Publish and release
         uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
         with:
-          path: packages/force_update
+          path: packages/leancode_force_update

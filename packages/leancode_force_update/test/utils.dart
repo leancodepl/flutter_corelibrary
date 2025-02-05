@@ -1,8 +1,8 @@
 import 'package:cqrs/cqrs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:force_update/data/contracts/contracts.dart';
-import 'package:force_update/force_update.dart';
+import 'package:leancode_force_update/data/contracts/contracts.dart';
+import 'package:leancode_force_update/leancode_force_update.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockCqrs extends Mock implements Cqrs {}

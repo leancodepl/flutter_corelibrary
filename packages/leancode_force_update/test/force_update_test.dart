@@ -1,9 +1,9 @@
 import 'package:cqrs/cqrs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:force_update/data/contracts/contracts.dart';
-import 'package:force_update/src/force_update_guard.dart';
-import 'package:force_update/src/force_update_storage.dart';
+import 'package:leancode_force_update/data/contracts/contracts.dart';
+import 'package:leancode_force_update/src/force_update_guard.dart';
+import 'package:leancode_force_update/src/force_update_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';

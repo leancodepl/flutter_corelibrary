@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:force_update/data/contracts/contracts.dart';
+import 'package:leancode_force_update/data/contracts/contracts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:version/version.dart';
 

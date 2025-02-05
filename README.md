@@ -2,10 +2,10 @@
 |-------------------------------------------------------| :--------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 | [`cqrs`][cqrs-link]                                   |         [Documentation][cqrs-documentation]          |                          [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link]                           |                  [![][cqrs-build-badge]][cqrs-build-badge-link]                  |
 | [`enhanced_gradients`][enhanced_gradients-link]       |  [Documentation][enhanced_gradients-documentation]   |     [![enhanced_gradients pub.dev badge][enhanced_gradients-pub-badge]][enhanced_gradients-pub-badge-link]      |    [![][enhanced_gradients-build-badge]][enhanced_gradients-build-badge-link]    |
-| [`force_update`][force_update-link]                                   |         [Documentation][force_update-documentation]          |                          [![force_update pub.dev badge][force_update-pub-badge]][force_update-pub-badge-link]                           |                  [![][force_update-build-badge]][force_update-build-badge-link]                  |
 | [`leancode_analytics`][leancode_analytics-link]         |  [Documentation][leancode_analytics-documentation]   |     [![leancode_analytics pub.dev badge][leancode_analytics-pub-badge]][leancode_analytics-pub-badge-link]      |    [![][leancode_analytics-build-badge]][leancode_analytics-build-badge-link]    |
 | [`leancode_debug_page`][leancode_debug_page-link]         |  [Documentation][leancode_debug_page-documentation]   |     [![leancode_debug_page pub.dev badge][leancode_debug_page-pub-badge]][leancode_debug_page-pub-badge-link]      |    [![][leancode_debug_page-build-badge]][leancode_debug_page-build-badge-link]    |
 | [`leancode_flutter_svg_adaptive_loader`][leancode_flutter_svg_adaptive_loader-link]               |    [Documentation][leancode_flutter_svg_adaptive_loader-documentation]     |           [![leancode_flutter_svg_adaptive_loader pub.dev badge][leancode_flutter_svg_adaptive_loader-pub-badge]][leancode_flutter_svg_adaptive_loader-pub-badge-link]            |        [![][leancode_flutter_svg_adaptive_loader-build-badge]][leancode_flutter_svg_adaptive_loader-build-badge-link]        |
+| [`leancode_force_update`][leancode_force_update-link]                                   |         [Documentation][leancode_force_update-documentation]          |                          [![leancode_force_update pub.dev badge][leancode_force_update-pub-badge]][leancode_force_update-pub-badge-link]                           |                  [![][leancode_force_update-build-badge]][leancode_force_update-build-badge-link]                  |
 | [`leancode_hooks`][leancode_hooks-link]               |    [Documentation][leancode_hooks-documentation]     |           [![leancode_hooks pub.dev badge][leancode_hooks-pub-badge]][leancode_hooks-pub-badge-link]            |        [![][leancode_hooks-build-badge]][leancode_hooks-build-badge-link]        |
 | [`leancode_lint`][leancode_lint-link]                 |     [Documentation][leancode_lint-documentation]     |             [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link]             |         [![][leancode_lint-build-badge]][leancode_lint-build-badge-link]         |
 | [`leancode_markup`][leancode_markup-link]             |  [Documentation][leancode_markup-documentation]   |     [![leancode_markup pub.dev badge][leancode_markup-pub-badge]][leancode_markup-pub-badge-link]      |    [![][leancode_markup-build-badge]][leancode_markup-build-badge-link]    |
@@ -37,13 +37,6 @@
 [enhanced_gradients-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/enhanced_gradients-test.yml?branch=master
 [enhanced_gradients-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/enhanced_gradients-test.yml
 
-[force_update-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/force_update
-[force_update-documentation]: https://pub.dev/documentation/force_update/latest/
-[force_update-pub-badge]: https://img.shields.io/pub/v/force_update
-[force_update-pub-badge-link]: https://pub.dev/packages/force_update
-[force_update-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/force_update-test.yml?branch=master
-[force_update-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/force_update-test.yml
-
 [leancode_analytics-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics
 [leancode_analytics-documentation]: https://pub.dev/documentation/leancode_analytics/latest/
 [leancode_analytics-pub-badge]: https://img.shields.io/pub/v/leancode_analytics
@@ -64,6 +57,13 @@
 [leancode_flutter_svg_adaptive_loader-pub-badge-link]: https://pub.dev/packages/leancode_flutter_svg_adaptive_loader
 [leancode_flutter_svg_adaptive_loader-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_flutter_svg_adaptive_loader-test.yml?branch=master
 [leancode_flutter_svg_adaptive_loader-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_flutter_svg_adaptive_loader-test.yml
+
+[leancode_force_update-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_force_update
+[leancode_force_update-documentation]: https://pub.dev/documentation/leancode_force_update/latest/
+[leancode_force_update-pub-badge]: https://img.shields.io/pub/v/leancode_force_update
+[leancode_force_update-pub-badge-link]: https://pub.dev/packages/leancode_force_update
+[leancode_force_update-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_force_update-test.yml?branch=master
+[leancode_force_update-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_force_update-test.yml
 
 [leancode_hooks-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_hooks
 [leancode_hooks-documentation]: https://pub.dev/documentation/leancode_hooks/latest/
