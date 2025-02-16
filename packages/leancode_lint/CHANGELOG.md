@@ -1,3 +1,7 @@
+# Unreleased
+
+- chore: Refactor lint codes to use built-in positional parameters.
+
 # 15.0.0
 
 - Enable the following lints:
