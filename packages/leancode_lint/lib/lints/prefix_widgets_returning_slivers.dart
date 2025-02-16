@@ -28,7 +28,7 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
             name: ruleName,
             problemMessage:
                 'Prefix widget names of widgets which return slivers in the build method.',
-            correctionMessage: '{0}',
+            correctionMessage: 'Consider renaming to {0}',
             errorSeverity: ErrorSeverity.WARNING,
           ),
         );
@@ -76,7 +76,7 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
           reporter.atToken(
             node.name,
             code,
-            arguments: [_getCorrectionMessage(config, node.name.lexeme)],
+            arguments: [_getSuggestedClassName(config, node.name.lexeme)],
           );
         }
       },
@@ -101,7 +101,7 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
             _hasSliverPrefix(expression.constructorName.type.name2.lexeme),
       );
 
-  static String _getCorrectionMessage(
+  static String _getSuggestedClassName(
     PrefixWidgetsReturningSliversConfig config,
     String className,
   ) {
@@ -121,6 +121,6 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
       ..write('Sliver')
       ..write(name);
 
-    return 'Consider renaming to $suggested';
+    return suggested.toString();
   }
 }
