@@ -23,7 +23,15 @@ final class PrefixWidgetsReturningSliversConfig {
 /// `AppPrefix` is specified in the config) prefix in their name.
 class PrefixWidgetsReturningSlivers extends DartLintRule {
   PrefixWidgetsReturningSlivers({required this.config})
-      : super(code: _getLintCode(config));
+      : super(
+          code: const LintCode(
+            name: ruleName,
+            problemMessage:
+                'Prefix widget names of widgets which return slivers in the build method.',
+            correctionMessage: '{0}',
+            errorSeverity: ErrorSeverity.WARNING,
+          ),
+        );
 
   PrefixWidgetsReturningSlivers.fromConfigs(CustomLintConfigs configs)
       : this(
@@ -67,7 +75,8 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
         if (isSliver) {
           reporter.atToken(
             node.name,
-            _getLintCode(config, node.name.lexeme),
+            code,
+            arguments: [_getCorrectionMessage(config, node.name.lexeme)],
           );
         }
       },
@@ -92,41 +101,26 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
             _hasSliverPrefix(expression.constructorName.type.name2.lexeme),
       );
 
-  static LintCode _getLintCode(
-    PrefixWidgetsReturningSliversConfig config, [
-    String? className,
-  ]) {
-    const problemMessageBase =
-        'Prefix widget names of widgets which return slivers in the build method.';
+  static String _getCorrectionMessage(
+    PrefixWidgetsReturningSliversConfig config,
+    String className,
+  ) {
+    var name = className;
 
-    final suggestedName = () {
-      var name = className;
-      if (name == null) {
-        return null;
-      }
-      final suggested = StringBuffer();
-      if (name.startsWith('_')) {
-        suggested.write('_');
-        name = name.substring(1);
-      }
-      if (config.applicationPrefix case final applicationPrefix?
-          when name.startsWith(applicationPrefix)) {
-        suggested.write(applicationPrefix);
-        name = name.substring(applicationPrefix.length);
-      }
-      suggested
-        ..write('Sliver')
-        ..write(name);
+    final suggested = StringBuffer();
+    if (name.startsWith('_')) {
+      suggested.write('_');
+      name = name.substring(1);
+    }
+    if (config.applicationPrefix case final applicationPrefix?
+        when name.startsWith(applicationPrefix)) {
+      suggested.write(applicationPrefix);
+      name = name.substring(applicationPrefix.length);
+    }
+    suggested
+      ..write('Sliver')
+      ..write(name);
 
-      return suggested.toString();
-    }();
-
-    return LintCode(
-      name: ruleName,
-      problemMessage: problemMessageBase,
-      correctionMessage:
-          suggestedName != null ? 'Consider renaming to $suggestedName' : null,
-      errorSeverity: ErrorSeverity.WARNING,
-    );
+    return 'Consider renaming to $suggested';
   }
 }

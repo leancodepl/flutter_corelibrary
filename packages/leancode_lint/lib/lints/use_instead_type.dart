@@ -11,8 +11,10 @@ abstract base class UseInsteadType extends DartLintRule {
   UseInsteadType({
     /// preferred item -> forbidden items
     required Map<String, List<ForbiddenItem>> replacements,
-    required this.lintCodeName,
-    this.errorSeverity = ErrorSeverity.WARNING,
+    required String lintCodeName,
+    required String problemMessage,
+    required String correctionMessage,
+    ErrorSeverity errorSeverity = ErrorSeverity.WARNING,
   })  : _checkers = [
           for (final MapEntry(key: preferredItemName, value: forbidden)
               in replacements.entries)
@@ -30,32 +32,18 @@ abstract base class UseInsteadType extends DartLintRule {
         super(
           code: LintCode(
             name: lintCodeName,
-            problemMessage: 'This item is forbidden',
+            problemMessage: problemMessage,
+            correctionMessage: correctionMessage,
+            errorSeverity: errorSeverity,
           ),
         );
 
   final List<(String preferredItemName, TypeChecker)> _checkers;
-  final String lintCodeName;
-  final ErrorSeverity errorSeverity;
-
-  String problemMessage(String itemName);
-  String correctionMessage(String preferredItemName);
 
   @override
   bool isEnabled(CustomLintConfigs configs) {
     return _checkers.isNotEmpty;
   }
-
-  LintCode _createCode({
-    required String itemName,
-    required String preferredItemName,
-  }) =>
-      LintCode(
-        name: lintCodeName,
-        problemMessage: problemMessage(itemName),
-        correctionMessage: correctionMessage(preferredItemName),
-        errorSeverity: errorSeverity,
-      );
 
   @override
   void run(
@@ -89,10 +77,8 @@ abstract base class UseInsteadType extends DartLintRule {
         if (checker.isExactly(element)) {
           reporter.atNode(
             node,
-            _createCode(
-              itemName: element.displayName,
-              preferredItemName: preferredItemName,
-            ),
+            code,
+            arguments: [element.displayName, preferredItemName],
           );
         }
       } catch (err) {
