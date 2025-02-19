@@ -1,3 +1,10 @@
+## 2.1.0
+
+- **Breaking:** Bump minimum Flutter version to 3.27.0
+- Bump `sensors_plus` dependency to `^6.1.1`
+- Bump `share_plus` dependency to `^10.1.4`
+- Bump `leancode_lint` dependency to `^15.0.0`
+
 ## 2.0.0
 
 - Bump `rxdart` dependency to `^0.28.0`
