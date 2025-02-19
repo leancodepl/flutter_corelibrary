@@ -6,7 +6,7 @@ description: >-
   A package providing a debug page which shows outgoing http requests and Logger logs
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: ">=3.27.0"
 
 dependencies:
