@@ -7,7 +7,7 @@ description: >-
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
-  flutter: ">=3.24.0"
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:
@@ -15,14 +15,14 @@ dependencies:
   http: ^1.1.0
   logging: ^1.2.0
   rxdart: ^0.28.0
-  sensors_plus: ^5.0.1
-  share_plus: ^9.0.0
+  sensors_plus: ^6.1.1
+  share_plus: ^10.1.4
 
 dev_dependencies:
   custom_lint: ^0.7.0
   flutter_test:
     sdk: flutter
-  leancode_lint: ^14.0.0
+  leancode_lint: ^15.0.0
   mocktail: ^1.0.3
 
 flutter:
