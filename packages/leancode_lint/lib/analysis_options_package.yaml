@@ -2,10 +2,8 @@ include: package:leancode_lint/analysis_options.yaml
 
 analyzer:
   errors:
-    package_api_docs: warning
     public_member_api_docs: warning
 
 linter:
   rules:
-    package_api_docs: true
     public_member_api_docs: true
