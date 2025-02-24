@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_string_literals_in_widgets
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
