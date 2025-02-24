@@ -1,15 +1,17 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/src/lint/linter.dart';
+import 'package:leancode_lint/type_checker.dart';
 import 'package:leancode_lint/utils.dart';
 
 String typeParametersString(
   Iterable<TypeParameter> typeParameters, {
   bool withBounds = false,
 }) {
-  final parameters =
-      typeParameters.map((e) => withBounds ? e.toSource() : e.name).join(', ');
+  final parameters = typeParameters
+      .map((e) => withBounds ? e.toSource() : e.name)
+      .join(', ');
 
   if (parameters.isNotEmpty) {
     return '<$parameters>';
@@ -22,13 +24,8 @@ Expression? maybeGetSingleReturnExpression(FunctionBody body) {
   return switch (body) {
     ExpressionFunctionBody(:final expression) ||
     BlockFunctionBody(
-      block: Block(
-        statements: [
-          ReturnStatement(:final expression?),
-        ],
-      )
-    ) =>
-      expression,
+      block: Block(statements: [ReturnStatement(:final expression?)]),
+    ) => expression,
     _ => null,
   };
 }
@@ -79,14 +76,8 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   }
 
   final isHookBuilder = const TypeChecker.any([
-    TypeChecker.fromName(
-      'HookBuilder',
-      packageName: 'flutter_hooks',
-    ),
-    TypeChecker.fromName(
-      'HookConsumer',
-      packageName: 'hooks_riverpod',
-    ),
+    TypeChecker.fromName('HookBuilder', packageName: 'flutter_hooks'),
+    TypeChecker.fromName('HookConsumer', packageName: 'hooks_riverpod'),
   ]).isExactly(classElement);
   if (!isHookBuilder) {
     return null;
@@ -95,8 +86,9 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   final builderParameter = node.argumentList.arguments
       .whereType<NamedExpression>()
       .firstWhereOrNull((e) => e.name.label.name == 'builder');
-  if (builderParameter
-      case NamedExpression(expression: FunctionExpression(:final body))) {
+  if (builderParameter case NamedExpression(
+    expression: FunctionExpression(:final body),
+  )) {
     return body;
   }
 
@@ -133,99 +125,117 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
 }
 
 bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-      final element? => const TypeChecker.any([
-          TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-          TypeChecker.fromName('State', packageName: 'flutter'),
-          TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-        ]).isSuperOf(element),
-      _ => false,
-    };
+  final element? => const TypeChecker.any([
+    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
+    TypeChecker.fromName('State', packageName: 'flutter'),
+    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+  ]).isSuperOf(element),
+  _ => false,
+};
 
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
     .firstWhereOrNull((member) => member.name.lexeme == 'build');
 
-extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
-  void addRegularComment(void Function(Token comment) listener) {
-    addCompilationUnit((node) {
-      bool isRegularComment(Token commentToken) {
-        final token = commentToken.toString();
-
-        return !token.startsWith('///') && token.startsWith('//');
-      }
-
-      Token? token = node.root.beginToken;
-      while (token != null) {
-        Token? commentToken = token.precedingComments;
-        while (commentToken != null) {
-          if (isRegularComment(commentToken)) {
-            listener(commentToken);
-          }
-          commentToken = commentToken.next;
-        }
-
-        if (token == token.next) {
-          break;
-        }
-
-        token = token.next;
-      }
-    });
+extension NodeLintRegistryExtensions on NodeLintRegistry {
+  void addRegularComment(LintRule rule, void Function(Token comment) listener) {
+    addCompilationUnit(rule, _RegularCommentVisitor(listener));
   }
 
   void addHookWidgetBody(
+    LintRule rule,
     void Function(FunctionBody node, AstNode diagnosticNode) listener, {
     bool isExactly = false,
   }) {
-    addInstanceCreationExpression((node) {
-      if (maybeHookBuilderBody(node) case final body?) {
-        listener(body, node.constructorName);
+    final visitor = _HookWidgetBodyVisitor(listener, isExactly);
+    addInstanceCreationExpression(rule, visitor);
+    addClassDeclaration(rule, visitor);
+  }
+}
+
+class _RegularCommentVisitor extends SimpleAstVisitor<void> {
+  _RegularCommentVisitor(this.listener);
+
+  final void Function(Token comment) listener;
+
+  @override
+  void visitCompilationUnit(CompilationUnit node) {
+    bool isRegularComment(Token commentToken) {
+      final token = commentToken.toString();
+
+      return !token.startsWith('///') && token.startsWith('//');
+    }
+
+    Token? token = node.root.beginToken;
+    while (token != null) {
+      Token? commentToken = token.precedingComments;
+      while (commentToken != null) {
+        if (isRegularComment(commentToken)) {
+          listener(commentToken);
+        }
+        commentToken = commentToken.next;
       }
-    });
-    addClassDeclaration((node) {
-      final element = node.declaredElement;
-      if (element == null) {
+
+      if (token == token.next) {
+        break;
+      }
+
+      token = token.next;
+    }
+  }
+}
+
+class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
+  _HookWidgetBodyVisitor(this.listener, this.isExactly);
+
+  final void Function(FunctionBody node, AstNode diagnosticNode) listener;
+  final bool isExactly;
+
+  @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (maybeHookBuilderBody(node) case final body?) {
+      listener(body, node.constructorName);
+    }
+  }
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    final element = node.declaredElement;
+    if (element == null) {
+      return;
+    }
+
+    const checker = TypeChecker.any([
+      TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+      TypeChecker.fromName('HookConsumerWidget', packageName: 'hooks_riverpod'),
+    ]);
+
+    final AstNode diagnosticNode;
+    if (isExactly) {
+      final superclass = node.extendsClause?.superclass;
+      final superclassElement = superclass?.element;
+      if (superclass == null || superclassElement == null) {
         return;
       }
 
-      const checker = TypeChecker.any([
-        TypeChecker.fromName(
-          'HookWidget',
-          packageName: 'flutter_hooks',
-        ),
-        TypeChecker.fromName(
-          'HookConsumerWidget',
-          packageName: 'hooks_riverpod',
-        ),
-      ]);
-
-      final AstNode diagnosticNode;
-      if (isExactly) {
-        final superclass = node.extendsClause?.superclass;
-        final superclassElement = superclass?.element;
-        if (superclass == null || superclassElement == null) {
-          return;
-        }
-
-        final isDirectHookWidget = checker.isExactly(superclassElement);
-        if (!isDirectHookWidget) {
-          return;
-        }
-        diagnosticNode = superclass;
-      } else {
-        final isHookWidget = checker.isSuperOf(element);
-        if (!isHookWidget) {
-          return;
-        }
-        diagnosticNode = node;
-      }
-
-      final buildMethod = getBuildMethod(node);
-      if (buildMethod == null) {
+      final isDirectHookWidget = checker.isExactly(superclassElement);
+      if (!isDirectHookWidget) {
         return;
       }
+      diagnosticNode = superclass;
+    } else {
+      final isHookWidget = checker.isSuperOf(element);
+      if (!isHookWidget) {
+        return;
+      }
+      diagnosticNode = node;
+    }
 
-      listener(buildMethod.body, diagnosticNode);
-    });
+    final buildMethod = getBuildMethod(node);
+    if (buildMethod == null) {
+      return;
+    }
+
+    listener(buildMethod.body, diagnosticNode);
   }
 }
