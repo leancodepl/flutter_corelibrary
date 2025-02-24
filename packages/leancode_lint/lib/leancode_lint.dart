@@ -1,4 +1,5 @@
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analysis_server_plugin/plugin.dart';
+import 'package:analysis_server_plugin/registry.dart';
 import 'package:leancode_lint/assists/convert_iterable_map_to_collection_for.dart';
 import 'package:leancode_lint/assists/convert_positional_to_named_formal.dart';
 import 'package:leancode_lint/assists/convert_record_into_nominal_type.dart';
@@ -12,26 +13,30 @@ import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
 import 'package:leancode_lint/lints/use_design_system_item.dart';
 
-PluginBase createPlugin() => _Linter();
+final plugin = _Linter();
 
-class _Linter extends PluginBase {
+class _Linter extends Plugin {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) => [
-        const StartCommentsWithSpace(),
-        ...UseDesignSystemItem.getRulesListFromConfigs(configs),
-        PrefixWidgetsReturningSlivers.fromConfigs(configs),
-        const AddCubitSuffixForYourCubits(),
-        const CatchParameterNames(),
-        const AvoidConditionalHooks(),
-        const HookWidgetDoesNotUseHooks(),
-        const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
-        const AvoidSingleChildInMultiChildWidgets(),
-      ];
+    const StartCommentsWithSpace(),
+    ...UseDesignSystemItem.getRulesListFromConfigs(configs),
+    PrefixWidgetsReturningSlivers.fromConfigs(configs),
+    const AddCubitSuffixForYourCubits(),
+    const AvoidConditionalHooks(),
+    const HookWidgetDoesNotUseHooks(),
+    const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
+    const AvoidSingleChildInMultiChildWidgets(),
+  ];
 
   @override
   List<Assist> getAssists() => [
-        ConvertRecordIntoNominalType(),
-        ConvertPositionalToNamedFormal(),
-        ConvertIterableMapToCollectionFor(),
-      ];
+    ConvertRecordIntoNominalType(),
+    ConvertPositionalToNamedFormal(),
+    ConvertIterableMapToCollectionFor(),
+  ];
+
+  @override
+  void register(PluginRegistry registry) {
+    registry.registerWarningRule(CatchParameterNames());
+  }
 }

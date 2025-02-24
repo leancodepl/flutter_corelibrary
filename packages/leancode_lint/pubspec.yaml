@@ -9,9 +9,8 @@ topics:
   - lints
 
 environment:
-  sdk: ">=3.6.0 <4.0.0"
+  sdk: 3.8.0-132.0.dev
 
 dependencies:
-  analyzer: ^6.11.0
-  analyzer_plugin: ^0.11.3
-  custom_lint_builder: ^0.7.0
+  analysis_server_plugin: any
+  analyzer: ^7.3.0
