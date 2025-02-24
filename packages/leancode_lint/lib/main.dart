@@ -23,7 +23,6 @@ class _Linter extends Plugin {
     ...UseDesignSystemItem.getRulesListFromConfigs(configs),
     PrefixWidgetsReturningSlivers.fromConfigs(configs),
     const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
-    const AvoidSingleChildInMultiChildWidgets(),
   ];
 
   @override
@@ -39,6 +38,7 @@ class _Linter extends Plugin {
       ..registerWarningRule(AddCubitSuffixForYourCubits())
       ..registerWarningRule(CatchParameterNames())
       ..registerWarningRule(AvoidConditionalHooks())
-      ..registerWarningRule(HookWidgetDoesNotUseHooks());
+      ..registerWarningRule(HookWidgetDoesNotUseHooks())
+      ..registerWarningRule(AvoidSingleChildInMultiChildWidgets());
   }
 }
