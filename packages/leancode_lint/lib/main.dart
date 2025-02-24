@@ -22,7 +22,6 @@ class _Linter extends Plugin {
     const StartCommentsWithSpace(),
     ...UseDesignSystemItem.getRulesListFromConfigs(configs),
     PrefixWidgetsReturningSlivers.fromConfigs(configs),
-    const AvoidConditionalHooks(),
     const HookWidgetDoesNotUseHooks(),
     const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
     const AvoidSingleChildInMultiChildWidgets(),
@@ -39,6 +38,7 @@ class _Linter extends Plugin {
   void register(PluginRegistry registry) {
     registry
       ..registerWarningRule(AddCubitSuffixForYourCubits())
-      ..registerWarningRule(CatchParameterNames());
+      ..registerWarningRule(CatchParameterNames())
+      ..registerWarningRule(AvoidConditionalHooks());
   }
 }

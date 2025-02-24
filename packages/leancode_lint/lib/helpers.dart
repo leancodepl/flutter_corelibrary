@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:leancode_lint/type_checker.dart';
 import 'package:leancode_lint/utils.dart';
@@ -136,6 +137,10 @@ bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
     .firstWhereOrNull((member) => member.name.lexeme == 'build');
+
+extension ExpressionExtensions on Expression {
+  SourceRange get sourceRange => SourceRange(offset, length);
+}
 
 extension NodeLintRegistryExtensions on NodeLintRegistry {
   void addRegularComment(LintRule rule, void Function(Token comment) listener) {
