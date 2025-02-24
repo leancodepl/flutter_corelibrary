@@ -16,7 +16,6 @@ final plugin = _Linter();
 class _Linter extends Plugin {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) => [
-    const StartCommentsWithSpace(),
     ...UseDesignSystemItem.getRulesListFromConfigs(configs),
     PrefixWidgetsReturningSlivers.fromConfigs(configs),
     const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
@@ -25,6 +24,7 @@ class _Linter extends Plugin {
   @override
   void register(PluginRegistry registry) {
     registry
+      ..registerWarningRule(StartCommentsWithSpace())
       ..registerWarningRule(AddCubitSuffixForYourCubits())
       ..registerWarningRule(CatchParameterNames())
       ..registerWarningRule(AvoidConditionalHooks())

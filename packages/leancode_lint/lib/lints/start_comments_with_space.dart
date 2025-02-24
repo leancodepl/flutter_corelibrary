@@ -1,19 +1,22 @@
+import 'package:_fe_analyzer_shared/src/scanner/token.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/src/lint/linter.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Forces comments/docs to start with a space.
-class StartCommentsWithSpace extends DartLintRule {
-  const StartCommentsWithSpace()
-      : super(
-          code: const LintCode(
-            name: 'start_comments_with_space',
-            problemMessage: 'Start {0} with a space.',
-            errorSeverity: ErrorSeverity.WARNING,
-          ),
-        );
+class StartCommentsWithSpace extends AnalysisRule {
+  StartCommentsWithSpace()
+    : super(
+        name: 'start_comments_with_space',
+        description: 'Start {0} with a space.',
+      );
+
+  @override
+  LintCode get lintCode => LintCode(name, description);
 
   @override
   List<Fix> getFixes() {
@@ -21,34 +24,36 @@ class StartCommentsWithSpace extends DartLintRule {
   }
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    ErrorReporter reporter,
-    CustomLintContext context,
+  void registerNodeProcessors(
+    NodeLintRegistry registry,
+    LinterContext context,
   ) {
-    context.registry.addRegularComment((token) {
+    registry.addComment(this, _Visitor(this, context));
+  }
+}
+
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
+
+  final LintRule rule;
+  final LinterContext context;
+
+  @override
+  void visitComment(Comment node) {
+    for (final token in node.tokens) {
       if (_commentErrorOffset(token) case final contentStart?) {
-        reporter.atOffset(
-          offset: token.offset + contentStart,
-          length: 0,
-          errorCode: code,
-          arguments: [_CommentType.comment.pluralName],
+        rule.reportLintForOffset(
+          token.offset + contentStart,
+          0,
+          arguments: [
+            if (token is DocumentationCommentToken)
+              _CommentType.doc.pluralName
+            else
+              _CommentType.comment.pluralName,
+          ],
         );
       }
-    });
-
-    context.registry.addComment((node) {
-      for (final token in node.tokens) {
-        if (_commentErrorOffset(token) case final contentStart?) {
-          reporter.atOffset(
-            offset: token.offset + contentStart,
-            length: 0,
-            errorCode: code,
-            arguments: [_CommentType.doc.pluralName],
-          );
-        }
-      }
-    });
+    }
   }
 
   int? _commentErrorOffset(Token comment) {
