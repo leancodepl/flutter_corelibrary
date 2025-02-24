@@ -28,7 +28,9 @@ class _Linter extends Plugin {
       ..registerWarningRule(AddCubitSuffixForYourCubits())
       ..registerWarningRule(CatchParameterNames())
       ..registerWarningRule(AvoidConditionalHooks())
-      ..registerWarningRule(HookWidgetDoesNotUseHooks())
+      ..registerWarningRule(
+        HookWidgetDoesNotUseHooks()..registerFixes(registry),
+      )
       ..registerWarningRule(AvoidSingleChildInMultiChildWidgets());
   }
 }

@@ -1,12 +1,17 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
+import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer/src/lint/linter.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
-class HookWidgetDoesNotUseHooks extends AnalysisRule {
+class HookWidgetDoesNotUseHooks extends AnalysisRule
+    with AnalysisRuleWithFixes {
   HookWidgetDoesNotUseHooks()
     : super(
         name: 'hook_widget_does_not_use_hooks',
@@ -44,28 +49,31 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule {
   }
 
   @override
-  List<Fix> getFixes() => [_ConvertHookWidgetToStatelessWidget()];
+  List<ProducerGenerator> get fixes => [ConvertHookWidgetToStatelessWidget.new];
 }
 
-class _ConvertHookWidgetToStatelessWidget extends DartFix {
+class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {
+  ConvertHookWidgetToStatelessWidget({required super.context});
+
   @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
-  ) {
-    reporter
-        .createChangeBuilder(
-          message: 'Convert HookWidget to StatelessWidget',
-          priority: 1,
-        )
-        .addDartFileEdit(
-          (builder) => builder.addSimpleReplacement(
-            SourceRange(analysisError.offset, analysisError.length),
-            'StatelessWidget',
-          ),
-        );
+  FixKind? get fixKind => const FixKind(
+    'leancode.lint.convertHookWidgetToStatelessWidget',
+    DartFixKindPriority.standard,
+    'Convert HookWidget to StatelessWidget',
+  );
+
+  @override
+  CorrectionApplicability get applicability =>
+      CorrectionApplicability.singleLocation;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    await builder.addDartFileEdit(
+      file,
+      (builder) => builder.addSimpleReplacement(
+        SourceRange(errorOffset!, errorLength!),
+        'StatelessWidget',
+      ),
+    );
   }
 }

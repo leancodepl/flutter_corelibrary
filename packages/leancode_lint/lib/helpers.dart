@@ -1,3 +1,5 @@
+import 'package:analysis_server_plugin/registry.dart';
+import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
@@ -242,5 +244,15 @@ class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
     }
 
     listener(buildMethod.body, diagnosticNode);
+  }
+}
+
+mixin AnalysisRuleWithFixes on AnalysisRule {
+  List<ProducerGenerator> get fixes;
+
+  void registerFixes(PluginRegistry registry) {
+    for (final fix in fixes) {
+      registry.registerFixForRule(lintCode, fix);
+    }
   }
 }
