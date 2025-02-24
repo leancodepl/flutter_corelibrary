@@ -24,7 +24,7 @@ class _Linter extends Plugin {
   @override
   void register(PluginRegistry registry) {
     registry
-      ..registerWarningRule(StartCommentsWithSpace())
+      ..registerWarningRule(StartCommentsWithSpace()..registerFixes(registry))
       ..registerWarningRule(AddCubitSuffixForYourCubits())
       ..registerWarningRule(CatchParameterNames())
       ..registerWarningRule(AvoidConditionalHooks())
