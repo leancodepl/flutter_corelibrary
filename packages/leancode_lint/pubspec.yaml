@@ -14,3 +14,6 @@ environment:
 dependencies:
   analysis_server_plugin: any
   analyzer: ^7.3.0
+  meta: ^1.16.0
+  path: ^1.9.1
+  source_span: ^1.10.1

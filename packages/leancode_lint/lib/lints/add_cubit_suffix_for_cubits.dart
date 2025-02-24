@@ -1,55 +1,57 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer/src/lint/linter.dart';
+import 'package:leancode_lint/type_checker.dart';
 
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
 /// class name.
-class AddCubitSuffixForYourCubits extends DartLintRule {
-  const AddCubitSuffixForYourCubits()
-      : super(
-          code: const LintCode(
-            name: 'add_cubit_suffix_for_your_cubits',
-            problemMessage: 'Add Cubit suffix for your cubits.',
-            correctionMessage: 'Ex. {0}Cubit',
-            errorSeverity: ErrorSeverity.WARNING,
-          ),
-        );
+class AddCubitSuffixForYourCubits extends AnalysisRule {
+  AddCubitSuffixForYourCubits()
+    : super(
+        name: 'add_cubit_suffix_for_your_cubits',
+        description: 'Add Cubit suffix for your cubits.',
+      );
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    ErrorReporter reporter,
-    CustomLintContext context,
+  LintCode get lintCode =>
+      LintCode(name, description, correctionMessage: 'Ex. {0}Cubit');
+
+  @override
+  void registerNodeProcessors(
+    NodeLintRegistry registry,
+    LinterContext context,
   ) {
-    context.registry.addClassDeclaration(
-      (node) {
-        final isCubitClass = _isCubitClass(node);
-        if (!isCubitClass) {
-          return;
-        }
+    registry.addClassDeclaration(this, _Visitor(this, context));
+  }
+}
 
-        final nameEndsWithCubit = _hasCubitSuffix(node.name.lexeme);
-        if (nameEndsWithCubit) {
-          return;
-        }
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
 
-        reporter.atToken(
-          node.name,
-          code,
-          arguments: [node.name.lexeme],
-        );
-      },
-    );
+  final LintRule rule;
+  final LinterContext context;
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    if (!_isCubitClass(node)) {
+      return;
+    }
+
+    if (_hasCubitSuffix(node.name.lexeme)) {
+      return;
+    }
+
+    rule.reportLintForToken(node.name, arguments: [node.name.lexeme]);
   }
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
 
   bool _isCubitClass(ClassDeclaration node) => switch (node.declaredElement) {
-        final element? => const TypeChecker.fromName(
-            'Cubit',
-            packageName: 'bloc',
-          ).isSuperOf(element),
-        _ => false,
-      };
+    final element? => const TypeChecker.fromName(
+      'Cubit',
+      packageName: 'bloc',
+    ).isSuperOf(element),
+    _ => false,
+  };
 }
