@@ -29,51 +29,55 @@ class StartCommentsWithSpace extends AnalysisRule with AnalysisRuleWithFixes {
     NodeLintRegistry registry,
     LinterContext context,
   ) {
-    registry.addComment(this, _Visitor(this, context));
+    registry
+      ..addRegularComment(this, _visitCommentToken)
+      ..addComment(this, _Visitor(this, context));
+  }
+
+  void _visitCommentToken(Token token) {
+    if (_commentErrorOffset(token) case final contentStart?) {
+      reportLintForOffset(
+        token.offset + contentStart,
+        0,
+        arguments: [
+          if (token is DocumentationCommentToken)
+            _CommentType.doc.pluralName
+          else
+            _CommentType.comment.pluralName,
+        ],
+      );
+    }
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
-  final LintRule rule;
+  final StartCommentsWithSpace rule;
   final LinterContext context;
 
   @override
   void visitComment(Comment node) {
-    for (final token in node.tokens) {
-      if (_commentErrorOffset(token) case final contentStart?) {
-        rule.reportLintForOffset(
-          token.offset + contentStart,
-          0,
-          arguments: [
-            if (token is DocumentationCommentToken)
-              _CommentType.doc.pluralName
-            else
-              _CommentType.comment.pluralName,
-          ],
-        );
-      }
-    }
+    node.tokens.forEach(rule._visitCommentToken);
+  }
+}
+
+int? _commentErrorOffset(Token comment) {
+  final lexeme = comment.lexeme;
+
+  // find index of first char after `/`
+  var contentStart = 0;
+  while (lexeme.length > contentStart && lexeme[contentStart] == '/') {
+    contentStart += 1;
   }
 
-  int? _commentErrorOffset(Token comment) {
-    final lexeme = comment.lexeme;
+  final needsSpace =
+      lexeme.length != contentStart && lexeme[contentStart] != ' ';
 
-    // find index of first char after `/`
-    var contentStart = 0;
-    while (lexeme.length > contentStart && lexeme[contentStart] == '/') {
-      contentStart += 1;
-    }
-
-    final needsSpace =
-        lexeme.length != contentStart && lexeme[contentStart] != ' ';
-
-    if (needsSpace) {
-      return contentStart;
-    }
-    return null;
+  if (needsSpace) {
+    return contentStart;
   }
+  return null;
 }
 
 enum _CommentType {
