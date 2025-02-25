@@ -10,9 +10,8 @@ class ColumnIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Column(
-      children: [
-        Container(),
-      ],
+      //
+      children: [Container()],
     );
   }
 }
@@ -24,9 +23,8 @@ class RowIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Row(
-      children: [
-        Container(),
-      ],
+      //
+      children: [Container()],
     );
   }
 }
@@ -38,10 +36,9 @@ class FlexIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Flex(
+      //
       direction: Axis.horizontal,
-      children: [
-        Container(),
-      ],
+      children: [Container()],
     );
   }
 }
@@ -53,9 +50,8 @@ class WrapIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Wrap(
-      children: [
-        Container(),
-      ],
+      //
+      children: [Container()],
     );
   }
 }
@@ -67,9 +63,8 @@ class SliverChildListDelegateIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     final _ = SliverChildListDelegate(
-      [
-        Container(),
-      ],
+      //
+      [Container()],
     );
 
     return const SizedBox();
@@ -83,9 +78,8 @@ class SliverListIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return SliverList.list(
-      children: [
-        Container(),
-      ],
+      //
+      children: [Container()],
     );
   }
 }
@@ -97,9 +91,8 @@ class SliverMainAxisGroupIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return const SliverMainAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(),
-      ],
+      //
+      slivers: [SliverToBoxAdapter()],
     );
   }
 }
@@ -111,9 +104,8 @@ class SliverCrossAxisGroupIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return const SliverCrossAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(),
-      ],
+      //
+      slivers: [SliverToBoxAdapter()],
     );
   }
 }
@@ -125,9 +117,8 @@ class MultiSliverIsMarked extends StatelessWidget {
   Widget build(BuildContext context) {
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return MultiSliver(
-      children: [
-        Container(),
-      ],
+      //
+      children: [Container()],
     );
   }
 }
@@ -146,13 +137,7 @@ class ManyChildrenIsNotMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        Container(),
-        Container(),
-        Container(),
-      ],
-    );
+    return Wrap(children: [Container(), Container(), Container()]);
   }
 }
 
@@ -161,11 +146,7 @@ class CollectionForIsMany extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        for (var i = 0; i < 3; i++) Container(),
-      ],
-    );
+    return Wrap(children: [for (var i = 0; i < 3; i++) Container()]);
   }
 }
 
@@ -176,9 +157,7 @@ class ListSpreadIsMany extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       children: [
-        ...[
-          for (var i = 0; i < 3; i++) Container(),
-        ],
+        ...[for (var i = 0; i < 3; i++) Container()],
       ],
     );
   }
@@ -189,15 +168,9 @@ class NotCollectionLiteralIsMany extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = [
-      Container(),
-      Container(),
-      Container(),
-    ];
+    final children = [Container(), Container(), Container()];
 
-    return Wrap(
-      children: children,
-    );
+    return Wrap(children: children);
   }
 }
 

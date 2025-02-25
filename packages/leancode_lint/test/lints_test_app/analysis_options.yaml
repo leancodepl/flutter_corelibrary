@@ -19,6 +19,6 @@ custom_lint:
     # TODO: remove explicit enable once enabled by default
     - constructor_parameters_and_fields_should_have_the_same_order: true
 
-analyzer:
-  plugins:
-    - custom_lint
+plugins:
+  leancode_lint:
+    path: ../../../leancode_lint
