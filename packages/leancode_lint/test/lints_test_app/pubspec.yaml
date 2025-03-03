@@ -11,13 +11,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.6
-  flutter_hooks: ^0.20.5
+  flutter_bloc: ^9.1.0
+  flutter_hooks: ^0.21.2
   hooks_riverpod: ^2.6.1
   sliver_tools: ^0.2.12
 
 dev_dependencies:
-  custom_lint: ^0.7.0
+  custom_lint: ^0.7.5
   leancode_lint:
     path: ../../../leancode_lint
 
