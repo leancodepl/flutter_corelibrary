@@ -1,3 +1,7 @@
+# 15.1.0
+
+- Support `analyzer` 7.0.0
+
 # 15.0.0
 
 - Enable the following lints:
