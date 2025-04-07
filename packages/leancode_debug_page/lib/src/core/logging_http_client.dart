@@ -8,8 +8,8 @@ import 'package:rxdart/rxdart.dart';
 class LoggingHttpClient extends http.BaseClient
     implements LogGatherer<RequestLogRecord> {
   LoggingHttpClient({http.Client? client})
-      : _httpClient = client ?? http.Client(),
-        _logsController = BehaviorSubject.seeded([]);
+    : _httpClient = client ?? http.Client(),
+      _logsController = BehaviorSubject.seeded([]);
 
   final http.Client _httpClient;
   final BehaviorSubject<List<RequestLogRecord>> _logsController;
@@ -33,30 +33,27 @@ class LoggingHttpClient extends http.BaseClient
       requestBody = null;
     }
 
-    var responseBodyBytes = <int>[];
+    final responseBodyBytes = <int>[];
     final responseBodyCompleter = Completer<String>();
 
     _logsController.add(
-      logs
-        ..add(
-          RequestLogRecord(
-            method: request.method,
-            url: request.url,
-            startTime: startTime,
-            endTime: endTime,
-            statusCode: response.statusCode,
-            requestHeaders: request.headers,
-            requestBody: requestBody,
-            responseBodyCompleter: responseBodyCompleter,
-            responseHeaders: response.headers,
-          ),
+      logs..add(
+        RequestLogRecord(
+          method: request.method,
+          url: request.url,
+          startTime: startTime,
+          endTime: endTime,
+          statusCode: response.statusCode,
+          requestHeaders: request.headers,
+          requestBody: requestBody,
+          responseBodyCompleter: responseBodyCompleter,
+          responseHeaders: response.headers,
         ),
+      ),
     );
 
     return http.StreamedResponse(
-      response.stream.doOnData((event) {
-        responseBodyBytes = event;
-      }).doOnDone(() {
+      response.stream.doOnData(responseBodyBytes.addAll).doOnDone(() {
         responseBodyCompleter.complete(
           http.Response.bytes(responseBodyBytes, response.statusCode).body,
         );
