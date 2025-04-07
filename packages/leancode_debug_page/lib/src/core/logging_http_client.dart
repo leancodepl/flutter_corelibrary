@@ -53,15 +53,11 @@ class LoggingHttpClient extends http.BaseClient
     );
 
     return http.StreamedResponse(
-      response.stream
-          .doOnData((event) {
-            responseBodyBytes.addAll(event);
-          })
-          .doOnDone(() {
-            responseBodyCompleter.complete(
-              http.Response.bytes(responseBodyBytes, response.statusCode).body,
-            );
-          }),
+      response.stream.doOnData(responseBodyBytes.addAll).doOnDone(() {
+        responseBodyCompleter.complete(
+          http.Response.bytes(responseBodyBytes, response.statusCode).body,
+        );
+      }),
       response.statusCode,
       contentLength: response.contentLength,
       request: response.request,
