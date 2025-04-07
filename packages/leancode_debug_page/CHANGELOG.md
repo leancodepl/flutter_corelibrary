@@ -1,3 +1,6 @@
+# 2.1.2
+- Fix logging response bodies
+
 ## 2.1.1
 
 - Downgrade `sensors_plus` dependency to `^6.0.0`
