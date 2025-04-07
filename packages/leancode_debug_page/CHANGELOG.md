@@ -1,4 +1,5 @@
 # 2.1.2
+
 - Fix logging response bodies
 
 ## 2.1.1
