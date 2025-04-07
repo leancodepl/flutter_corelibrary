@@ -33,7 +33,7 @@ class LoggingHttpClient extends http.BaseClient
       requestBody = null;
     }
 
-    var responseBodyBytes = <int>[];
+    final responseBodyBytes = <int>[];
     final responseBodyCompleter = Completer<String>();
 
     _logsController.add(
