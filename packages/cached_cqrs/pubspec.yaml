@@ -9,8 +9,7 @@ environment:
 
 dependencies:
   cached_query: ^2.2.1
-  cqrs:
-    path: ../cqrs
+  cqrs: ^10.0.2
   flutter:
     sdk: flutter
 
