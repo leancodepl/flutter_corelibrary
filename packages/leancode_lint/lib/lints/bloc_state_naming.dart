@@ -39,13 +39,6 @@ class BlocStateNaming extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
   );
 
-  static const preferMixinCode = LintCode(
-    name: 'bloc_state_prefer_mixin',
-    problemMessage:
-        'The class {0} should mix in EquatableMixin instead of extending Equatable.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
-
   static const typeCheckers = (
     bloc: TypeChecker.fromName('BlocBase', packageName: 'bloc'),
     equatable: TypeChecker.fromName('Equatable', packageName: 'equatable'),
@@ -145,12 +138,6 @@ class BlocStateNaming extends DartLintRule {
         reporter.atElement(
           stateElement,
           equatableCode,
-          arguments: [expectedStateName],
-        );
-      } else if (isEquatable) {
-        reporter.atElement(
-          stateElement,
-          preferMixinCode,
           arguments: [expectedStateName],
         );
       }
