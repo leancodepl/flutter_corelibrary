@@ -25,11 +25,9 @@ class BlocStateNaming extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
   );
 
-  static const _allowedSuffixes = ['Initial', 'Loading', 'Success', 'Error'];
   static const subclassNameCode = LintCode(
     name: 'bloc_state_subclass_name',
-    problemMessage:
-        'The class {0} should end in one of the following suffixes: {1}.',
+    problemMessage: 'State subclasses should have the base name as the prefix.',
     errorSeverity: ErrorSeverity.WARNING,
   );
 
@@ -115,20 +113,15 @@ class BlocStateNaming extends DartLintRule {
         }
       }
 
-      // TODO?
-      // if (stateElement.isSealed) {
-      //   final subtypes = stateElement.subclasses;
-      //
-      //   for (final subtype in subtypes) {
-      //     if (_allowedSuffixes.none(subtype.name.endsWith)) {
-      //       reporter.atElement(
-      //         subtype,
-      //         subclassNameCode,
-      //         arguments: [expectedStateName, _allowedSuffixes.join(', ')],
-      //       );
-      //     }
-      //   }
-      // }
+      if (stateElement.isSealed) {
+        final subtypes = stateElement.subclasses;
+
+        for (final subtype in subtypes) {
+          if (!subtype.name.startsWith(expectedStateName)) {
+            reporter.atElement(subtype, subclassNameCode);
+          }
+        }
+      }
 
       final isEquatableMixin =
           stateElement.mixins.any(typeCheckers.equatableMixin.isExactlyType);
