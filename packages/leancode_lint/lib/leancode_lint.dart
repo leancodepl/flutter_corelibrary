@@ -5,6 +5,7 @@ import 'package:leancode_lint/assists/convert_record_into_nominal_type.dart';
 import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
+import 'package:leancode_lint/lints/bloc_state_naming.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
@@ -28,6 +29,7 @@ class _Linter extends PluginBase {
         ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
         AvoidSingleChildInMultiChildWidgets(),
         const UseEquatableMixin(),
+        const BlocStateNaming(),
       ];
 
   @override

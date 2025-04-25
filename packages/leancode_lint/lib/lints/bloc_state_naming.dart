@@ -130,11 +130,10 @@ class BlocStateNaming extends DartLintRule {
       //   }
       // }
 
-      final isEquatable = typeCheckers.equatable.isAssignableFrom(stateElement);
       final isEquatableMixin =
-          typeCheckers.equatableMixin.isAssignableFrom(stateElement);
+          stateElement.mixins.any(typeCheckers.equatableMixin.isExactlyType);
 
-      if (!isEquatable && !isEquatableMixin) {
+      if (!isEquatableMixin) {
         reporter.atElement(
           stateElement,
           equatableCode,
