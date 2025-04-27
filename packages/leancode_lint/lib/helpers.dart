@@ -73,7 +73,7 @@ List<InvocationExpression> getAllInnerHookExpressions(AstNode node) {
 
 /// Given an instance creation, returns the builder function body if the node is a HookBuilder.
 FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
-  final classElement = node.constructorName.type.element;
+  final classElement = node.constructorName.type.element2;
   if (classElement == null) {
     return null;
   }
@@ -127,12 +127,12 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
   };
 }
 
-bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-  final element? => const TypeChecker.any([
+bool isWidgetClass(ClassDeclaration node) => switch (node.declaredFragment) {
+  final fragment? => const TypeChecker.any([
     TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
     TypeChecker.fromName('State', packageName: 'flutter'),
     TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-  ]).isSuperOf(element),
+  ]).isSuperOf(fragment.element),
   _ => false,
 };
 
@@ -207,7 +207,7 @@ class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    final element = node.declaredElement;
+    final element = node.declaredFragment?.element;
     if (element == null) {
       return;
     }
@@ -220,7 +220,7 @@ class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
     final AstNode diagnosticNode;
     if (isExactly) {
       final superclass = node.extendsClause?.superclass;
-      final superclassElement = superclass?.element;
+      final superclassElement = superclass?.element2;
       if (superclass == null || superclassElement == null) {
         return;
       }

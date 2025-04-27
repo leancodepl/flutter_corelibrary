@@ -39,7 +39,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     final constructorName = node.constructorName.type;
-    if (constructorName.element case final typeElement?) {
+    if (constructorName.element2 case final typeElement?) {
       // is it something we want to complain about?
       final match = _complain.firstWhereOrNull(
         (e) => e.$2.isExactly(typeElement),
@@ -50,7 +50,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
       // does it have a children argument?
       var children = node.argumentList.arguments.firstWhereOrNull(
-        (e) => e.staticParameterElement?.name == match.$1,
+        (e) => e.correspondingParameter?.name3 == match.$1,
       );
       if (children == null) {
         return;

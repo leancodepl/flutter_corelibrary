@@ -32,12 +32,11 @@ class AvoidConditionalHooks extends AnalysisRule {
 
       final returnExpressions = getAllReturnExpressions(node).nonNulls;
       // everything past that return is considered conditional
-      final firstReturn =
-          returnExpressions.isEmpty
-              ? null
-              : returnExpressions.reduce(
-                (acc, curr) => acc.offset < curr.offset ? acc : curr,
-              );
+      final firstReturn = returnExpressions.isEmpty
+          ? null
+          : returnExpressions.reduce(
+              (acc, curr) => acc.offset < curr.offset ? acc : curr,
+            );
 
       for (final hookExpression in hookExpressions) {
         if (_isConditional(firstReturn, hookExpression, node)) {
