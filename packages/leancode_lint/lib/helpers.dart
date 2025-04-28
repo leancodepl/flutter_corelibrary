@@ -276,11 +276,12 @@ bool areInSamePackage(Element element1, Element element2) {
 extension on Element {
   String? get package {
     final uri = library?.definingCompilationUnit.source.uri;
-    if (uri == null || uri.scheme != 'package') {
-      return null;
-    }
 
-    return uri.pathSegments.first;
+    return switch (uri) {
+      null => null,
+      Uri(scheme: 'dart', :final path) => 'dart:$path',
+      _ => uri.pathSegments.first,
+    };
   }
 }
 

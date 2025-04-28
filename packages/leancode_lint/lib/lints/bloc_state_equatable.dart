@@ -25,6 +25,10 @@ class BlocStateEquatable extends DartLintRule {
         return;
       }
 
+      if (!areInSamePackage(blocData.stateElement, blocData.blocElement)) {
+        return;
+      }
+
       final isEquatableMixin = blocData.stateElement.mixins.any(
         const TypeChecker.fromName('EquatableMixin', packageName: 'equatable')
             .isExactlyType,
