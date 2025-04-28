@@ -12,18 +12,6 @@ class BlocStateNaming extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
   );
 
-  static const stateSealedCode = LintCode(
-    name: 'bloc_state_sealed',
-    problemMessage: 'The class {0} should be sealed.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
-
-  static const stateFinalCode = LintCode(
-    name: 'bloc_state_final',
-    problemMessage: 'The class {0} should be final.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
-
   @override
   void run(
     CustomLintResolver resolver,
@@ -36,12 +24,7 @@ class BlocStateNaming extends DartLintRule {
         return;
       }
 
-      final (
-        :blocElement,
-        :expectedStateName,
-        :stateElement,
-        :stateSubclasses,
-      ) = blocData;
+      final (:blocElement, :expectedStateName, :stateElement) = blocData;
 
       if (!areInSamePackage(stateElement, blocElement)) {
         return;
@@ -53,24 +36,6 @@ class BlocStateNaming extends DartLintRule {
           stateNameCode,
           arguments: [node.name.lexeme, expectedStateName],
         );
-      }
-
-      if (stateSubclasses.isEmpty) {
-        if (!stateElement.isFinal) {
-          reporter.atElement(
-            stateElement,
-            stateFinalCode,
-            arguments: [expectedStateName],
-          );
-        }
-      } else {
-        if (!stateElement.isSealed) {
-          reporter.atElement(
-            stateElement,
-            stateSealedCode,
-            arguments: [expectedStateName],
-          );
-        }
       }
     });
   }

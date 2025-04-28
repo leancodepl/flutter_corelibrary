@@ -237,7 +237,6 @@ const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
   ClassElement blocElement,
   String expectedStateName,
   ClassElement stateElement,
-  Iterable<ClassElement> stateSubclasses,
 })? maybeBlocData(ClassDeclaration clazz) {
   final classElement = clazz.declaredElement;
 
@@ -260,19 +259,10 @@ const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
     return null;
   }
 
-  final stateTypeChecker = TypeChecker.fromStatic(stateElement.thisType);
-  final stateSubclasses =
-      stateElement.library.units.expand((u) => u.classes).where(
-            (clazz) =>
-                stateTypeChecker.isAssignableFrom(clazz) &&
-                !stateTypeChecker.isExactly(clazz),
-          );
-
   return (
     blocElement: classElement,
     expectedStateName: '${baseName}State',
     stateElement: stateElement,
-    stateSubclasses: stateSubclasses,
   );
 }
 
@@ -291,5 +281,16 @@ extension on Element {
     }
 
     return uri.pathSegments.first;
+  }
+}
+
+extension ClassSubclasses on ClassElement {
+  Iterable<ClassElement> get subclasses {
+    final typeChecker = TypeChecker.fromStatic(thisType);
+    return library.units.expand((u) => u.classes).where(
+          (clazz) =>
+              typeChecker.isAssignableFrom(clazz) &&
+              !typeChecker.isExactly(clazz),
+        );
   }
 }

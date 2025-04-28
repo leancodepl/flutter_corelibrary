@@ -30,7 +30,7 @@ class BlocStateSubclassesNaming extends DartLintRule {
         return;
       }
 
-      for (final subtype in blocData.stateSubclasses) {
+      for (final subtype in blocData.stateElement.subclasses) {
         if (!subtype.name.startsWith(blocData.expectedStateName)) {
           reporter.atElement(subtype, code);
         }

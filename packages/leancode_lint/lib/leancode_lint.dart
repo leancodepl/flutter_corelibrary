@@ -6,6 +6,7 @@ import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/lints/bloc_state_equatable.dart';
+import 'package:leancode_lint/lints/bloc_state_modifiers.dart';
 import 'package:leancode_lint/lints/bloc_state_naming.dart';
 import 'package:leancode_lint/lints/bloc_state_subclasses_naming.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
@@ -34,6 +35,7 @@ class _Linter extends PluginBase {
         const BlocStateNaming(),
         const BlocStateEquatable(),
         const BlocStateSubclassesNaming(),
+        const BlocStateModifiers(),
       ];
 
   @override
