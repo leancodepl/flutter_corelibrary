@@ -15,6 +15,9 @@ class BlocStateModifiers extends DartLintRule {
         );
 
   @override
+  List<Fix> getFixes() => [AddModifier()];
+
+  @override
   void run(
     CustomLintResolver resolver,
     ErrorReporter reporter,
@@ -41,6 +44,7 @@ class BlocStateModifiers extends DartLintRule {
               clazz,
               code,
               arguments: [expectedStateName, 'final'],
+              data: 'final',
             );
           }
         } else {
@@ -49,12 +53,39 @@ class BlocStateModifiers extends DartLintRule {
               clazz,
               code,
               arguments: [expectedStateName, 'sealed'],
+              data: 'sealed',
             );
           }
         }
       }
 
       checkHierarchy(stateElement);
+    });
+  }
+}
+
+class AddModifier extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    AnalysisError analysisError,
+    List<AnalysisError> others,
+  ) {
+    final missingModifier = analysisError.data! as String;
+
+    reporter
+        .createChangeBuilder(
+      message: 'Add $missingModifier modifier',
+      priority: 1,
+    )
+        .addDartFileEdit((builder) {
+      final lineStart = resolver.lineInfo.getOffsetOfLine(
+        resolver.lineInfo.getLocation(analysisError.offset).lineNumber,
+      );
+
+      builder.addSimpleInsertion(lineStart, '$missingModifier ');
     });
   }
 }
