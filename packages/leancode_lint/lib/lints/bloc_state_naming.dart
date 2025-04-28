@@ -31,19 +31,6 @@ class BlocStateNaming extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
   );
 
-  static const equatableCode = LintCode(
-    name: 'bloc_state_equatable',
-    problemMessage: 'The class {0} should mix in EquatableMixin.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
-
-  static const typeCheckers = (
-    bloc: TypeChecker.fromName('BlocBase', packageName: 'bloc'),
-    equatable: TypeChecker.fromName('Equatable', packageName: 'equatable'),
-    equatableMixin:
-        TypeChecker.fromName('EquatableMixin', packageName: 'equatable'),
-  );
-
   @override
   void run(
     CustomLintResolver resolver,
@@ -102,17 +89,6 @@ class BlocStateNaming extends DartLintRule {
         if (!subtype.name.startsWith(expectedStateName)) {
           reporter.atElement(subtype, subclassNameCode);
         }
-      }
-
-      final isEquatableMixin =
-          stateElement.mixins.any(typeCheckers.equatableMixin.isExactlyType);
-
-      if (!isEquatableMixin) {
-        reporter.atElement(
-          stateElement,
-          equatableCode,
-          arguments: [expectedStateName],
-        );
       }
     });
   }

@@ -260,7 +260,13 @@ const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
     return null;
   }
 
-  final stateSubclasses = stateElement.subclasses;
+  final stateTypeChecker = TypeChecker.fromStatic(stateElement.thisType);
+  final stateSubclasses =
+      stateElement.library.units.expand((u) => u.classes).where(
+            (clazz) =>
+                stateTypeChecker.isAssignableFrom(clazz) &&
+                !stateTypeChecker.isExactly(clazz),
+          );
 
   return (
     blocElement: classElement,
@@ -268,15 +274,4 @@ const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
     stateElement: stateElement,
     stateSubclasses: stateSubclasses,
   );
-}
-
-extension on ClassElement {
-  Iterable<ClassElement> get subclasses {
-    final thisTypeChecker = TypeChecker.fromStatic(thisType);
-    return library.units.expand((u) => u.classes).where(
-          (clazz) =>
-              thisTypeChecker.isAssignableFrom(clazz) &&
-              !thisTypeChecker.isExactly(clazz),
-        );
-  }
 }
