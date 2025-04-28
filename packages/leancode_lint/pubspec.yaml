@@ -14,5 +14,4 @@ environment:
 dependencies:
   analyzer: ^7.3.0
   analyzer_plugin: ^0.13.0
-  collection: any
   custom_lint_builder: ^0.7.5
