@@ -33,8 +33,11 @@ class BlocStateEquatable extends DartLintRule {
         const TypeChecker.fromName('EquatableMixin', packageName: 'equatable')
             .isExactlyType,
       );
+      final isEquatable =
+          const TypeChecker.fromName('Equatable', packageName: 'equatable')
+              .isAssignableFrom(blocData.stateElement);
 
-      if (!isEquatableMixin) {
+      if (!isEquatableMixin && !isEquatable) {
         reporter.atElement(
           blocData.stateElement,
           code,

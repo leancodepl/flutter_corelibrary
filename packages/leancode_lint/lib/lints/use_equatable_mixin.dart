@@ -1,5 +1,6 @@
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
+import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 class UseEquatableMixin extends DartLintRule {
@@ -18,6 +19,9 @@ class UseEquatableMixin extends DartLintRule {
     equatableMixin:
         TypeChecker.fromName('EquatableMixin', packageName: 'equatable'),
   );
+
+  @override
+  List<Fix> getFixes() => [ConvertToMixin()];
 
   @override
   void run(
@@ -46,8 +50,32 @@ class UseEquatableMixin extends DartLintRule {
           extendsClause.superclass,
           code,
           arguments: [node.name.lexeme],
+          data: extendsClause.sourceRange,
         );
       }
+    });
+  }
+}
+
+class ConvertToMixin extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    AnalysisError analysisError,
+    List<AnalysisError> others,
+  ) {
+    reporter
+        .createChangeBuilder(
+      message: 'Replace with a mixin',
+      priority: 1,
+    )
+        .addDartFileEdit((builder) {
+      builder.addSimpleReplacement(
+        analysisError.data! as SourceRange,
+        'with EquatableMixin',
+      );
     });
   }
 }
