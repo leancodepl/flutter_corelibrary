@@ -275,3 +275,21 @@ const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
     stateSubclasses: stateSubclasses,
   );
 }
+
+bool areInSamePackage(Element element1, Element element2) {
+  final package1 = element1.package;
+  final package2 = element2.package;
+
+  return package1 != null && package2 != null && package1 == package2;
+}
+
+extension on Element {
+  String? get package {
+    final uri = library?.definingCompilationUnit.source.uri;
+    if (uri == null || uri.scheme != 'package') {
+      return null;
+    }
+
+    return uri.pathSegments.first;
+  }
+}

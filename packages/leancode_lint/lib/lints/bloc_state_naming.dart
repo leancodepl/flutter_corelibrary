@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -25,12 +24,6 @@ class BlocStateNaming extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
   );
 
-  static const subclassNameCode = LintCode(
-    name: 'bloc_state_subclass_name',
-    problemMessage: 'State subclasses should have the base name as the prefix.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
-
   @override
   void run(
     CustomLintResolver resolver,
@@ -50,12 +43,7 @@ class BlocStateNaming extends DartLintRule {
         :stateSubclasses,
       ) = blocData;
 
-      final statePackage = stateElement.package;
-      final blocPackage = blocElement.package;
-
-      if (statePackage == null ||
-          blocPackage == null ||
-          statePackage != blocPackage) {
+      if (!areInSamePackage(stateElement, blocElement)) {
         return;
       }
 
@@ -84,23 +72,6 @@ class BlocStateNaming extends DartLintRule {
           );
         }
       }
-
-      for (final subtype in stateSubclasses) {
-        if (!subtype.name.startsWith(expectedStateName)) {
-          reporter.atElement(subtype, subclassNameCode);
-        }
-      }
     });
-  }
-}
-
-extension on Element {
-  String? get package {
-    final uri = library?.definingCompilationUnit.source.uri;
-    if (uri == null || uri.scheme != 'package') {
-      return null;
-    }
-
-    return uri.pathSegments.first;
   }
 }
