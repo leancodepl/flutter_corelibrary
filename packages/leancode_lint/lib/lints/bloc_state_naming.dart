@@ -4,13 +4,14 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
 class BlocStateNaming extends DartLintRule {
-  const BlocStateNaming() : super(code: stateNameCode);
-
-  static const stateNameCode = LintCode(
-    name: 'bloc_state_base_name',
-    problemMessage: "The name of {0}'s state should be {1}.",
-    errorSeverity: ErrorSeverity.WARNING,
-  );
+  const BlocStateNaming()
+      : super(
+          code: const LintCode(
+            name: 'bloc_state_base_name',
+            problemMessage: "The name of {0}'s state should be {1}.",
+            errorSeverity: ErrorSeverity.WARNING,
+          ),
+        );
 
   @override
   void run(
@@ -33,7 +34,7 @@ class BlocStateNaming extends DartLintRule {
       if (stateElement.name != expectedStateName) {
         reporter.atToken(
           node.name,
-          stateNameCode,
+          code,
           arguments: [node.name.lexeme, expectedStateName],
         );
       }
