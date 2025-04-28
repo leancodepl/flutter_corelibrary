@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -227,5 +228,55 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
 
       listener(buildMethod.body, diagnosticNode);
     });
+  }
+}
+
+const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
+
+({
+  ClassElement blocElement,
+  String expectedStateName,
+  ClassElement stateElement,
+  Iterable<ClassElement> stateSubclasses,
+})? maybeBlocData(ClassDeclaration clazz) {
+  final classElement = clazz.declaredElement;
+
+  if (classElement == null || !blocTypeChecker.isAssignableFrom(classElement)) {
+    return null;
+  }
+
+  final baseName = clazz.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
+
+  final stateType = classElement.allSupertypes
+      .firstWhere((t) => blocTypeChecker.isExactly(t.element))
+      .typeArguments
+      .singleOrNull;
+  if (stateType == null) {
+    return null;
+  }
+
+  final stateElement = stateType.element;
+  if (stateElement is! ClassElement) {
+    return null;
+  }
+
+  final stateSubclasses = stateElement.subclasses;
+
+  return (
+    blocElement: classElement,
+    expectedStateName: '${baseName}State',
+    stateElement: stateElement,
+    stateSubclasses: stateSubclasses,
+  );
+}
+
+extension on ClassElement {
+  Iterable<ClassElement> get subclasses {
+    final thisTypeChecker = TypeChecker.fromStatic(thisType);
+    return library.units.expand((u) => u.classes).where(
+          (clazz) =>
+              thisTypeChecker.isAssignableFrom(clazz) &&
+              !thisTypeChecker.isExactly(clazz),
+        );
   }
 }

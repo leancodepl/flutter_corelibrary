@@ -1,8 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
-import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/helpers.dart';
 
 class BlocStateNaming extends DartLintRule {
   const BlocStateNaming() : super(code: stateNameCode);
@@ -51,26 +51,20 @@ class BlocStateNaming extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
-      final classElement = node.declaredElement;
-
-      if (classElement == null ||
-          !typeCheckers.bloc.isAssignableFrom(classElement)) {
+      final blocData = maybeBlocData(node);
+      if (blocData == null) {
         return;
       }
 
-      final baseName =
-          node.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
+      final (
+        :blocElement,
+        :expectedStateName,
+        :stateElement,
+        :stateSubclasses,
+      ) = blocData;
 
-      final stateType = classElement.allSupertypes
-          .firstWhere((t) => typeCheckers.bloc.isExactly(t.element))
-          .typeArguments
-          .singleOrNull;
-      if (stateType == null) {
-        return;
-      }
-
-      final statePackage = stateType.element?.package;
-      final blocPackage = classElement.package;
+      final statePackage = stateElement.package;
+      final blocPackage = blocElement.package;
 
       if (statePackage == null ||
           blocPackage == null ||
@@ -78,9 +72,7 @@ class BlocStateNaming extends DartLintRule {
         return;
       }
 
-      final expectedStateName = '${baseName}State';
-
-      if (stateType.element?.name != expectedStateName) {
+      if (stateElement.name != expectedStateName) {
         reporter.atToken(
           node.name,
           stateNameCode,
@@ -88,14 +80,7 @@ class BlocStateNaming extends DartLintRule {
         );
       }
 
-      final stateElement = stateType.element;
-      if (stateElement is! ClassElement) {
-        return;
-      }
-
-      final subclasses = stateElement.subclasses;
-
-      if (subclasses.isEmpty) {
+      if (stateSubclasses.isEmpty) {
         if (!stateElement.isFinal) {
           reporter.atElement(
             stateElement,
@@ -113,13 +98,9 @@ class BlocStateNaming extends DartLintRule {
         }
       }
 
-      if (stateElement.isSealed) {
-        final subtypes = stateElement.subclasses;
-
-        for (final subtype in subtypes) {
-          if (!subtype.name.startsWith(expectedStateName)) {
-            reporter.atElement(subtype, subclassNameCode);
-          }
+      for (final subtype in stateSubclasses) {
+        if (!subtype.name.startsWith(expectedStateName)) {
+          reporter.atElement(subtype, subclassNameCode);
         }
       }
 
@@ -145,16 +126,5 @@ extension on Element {
     }
 
     return uri.pathSegments.first;
-  }
-}
-
-extension on ClassElement {
-  Iterable<ClassElement> get subclasses {
-    final thisTypeChecker = TypeChecker.fromStatic(thisType);
-    return library.units.expand((u) => u.classes).where(
-          (clazz) =>
-              thisTypeChecker.isAssignableFrom(clazz) &&
-              !thisTypeChecker.isExactly(clazz),
-        );
   }
 }
