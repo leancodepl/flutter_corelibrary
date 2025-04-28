@@ -14,6 +14,9 @@ class BlocStateEquatable extends DartLintRule {
         );
 
   @override
+  List<Fix> getFixes() => [AddMixin()];
+
+  @override
   void run(
     CustomLintResolver resolver,
     ErrorReporter reporter,
@@ -45,5 +48,27 @@ class BlocStateEquatable extends DartLintRule {
         );
       }
     });
+  }
+}
+
+class AddMixin extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    AnalysisError analysisError,
+    List<AnalysisError> others,
+  ) {
+    reporter
+        .createChangeBuilder(message: 'Add EquatableMixin', priority: 1)
+        .addDartFileEdit(
+          (builder) => builder
+            ..importLibrary(Uri.parse('package:equatable/equatable.dart'))
+            ..addSimpleInsertion(
+              analysisError.offset + analysisError.length,
+              ' with EquatableMixin',
+            ),
+        );
   }
 }
