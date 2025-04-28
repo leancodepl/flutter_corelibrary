@@ -274,15 +274,10 @@ bool areInSamePackage(Element element1, Element element2) {
 }
 
 extension on Element {
-  String? get package {
-    final uri = library?.definingCompilationUnit.source.uri;
-
-    return switch (uri) {
-      null => null,
-      Uri(scheme: 'dart', :final path) => 'dart:$path',
-      _ => uri.pathSegments.first,
-    };
-  }
+  String? get package => switch (library?.definingCompilationUnit.source.uri) {
+        final uri? => '${uri.scheme}:${uri.pathSegments.first}',
+        null => null,
+      };
 }
 
 extension ClassSubclasses on ClassElement {
