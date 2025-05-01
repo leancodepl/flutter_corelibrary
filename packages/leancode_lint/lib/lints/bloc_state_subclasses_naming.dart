@@ -21,17 +21,17 @@ class BlocStateSubclassesNaming extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
-      final blocData = maybeBlocData(node);
-      if (blocData == null) {
+      final data = maybeBlocData(node);
+      if (data == null) {
         return;
       }
 
-      if (!areInSamePackage(blocData.stateElement, blocData.blocElement)) {
+      if (!data.inSamePackage) {
         return;
       }
 
-      for (final subtype in blocData.stateElement.subclasses) {
-        if (!subtype.name.startsWith(blocData.expectedStateName)) {
+      for (final subtype in data.stateElement.subclasses) {
+        if (!subtype.name.startsWith('${data.baseName}State')) {
           reporter.atElement(subtype, code);
         }
       }

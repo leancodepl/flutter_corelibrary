@@ -231,23 +231,23 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
   }
 }
 
-const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
+const blocBase = TypeChecker.fromName('BlocBase', packageName: 'bloc');
 
 ({
-  ClassElement blocElement,
-  String expectedStateName,
+  String baseName,
   ClassElement stateElement,
+  bool inSamePackage,
 })? maybeBlocData(ClassDeclaration clazz) {
   final classElement = clazz.declaredElement;
 
-  if (classElement == null || !blocTypeChecker.isAssignableFrom(classElement)) {
+  if (classElement == null || !blocBase.isAssignableFrom(classElement)) {
     return null;
   }
 
   final baseName = clazz.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
 
   final stateType = classElement.allSupertypes
-      .firstWhere((t) => blocTypeChecker.isExactly(t.element))
+      .firstWhere((t) => blocBase.isExactly(t.element))
       .typeArguments
       .singleOrNull;
   if (stateType == null) {
@@ -260,13 +260,13 @@ const blocTypeChecker = TypeChecker.fromName('BlocBase', packageName: 'bloc');
   }
 
   return (
-    blocElement: classElement,
-    expectedStateName: '${baseName}State',
+    baseName: baseName,
     stateElement: stateElement,
+    inSamePackage: _inSamePackage(classElement, stateElement),
   );
 }
 
-bool areInSamePackage(Element element1, Element element2) {
+bool _inSamePackage(Element element1, Element element2) {
   final package1 = element1.package;
   final package2 = element2.package;
 

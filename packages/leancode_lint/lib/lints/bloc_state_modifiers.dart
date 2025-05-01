@@ -24,14 +24,12 @@ class BlocStateModifiers extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
-      final blocData = maybeBlocData(node);
-      if (blocData == null) {
+      final data = maybeBlocData(node);
+      if (data == null) {
         return;
       }
 
-      final (:blocElement, :expectedStateName, :stateElement) = blocData;
-
-      if (!areInSamePackage(stateElement, blocElement)) {
+      if (!data.inSamePackage) {
         return;
       }
 
@@ -43,7 +41,7 @@ class BlocStateModifiers extends DartLintRule {
             reporter.atElement(
               clazz,
               code,
-              arguments: [expectedStateName, 'final'],
+              arguments: [data.stateElement.name, 'final'],
               data: 'final',
             );
           }
@@ -52,14 +50,14 @@ class BlocStateModifiers extends DartLintRule {
             reporter.atElement(
               clazz,
               code,
-              arguments: [expectedStateName, 'sealed'],
+              arguments: [data.stateElement.name, 'sealed'],
               data: 'sealed',
             );
           }
         }
       }
 
-      checkHierarchy(stateElement);
+      checkHierarchy(data.stateElement);
     });
   }
 }

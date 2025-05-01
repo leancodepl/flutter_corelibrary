@@ -20,22 +20,22 @@ class BlocStateNaming extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
-      final blocData = maybeBlocData(node);
-      if (blocData == null) {
+      final data = maybeBlocData(node);
+      if (data == null) {
         return;
       }
 
-      final (:blocElement, :expectedStateName, :stateElement) = blocData;
-
-      if (!areInSamePackage(stateElement, blocElement)) {
+      if (!data.inSamePackage) {
         return;
       }
 
-      if (stateElement.name != expectedStateName) {
+      final expectedName = '${data.baseName}State';
+
+      if (data.stateElement.name != expectedName) {
         reporter.atToken(
           node.name,
           code,
-          arguments: [node.name.lexeme, expectedStateName],
+          arguments: [node.name.lexeme, expectedName],
         );
       }
     });

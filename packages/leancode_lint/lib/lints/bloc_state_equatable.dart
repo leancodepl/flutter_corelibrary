@@ -23,28 +23,28 @@ class BlocStateEquatable extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
-      final blocData = maybeBlocData(node);
-      if (blocData == null) {
+      final data = maybeBlocData(node);
+      if (data == null) {
         return;
       }
 
-      if (!areInSamePackage(blocData.stateElement, blocData.blocElement)) {
+      if (!data.inSamePackage) {
         return;
       }
 
-      final isEquatableMixin = blocData.stateElement.mixins.any(
+      final isEquatableMixin = data.stateElement.mixins.any(
         const TypeChecker.fromName('EquatableMixin', packageName: 'equatable')
             .isExactlyType,
       );
       final isEquatable =
           const TypeChecker.fromName('Equatable', packageName: 'equatable')
-              .isAssignableFrom(blocData.stateElement);
+              .isAssignableFrom(data.stateElement);
 
       if (!isEquatableMixin && !isEquatable) {
         reporter.atElement(
-          blocData.stateElement,
+          data.stateElement,
           code,
-          arguments: [blocData.expectedStateName],
+          arguments: [data.stateElement.name],
         );
       }
     });
