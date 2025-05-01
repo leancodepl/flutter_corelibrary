@@ -34,27 +34,27 @@ class BlocClassNaming extends DartLintRule {
       final expectedPresentationEventName = expectedEventName;
 
       if (data.stateElement.name != expectedStateName) {
-        reporter.atToken(
-          node.name,
+        reporter.atElement(
+          data.stateElement,
           code,
           arguments: [node.name.lexeme, 'state', expectedStateName],
         );
       }
 
-      if (data.eventElement != null &&
-          data.eventElement?.name != expectedEventName) {
-        reporter.atToken(
-          node.name,
+      if (data.eventElement case final eventElement?
+          when data.eventElement?.name != expectedEventName) {
+        reporter.atElement(
+          eventElement,
           code,
           arguments: [node.name.lexeme, 'event', expectedEventName],
         );
       }
 
-      if (data.presentationEventElement != null &&
-          data.presentationEventElement?.name !=
+      if (data.presentationEventElement case final presentationEventElement?
+          when data.presentationEventElement?.name !=
               expectedPresentationEventName) {
-        reporter.atToken(
-          node.name,
+        reporter.atElement(
+          presentationEventElement,
           code,
           arguments: [
             node.name.lexeme,
