@@ -30,6 +30,9 @@ class BlocSubclassesNaming extends DartLintRule {
       }
 
       final stateBaseName = '${data.baseName}State';
+      final eventBaseName = '${data.baseName}Event';
+      final presentationEventBaseName = eventBaseName;
+
       for (final subtype in data.stateElement.subclasses) {
         if (!subtype.name.startsWith(stateBaseName)) {
           reporter.atElement(
@@ -37,6 +40,34 @@ class BlocSubclassesNaming extends DartLintRule {
             code,
             arguments: [node.name.lexeme, 'state', stateBaseName],
           );
+        }
+      }
+
+      if (data.eventElement case final eventElement?) {
+        for (final subtype in eventElement.subclasses) {
+          if (!subtype.name.startsWith(eventBaseName)) {
+            reporter.atElement(
+              subtype,
+              code,
+              arguments: [node.name.lexeme, 'event', eventBaseName],
+            );
+          }
+        }
+      }
+
+      if (data.presentationEventElement case final presentationEventElement?) {
+        for (final subtype in presentationEventElement.subclasses) {
+          if (!subtype.name.startsWith(presentationEventBaseName)) {
+            reporter.atElement(
+              subtype,
+              code,
+              arguments: [
+                node.name.lexeme,
+                'presentation event',
+                presentationEventBaseName,
+              ],
+            );
+          }
         }
       }
     });
