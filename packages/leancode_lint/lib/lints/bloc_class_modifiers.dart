@@ -41,7 +41,7 @@ class BlocClassModifiers extends DartLintRule {
             reporter.atElement(
               clazz,
               code,
-              arguments: [data.stateElement.name, 'final'],
+              arguments: [clazz.name, 'final'],
               data: 'final',
             );
           }
@@ -50,7 +50,7 @@ class BlocClassModifiers extends DartLintRule {
             reporter.atElement(
               clazz,
               code,
-              arguments: [data.stateElement.name, 'sealed'],
+              arguments: [clazz.name, 'sealed'],
               data: 'sealed',
             );
           }
@@ -81,17 +81,18 @@ class AddModifier extends DartFix {
   ) {
     final missingModifier = analysisError.data! as String;
 
+    final location = resolver.lineInfo.getLocation(analysisError.offset);
+
     reporter
         .createChangeBuilder(
       message: 'Add $missingModifier modifier',
       priority: 1,
     )
         .addDartFileEdit((builder) {
-      final lineStart = resolver.lineInfo.getOffsetOfLine(
-        resolver.lineInfo.getLocation(analysisError.offset).lineNumber,
+      builder.addSimpleInsertion(
+        analysisError.offset - location.columnNumber + 1,
+        '$missingModifier ',
       );
-
-      builder.addSimpleInsertion(lineStart, '$missingModifier ');
     });
   }
 }
