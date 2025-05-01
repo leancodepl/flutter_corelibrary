@@ -3,13 +3,12 @@ import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
-class BlocStateSubclassesNaming extends DartLintRule {
-  const BlocStateSubclassesNaming()
+class BlocSubclassesNaming extends DartLintRule {
+  const BlocSubclassesNaming()
       : super(
           code: const LintCode(
-            name: 'bloc_state_subclass_name',
-            problemMessage:
-                'State subclasses should have the base name as the prefix.',
+            name: 'bloc_subclasses_naming',
+            problemMessage: "{0}'s {1} subclasses should start with {2}",
             errorSeverity: ErrorSeverity.WARNING,
           ),
         );
@@ -30,9 +29,14 @@ class BlocStateSubclassesNaming extends DartLintRule {
         return;
       }
 
+      final stateBaseName = '${data.baseName}State';
       for (final subtype in data.stateElement.subclasses) {
-        if (!subtype.name.startsWith('${data.baseName}State')) {
-          reporter.atElement(subtype, code);
+        if (!subtype.name.startsWith(stateBaseName)) {
+          reporter.atElement(
+            subtype,
+            code,
+            arguments: [node.name.lexeme, 'state', stateBaseName],
+          );
         }
       }
     });

@@ -231,23 +231,30 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
   }
 }
 
-const blocBase = TypeChecker.fromName('BlocBase', packageName: 'bloc');
+const _blocBase = TypeChecker.fromName('BlocBase', packageName: 'bloc');
+const _bloc = TypeChecker.fromName('Bloc', packageName: 'bloc');
+const _blocPresentation = TypeChecker.fromName(
+  'BlocPresentationMixin',
+  packageName: 'bloc_presentation',
+);
 
 ({
   String baseName,
   ClassElement stateElement,
+  ClassElement? eventElement,
+  ClassElement? presentationEventElement,
   bool inSamePackage,
 })? maybeBlocData(ClassDeclaration clazz) {
   final classElement = clazz.declaredElement;
 
-  if (classElement == null || !blocBase.isAssignableFrom(classElement)) {
+  if (classElement == null || !_blocBase.isAssignableFrom(classElement)) {
     return null;
   }
 
   final baseName = clazz.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
 
   final stateType = classElement.allSupertypes
-      .firstWhere((t) => blocBase.isExactly(t.element))
+      .firstWhere((t) => _blocBase.isExactly(t.element))
       .typeArguments
       .singleOrNull;
   if (stateType == null) {
@@ -259,10 +266,31 @@ const blocBase = TypeChecker.fromName('BlocBase', packageName: 'bloc');
     return null;
   }
 
+  final eventElement = classElement.allSupertypes
+      .firstWhereOrNull((t) => _bloc.isExactly(t.element))
+      ?.typeArguments
+      .firstOrNull
+      ?.element;
+  if (eventElement is! ClassElement?) {
+    return null;
+  }
+
+  final presentationEventElement = classElement.mixins
+      .firstWhereOrNull((m) => _blocPresentation.isExactly(m.element))
+      ?.typeArguments
+      .elementAtOrNull(1)
+      ?.element;
+  if (presentationEventElement is! ClassElement?) {
+    return null;
+  }
+
   return (
     baseName: baseName,
     stateElement: stateElement,
-    inSamePackage: _inSamePackage(classElement, stateElement),
+    eventElement: eventElement,
+    presentationEventElement: presentationEventElement,
+    inSamePackage: _inSamePackage(classElement, stateElement) &&
+        (eventElement == null || _inSamePackage(classElement, eventElement)),
   );
 }
 

@@ -4,11 +4,11 @@ import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
-class BlocStateModifiers extends DartLintRule {
-  const BlocStateModifiers()
+class BlocClassModifiers extends DartLintRule {
+  const BlocClassModifiers()
       : super(
           code: const LintCode(
-            name: 'bloc_state_modifiers',
+            name: 'bloc_class_modifiers',
             problemMessage: 'The class {0} should be {1}.',
             errorSeverity: ErrorSeverity.WARNING,
           ),
@@ -58,6 +58,14 @@ class BlocStateModifiers extends DartLintRule {
       }
 
       checkHierarchy(data.stateElement);
+
+      if (data.eventElement case final eventElement?) {
+        checkHierarchy(eventElement);
+      }
+
+      if (data.presentationEventElement case final presentationEventElement?) {
+        checkHierarchy(presentationEventElement);
+      }
     });
   }
 }
