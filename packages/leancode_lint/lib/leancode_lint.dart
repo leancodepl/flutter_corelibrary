@@ -13,6 +13,7 @@ import 'package:leancode_lint/lints/bloc_subclasses_naming.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
+import 'package:leancode_lint/lints/never_discard_build_context.dart';
 import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
 import 'package:leancode_lint/lints/use_clock.dart';
@@ -40,6 +41,7 @@ class _Linter extends PluginBase {
         const BlocClassModifiers(),
         const BlocConstConstructors(),
         const UseClock(),
+        const NeverDiscardBuildContext(),
       ];
 
   @override
