@@ -229,6 +229,14 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       listener(buildMethod.body, diagnosticNode);
     });
   }
+
+  void addBloc(void Function(ClassDeclaration node, _BlocData data) listener) {
+    addClassDeclaration((node) {
+      if (_maybeBlocData(node) case final data?) {
+        listener(node, data);
+      }
+    });
+  }
 }
 
 const _blocBase = TypeChecker.fromName('BlocBase', packageName: 'bloc');
@@ -238,13 +246,15 @@ const _blocPresentation = TypeChecker.fromName(
   packageName: 'bloc_presentation',
 );
 
-({
+typedef _BlocData = ({
   String baseName,
   ClassElement stateElement,
   ClassElement? eventElement,
   ClassElement? presentationEventElement,
   bool inSamePackage,
-})? maybeBlocData(ClassDeclaration clazz) {
+});
+
+_BlocData? _maybeBlocData(ClassDeclaration clazz) {
   final classElement = clazz.declaredElement;
 
   if (classElement == null || !_blocBase.isAssignableFrom(classElement)) {

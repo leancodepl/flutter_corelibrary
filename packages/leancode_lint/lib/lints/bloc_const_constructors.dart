@@ -20,12 +20,7 @@ class BlocConstConstructors extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration((node) {
-      final data = maybeBlocData(node);
-      if (data == null) {
-        return;
-      }
-
+    context.registry.addBloc((node, data) {
       if (!data.inSamePackage) {
         return;
       }
