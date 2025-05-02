@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
+import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 
@@ -84,8 +85,11 @@ class AddModifier extends DartFix {
       priority: 1,
     )
         .addDartFileEdit((builder) {
-      builder.addSimpleInsertion(
-        analysisError.offset - location.columnNumber + 1,
+      builder.addSimpleReplacement(
+        SourceRange(
+          analysisError.offset - location.columnNumber + 1,
+          location.columnNumber - 1 - 6,
+        ),
         '$missingModifier ',
       );
     });
