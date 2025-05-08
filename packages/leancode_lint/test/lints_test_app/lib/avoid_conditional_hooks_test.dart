@@ -27,15 +27,17 @@ class SampleHookWidget extends HookWidget {
       final a = // expect_lint: avoid_conditional_hooks
           useState('b');
 
-      final b = Random().nextBool()
-          ? // expect_lint: avoid_conditional_hooks
-          useState('c')
-          : null;
+      final b =
+          Random().nextBool()
+              ? // expect_lint: avoid_conditional_hooks
+              useState('c')
+              : null;
 
-      final c = Random().nextBool()
-          ? null
-          : // expect_lint: avoid_conditional_hooks
-          useState('c');
+      final c =
+          Random().nextBool()
+              ? null
+              : // expect_lint: avoid_conditional_hooks
+              useState('c');
 
       const abc = 'aaa';
 
@@ -44,19 +46,19 @@ class SampleHookWidget extends HookWidget {
 
     final test = useState('abc');
 
-    final b = Random().nextBool()
-        ? // expect_lint: avoid_conditional_hooks
-        useState('c')
-        : null;
+    final b =
+        Random().nextBool()
+            ? // expect_lint: avoid_conditional_hooks
+            useState('c')
+            : null;
 
-    final c = Random().nextBool()
-        ? null
-        : // expect_lint: avoid_conditional_hooks
-        useState('c');
+    final c =
+        Random().nextBool()
+            ? null
+            : // expect_lint: avoid_conditional_hooks
+            useState('c');
 
-    return Container(
-      key: Key('$test ${b?.value} ${c?.value}'),
-    );
+    return Container(key: Key('$test ${b?.value} ${c?.value}'));
   }
 }
 
@@ -65,44 +67,46 @@ class SampleConditionalExpressionHookWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) => TextField(
-        controller: Random().nextBool()
+    controller:
+        Random().nextBool()
             ? // expect_lint: avoid_conditional_hooks
             useTextEditingController()
             : TextEditingController(),
-      );
+  );
 }
 
 class SampleConditionalExpressionHookWidget2 extends HookWidget {
   const SampleConditionalExpressionHookWidget2({super.key});
 
   @override
-  Widget build(BuildContext context) => Random().nextBool()
-      ? TextField(
-          controller: // expect_lint: avoid_conditional_hooks
-              useTextEditingController(),
-        )
-      : Container();
+  Widget build(BuildContext context) =>
+      Random().nextBool()
+          ? TextField(
+            controller: // expect_lint: avoid_conditional_hooks
+                useTextEditingController(),
+          )
+          : Container();
 }
 
 class HookConsumerWidgetIsSeenAsAHookWidget extends HookConsumerWidget {
   const HookConsumerWidgetIsSeenAsAHookWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Random().nextBool()
-      ? TextField(
-          controller: // expect_lint: avoid_conditional_hooks
-              useTextEditingController(),
-        )
-      : Container();
+  Widget build(BuildContext context, WidgetRef ref) =>
+      Random().nextBool()
+          ? TextField(
+            controller: // expect_lint: avoid_conditional_hooks
+                useTextEditingController(),
+          )
+          : Container();
 }
 
 class SampleNotConditionalExpressionHookWidget extends HookWidget {
   const SampleNotConditionalExpressionHookWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => TextField(
-        controller: useTextEditingController(),
-      );
+  Widget build(BuildContext context) =>
+      TextField(controller: useTextEditingController());
 }
 
 class SampleSwitchExpressionHookWidget extends HookWidget {
@@ -110,8 +114,8 @@ class SampleSwitchExpressionHookWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) => switch (useTextEditingController()) {
-        TextEditingController() => Container(),
-      };
+    TextEditingController() => Container(),
+  };
 }
 
 class SampleSwitchHookWidget extends HookWidget {
@@ -122,18 +126,18 @@ class SampleSwitchHookWidget extends HookWidget {
     switch (Random().nextInt(10)) {
       case 5:
         final state =
-            // expect_lint: avoid_conditional_hooks
-            useState(false);
+        // expect_lint: avoid_conditional_hooks
+        useState(false);
 
         return Container(key: Key(state.value.toString()));
     }
 
     return switch (Random().nextInt(10)) {
       5 => TextField(
-          controller:
-              // expect_lint: avoid_conditional_hooks
-              useTextEditingController(),
-        ),
+        controller:
+            // expect_lint: avoid_conditional_hooks
+            useTextEditingController(),
+      ),
       _ => const SizedBox(),
     };
   }
@@ -147,7 +151,8 @@ class ShortCircuits extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final a1 = useMemoized(() => null) ?? 123;
-    final a2 = notifier ??
+    final a2 =
+        notifier ??
         // expect_lint: avoid_conditional_hooks
         useState(1);
 
@@ -162,8 +167,8 @@ class ShortCircuits extends HookWidget {
 
     ValueNotifier<int>? b;
     b ??=
-        // expect_lint: avoid_conditional_hooks
-        useState(1);
+    // expect_lint: avoid_conditional_hooks
+    useState(1);
 
     var c = true;
     c |=
@@ -192,8 +197,8 @@ class HookAfterReturn extends HookWidget {
     }
 
     final b =
-        // expect_lint: avoid_conditional_hooks
-        useState(1);
+    // expect_lint: avoid_conditional_hooks
+    useState(1);
 
     throw Exception('$a$b');
   }

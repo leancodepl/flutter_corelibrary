@@ -50,15 +50,15 @@ class ConvertRecordIntoNominalType extends DartAssist {
         final klass = _classFromRecord(node, record);
         reporter
             .createChangeBuilder(
-          message: 'Convert to nominal type',
-          priority: 1,
-        )
+              message: 'Convert to nominal type',
+              priority: 1,
+            )
             .addDartFileEdit((builder) {
-          builder
-            ..importLibraryElement(Uri.parse('package:meta/meta.dart'))
-            ..addSimpleReplacement(node.sourceRange, klass)
-            ..format(node.sourceRange);
-        });
+              builder
+                ..importLibraryElement(Uri.parse('package:meta/meta.dart'))
+                ..addSimpleReplacement(node.sourceRange, klass)
+                ..format(node.sourceRange);
+            });
       }
     });
   }
@@ -72,12 +72,14 @@ class ConvertRecordIntoNominalType extends DartAssist {
       withBounds: true,
     );
     var unnamedCounter = 0;
-    final positionals = record.positionalFields.map((positional) {
-      final name = positional.name?.lexeme ?? 'pos${unnamedCounter++}';
-      return (name, positional.type);
-    }).toList();
+    final positionals =
+        record.positionalFields.map((positional) {
+          final name = positional.name?.lexeme ?? 'pos${unnamedCounter++}';
+          return (name, positional.type);
+        }).toList();
 
-    final named = record.namedFields?.fields.map((named) {
+    final named =
+        record.namedFields?.fields.map((named) {
           final name = named.name.lexeme;
           return (name, named.type);
         }) ??

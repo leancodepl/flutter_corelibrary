@@ -23,14 +23,14 @@ final class PrefixWidgetsReturningSliversConfig {
 /// `AppPrefix` is specified in the config) prefix in their name.
 class PrefixWidgetsReturningSlivers extends DartLintRule {
   PrefixWidgetsReturningSlivers({required this.config})
-      : super(code: _getLintCode(config));
+    : super(code: _getLintCode(config));
 
   PrefixWidgetsReturningSlivers.fromConfigs(CustomLintConfigs configs)
-      : this(
-          config: PrefixWidgetsReturningSliversConfig.fromConfig(
-            configs.rules[ruleName]?.json ?? {},
-          ),
-        );
+    : this(
+        config: PrefixWidgetsReturningSliversConfig.fromConfig(
+          configs.rules[ruleName]?.json ?? {},
+        ),
+      );
 
   final PrefixWidgetsReturningSliversConfig config;
 
@@ -42,36 +42,31 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration(
-      (node) {
-        final isThisWidgetClass = isWidgetClass(node);
-        if (!isThisWidgetClass) {
-          return;
-        }
+    context.registry.addClassDeclaration((node) {
+      final isThisWidgetClass = isWidgetClass(node);
+      if (!isThisWidgetClass) {
+        return;
+      }
 
-        final startsWithSliver = _hasSliverPrefix(node.name.lexeme);
-        if (startsWithSliver) {
-          return;
-        }
+      final startsWithSliver = _hasSliverPrefix(node.name.lexeme);
+      if (startsWithSliver) {
+        return;
+      }
 
-        final buildMethod = getBuildMethod(node);
-        if (buildMethod == null) {
-          return;
-        }
+      final buildMethod = getBuildMethod(node);
+      if (buildMethod == null) {
+        return;
+      }
 
-        // Get all return expressions from build method
-        final returnExpressions = getAllReturnExpressions(buildMethod.body);
+      // Get all return expressions from build method
+      final returnExpressions = getAllReturnExpressions(buildMethod.body);
 
-        final isSliver = _anyIsSliver(returnExpressions.nonNulls);
+      final isSliver = _anyIsSliver(returnExpressions.nonNulls);
 
-        if (isSliver) {
-          reporter.atToken(
-            node.name,
-            _getLintCode(config, node.name.lexeme),
-          );
-        }
-      },
-    );
+      if (isSliver) {
+        reporter.atToken(node.name, _getLintCode(config, node.name.lexeme));
+      }
+    });
   }
 
   late final possiblePrefixes = [
@@ -87,10 +82,10 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
       possiblePrefixes.any(className.startsWith);
 
   bool _anyIsSliver(Iterable<Expression> expressions) => expressions.any(
-        (expression) =>
-            expression is InstanceCreationExpression &&
-            _hasSliverPrefix(expression.constructorName.type.name2.lexeme),
-      );
+    (expression) =>
+        expression is InstanceCreationExpression &&
+        _hasSliverPrefix(expression.constructorName.type.name2.lexeme),
+  );
 
   static LintCode _getLintCode(
     PrefixWidgetsReturningSliversConfig config, [

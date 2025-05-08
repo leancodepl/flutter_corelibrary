@@ -8,12 +8,14 @@ class ColumnIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Column(
       children: [
         Container(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -22,12 +24,14 @@ class RowIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Row(
       children: [
         Container(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -36,6 +40,7 @@ class FlexIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Flex(
       direction: Axis.horizontal,
@@ -43,6 +48,7 @@ class FlexIsMarked extends StatelessWidget {
         Container(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -51,12 +57,14 @@ class WrapIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Wrap(
       children: [
         Container(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -65,12 +73,14 @@ class SliverChildListDelegateIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     final _ = SliverChildListDelegate(
       [
         Container(),
       ],
     );
+    // dart format on
 
     return const SizedBox();
   }
@@ -81,12 +91,14 @@ class SliverListIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return SliverList.list(
       children: [
         Container(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -95,12 +107,14 @@ class SliverMainAxisGroupIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return const SliverMainAxisGroup(
       slivers: [
         SliverToBoxAdapter(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -109,12 +123,14 @@ class SliverCrossAxisGroupIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return const SliverCrossAxisGroup(
       slivers: [
         SliverToBoxAdapter(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -123,12 +139,14 @@ class MultiSliverIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return MultiSliver(
       children: [
         Container(),
       ],
     );
+    // dart format on
   }
 }
 
@@ -146,13 +164,7 @@ class ManyChildrenIsNotMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        Container(),
-        Container(),
-        Container(),
-      ],
-    );
+    return Wrap(children: [Container(), Container(), Container()]);
   }
 }
 
@@ -161,11 +173,7 @@ class CollectionForIsMany extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        for (var i = 0; i < 3; i++) Container(),
-      ],
-    );
+    return Wrap(children: [for (var i = 0; i < 3; i++) Container()]);
   }
 }
 
@@ -176,9 +184,7 @@ class ListSpreadIsMany extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       children: [
-        ...[
-          for (var i = 0; i < 3; i++) Container(),
-        ],
+        ...[for (var i = 0; i < 3; i++) Container()],
       ],
     );
   }
@@ -189,15 +195,9 @@ class NotCollectionLiteralIsMany extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = [
-      Container(),
-      Container(),
-      Container(),
-    ];
+    final children = [Container(), Container(), Container()];
 
-    return Wrap(
-      children: children,
-    );
+    return Wrap(children: children);
   }
 }
 

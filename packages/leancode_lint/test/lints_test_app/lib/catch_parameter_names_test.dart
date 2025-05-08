@@ -7,15 +7,19 @@ Object? someFunction() {
     return exception;
   }
 
-  try {} catch (err,
-  // expect_lint: catch_parameter_names
-  stackTrace) {
+  try {} catch (
+    err,
+    // expect_lint: catch_parameter_names
+    stackTrace
+  ) {
     return stackTrace;
   }
 
-  try {} on HttpException catch (err,
-  // expect_lint: catch_parameter_names
-  stackTrace) {
+  try {} on HttpException catch (
+    err,
+    // expect_lint: catch_parameter_names
+    stackTrace
+  ) {
     return stackTrace;
   }
 

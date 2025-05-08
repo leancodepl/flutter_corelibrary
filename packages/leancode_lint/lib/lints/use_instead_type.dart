@@ -13,26 +13,26 @@ abstract base class UseInsteadType extends DartLintRule {
     required Map<String, List<ForbiddenItem>> replacements,
     required this.lintCodeName,
     this.errorSeverity = ErrorSeverity.WARNING,
-  })  : _checkers = [
-          for (final MapEntry(key: preferredItemName, value: forbidden)
-              in replacements.entries)
-            (
-              preferredItemName,
-              TypeChecker.any([
-                for (final (:name, :packageName) in forbidden)
-                  if (packageName.startsWith('dart:'))
-                    TypeChecker.fromUrl('$packageName#$name')
-                  else
-                    TypeChecker.fromName(name, packageName: packageName),
-              ])
-            ),
-        ],
-        super(
-          code: LintCode(
-            name: lintCodeName,
-            problemMessage: 'This item is forbidden',
-          ),
-        );
+  }) : _checkers = [
+         for (final MapEntry(key: preferredItemName, value: forbidden)
+             in replacements.entries)
+           (
+             preferredItemName,
+             TypeChecker.any([
+               for (final (:name, :packageName) in forbidden)
+                 if (packageName.startsWith('dart:'))
+                   TypeChecker.fromUrl('$packageName#$name')
+                 else
+                   TypeChecker.fromName(name, packageName: packageName),
+             ]),
+           ),
+       ],
+       super(
+         code: LintCode(
+           name: lintCodeName,
+           problemMessage: 'This item is forbidden',
+         ),
+       );
 
   final List<(String preferredItemName, TypeChecker)> _checkers;
   final String lintCodeName;
@@ -49,13 +49,12 @@ abstract base class UseInsteadType extends DartLintRule {
   LintCode _createCode({
     required String itemName,
     required String preferredItemName,
-  }) =>
-      LintCode(
-        name: lintCodeName,
-        problemMessage: problemMessage(itemName),
-        correctionMessage: correctionMessage(preferredItemName),
-        errorSeverity: errorSeverity,
-      );
+  }) => LintCode(
+    name: lintCodeName,
+    problemMessage: problemMessage(itemName),
+    correctionMessage: correctionMessage(preferredItemName),
+    errorSeverity: errorSeverity,
+  );
 
   @override
   void run(
@@ -75,11 +74,7 @@ abstract base class UseInsteadType extends DartLintRule {
     });
   }
 
-  void _handleElement(
-    ErrorReporter reporter,
-    Element element,
-    AstNode node,
-  ) {
+  void _handleElement(ErrorReporter reporter, Element element, AstNode node) {
     if (_isInHide(node)) {
       return;
     }

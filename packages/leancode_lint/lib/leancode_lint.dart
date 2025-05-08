@@ -17,21 +17,21 @@ PluginBase createPlugin() => _Linter();
 class _Linter extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) => [
-        StartCommentsWithSpace(),
-        ...UseDesignSystemItem.getRulesListFromConfigs(configs),
-        PrefixWidgetsReturningSlivers.fromConfigs(configs),
-        AddCubitSuffixForYourCubits(),
-        CatchParameterNames(),
-        AvoidConditionalHooks(),
-        HookWidgetDoesNotUseHooks(),
-        ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
-        AvoidSingleChildInMultiChildWidgets(),
-      ];
+    StartCommentsWithSpace(),
+    ...UseDesignSystemItem.getRulesListFromConfigs(configs),
+    PrefixWidgetsReturningSlivers.fromConfigs(configs),
+    AddCubitSuffixForYourCubits(),
+    CatchParameterNames(),
+    AvoidConditionalHooks(),
+    HookWidgetDoesNotUseHooks(),
+    ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
+    AvoidSingleChildInMultiChildWidgets(),
+  ];
 
   @override
   List<Assist> getAssists() => [
-        ConvertRecordIntoNominalType(),
-        ConvertPositionalToNamedFormal(),
-        ConvertIterableMapToCollectionFor(),
-      ];
+    ConvertRecordIntoNominalType(),
+    ConvertPositionalToNamedFormal(),
+    ConvertIterableMapToCollectionFor(),
+  ];
 }
