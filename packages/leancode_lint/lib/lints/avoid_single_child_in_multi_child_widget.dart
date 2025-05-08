@@ -9,76 +9,34 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
   AvoidSingleChildInMultiChildWidgets() : super(code: _createCode(''));
 
   static LintCode _createCode(String name) => LintCode(
-        name: 'avoid_single_child_in_multi_child_widgets',
-        problemMessage: 'Avoid using $name with a single child.',
-        correctionMessage:
-            'Remove the $name and achieve the same result using dedicated widgets.',
-        errorSeverity: ErrorSeverity.WARNING,
-      );
+    name: 'avoid_single_child_in_multi_child_widgets',
+    problemMessage: 'Avoid using $name with a single child.',
+    correctionMessage:
+        'Remove the $name and achieve the same result using dedicated widgets.',
+    errorSeverity: ErrorSeverity.WARNING,
+  );
 
   static const _complain = [
+    ('children', TypeChecker.fromName('Column', packageName: 'flutter')),
+    ('children', TypeChecker.fromName('Row', packageName: 'flutter')),
+    ('children', TypeChecker.fromName('Wrap', packageName: 'flutter')),
+    ('children', TypeChecker.fromName('Flex', packageName: 'flutter')),
+    ('children', TypeChecker.fromName('SliverList', packageName: 'flutter')),
     (
-      'children',
-      TypeChecker.fromName(
-        'Column',
-        packageName: 'flutter',
-      )
-    ),
-    (
-      'children',
-      TypeChecker.fromName(
-        'Row',
-        packageName: 'flutter',
-      )
-    ),
-    (
-      'children',
-      TypeChecker.fromName(
-        'Wrap',
-        packageName: 'flutter',
-      )
-    ),
-    (
-      'children',
-      TypeChecker.fromName(
-        'Flex',
-        packageName: 'flutter',
-      )
-    ),
-    (
-      'children',
-      TypeChecker.fromName(
-        'SliverList',
-        packageName: 'flutter',
-      )
+      'slivers',
+      TypeChecker.fromName('SliverMainAxisGroup', packageName: 'flutter'),
     ),
     (
       'slivers',
-      TypeChecker.fromName(
-        'SliverMainAxisGroup',
-        packageName: 'flutter',
-      )
-    ),
-    (
-      'slivers',
-      TypeChecker.fromName(
-        'SliverCrossAxisGroup',
-        packageName: 'flutter',
-      )
+      TypeChecker.fromName('SliverCrossAxisGroup', packageName: 'flutter'),
     ),
     (
       'children',
-      TypeChecker.fromName(
-        'MultiSliver',
-        packageName: 'sliver_tools',
-      )
+      TypeChecker.fromName('MultiSliver', packageName: 'sliver_tools'),
     ),
     (
       'children',
-      TypeChecker.fromName(
-        'SliverChildListDelegate',
-        packageName: 'flutter',
-      )
+      TypeChecker.fromName('SliverChildListDelegate', packageName: 'flutter'),
     ),
   ];
 
@@ -92,8 +50,9 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
       final constructorName = node.constructorName.type;
       if (constructorName.element case final typeElement?) {
         // is it something we want to complain about?
-        final match =
-            _complain.firstWhereOrNull((e) => e.$2.isExactly(typeElement));
+        final match = _complain.firstWhereOrNull(
+          (e) => e.$2.isExactly(typeElement),
+        );
         if (match == null) {
           return;
         }
@@ -141,7 +100,7 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
         IfElement(:final thenElement, :final elseElement) =>
           checkExpression(thenElement) &&
               (elseElement == null || checkExpression(elseElement)),
-        NullAwareElement(:final value) => checkExpression(value)
+        NullAwareElement(:final value) => checkExpression(value),
       };
     }
 

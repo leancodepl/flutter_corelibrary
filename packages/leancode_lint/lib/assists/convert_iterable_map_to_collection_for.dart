@@ -41,24 +41,23 @@ class ConvertIterableMapToCollectionFor extends DartAssist {
   void _handleIterable(MethodInvocation node, ChangeReporter reporter) {
     const iterableChecker = TypeChecker.fromUrl('dart:core#Iterable');
 
-    if (node
-        case MethodInvocation(
-          target: Expression(
-            staticType: final targetType?,
-            offset: final targetOffset,
-            end: final targetEnd,
+    if (node case MethodInvocation(
+      target: Expression(
+        staticType: final targetType?,
+        offset: final targetOffset,
+        end: final targetEnd,
+      ),
+      methodName: SimpleIdentifier(name: 'map'),
+      :final parent,
+      argumentList: ArgumentList(
+        arguments: [
+          FunctionExpression(
+            body: final functionBody,
+            parameters: FormalParameterList(parameters: [final parameter]),
           ),
-          methodName: SimpleIdentifier(name: 'map'),
-          :final parent,
-          argumentList: ArgumentList(
-            arguments: [
-              FunctionExpression(
-                body: final functionBody,
-                parameters: FormalParameterList(parameters: [final parameter])
-              )
-            ]
-          )
-        ) when iterableChecker.isAssignableFromType(targetType)) {
+        ],
+      ),
+    ) when iterableChecker.isAssignableFromType(targetType)) {
       final expression = maybeGetSingleReturnExpression(functionBody);
       if (expression == null) {
         return;
@@ -69,28 +68,22 @@ class ConvertIterableMapToCollectionFor extends DartAssist {
       final nodeWithCollect = parentCollectKind?.$2 ?? node;
 
       reporter
-          .createChangeBuilder(
-        message: 'Turn into collection-for',
-        priority: 1,
-      )
+          .createChangeBuilder(message: 'Turn into collection-for', priority: 1)
           .addDartFileEdit((builder) {
-        builder
-          ..addSimpleReplacement(
-            SourceRange(
-              nodeWithCollect.offset,
-              targetOffset - nodeWithCollect.offset,
-            ),
-            '${collectKind.startDelimiter}for(final $parameter in ',
-          )
-          ..addSimpleReplacement(
-            SourceRange(
-              targetEnd,
-              nodeWithCollect.end - targetEnd,
-            ),
-            ') $expression${collectKind.endDelimiter}',
-          )
-          ..format(nodeWithCollect.sourceRange);
-      });
+            builder
+              ..addSimpleReplacement(
+                SourceRange(
+                  nodeWithCollect.offset,
+                  targetOffset - nodeWithCollect.offset,
+                ),
+                '${collectKind.startDelimiter}for(final $parameter in ',
+              )
+              ..addSimpleReplacement(
+                SourceRange(targetEnd, nodeWithCollect.end - targetEnd),
+                ') $expression${collectKind.endDelimiter}',
+              )
+              ..format(nodeWithCollect.sourceRange);
+          });
     }
   }
 
@@ -98,14 +91,14 @@ class ConvertIterableMapToCollectionFor extends DartAssist {
     return switch (parent) {
       ParenthesizedExpression(:final parent) => _checkCollectKind(parent),
       MethodInvocation(methodName: SimpleIdentifier(name: 'toList')) => (
-          _IterableCollect.list,
-          parent
-        ),
+        _IterableCollect.list,
+        parent,
+      ),
       MethodInvocation(methodName: SimpleIdentifier(name: 'toSet')) => (
-          _IterableCollect.set,
-          parent
-        ),
-      _ => null
+        _IterableCollect.set,
+        parent,
+      ),
+      _ => null,
     };
   }
 }
@@ -115,12 +108,12 @@ enum _IterableCollect {
   set;
 
   String get startDelimiter => switch (this) {
-        list => '[',
-        set => '{',
-      };
+    list => '[',
+    set => '{',
+  };
 
   String get endDelimiter => switch (this) {
-        list => ']',
-        set => '}',
-      };
+    list => ']',
+    set => '}',
+  };
 }

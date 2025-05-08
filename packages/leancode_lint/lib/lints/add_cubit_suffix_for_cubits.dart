@@ -16,35 +16,30 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration(
-      (node) {
-        final isCubitClass = _isCubitClass(node);
-        if (!isCubitClass) {
-          return;
-        }
+    context.registry.addClassDeclaration((node) {
+      final isCubitClass = _isCubitClass(node);
+      if (!isCubitClass) {
+        return;
+      }
 
-        final nameEndsWithCubit = _hasCubitSuffix(node.name.lexeme);
-        if (nameEndsWithCubit) {
-          return;
-        }
+      final nameEndsWithCubit = _hasCubitSuffix(node.name.lexeme);
+      if (nameEndsWithCubit) {
+        return;
+      }
 
-        reporter.atToken(
-          node.name,
-          _getLintCode(node.name.lexeme),
-        );
-      },
-    );
+      reporter.atToken(node.name, _getLintCode(node.name.lexeme));
+    });
   }
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
 
   bool _isCubitClass(ClassDeclaration node) => switch (node.declaredElement) {
-        final element? => const TypeChecker.fromName(
-            'Cubit',
-            packageName: 'bloc',
-          ).isSuperOf(element),
-        _ => false,
-      };
+    final element? => const TypeChecker.fromName(
+      'Cubit',
+      packageName: 'bloc',
+    ).isSuperOf(element),
+    _ => false,
+  };
 
   static LintCode _getLintCode([String? className]) {
     const problemMessageBase = 'Add Cubit suffix for your cubits.';

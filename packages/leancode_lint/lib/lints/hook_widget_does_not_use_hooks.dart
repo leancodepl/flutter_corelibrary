@@ -17,37 +17,36 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addHookWidgetBody(
-      isExactly: true,
-      (node, diagnosticTarget) {
-        // get all hook expressions from build method
-        final hookExpressions = switch (node) {
-          ExpressionFunctionBody(expression: final AstNode node) ||
-          BlockFunctionBody(block: final AstNode node) =>
-            getAllInnerHookExpressions(node),
-          _ => <Expression>[],
-        };
+    context.registry.addHookWidgetBody(isExactly: true, (
+      node,
+      diagnosticTarget,
+    ) {
+      // get all hook expressions from build method
+      final hookExpressions = switch (node) {
+        ExpressionFunctionBody(expression: final AstNode node) ||
+        BlockFunctionBody(
+          block: final AstNode node,
+        ) => getAllInnerHookExpressions(node),
+        _ => <Expression>[],
+      };
 
-        if (hookExpressions.isNotEmpty) {
-          return;
-        }
+      if (hookExpressions.isNotEmpty) {
+        return;
+      }
 
-        reporter.atNode(diagnosticTarget, _getLintCode());
-      },
-    );
+      reporter.atNode(diagnosticTarget, _getLintCode());
+    });
   }
 
   @override
-  List<Fix> getFixes() => [
-        _ConvertHookWidgetToStatelessWidget(),
-      ];
+  List<Fix> getFixes() => [_ConvertHookWidgetToStatelessWidget()];
 
   static LintCode _getLintCode() => const LintCode(
-        name: ruleName,
-        problemMessage: 'This HookWidget does not use hooks.',
-        correctionMessage: 'Convert it to a StatelessWidget',
-        errorSeverity: ErrorSeverity.WARNING,
-      );
+    name: ruleName,
+    problemMessage: 'This HookWidget does not use hooks.',
+    correctionMessage: 'Convert it to a StatelessWidget',
+    errorSeverity: ErrorSeverity.WARNING,
+  );
 }
 
 class _ConvertHookWidgetToStatelessWidget extends DartFix {

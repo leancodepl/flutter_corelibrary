@@ -8,8 +8,9 @@ String typeParametersString(
   Iterable<TypeParameter> typeParameters, {
   bool withBounds = false,
 }) {
-  final parameters =
-      typeParameters.map((e) => withBounds ? e.toSource() : e.name).join(', ');
+  final parameters = typeParameters
+      .map((e) => withBounds ? e.toSource() : e.name)
+      .join(', ');
 
   if (parameters.isNotEmpty) {
     return '<$parameters>';
@@ -22,13 +23,8 @@ Expression? maybeGetSingleReturnExpression(FunctionBody body) {
   return switch (body) {
     ExpressionFunctionBody(:final expression) ||
     BlockFunctionBody(
-      block: Block(
-        statements: [
-          ReturnStatement(:final expression?),
-        ],
-      )
-    ) =>
-      expression,
+      block: Block(statements: [ReturnStatement(:final expression?)]),
+    ) => expression,
     _ => null,
   };
 }
@@ -79,14 +75,8 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   }
 
   final isHookBuilder = const TypeChecker.any([
-    TypeChecker.fromName(
-      'HookBuilder',
-      packageName: 'flutter_hooks',
-    ),
-    TypeChecker.fromName(
-      'HookConsumer',
-      packageName: 'hooks_riverpod',
-    ),
+    TypeChecker.fromName('HookBuilder', packageName: 'flutter_hooks'),
+    TypeChecker.fromName('HookConsumer', packageName: 'hooks_riverpod'),
   ]).isExactly(classElement);
   if (!isHookBuilder) {
     return null;
@@ -95,8 +85,9 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   final builderParameter = node.argumentList.arguments
       .whereType<NamedExpression>()
       .firstWhereOrNull((e) => e.name.label.name == 'builder');
-  if (builderParameter
-      case NamedExpression(expression: FunctionExpression(:final body))) {
+  if (builderParameter case NamedExpression(
+    expression: FunctionExpression(:final body),
+  )) {
     return body;
   }
 
@@ -133,13 +124,13 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
 }
 
 bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-      final element? => const TypeChecker.any([
-          TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-          TypeChecker.fromName('State', packageName: 'flutter'),
-          TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-        ]).isSuperOf(element),
-      _ => false,
-    };
+  final element? => const TypeChecker.any([
+    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
+    TypeChecker.fromName('State', packageName: 'flutter'),
+    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+  ]).isSuperOf(element),
+  _ => false,
+};
 
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
@@ -189,10 +180,7 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       }
 
       const checker = TypeChecker.any([
-        TypeChecker.fromName(
-          'HookWidget',
-          packageName: 'flutter_hooks',
-        ),
+        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
         TypeChecker.fromName(
           'HookConsumerWidget',
           packageName: 'hooks_riverpod',

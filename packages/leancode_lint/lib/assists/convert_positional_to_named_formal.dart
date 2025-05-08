@@ -51,13 +51,13 @@ class ConvertPositionalToNamedFormal extends DartAssist {
         return;
       }
 
-      final parameters =
-          node.parameters.where((parameter) => parameter.isRequiredPositional);
+      final parameters = node.parameters.where(
+        (parameter) => parameter.isRequiredPositional,
+      );
 
-      final nextItem = parameters
-          .skip(1)
-          .cast<SyntacticEntity>()
-          .followedBy([node.leftDelimiter ?? node.rightParenthesis]);
+      final nextItem = parameters.skip(1).cast<SyntacticEntity>().followedBy([
+        node.leftDelimiter ?? node.rightParenthesis,
+      ]);
 
       final found = parameters
           .zip(nextItem)
@@ -74,29 +74,29 @@ class ConvertPositionalToNamedFormal extends DartAssist {
 
       reporter
           .createChangeBuilder(
-        message: 'Convert to named formal parameter',
-        priority: 1,
-      )
+            message: 'Convert to named formal parameter',
+            priority: 1,
+          )
           .addDartFileEdit((builder) {
-        // delete positional parameter
-        builder.addDeletion(sourceRange);
+            // delete positional parameter
+            builder.addDeletion(sourceRange);
 
-        final namedParam =
-            '${Keyword.REQUIRED.lexeme} ${Keyword.THIS.lexeme}.${parameter.name},';
+            final namedParam =
+                '${Keyword.REQUIRED.lexeme} ${Keyword.THIS.lexeme}.${parameter.name},';
 
-        if (node.leftDelimiter case final brace?) {
-          // has named parameters, add to list
-          builder.addSimpleInsertion(brace.offset + 1, namedParam);
-        } else {
-          // no named parameters, create
-          builder.addSimpleInsertion(
-            node.rightParenthesis.offset,
-            '{$namedParam}',
-          );
-        }
+            if (node.leftDelimiter case final brace?) {
+              // has named parameters, add to list
+              builder.addSimpleInsertion(brace.offset + 1, namedParam);
+            } else {
+              // no named parameters, create
+              builder.addSimpleInsertion(
+                node.rightParenthesis.offset,
+                '{$namedParam}',
+              );
+            }
 
-        builder.format(node.sourceRange);
-      });
+            builder.format(node.sourceRange);
+          });
     });
   }
 }

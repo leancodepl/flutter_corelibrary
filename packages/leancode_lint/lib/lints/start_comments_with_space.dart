@@ -11,10 +11,10 @@ class StartCommentsWithSpace extends DartLintRule {
   static const ruleName = 'start_comments_with_space';
 
   static LintCode _createCode(_CommentType param) => LintCode(
-        name: ruleName,
-        problemMessage: 'Start ${param.name}s with a space.',
-        errorSeverity: ErrorSeverity.WARNING,
-      );
+    name: ruleName,
+    problemMessage: 'Start ${param.name}s with a space.',
+    errorSeverity: ErrorSeverity.WARNING,
+  );
 
   @override
   List<Fix> getFixes() {
@@ -69,10 +69,7 @@ class StartCommentsWithSpace extends DartLintRule {
   }
 }
 
-enum _CommentType {
-  comment,
-  doc;
-}
+enum _CommentType { comment, doc }
 
 class _AddStartingSpaceToComment extends DartFix {
   @override

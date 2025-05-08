@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SampleHookWidgetNotUsingHooks extends
-    // expect_lint: hook_widget_does_not_use_hooks
-    HookWidget {
+class SampleHookWidgetNotUsingHooks
+    extends
+        // expect_lint: hook_widget_does_not_use_hooks
+        HookWidget {
   const SampleHookWidgetNotUsingHooks({super.key});
 
   @override
@@ -13,9 +14,10 @@ class SampleHookWidgetNotUsingHooks extends
   }
 }
 
-class HookConsumerWidgetIsSeenAsAHookWidget extends
-    // expect_lint: hook_widget_does_not_use_hooks
-    HookConsumerWidget {
+class HookConsumerWidgetIsSeenAsAHookWidget
+    extends
+        // expect_lint: hook_widget_does_not_use_hooks
+        HookConsumerWidget {
   const HookConsumerWidgetIsSeenAsAHookWidget({super.key});
 
   @override
@@ -33,9 +35,7 @@ class SampleHookWidgetUsingHooks extends HookWidget {
 
     useAutomaticKeepAlive();
 
-    return Container(
-      key: Key(a.value),
-    );
+    return Container(key: Key(a.value));
   }
 }
 
@@ -68,9 +68,7 @@ class WidgetUsingHookDirectlyInWidget extends HookWidget {
   Widget build(BuildContext context) {
     useTextEditingController();
 
-    return PageView(
-      controller: usePageController(),
-    );
+    return PageView(controller: usePageController());
   }
 }
 
@@ -95,8 +93,8 @@ class WidgetTransitivelyBeingAHookWidget extends SampleHookWidgetUsingHooks {
 }
 
 final a =
-    // expect_lint: hook_widget_does_not_use_hooks
-    HookBuilder(
+// expect_lint: hook_widget_does_not_use_hooks
+HookBuilder(
   builder: (context) {
     return const SizedBox();
   },
@@ -110,8 +108,8 @@ final b = HookBuilder(
 );
 
 final c =
-    // expect_lint: hook_widget_does_not_use_hooks
-    HookConsumer(
+// expect_lint: hook_widget_does_not_use_hooks
+HookConsumer(
   builder: (context, ref, child) {
     return const SizedBox();
   },
@@ -125,12 +123,13 @@ class HookBuilderIsASeparateHookContext extends HookWidget {
   Widget build(BuildContext context) {
     // expect_lint: hook_widget_does_not_use_hooks
     return HookBuilder(
-      builder: (context) => HookBuilder(
-        builder: (context) {
-          useState(1);
-          return const SizedBox();
-        },
-      ),
+      builder:
+          (context) => HookBuilder(
+            builder: (context) {
+              useState(1);
+              return const SizedBox();
+            },
+          ),
     );
   }
 }
