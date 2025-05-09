@@ -2,6 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/common_type_checkers.dart';
 import 'package:leancode_lint/helpers.dart';
 
 class BlocRelatedClassesEquatable extends DartLintRule {
@@ -17,16 +18,6 @@ class BlocRelatedClassesEquatable extends DartLintRule {
   @override
   List<Fix> getFixes() => [AddMixin()];
 
-  static const _equatableMixin = TypeChecker.fromName(
-    'EquatableMixin',
-    packageName: 'equatable',
-  );
-
-  static const _equatable = TypeChecker.fromName(
-    'Equatable',
-    packageName: 'equatable',
-  );
-
   @override
   void run(
     CustomLintResolver resolver,
@@ -41,9 +32,9 @@ class BlocRelatedClassesEquatable extends DartLintRule {
         }
 
         final isEquatableMixin = element.mixins.any(
-          _equatableMixin.isExactlyType,
+          TypeCheckers.equatableMixin.isExactlyType,
         );
-        final isEquatable = _equatable.isAssignableFrom(element);
+        final isEquatable = TypeCheckers.equatable.isAssignableFrom(element);
 
         if (!isEquatableMixin && !isEquatable) {
           reporter.atElement(element, code, arguments: [element.name]);

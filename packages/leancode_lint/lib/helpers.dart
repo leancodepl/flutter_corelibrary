@@ -3,6 +3,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/common_type_checkers.dart';
 import 'package:leancode_lint/utils.dart';
 
 String typeParametersString(
@@ -76,8 +77,8 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   }
 
   final isHookBuilder = const TypeChecker.any([
-    TypeChecker.fromName('HookBuilder', packageName: 'flutter_hooks'),
-    TypeChecker.fromName('HookConsumer', packageName: 'hooks_riverpod'),
+    TypeCheckers.hookBuilder,
+    TypeCheckers.hookConsumer,
   ]).isExactly(classElement);
   if (!isHookBuilder) {
     return null;
@@ -126,9 +127,9 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
 
 bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
   final element? => const TypeChecker.any([
-    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-    TypeChecker.fromName('State', packageName: 'flutter'),
-    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+    TypeCheckers.statelessWidget,
+    TypeCheckers.state,
+    TypeCheckers.hookWidget,
   ]).isSuperOf(element),
   _ => false,
 };
@@ -181,11 +182,8 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       }
 
       const checker = TypeChecker.any([
-        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-        TypeChecker.fromName(
-          'HookConsumerWidget',
-          packageName: 'hooks_riverpod',
-        ),
+        TypeCheckers.hookWidget,
+        TypeCheckers.hookConsumerWidget,
       ]);
 
       final AstNode diagnosticNode;
@@ -227,13 +225,6 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
   }
 }
 
-const _blocBase = TypeChecker.fromName('BlocBase', packageName: 'bloc');
-const _bloc = TypeChecker.fromName('Bloc', packageName: 'bloc');
-const _blocPresentation = TypeChecker.fromName(
-  'BlocPresentationMixin',
-  packageName: 'bloc_presentation',
-);
-
 typedef _BlocData =
     ({
       String baseName,
@@ -246,7 +237,8 @@ typedef _BlocData =
 _BlocData? _maybeBlocData(ClassDeclaration clazz) {
   final blocElement = clazz.declaredElement;
 
-  if (blocElement == null || !_blocBase.isAssignableFrom(blocElement)) {
+  if (blocElement == null ||
+      !TypeCheckers.blocBase.isAssignableFrom(blocElement)) {
     return null;
   }
 
@@ -254,7 +246,7 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
 
   final stateType =
       blocElement.allSupertypes
-          .firstWhere((t) => _blocBase.isExactly(t.element))
+          .firstWhere((t) => TypeCheckers.blocBase.isExactly(t.element))
           .typeArguments
           .singleOrNull;
   if (stateType == null) {
@@ -268,7 +260,7 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
 
   final eventElement =
       blocElement.allSupertypes
-          .firstWhereOrNull((t) => _bloc.isExactly(t.element))
+          .firstWhereOrNull((t) => TypeCheckers.bloc.isExactly(t.element))
           ?.typeArguments
           .firstOrNull
           ?.element;
@@ -278,7 +270,9 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
 
   final presentationEventElement =
       blocElement.mixins
-          .firstWhereOrNull((m) => _blocPresentation.isExactly(m.element))
+          .firstWhereOrNull(
+            (m) => TypeCheckers.blocPresentation.isExactly(m.element),
+          )
           ?.typeArguments
           .elementAtOrNull(1)
           ?.element;

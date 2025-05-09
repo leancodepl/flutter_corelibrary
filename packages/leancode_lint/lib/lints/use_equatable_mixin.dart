@@ -2,6 +2,7 @@ import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/common_type_checkers.dart';
 
 class UseEquatableMixin extends DartLintRule {
   const UseEquatableMixin()
@@ -13,14 +14,6 @@ class UseEquatableMixin extends DartLintRule {
           errorSeverity: ErrorSeverity.WARNING,
         ),
       );
-
-  static const typeCheckers = (
-    equatable: TypeChecker.fromName('Equatable', packageName: 'equatable'),
-    equatableMixin: TypeChecker.fromName(
-      'EquatableMixin',
-      packageName: 'equatable',
-    ),
-  );
 
   @override
   List<Fix> getFixes() => [ConvertToMixin()];
@@ -39,13 +32,13 @@ class UseEquatableMixin extends DartLintRule {
 
       final superType = extendsClause.superclass.type;
       final isEquatable =
-          superType != null && typeCheckers.equatable.isExactlyType(superType);
+          superType != null && TypeCheckers.equatable.isExactlyType(superType);
 
       final isEquatableMixin =
           node.withClause?.mixinTypes
               .map((mixin) => mixin.type)
               .nonNulls
-              .any(typeCheckers.equatableMixin.isExactlyType) ??
+              .any(TypeCheckers.equatableMixin.isExactlyType) ??
           false;
 
       if (isEquatable && !isEquatableMixin) {
