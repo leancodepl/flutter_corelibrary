@@ -10,7 +10,7 @@ class Test1Cubit extends Cubit<WrongStateName> {
 }
 
 // expect_lint: bloc_related_class_naming
-class WrongStateName {}
+final class WrongStateName {}
 
 // Test for invalid event name
 class Test2Bloc extends Bloc<WrongEventName, Test2State> {
@@ -18,9 +18,9 @@ class Test2Bloc extends Bloc<WrongEventName, Test2State> {
 }
 
 // expect_lint: bloc_related_class_naming
-class WrongEventName {}
+final class WrongEventName {}
 
-class Test2State {}
+final class Test2State {}
 
 // Test for invalid presentation event name
 class Test3Bloc extends Bloc<Test3Event, Test3State>
@@ -28,12 +28,12 @@ class Test3Bloc extends Bloc<Test3Event, Test3State>
   Test3Bloc() : super(Test3State());
 }
 
-class Test3Event {}
+final class Test3Event {}
 
-class Test3State {}
+final class Test3State {}
 
 // expect_lint: bloc_related_class_naming
-class WrongPresentationEventName {}
+final class WrongPresentationEventName {}
 
 // Invalid names detected for enums
 class Test4Cubit extends Bloc<WrongEnumEvent, WrongEnumState>
@@ -62,9 +62,9 @@ class Correct1Cubit extends Cubit<Correct1State>
   Correct1Cubit() : super(Correct1State());
 }
 
-class Correct1State {}
+final class Correct1State {}
 
-class Correct1Event {}
+final class Correct1Event {}
 
 // No lint when names are correct, with event disambiguation
 class Correct2Bloc extends Bloc<Correct2Event, Correct2State>
@@ -72,11 +72,11 @@ class Correct2Bloc extends Bloc<Correct2Event, Correct2State>
   Correct2Bloc() : super(Correct2State());
 }
 
-class Correct2Event {}
+final class Correct2Event {}
 
-class Correct2State {}
+final class Correct2State {}
 
-class Correct2PresentationEvent {}
+final class Correct2PresentationEvent {}
 
 // No lint when class is from the same package, but another file
 class SamePackageBloc extends Bloc<ClassFromSamePackage, ClassFromSamePackage>
