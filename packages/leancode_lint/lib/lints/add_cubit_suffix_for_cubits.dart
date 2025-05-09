@@ -2,6 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/common_type_checkers.dart';
 
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
 /// class name.
@@ -34,10 +35,7 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
 
   bool _isCubitClass(ClassDeclaration node) => switch (node.declaredElement) {
-    final element? => const TypeChecker.fromName(
-      'Cubit',
-      packageName: 'bloc',
-    ).isSuperOf(element),
+    final element? => TypeCheckers.cubit.isSuperOf(element),
     _ => false,
   };
 

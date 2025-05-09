@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/common_type_checkers.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Converts an iterable call to [Iterable.map] with an optional
@@ -39,8 +40,6 @@ class ConvertIterableMapToCollectionFor extends DartAssist {
   }
 
   void _handleIterable(MethodInvocation node, ChangeReporter reporter) {
-    const iterableChecker = TypeChecker.fromUrl('dart:core#Iterable');
-
     if (node case MethodInvocation(
       target: Expression(
         staticType: final targetType?,
@@ -57,7 +56,7 @@ class ConvertIterableMapToCollectionFor extends DartAssist {
           ),
         ],
       ),
-    ) when iterableChecker.isAssignableFromType(targetType)) {
+    ) when TypeCheckers.iterable.isAssignableFromType(targetType)) {
       final expression = maybeGetSingleReturnExpression(functionBody);
       if (expression == null) {
         return;

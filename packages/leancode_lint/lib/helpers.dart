@@ -1,7 +1,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/common_type_checkers.dart';
 import 'package:leancode_lint/utils.dart';
 
 String typeParametersString(
@@ -75,8 +77,8 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   }
 
   final isHookBuilder = const TypeChecker.any([
-    TypeChecker.fromName('HookBuilder', packageName: 'flutter_hooks'),
-    TypeChecker.fromName('HookConsumer', packageName: 'hooks_riverpod'),
+    TypeCheckers.hookBuilder,
+    TypeCheckers.hookConsumer,
   ]).isExactly(classElement);
   if (!isHookBuilder) {
     return null;
@@ -125,9 +127,9 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
 
 bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
   final element? => const TypeChecker.any([
-    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-    TypeChecker.fromName('State', packageName: 'flutter'),
-    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+    TypeCheckers.statelessWidget,
+    TypeCheckers.state,
+    TypeCheckers.hookWidget,
   ]).isSuperOf(element),
   _ => false,
 };
@@ -180,11 +182,8 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       }
 
       const checker = TypeChecker.any([
-        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-        TypeChecker.fromName(
-          'HookConsumerWidget',
-          packageName: 'hooks_riverpod',
-        ),
+        TypeCheckers.hookWidget,
+        TypeCheckers.hookConsumerWidget,
       ]);
 
       final AstNode diagnosticNode;
@@ -215,5 +214,95 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
 
       listener(buildMethod.body, diagnosticNode);
     });
+  }
+
+  void addBloc(void Function(ClassDeclaration node, _BlocData data) listener) {
+    addClassDeclaration((node) {
+      if (_maybeBlocData(node) case final data?) {
+        listener(node, data);
+      }
+    });
+  }
+}
+
+typedef _BlocData =
+    ({
+      String baseName,
+      InterfaceElement blocElement,
+      InterfaceElement stateElement,
+      InterfaceElement? eventElement,
+      InterfaceElement? presentationEventElement,
+    });
+
+_BlocData? _maybeBlocData(ClassDeclaration clazz) {
+  final blocElement = clazz.declaredElement;
+
+  if (blocElement == null ||
+      !TypeCheckers.blocBase.isAssignableFrom(blocElement)) {
+    return null;
+  }
+
+  final baseName = clazz.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
+
+  final stateType =
+      blocElement.allSupertypes
+          .firstWhere(TypeCheckers.blocBase.isExactlyType)
+          .typeArguments
+          .singleOrNull;
+  if (stateType == null) {
+    return null;
+  }
+
+  final stateElement = stateType.element;
+  if (stateElement is! InterfaceElement) {
+    return null;
+  }
+
+  final eventElement =
+      blocElement.allSupertypes
+          .firstWhereOrNull(TypeCheckers.bloc.isExactlyType)
+          ?.typeArguments
+          .firstOrNull
+          ?.element;
+  if (eventElement is! InterfaceElement?) {
+    return null;
+  }
+
+  final presentationEventElement =
+      blocElement.mixins
+          .firstWhereOrNull(TypeCheckers.blocPresentation.isExactlyType)
+          ?.typeArguments
+          .elementAtOrNull(1)
+          ?.element;
+  if (presentationEventElement is! InterfaceElement?) {
+    return null;
+  }
+
+  return (
+    baseName: baseName,
+    blocElement: blocElement,
+    stateElement: stateElement,
+    eventElement: eventElement,
+    presentationEventElement: presentationEventElement,
+  );
+}
+
+bool inSameFile(Element element1, Element element2) {
+  final file1 = element1.source?.uri;
+  final file2 = element2.source?.uri;
+
+  return file1 != null && file2 != null && file1 == file2;
+}
+
+extension TypeSubclasses on InterfaceElement {
+  Iterable<ClassElement> get subclasses {
+    final typeChecker = TypeChecker.fromStatic(thisType);
+    return library.units
+        .expand((u) => u.classes)
+        .where(
+          (clazz) =>
+              typeChecker.isAssignableFrom(clazz) &&
+              !typeChecker.isExactly(clazz),
+        );
   }
 }
