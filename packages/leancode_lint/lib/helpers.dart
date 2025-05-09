@@ -301,3 +301,16 @@ bool inSameFile(Element element1, Element element2) {
 
   return file1 != null && file2 != null && file1 == file2;
 }
+
+extension TypeSubclasses on InterfaceElement {
+  Iterable<ClassElement> get subclasses {
+    final typeChecker = TypeChecker.fromStatic(thisType);
+    return library.units
+        .expand((u) => u.classes)
+        .where(
+          (clazz) =>
+              typeChecker.isAssignableFrom(clazz) &&
+              !typeChecker.isExactly(clazz),
+        );
+  }
+}
