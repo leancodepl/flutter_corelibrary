@@ -246,7 +246,7 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
 
   final stateType =
       blocElement.allSupertypes
-          .firstWhere((t) => TypeCheckers.blocBase.isExactly(t.element))
+          .firstWhere(TypeCheckers.blocBase.isExactlyType)
           .typeArguments
           .singleOrNull;
   if (stateType == null) {
@@ -260,7 +260,7 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
 
   final eventElement =
       blocElement.allSupertypes
-          .firstWhereOrNull((t) => TypeCheckers.bloc.isExactly(t.element))
+          .firstWhereOrNull(TypeCheckers.bloc.isExactlyType)
           ?.typeArguments
           .firstOrNull
           ?.element;
@@ -270,9 +270,7 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
 
   final presentationEventElement =
       blocElement.mixins
-          .firstWhereOrNull(
-            (m) => TypeCheckers.blocPresentation.isExactly(m.element),
-          )
+          .firstWhereOrNull(TypeCheckers.blocPresentation.isExactlyType)
           ?.typeArguments
           .elementAtOrNull(1)
           ?.element;
