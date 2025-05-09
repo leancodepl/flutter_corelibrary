@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -216,4 +217,87 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       listener(buildMethod.body, diagnosticNode);
     });
   }
+
+  void addBloc(void Function(ClassDeclaration node, _BlocData data) listener) {
+    addClassDeclaration((node) {
+      if (_maybeBlocData(node) case final data?) {
+        listener(node, data);
+      }
+    });
+  }
+}
+
+const _blocBase = TypeChecker.fromName('BlocBase', packageName: 'bloc');
+const _bloc = TypeChecker.fromName('Bloc', packageName: 'bloc');
+const _blocPresentation = TypeChecker.fromName(
+  'BlocPresentationMixin',
+  packageName: 'bloc_presentation',
+);
+
+typedef _BlocData =
+    ({
+      String baseName,
+      InterfaceElement blocElement,
+      InterfaceElement stateElement,
+      InterfaceElement? eventElement,
+      InterfaceElement? presentationEventElement,
+    });
+
+_BlocData? _maybeBlocData(ClassDeclaration clazz) {
+  final blocElement = clazz.declaredElement;
+
+  if (blocElement == null || !_blocBase.isAssignableFrom(blocElement)) {
+    return null;
+  }
+
+  final baseName = clazz.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
+
+  final stateType =
+      blocElement.allSupertypes
+          .firstWhere((t) => _blocBase.isExactly(t.element))
+          .typeArguments
+          .singleOrNull;
+  if (stateType == null) {
+    return null;
+  }
+
+  final stateElement = stateType.element;
+  if (stateElement is! InterfaceElement) {
+    return null;
+  }
+
+  final eventElement =
+      blocElement.allSupertypes
+          .firstWhereOrNull((t) => _bloc.isExactly(t.element))
+          ?.typeArguments
+          .firstOrNull
+          ?.element;
+  if (eventElement is! InterfaceElement?) {
+    return null;
+  }
+
+  final presentationEventElement =
+      blocElement.mixins
+          .firstWhereOrNull((m) => _blocPresentation.isExactly(m.element))
+          ?.typeArguments
+          .elementAtOrNull(1)
+          ?.element;
+  if (presentationEventElement is! InterfaceElement?) {
+    return null;
+  }
+
+  return (
+    baseName: baseName,
+    blocElement: blocElement,
+    stateElement: stateElement,
+    eventElement: eventElement,
+    presentationEventElement: presentationEventElement,
+  );
+}
+
+bool inSameFile(Element element1, Element element2) {
+  final file1 = element1.source?.uri;
+  final file2 = element2.source?.uri;
+
+  return file1 != null && file2 != null && file1 == file2;
 }
