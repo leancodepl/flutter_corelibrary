@@ -57,16 +57,26 @@ enum WrongEnumPresentationEvent { one }
 // region Correct blocs
 
 // No lint when names are correct
-class CorrectBloc extends Bloc<CorrectEvent, CorrectState>
-    with BlocPresentationMixin<CorrectState, CorrectPresentationEvent> {
-  CorrectBloc() : super(CorrectState());
+class Correct1Cubit extends Cubit<Correct1State>
+    with BlocPresentationMixin<Correct1State, Correct1Event> {
+  Correct1Cubit() : super(Correct1State());
 }
 
-class CorrectEvent {}
+class Correct1State {}
 
-class CorrectState {}
+class Correct1Event {}
 
-class CorrectPresentationEvent {}
+// No lint when names are correct, with event disambiguation
+class Correct2Bloc extends Bloc<Correct2Event, Correct2State>
+    with BlocPresentationMixin<Correct2State, Correct2PresentationEvent> {
+  Correct2Bloc() : super(Correct2State());
+}
+
+class Correct2Event {}
+
+class Correct2State {}
+
+class Correct2PresentationEvent {}
 
 // No lint when class is from the same package, but another file
 class SamePackageBloc extends Bloc<ClassFromSamePackage, ClassFromSamePackage>

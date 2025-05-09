@@ -36,7 +36,11 @@ class BlocRelatedClassNaming extends DartLintRule {
 
       checkClass(data.stateElement, 'state', 'State');
       checkClass(data.eventElement, 'event', 'Event');
-      checkClass(data.presentationEventElement, 'presentation event', 'Event');
+      checkClass(
+        data.presentationEventElement,
+        'presentation event',
+        data.eventElement == null ? 'Event' : 'PresentationEvent',
+      );
     });
   }
 }
