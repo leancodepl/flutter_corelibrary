@@ -1,5 +1,5 @@
 // for tests
-// ignore_for_file: prefer_equatable_mixin
+// ignore_for_file: prefer_equatable_mixin, bloc_const_constructors
 
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';

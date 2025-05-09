@@ -1,5 +1,5 @@
 // for tests
-// ignore_for_file: bloc_related_classes_equatable
+// ignore_for_file: bloc_related_classes_equatable, bloc_const_constructors
 
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
