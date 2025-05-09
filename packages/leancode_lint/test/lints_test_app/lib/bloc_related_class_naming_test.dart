@@ -1,3 +1,6 @@
+// for tests
+// ignore_for_file: bloc_related_classes_equatable
+
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lints_test_app/bloc_related_class_naming_utils.dart';
