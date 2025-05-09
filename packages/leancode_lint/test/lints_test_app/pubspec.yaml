@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   bloc_presentation: ^1.1.0
+  equatable: ^2.0.7
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
