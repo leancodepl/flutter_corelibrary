@@ -9,11 +9,15 @@ class MyState
   List<Object?> get props => [];
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 // Transitively extending Equatable is not flagged
 class MyState2 extends MyState {
   @override
   List<Object?> get props => [];
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 // Using EquatableMixin is not flagged
 class MyState3 with EquatableMixin {
