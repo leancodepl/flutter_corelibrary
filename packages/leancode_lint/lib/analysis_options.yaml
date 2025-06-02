@@ -154,6 +154,7 @@ analyzer:
     unnecessary_const: warning
     unnecessary_constructor_name: warning
     unnecessary_getters_setters: warning
+    unnecessary_ignore: warning
     unnecessary_lambdas: warning
     unnecessary_late: warning
     unnecessary_library_directive: warning
@@ -183,6 +184,7 @@ analyzer:
     use_is_even_rather_than_modulo: warning
     use_key_in_widget_constructors: warning
     use_named_constants: warning
+    use_null_aware_elements: warning
     use_raw_strings: warning
     use_rethrow_when_possible: warning
     use_string_buffers: warning
@@ -394,6 +396,7 @@ linter:
     unnecessary_constructor_name: true
     unnecessary_final: false
     unnecessary_getters_setters: true
+    unnecessary_ignore: true
     unnecessary_lambdas: true
     unnecessary_late: true
     unnecessary_library_directive: true
@@ -427,6 +430,7 @@ linter:
     use_key_in_widget_constructors: true
     use_late_for_private_fields_and_variables: false
     use_named_constants: true
+    use_null_aware_elements: true
     use_raw_strings: true
     use_rethrow_when_possible: true
     use_setters_to_change_properties: false
