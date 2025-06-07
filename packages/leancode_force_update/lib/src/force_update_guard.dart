@@ -70,9 +70,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     init();
   }
 
-  Future<void> _applyResult({
-    required ForceUpdateResult? result,
-  }) async {
+  Future<void> _applyResult({required ForceUpdateResult? result}) async {
     final currentVersion = Version.parse(_packageInfo.version);
 
     if (result == null || result.versionAtTimeOfRequest < currentVersion) {
@@ -130,10 +128,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     };
 
     final response = await widget.cqrs.get(
-      VersionSupport(
-        platform: platform,
-        version: _packageInfo.version,
-      ),
+      VersionSupport(platform: platform, version: _packageInfo.version),
     );
 
     if (response case QuerySuccess(:final data)) {

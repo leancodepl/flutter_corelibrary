@@ -10,7 +10,7 @@ class MockCqrs extends Mock implements Cqrs {}
 
 class MockQuery extends Mock implements Query<VersionSupportDTO> {}
 
-void main() async {
+void main() {
   final forceUpdateController = ForceUpdateController(
     androidBundleId: 'com.example.example',
     appleAppId: '1111111111',
