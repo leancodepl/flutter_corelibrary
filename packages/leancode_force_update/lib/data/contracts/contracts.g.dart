@@ -18,10 +18,7 @@ Map<String, dynamic> _$VersionSupportToJson(VersionSupport instance) =>
       'Version': instance.version,
     };
 
-const _$PlatformDTOEnumMap = {
-  PlatformDTO.android: 0,
-  PlatformDTO.ios: 1,
-};
+const _$PlatformDTOEnumMap = {PlatformDTO.android: 0, PlatformDTO.ios: 1};
 
 VersionSupportDTO _$VersionSupportDTOFromJson(Map<String, dynamic> json) =>
     VersionSupportDTO(
