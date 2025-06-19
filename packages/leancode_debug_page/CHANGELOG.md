@@ -1,3 +1,7 @@
+## 2.1.3
+
+- Fix a bug causing an exception on web (#466)
+
 ## 2.1.2
 
 - Fix logging response bodies
