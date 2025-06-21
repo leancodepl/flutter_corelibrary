@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_debug_page/leancode_debug_page.dart';
 import 'package:leancode_debug_page/src/ui/colors.dart';
+import 'package:leancode_debug_page/src/ui/debug_page_route.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/logs_inspector_share_button.dart';
@@ -11,16 +12,20 @@ enum LogsInspectorTab {
   logs,
 }
 
+class LogsInspectorRoute extends DebugPageRoute {
+  LogsInspectorRoute(DebugPageController controller)
+      : super(
+          builder: (context) => LogsInspector(controller: controller),
+        );
+}
+
 class LogsInspector extends StatefulWidget {
   const LogsInspector({
     super.key,
     required DebugPageController controller,
-    required VoidCallback onBackButtonClicked,
-  })  : _controller = controller,
-        _onBackButtonClicked = onBackButtonClicked;
+  }) : _controller = controller;
 
   final DebugPageController _controller;
-  final VoidCallback _onBackButtonClicked;
 
   @override
   State<StatefulWidget> createState() {
@@ -41,7 +46,7 @@ class _LogsInspectorState extends State<LogsInspector> {
           controller: widget._controller,
         ),
         appBar: AppBar(
-          leading: BackButton(onPressed: widget._onBackButtonClicked),
+          leading: const BackButton(),
           title: const Text('Logs inspector'),
           actions: [
             IconButton(

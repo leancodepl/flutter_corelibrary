@@ -1,11 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:leancode_debug_page/src/core/logger_listener.dart';
 import 'package:leancode_debug_page/src/core/logging_http_client.dart';
 import 'package:leancode_debug_page/src/core/shake_detector.dart';
 import 'package:leancode_debug_page/src/models/filter.dart';
 import 'package:leancode_debug_page/src/models/request_log_record.dart';
+import 'package:leancode_debug_page/src/ui/debug_page_route.dart';
+import 'package:leancode_debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -15,6 +17,7 @@ class DebugPageController {
     this.showOnShake = true,
     this.ignoredBasePath,
     required this.loggingHttpClient,
+    required this.navigatorKey,
   }) : loggerListener = LoggerListener() {
     requestsFilters = ValueNotifier([]);
     _sourceRequestsStreamSubscription = loggingHttpClient.logStream.listen(
@@ -37,7 +40,7 @@ class DebugPageController {
     if (showOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
         shakeThresholdGravity: 4,
-        onPhoneShake: () => visible.value = true,
+        onPhoneShake: open,
       );
     }
   }
@@ -49,10 +52,9 @@ class DebugPageController {
 
   final LoggingHttpClient loggingHttpClient;
   final LoggerListener loggerListener;
+  final GlobalKey<NavigatorState> navigatorKey;
 
   ShakeDetector? _shakeDetector;
-
-  final visible = ValueNotifier(false);
 
   late ValueNotifier<List<Filter<RequestLogRecord>>> requestsFilters;
   late ValueNotifier<List<Filter<LogRecord>>> loggerFilters;
@@ -79,12 +81,15 @@ class DebugPageController {
     _loggerLogController.add(filtered);
   }
 
+  void open() => navigatorKey.currentState!.push(LogsInspectorRoute(this));
+
+  void close() =>
+      navigatorKey.currentState!.popUntil((route) => route is! DebugPageRoute);
+
   void dispose() {
     loggerListener.dispose();
 
     _shakeDetector?.stopListening();
-
-    visible.dispose();
 
     _sourceRequestsStreamSubscription.cancel();
     requestsFilters.dispose();

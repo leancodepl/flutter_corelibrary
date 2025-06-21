@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_debug_page/src/core/debug_page_controller.dart';
@@ -69,6 +70,7 @@ void main() {
         controller = DebugPageController(
           loggingHttpClient: loggingHttpClient,
           showOnShake: false,
+          navigatorKey: GlobalKey(),
         );
       },
     );
