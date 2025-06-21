@@ -20,17 +20,26 @@ A debug page that gathers HTTP requests and logger logs. Features:
   - Device shake
 
 #### Requests list
+
 ![Requests list](images/requests.png)
 
 #### Request details
+
 ![Request details](images/request_details.png)
 
 #### Logs list
+
 ![Logs list](images/logs.png)
 
 ## Usage
 
-You only have to wrap your ```MaterialApp``` with ```DebugPageOverlay``` and provide a ```DebugPageController```. ```DebugPageController``` requires a ```LoggingHttpClient```, which is a wrapper over ```Client``` from dart's ```http``` package. This allows you to put your implementation of client in there.
+Wrap your `MaterialApp` with a `DebugPageOverlay` and provide a `DebugPageController`.
+`DebugPageController` requires:
+
+- a `LoggingHttpClient`, which is a wrapper over `Client` from Dart's `http` package.
+  This allows you to use your own client implementations.
+
+- a navigator key, which is used to navigate to the debug page.
 
 ```dart
 class MyApp extends StatefulWidget {
@@ -46,7 +55,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  _MyAppState();
+  final navigatorKey = GlobalKey<NavigatorState>();
 
   late DebugPageController _debugPageController;
 
@@ -57,6 +66,7 @@ class _MyAppState extends State<MyApp> {
     _debugPageController = DebugPageController(
       showEntryButton: true,
       loggingHttpClient: widget._loggingHttpClient,
+      navigatorKey: navigatorKey,
     );
   }
 
@@ -66,6 +76,7 @@ class _MyAppState extends State<MyApp> {
       controller: _debugPageController,
       child: MaterialApp(
         title: 'Debug Page Demo',
+        navigatorKey: navigatorKey,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
@@ -89,11 +100,14 @@ class _MyAppState extends State<MyApp> {
 
 For a complete working sample, see [example](example).
 
-You can configure debug page's entry points by setting ```showEntryButton``` (defaults to false) and ```showOnShake``` (defaults to true) flags in the constructor of ```DebugPageController```.
+You can configure debug page's entry points by setting ```showEntryButton``` (defaults to false) and
+```showOnShake``` (defaults to true) flags in the constructor of ```DebugPageController```.
 
 ## Warning
 
-For gathering logs from loggers, this package relies on listening to `Logger.root`. This means that changing `Logger.root.level` affects this package's behavior, and the logs are only collected from the current isolate.
+For gathering logs from loggers, this package relies on listening to `Logger.root`. This means that
+changing `Logger.root.level` affects this package's behavior, and the logs are only collected from
+the current isolate.
 
 ---
 
@@ -105,8 +119,6 @@ For gathering logs from loggers, this package relies on listening to `Logger.roo
    Built with ☕️ by <a href="https://leancode.co/?utm_source=readme&utm_medium=leancode_debug_page_package">LeanCode</a>
    </p>
 </p>
-
-
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_debug_page
 [pub-badge-link]: https://pub.dev/packages/leancode_debug_page
