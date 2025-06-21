@@ -1,3 +1,8 @@
+## 3.0.0
+
+- **Breaking:** Fix navigation inside the debug page. 
+  This now requires passing a navigator key to the debug page controller.
+
 ## 2.1.3
 
 - Fix a bug causing an exception on web (#466)

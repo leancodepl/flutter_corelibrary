@@ -25,8 +25,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  _MyAppState();
-
+  final navigatorKey = GlobalKey<NavigatorState>();
   late DebugPageController _debugPageController;
 
   @override
@@ -36,6 +35,7 @@ class _MyAppState extends State<MyApp> {
     _debugPageController = DebugPageController(
       showEntryButton: true,
       loggingHttpClient: widget._loggingHttpClient,
+      navigatorKey: navigatorKey,
     );
   }
 
@@ -45,6 +45,7 @@ class _MyAppState extends State<MyApp> {
       controller: _debugPageController,
       child: MaterialApp(
         title: 'Debug Page Demo',
+        navigatorKey: navigatorKey,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
@@ -146,25 +147,35 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Overlay.of(context).insert(
-                    OverlayEntry(
-                      opaque: true,
-                      builder: (context) => Container(
-                        color: Colors.red,
-                        alignment: Alignment.center,
-                        child: const Material(
-                          color: Colors.transparent,
-                          child: Text(
-                            'Overlay',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
+                  late OverlayEntry entry;
+                  entry = OverlayEntry(
+                    opaque: true,
+                    builder: (context) => Container(
+                      color: Colors.red,
+                      alignment: Alignment.center,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'Overlay',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
                             ),
-                          ),
+                            ElevatedButton(
+                              onPressed: () => entry.remove(),
+                              child: const Text('Close overlay'),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   );
+
+                  Overlay.of(context).insert(entry);
                 },
                 child: const Text('Show an overlay'),
               ),
@@ -174,6 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'Send request',
         label: const Text('Send request'),
         icon: const Icon(Icons.send),
         tooltip: 'Send a request',
