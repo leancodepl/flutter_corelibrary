@@ -54,7 +54,7 @@ class _DraggableFloatingButtonState extends State<_DraggableFloatingButton> {
     final verticalCenter = height / 2;
 
     final floatingActionButton = GestureDetector(
-      onTap: () => widget._controller.visible.value = true,
+      onTap: () => widget._controller.open(),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

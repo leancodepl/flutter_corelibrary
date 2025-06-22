@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leancode_debug_page/src/core/debug_page_controller.dart';
 import 'package:leancode_debug_page/src/core/filters/logger_filters.dart';
@@ -19,6 +20,7 @@ void main() {
         controller = DebugPageController(
           loggingHttpClient: LoggingHttpClient(client: mockClient),
           showOnShake: false,
+          navigatorKey: GlobalKey(),
         );
 
         Logger.root.level = Level.ALL;
