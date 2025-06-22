@@ -1,7 +1,7 @@
 ## 3.0.0
 
-- **Breaking:** Fix navigation inside the debug page. 
-  This now requires passing a navigator key to the debug page controller.
+- **Breaking:** Fix navigation inside the debug page.
+  `DebugPageController` now requires passing a navigator key.
 
 ## 2.1.3
 
