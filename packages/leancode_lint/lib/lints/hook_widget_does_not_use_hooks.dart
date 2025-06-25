@@ -1,10 +1,12 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
 import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/source_range.dart';
-import 'package:analyzer/src/lint/linter.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:leancode_lint/helpers.dart';
@@ -19,7 +21,7 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule
       );
 
   @override
-  LintCode get lintCode => LintCode(
+  LintCode get diagnosticCode => LintCode(
     name,
     description,
     correctionMessage: 'Convert it to a StatelessWidget',
@@ -27,8 +29,8 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule
 
   @override
   void registerNodeProcessors(
-    NodeLintRegistry registry,
-    LinterContext context,
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
     registry.addHookWidgetBody(this, isExactly: true, (node, diagnosticTarget) {
       // get all hook expressions from build method
@@ -44,7 +46,7 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule
         return;
       }
 
-      reportLint(diagnosticTarget);
+      reportAtNode(diagnosticTarget);
     });
   }
 
@@ -71,7 +73,7 @@ class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {
     await builder.addDartFileEdit(
       file,
       (builder) => builder.addSimpleReplacement(
-        SourceRange(errorOffset!, errorLength!),
+        SourceRange(diagnosticOffset!, diagnosticLength!),
         'StatelessWidget',
       ),
     );

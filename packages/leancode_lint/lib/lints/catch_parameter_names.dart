@@ -1,7 +1,9 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/src/lint/linter.dart';
 
 /// Enforces that a catch clause has correctly named variable bindings:
 /// - if it's a catch-all, the exception should be named `err` and the stacktrace `st`
@@ -15,7 +17,7 @@ class CatchParameterNames extends AnalysisRule {
       );
 
   @override
-  LintCode get lintCode => LintCode(
+  LintCode get diagnosticCode => LintCode(
     name,
     'Parameter name for the {0} is non-standard.',
     correctionMessage: 'Rename the parameter to {1}`.',
@@ -23,8 +25,8 @@ class CatchParameterNames extends AnalysisRule {
 
   @override
   void registerNodeProcessors(
-    NodeLintRegistry registry,
-    LinterContext context,
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
     registry.addCatchClause(this, _Visitor(this, context));
   }
@@ -33,8 +35,8 @@ class CatchParameterNames extends AnalysisRule {
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
-  final LintRule rule;
-  final LinterContext context;
+  final AnalysisRule rule;
+  final RuleContext context;
 
   @override
   void visitCatchClause(CatchClause node) {
@@ -52,7 +54,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   ) {
     if (node != null &&
         !{'_', param.preferredName}.contains(node.name.lexeme)) {
-      rule.reportLint(node, arguments: [param.name, param.preferredName]);
+      rule.reportAtNode(node, arguments: [param.name, param.preferredName]);
     }
   }
 }

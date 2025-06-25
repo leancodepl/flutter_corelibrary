@@ -1,7 +1,9 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/src/lint/linter.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning for conditional hooks usage.
@@ -13,12 +15,12 @@ class AvoidConditionalHooks extends AnalysisRule {
       );
 
   @override
-  LintCode get lintCode => LintCode(name, description);
+  LintCode get diagnosticCode => LintCode(name, description);
 
   @override
   void registerNodeProcessors(
-    NodeLintRegistry registry,
-    LinterContext context,
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
     registry.addHookWidgetBody(this, (node, diagnosticNode) {
       // get all hook expressions from build method
@@ -40,7 +42,7 @@ class AvoidConditionalHooks extends AnalysisRule {
 
       for (final hookExpression in hookExpressions) {
         if (_isConditional(firstReturn, hookExpression, node)) {
-          reportLint(hookExpression);
+          reportAtNode(hookExpression);
         }
       }
     });

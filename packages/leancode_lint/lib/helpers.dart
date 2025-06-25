@@ -1,10 +1,12 @@
 import 'package:analysis_server_plugin/registry.dart';
 import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/source_range.dart';
-import 'package:analyzer/src/lint/linter.dart';
 import 'package:leancode_lint/type_checker.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -144,13 +146,16 @@ extension ExpressionExtensions on Expression {
   SourceRange get sourceRange => SourceRange(offset, length);
 }
 
-extension NodeLintRegistryExtensions on NodeLintRegistry {
-  void addRegularComment(LintRule rule, void Function(Token comment) listener) {
+extension NodeLintRegistryExtensions on RuleVisitorRegistry {
+  void addRegularComment(
+    AnalysisRule rule,
+    void Function(Token comment) listener,
+  ) {
     addCompilationUnit(rule, _RegularCommentVisitor(listener));
   }
 
   void addHookWidgetBody(
-    LintRule rule,
+    AnalysisRule rule,
     void Function(FunctionBody node, AstNode diagnosticNode) listener, {
     bool isExactly = false,
   }) {
@@ -251,8 +256,10 @@ mixin AnalysisRuleWithFixes on AnalysisRule {
   List<ProducerGenerator> get fixes;
 
   void registerFixes(PluginRegistry registry) {
-    for (final fix in fixes) {
-      registry.registerFixForRule(lintCode, fix);
+    if (diagnosticCode case final LintCode code) {
+      for (final fix in fixes) {
+        registry.registerFixForRule(code, fix);
+      }
     }
   }
 }

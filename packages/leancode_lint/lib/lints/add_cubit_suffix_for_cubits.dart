@@ -1,7 +1,9 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/src/lint/linter.dart';
 import 'package:leancode_lint/type_checker.dart';
 
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
@@ -14,13 +16,13 @@ class AddCubitSuffixForYourCubits extends AnalysisRule {
       );
 
   @override
-  LintCode get lintCode =>
+  LintCode get diagnosticCode =>
       LintCode(name, description, correctionMessage: 'Ex. {0}Cubit');
 
   @override
   void registerNodeProcessors(
-    NodeLintRegistry registry,
-    LinterContext context,
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
     registry.addClassDeclaration(this, _Visitor(this, context));
   }
@@ -29,8 +31,8 @@ class AddCubitSuffixForYourCubits extends AnalysisRule {
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
-  final LintRule rule;
-  final LinterContext context;
+  final AnalysisRule rule;
+  final RuleContext context;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -42,7 +44,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    rule.reportLintForToken(node.name, arguments: [node.name.lexeme]);
+    rule.reportAtToken(node.name, arguments: [node.name.lexeme]);
   }
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');

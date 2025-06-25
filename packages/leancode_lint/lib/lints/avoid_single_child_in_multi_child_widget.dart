@@ -1,7 +1,9 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/src/lint/linter.dart';
 import 'package:leancode_lint/type_checker.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -14,7 +16,7 @@ class AvoidSingleChildInMultiChildWidgets extends AnalysisRule {
       );
 
   @override
-  LintCode get lintCode => LintCode(
+  LintCode get diagnosticCode => LintCode(
     name,
     description,
     correctionMessage:
@@ -23,8 +25,8 @@ class AvoidSingleChildInMultiChildWidgets extends AnalysisRule {
 
   @override
   void registerNodeProcessors(
-    NodeLintRegistry registry,
-    LinterContext context,
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
     registry.addInstanceCreationExpression(this, _Visitor(this, context));
   }
@@ -33,8 +35,8 @@ class AvoidSingleChildInMultiChildWidgets extends AnalysisRule {
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
-  final LintRule rule;
-  final LinterContext context;
+  final AnalysisRule rule;
+  final RuleContext context;
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
@@ -65,9 +67,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   void _checkInstanceCreation(NamedType constructorName, Expression children) {
     if (children case final ListLiteral list) {
       if (_hasSingleElement(list)) {
-        rule.reportLint(
+        rule.reportAtNode(
           constructorName,
-          arguments: [constructorName.name2.lexeme],
+          arguments: [constructorName.name.lexeme],
         );
       }
     }
