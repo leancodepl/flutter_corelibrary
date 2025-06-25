@@ -9,12 +9,14 @@ topics:
   - lints
 
 environment:
-  sdk: 3.9.0-62.0.dev
+  sdk: 3.9.0-268.0.dev
 
 dependencies:
+  _fe_analyzer_shared: ^83.0.0
   analysis_server_plugin: any
-  analyzer: ^7.4.4
-  analyzer_plugin: ^0.13.0
-  meta: ^1.16.0
+  analyzer: ^7.4.6
+  analyzer_plugin: ^0.13.2
+  meta: ^1.17.0
   path: ^1.9.1
   source_span: ^1.10.1
+  yaml: ^3.1.3
