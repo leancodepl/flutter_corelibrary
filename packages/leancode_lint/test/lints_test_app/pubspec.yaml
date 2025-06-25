@@ -3,15 +3,15 @@ description: Flutter app for lint rules testing
 
 publish_to: 'none'
 
-version: 1.0.0+1ľ
+version: 1.0.0+1
 
 environment:
-  sdk: 3.8.0-132.0.dev
+  sdk: 3.9.0-268.0.dev
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc: ^9.0.0
+  flutter_bloc: ^9.1.1
   flutter_hooks: ^0.21.2
   hooks_riverpod: ^2.6.1
   sliver_tools: ^0.2.12

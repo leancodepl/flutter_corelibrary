@@ -13,37 +13,37 @@ const _forceUpdateScreenKey = Key('ForceUpdateScreen');
 const _suggestUpdateDialogKey = Key('SuggestUpdateDialog');
 
 void registerVersionSupportAnswer(Cqrs cqrs, VersionSupportDTO dto) {
-  when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
-    (_) async => QuerySuccess(dto),
-  );
+  when(
+    () => cqrs.get<VersionSupportDTO>(any()),
+  ).thenAnswer((_) async => QuerySuccess(dto));
 }
 
 void registerUpdateRequired(Cqrs cqrs) => registerVersionSupportAnswer(
-      cqrs,
-      VersionSupportDTO(
-        currentlySupportedVersion: '1.5.0',
-        minimumRequiredVersion: '1.3.0',
-        result: VersionSupportResultDTO.updateRequired,
-      ),
-    );
+  cqrs,
+  VersionSupportDTO(
+    currentlySupportedVersion: '1.5.0',
+    minimumRequiredVersion: '1.3.0',
+    result: VersionSupportResultDTO.updateRequired,
+  ),
+);
 
 void registerUpdateSuggested(Cqrs cqrs) => registerVersionSupportAnswer(
-      cqrs,
-      VersionSupportDTO(
-        currentlySupportedVersion: '1.5.0',
-        minimumRequiredVersion: '1.0.0',
-        result: VersionSupportResultDTO.updateSuggested,
-      ),
-    );
+  cqrs,
+  VersionSupportDTO(
+    currentlySupportedVersion: '1.5.0',
+    minimumRequiredVersion: '1.0.0',
+    result: VersionSupportResultDTO.updateSuggested,
+  ),
+);
 
 void registerUpToDate(Cqrs cqrs) => registerVersionSupportAnswer(
-      cqrs,
-      VersionSupportDTO(
-        currentlySupportedVersion: '1.0.0',
-        minimumRequiredVersion: '1.0.0',
-        result: VersionSupportResultDTO.upToDate,
-      ),
-    );
+  cqrs,
+  VersionSupportDTO(
+    currentlySupportedVersion: '1.0.0',
+    minimumRequiredVersion: '1.0.0',
+    result: VersionSupportResultDTO.upToDate,
+  ),
+);
 
 Future<void> pumpForceUpdateGuard({
   required Cqrs cqrs,
@@ -60,11 +60,9 @@ Future<void> pumpForceUpdateGuard({
           cqrs: cqrs,
           showForceUpdateScreenImmediately: applyResponseImmediately,
           showSuggestUpdateDialogImmediately: applyResponseImmediately,
-          controller: controller ??
-              ForceUpdateController(
-                androidBundleId: '',
-                appleAppId: '',
-              ),
+          controller:
+              controller ??
+              ForceUpdateController(androidBundleId: '', appleAppId: ''),
           forceUpdateScreen: const Text(
             key: _forceUpdateScreenKey,
             'Update required',

@@ -8,11 +8,13 @@ class ColumnIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Column(
       //
       children: [Container()],
     );
+    // dart format on
   }
 }
 
@@ -21,11 +23,13 @@ class RowIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Row(
       //
       children: [Container()],
     );
+    // dart format on
   }
 }
 
@@ -34,12 +38,14 @@ class FlexIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Flex(
       //
       direction: Axis.horizontal,
       children: [Container()],
     );
+    // dart format on
   }
 }
 
@@ -48,11 +54,13 @@ class WrapIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return Wrap(
       //
       children: [Container()],
     );
+    // dart format on
   }
 }
 
@@ -61,11 +69,13 @@ class SliverChildListDelegateIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     final _ = SliverChildListDelegate(
       //
       [Container()],
     );
+    // dart format on
 
     return const SizedBox();
   }
@@ -76,11 +86,13 @@ class SliverListIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return SliverList.list(
       //
       children: [Container()],
     );
+    // dart format on
   }
 }
 
@@ -89,11 +101,13 @@ class SliverMainAxisGroupIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return const SliverMainAxisGroup(
       //
       slivers: [SliverToBoxAdapter()],
     );
+    // dart format on
   }
 }
 
@@ -102,11 +116,13 @@ class SliverCrossAxisGroupIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return const SliverCrossAxisGroup(
       //
       slivers: [SliverToBoxAdapter()],
     );
+    // dart format on
   }
 }
 
@@ -115,11 +131,13 @@ class MultiSliverIsMarked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: avoid_single_child_in_multi_child_widgets
     return MultiSliver(
       //
       children: [Container()],
     );
+    // dart format on
   }
 }
 

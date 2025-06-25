@@ -11,39 +11,50 @@
 //   UseInsteadType({
 //     /// preferred item -> forbidden items
 //     required Map<String, List<ForbiddenItem>> replacements,
-//     required String lintCodeName,
-//     required String problemMessage,
-//     required String correctionMessage,
-//     ErrorSeverity errorSeverity = ErrorSeverity.WARNING,
-//   })  : _checkers = [
-//           for (final MapEntry(key: preferredItemName, value: forbidden)
-//               in replacements.entries)
-//             (
-//               preferredItemName,
-//               TypeChecker.any([
-//                 for (final (:name, :packageName) in forbidden)
-//                   if (packageName.startsWith('dart:'))
-//                     TypeChecker.fromUrl('$packageName#$name')
-//                   else
-//                     TypeChecker.fromName(name, packageName: packageName),
-//               ])
-//             ),
-//         ],
-//         super(
-//           code: LintCode(
-//             name: lintCodeName,
-//             problemMessage: problemMessage,
-//             correctionMessage: correctionMessage,
-//             errorSeverity: errorSeverity,
-//           ),
-//         );
+//     required this.lintCodeName,
+//     this.errorSeverity = ErrorSeverity.WARNING,
+//   }) : _checkers = [
+//          for (final MapEntry(key: preferredItemName, value: forbidden)
+//              in replacements.entries)
+//            (
+//              preferredItemName,
+//              TypeChecker.any([
+//                for (final (:name, :packageName) in forbidden)
+//                  if (packageName.startsWith('dart:'))
+//                    TypeChecker.fromUrl('$packageName#$name')
+//                  else
+//                    TypeChecker.fromName(name, packageName: packageName),
+//              ]),
+//            ),
+//        ],
+//        super(
+//          code: LintCode(
+//            name: lintCodeName,
+//            problemMessage: 'This item is forbidden',
+//          ),
+//        );
 //
 //   final List<(String preferredItemName, TypeChecker)> _checkers;
+//   final String lintCodeName;
+//   final ErrorSeverity errorSeverity;
+//
+//   String problemMessage(String itemName);
+//   String correctionMessage(String preferredItemName);
 //
 //   @override
 //   bool isEnabled(CustomLintConfigs configs) {
 //     return _checkers.isNotEmpty;
 //   }
+//
+//   LintCode _createCode({
+//     required String itemName,
+//     required String preferredItemName,
+//   }) => LintCode(
+//     name: lintCodeName,
+//     problemMessage: problemMessage(itemName),
+//     correctionMessage: correctionMessage(preferredItemName),
+//     errorSeverity: errorSeverity,
+//   );
 //
 //   @override
 //   void run(
@@ -63,11 +74,7 @@
 //     });
 //   }
 //
-//   void _handleElement(
-//     ErrorReporter reporter,
-//     Element element,
-//     AstNode node,
-//   ) {
+//   void _handleElement(ErrorReporter reporter, Element element, AstNode node) {
 //     if (_isInHide(node)) {
 //       return;
 //     }
@@ -77,8 +84,10 @@
 //         if (checker.isExactly(element)) {
 //           reporter.atNode(
 //             node,
-//             code,
-//             arguments: [element.displayName, preferredItemName],
+//             _createCode(
+//               itemName: element.displayName,
+//               preferredItemName: preferredItemName,
+//             ),
 //           );
 //         }
 //       } catch (err) {

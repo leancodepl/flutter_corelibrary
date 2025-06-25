@@ -64,6 +64,7 @@
 /// code contract generator.
 library;
 
+export 'src/command_response.dart';
 export 'src/cqrs.dart';
 export 'src/cqrs_error.dart';
 export 'src/cqrs_middleware.dart';
