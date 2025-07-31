@@ -23,6 +23,9 @@ class AvoidMissingDispose extends DartLintRule {
   static const ruleName = 'avoid_missing_dispose';
 
   @override
+  List<Fix> getFixes() => [_AddDisposeMethod()];
+
+  @override
   void run(
     CustomLintResolver resolver,
     ErrorReporter reporter,
@@ -55,7 +58,14 @@ class AvoidMissingDispose extends DartLintRule {
       );
 
       if (disposeExpressions.isEmpty) {
-        reporter.atNode(node, _createCode());
+        reporter.atNode(
+          node,
+          _createCode(),
+          data: _AvoidMissingDisposeAnalysisData(
+            instanceName: node.fields.variables.first.name.lexeme,
+            classNode: classNode,
+          ),
+        );
       }
     });
     context.registry.addInstanceCreationExpression((node) {
@@ -250,4 +260,55 @@ class _DisposeExpressionsGatherer extends GeneralizingAstVisitor<void> {
       }
     }
   }
+}
+
+class _AddDisposeMethod extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    AnalysisError analysisError,
+    List<AnalysisError> others,
+  ) {
+    if (analysisError.data case final _AvoidMissingDisposeAnalysisData data) {
+      final disposeMethodNode = _getStateDisposeMethod(data.classNode);
+      if (disposeMethodNode?.body case final BlockFunctionBody body
+          when body.block.statements.isNotEmpty) {
+        reporter
+            .createChangeBuilder(
+              message:
+                  'Add ${data.instanceName}.dispose() to the state dispose method',
+              priority: 80,
+            )
+            .addDartFileEdit((builder) {
+              builder.addSimpleInsertion(
+                body.block.statements.first.offset,
+                '${data.instanceName}.dispose();\n    ',
+              );
+            });
+      }
+    }
+  }
+
+  MethodDeclaration? _getStateDisposeMethod(ClassDeclaration classNode) {
+    for (final member in classNode.members) {
+      if (member case final MethodDeclaration methodDeclaration) {
+        if (methodDeclaration.name.lexeme == 'dispose') {
+          return methodDeclaration;
+        }
+      }
+    }
+    return null;
+  }
+}
+
+class _AvoidMissingDisposeAnalysisData {
+  const _AvoidMissingDisposeAnalysisData({
+    required this.instanceName,
+    required this.classNode,
+  });
+
+  final String instanceName;
+  final ClassDeclaration classNode;
 }
