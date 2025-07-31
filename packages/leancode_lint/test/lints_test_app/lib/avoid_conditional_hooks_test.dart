@@ -71,6 +71,7 @@ class SampleConditionalExpressionHookWidget extends HookWidget {
         Random().nextBool()
             ? // expect_lint: avoid_conditional_hooks
             useTextEditingController()
+            // expect_lint: avoid_missing_dispose
             : TextEditingController(),
   );
 }

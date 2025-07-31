@@ -119,7 +119,6 @@ class StatelessMissingDisposeWidget extends StatelessWidget {
   final controller = TextEditingController();
   final ScrollController scrollController;
   // Ignored because of testing lint rule purpose
-  // ignore: unused_field
   final FocusNode _focusNode;
 
   @override
