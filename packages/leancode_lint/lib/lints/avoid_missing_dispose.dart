@@ -184,18 +184,15 @@ class AvoidMissingDispose extends DartLintRule {
     ConstructorDeclaration constructorDeclaration,
     String parameterName,
   ) {
-    for (final parameter in constructorDeclaration.parameters.parameters) {
-      if (parameter.name?.lexeme == parameterName) {
-        return true;
-      }
+    if (constructorDeclaration.parameters.parameters.any(
+      (parameter) => parameter.name?.lexeme == parameterName,
+    )) {
+      return true;
     }
-    for (final initializer in constructorDeclaration.initializers) {
-      if (initializer case final ConstructorFieldInitializer initializer
-          when initializer.fieldName.name == parameterName) {
-        return true;
-      }
-    }
-    return false;
+
+    return constructorDeclaration.initializers
+        .whereType<ConstructorFieldInitializer>()
+        .any((initializer) => initializer.fieldName.name == parameterName);
   }
 
   ConstructorDeclaration? _getConstructorDeclaration(
