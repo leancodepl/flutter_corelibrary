@@ -51,21 +51,10 @@ class _MissingDisposeStatefulWidgetState
 
   @override
   void dispose() {
-    void nestedDispose() {
-      switch (0) {
-        case 0:
-          if (Random().nextBool()) {
-            _valueNotifier.dispose();
-          }
-          _textControllerTest.dispose();
-        case 1:
-          _scrollController.dispose();
-        case 2:
-          _focusNode.dispose();
-      }
-    }
-
-    nestedDispose();
+    _textControllerTest.dispose();
+    _scrollController.dispose();
+    _valueNotifier.dispose();
+    _ignoredInstance.dispose();
     _streamController.close();
     _focusNode.dispose();
     _focusNode2.dispose();
