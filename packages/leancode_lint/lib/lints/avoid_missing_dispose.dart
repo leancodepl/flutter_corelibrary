@@ -1,6 +1,8 @@
+// Replace this once analyzer is updated
+// ignore_for_file: deprecated_member_use
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
@@ -96,7 +98,8 @@ class AvoidMissingDispose extends DartLintRule {
         return;
       }
 
-      if (_isWidget(classNode) && !_isFieldUsedByConstructor(classNode, node)) {
+      if (_isWidgetClass(classNode) &&
+          !_isFieldUsedByConstructor(classNode, node)) {
         reporter.atNode(node, code);
         return;
       }
@@ -134,7 +137,7 @@ class AvoidMissingDispose extends DartLintRule {
       final classNode = _getContainingClass(node);
 
       if (classNode == null ||
-          !(_isWidget(classNode) || _isStateOfWidget(classNode)) ||
+          !(_isWidgetClass(classNode) || _isStateOfWidget(classNode)) ||
           !_isDisposable(type)) {
         return;
       }
@@ -148,8 +151,6 @@ class AvoidMissingDispose extends DartLintRule {
 
   bool _isIgnoredInstance(InterfaceType type) {
     return config.ignoredInstancesCheckers.any(
-      // Remove this once analyzer is updated
-      // ignore: deprecated_member_use
       (checker) => checker.isExactly(type.element),
     );
   }
@@ -259,25 +260,26 @@ class AvoidMissingDispose extends DartLintRule {
   }
 
   bool _isStateOfWidget(ClassDeclaration classNode) {
-    // Suggested ClassElement2 doesn't work in this case
-    // ignore: deprecated_member_use
-    if (classNode.declaredFragment case final ClassElement element) {
-      return element.allSupertypes.any(
-        (type) => type.element3.name3 == 'State',
-      );
-    }
-    return false;
+    const stateTypeChecker = TypeChecker.fromName(
+      'State',
+      packageName: 'flutter',
+    );
+    return switch (classNode.declaredElement) {
+      final element? =>
+        stateTypeChecker.isExactly(element) ||
+            stateTypeChecker.isSuperOf(element),
+      _ => false,
+    };
   }
 
-  bool _isWidget(ClassDeclaration classNode) {
-    // Suggested ClassElement2 doesn't work in this case
-    // ignore: deprecated_member_use
-    if (classNode.declaredFragment case final ClassElement element) {
-      return element.allSupertypes.any(
-        (type) => type.element3.name3 == 'Widget',
-      );
-    }
-    return false;
+  bool _isWidgetClass(ClassDeclaration classNode) {
+    const widgetTypeChecker = TypeChecker.fromName(
+      'Widget',
+      packageName: 'flutter',
+    );
+
+    return widgetTypeChecker.isExactly(classNode.declaredElement!) ||
+        widgetTypeChecker.isSuperOf(classNode.declaredElement!);
   }
 }
 
