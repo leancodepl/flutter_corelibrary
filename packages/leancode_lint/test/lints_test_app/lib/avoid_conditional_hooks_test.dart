@@ -1,3 +1,5 @@
+// Not related to the test
+// ignore_for_file: avoid_missing_dispose
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -71,8 +73,6 @@ class SampleConditionalExpressionHookWidget extends HookWidget {
         Random().nextBool()
             ? // expect_lint: avoid_conditional_hooks
             useTextEditingController()
-            // Not related to the test
-            // ignore: avoid_missing_dispose
             : TextEditingController(),
   );
 }
