@@ -332,8 +332,9 @@ class _AddDisposeMethod extends DartFix {
   ) {
     if (analysisError.data case final _AvoidMissingDisposeAnalysisData data) {
       final disposeMethodNode = _getStateDisposeMethod(data.classNode);
-      if (disposeMethodNode?.body case final BlockFunctionBody body
-          when body.block.statements.isNotEmpty) {
+      if (disposeMethodNode?.body case BlockFunctionBody(
+        block: Block(statements: [final statement, ...]),
+      )) {
         reporter
             .createChangeBuilder(
               message:
@@ -342,7 +343,7 @@ class _AddDisposeMethod extends DartFix {
             )
             .addDartFileEdit((builder) {
               builder.addSimpleInsertion(
-                body.block.statements.first.offset,
+                statement.offset,
                 '${data.instanceName}.dispose();\n    ',
               );
             });
