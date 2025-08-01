@@ -330,21 +330,24 @@ class _AddDisposeMethod extends DartFix {
     AnalysisError analysisError,
     List<AnalysisError> others,
   ) {
-    if (analysisError.data case final _AvoidMissingDisposeAnalysisData data) {
-      final disposeMethodNode = _getStateDisposeMethod(data.classNode);
+    if (analysisError.data case _AvoidMissingDisposeAnalysisData(
+      classNode: final classNode,
+      instanceName: final instanceName,
+    )) {
+      final disposeMethodNode = _getStateDisposeMethod(classNode);
       if (disposeMethodNode?.body case BlockFunctionBody(
         block: Block(statements: [final statement, ...]),
       )) {
         reporter
             .createChangeBuilder(
               message:
-                  'Add ${data.instanceName}.dispose() to the state dispose method',
+                  'Add $instanceName.dispose() to the state dispose method',
               priority: 80,
             )
             .addDartFileEdit((builder) {
               builder.addSimpleInsertion(
                 statement.offset,
-                '${data.instanceName}.dispose();\n    ',
+                '$instanceName.dispose();\n    ',
               );
             });
       }
