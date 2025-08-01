@@ -479,8 +479,8 @@ Disposable resources like controllers, and focus nodes must be properly disposed
 
 ```dart
 class MyWidgetState extends State<MyWidget> {
-  final late TextEditingController controller = TextEditingController();
-  final late FocusNode focusNode = FocusNode();
+  late final TextEditingController controller = TextEditingController();
+  late final FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -504,8 +504,8 @@ class MyWidgetState extends State<MyWidget> {
 
 ```dart
 class MyWidgetState extends State<MyWidget> {
-  late TextEditingController controller;
-  late FocusNode focusNode;
+  late final TextEditingController controller;
+  late final FocusNode focusNode;
 
   @override
   void initState() {
