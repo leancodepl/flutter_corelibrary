@@ -351,15 +351,9 @@ class _AddDisposeMethod extends DartFix {
   }
 
   MethodDeclaration? _getStateDisposeMethod(ClassDeclaration classNode) {
-    return classNode.members.firstWhereOrNull(
-          (member) => switch (member) {
-            final MethodDeclaration methodDeclaration
-                when methodDeclaration.name.lexeme == 'dispose' =>
-              true,
-            _ => false,
-          },
-        )
-        as MethodDeclaration?;
+    return classNode.members.whereType<MethodDeclaration>().firstWhereOrNull(
+      (member) => member.name.lexeme == 'dispose',
+    );
   }
 }
 
