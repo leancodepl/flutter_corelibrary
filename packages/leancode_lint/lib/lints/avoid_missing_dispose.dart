@@ -16,7 +16,7 @@ class AvoidMissingDispose extends DartLintRule {
   static LintCode _createCode() => const LintCode(
     name: ruleName,
     problemMessage: 'Resource should be disposed in the dispose() method.',
-    correctionMessage: 'Add disposal of this resource in the dispose() method.',
+    correctionMessage: 'Add disposal of this resource.',
     errorSeverity: ErrorSeverity.WARNING,
   );
 
