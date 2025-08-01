@@ -18,7 +18,7 @@ class AvoidMissingDisposeConfig {
           (json['ignored_instances'] as YamlList?)
               ?.map((e) => e.toString())
               .toSet() ??
-          {},
+          const {},
     );
   }
 
@@ -28,7 +28,16 @@ class AvoidMissingDisposeConfig {
 /// Checks for proper disposal of resources in StatefulWidget classes.
 /// Warns when disposable resources are not properly disposed in the dispose() method.
 class AvoidMissingDispose extends DartLintRule {
-  AvoidMissingDispose({required this.config}) : super(code: _createCode());
+  const AvoidMissingDispose({required this.config})
+    : super(
+        code: const LintCode(
+          name: ruleName,
+          problemMessage:
+              'Resource should be disposed in the dispose() method.',
+          correctionMessage: 'Add disposal of this resource.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   AvoidMissingDispose.fromConfigs(CustomLintConfigs configs)
     : this(
@@ -36,13 +45,6 @@ class AvoidMissingDispose extends DartLintRule {
           configs.rules[ruleName]?.json ?? {},
         ),
       );
-
-  static LintCode _createCode() => const LintCode(
-    name: ruleName,
-    problemMessage: 'Resource should be disposed in the dispose() method.',
-    correctionMessage: 'Add disposal of this resource.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
 
   final AvoidMissingDisposeConfig config;
 
@@ -71,7 +73,7 @@ class AvoidMissingDispose extends DartLintRule {
       }
 
       if (_isWidget(classNode) && !_isFieldUsedByConstructor(classNode, node)) {
-        reporter.atNode(node, _createCode());
+        reporter.atNode(node, code);
         return;
       }
 
@@ -91,7 +93,7 @@ class AvoidMissingDispose extends DartLintRule {
       if (disposeExpressions.isEmpty) {
         reporter.atNode(
           node,
-          _createCode(),
+          code,
           data: _AvoidMissingDisposeAnalysisData(
             instanceName: node.fields.variables.first.name.lexeme,
             classNode: classNode,
@@ -122,7 +124,7 @@ class AvoidMissingDispose extends DartLintRule {
       }
 
       if (_isInReturnWidget(node)) {
-        reporter.atNode(node, _createCode());
+        reporter.atNode(node, code);
         return;
       }
     });
@@ -164,10 +166,9 @@ class AvoidMissingDispose extends DartLintRule {
       }
     }
     for (final initializer in constructorDeclaration.initializers) {
-      if (initializer case final ConstructorFieldInitializer initializer) {
-        if (initializer.fieldName.name == parameterName) {
-          return true;
-        }
+      if (initializer case final ConstructorFieldInitializer initializer
+          when initializer.fieldName.name == parameterName) {
+        return true;
       }
     }
     return false;
@@ -176,12 +177,13 @@ class AvoidMissingDispose extends DartLintRule {
   ConstructorDeclaration? _getConstructorDeclaration(
     ClassDeclaration classNode,
   ) {
-    for (final member in classNode.members) {
-      if (member case final ConstructorDeclaration constructorDeclaration) {
-        return constructorDeclaration;
-      }
-    }
-    return null;
+    return classNode.members.firstWhereOrNull(
+          (member) => switch (member) {
+            final ConstructorDeclaration _ => true,
+            _ => false,
+          },
+        )
+        as ConstructorDeclaration?;
   }
 
   ClassDeclaration? _getContainingClass(AstNode node) {
@@ -269,6 +271,7 @@ class AvoidMissingDispose extends DartLintRule {
 
 class _DisposeExpressionsGatherer extends GeneralizingAstVisitor<void> {
   _DisposeExpressionsGatherer({required this.targetName});
+
   final String targetName;
 
   final List<InvocationExpression> _disposeExpressions = [];
@@ -286,13 +289,11 @@ class _DisposeExpressionsGatherer extends GeneralizingAstVisitor<void> {
 
   @override
   void visitExpressionStatement(ExpressionStatement node) {
-    if (node.expression case final MethodInvocation methodInvocation) {
-      if (methodInvocation.methodName.name == disposeMethodName) {
-        if (methodInvocation.target case final SimpleIdentifier target) {
-          if (target.name == targetName) {
-            _disposeExpressions.add(methodInvocation);
-          }
-        }
+    if (node.expression case final MethodInvocation methodInvocation
+        when methodInvocation.methodName.name == disposeMethodName) {
+      if (methodInvocation.target case final SimpleIdentifier target
+          when target.name == targetName) {
+        _disposeExpressions.add(methodInvocation);
       }
     }
   }
@@ -328,14 +329,15 @@ class _AddDisposeMethod extends DartFix {
   }
 
   MethodDeclaration? _getStateDisposeMethod(ClassDeclaration classNode) {
-    for (final member in classNode.members) {
-      if (member case final MethodDeclaration methodDeclaration) {
-        if (methodDeclaration.name.lexeme == 'dispose') {
-          return methodDeclaration;
-        }
-      }
-    }
-    return null;
+    return classNode.members.firstWhereOrNull(
+          (member) => switch (member) {
+            final MethodDeclaration methodDeclaration
+                when methodDeclaration.name.lexeme == 'dispose' =>
+              true,
+            _ => false,
+          },
+        )
+        as MethodDeclaration?;
   }
 }
 
