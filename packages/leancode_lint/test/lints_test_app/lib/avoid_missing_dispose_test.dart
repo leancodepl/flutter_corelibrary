@@ -1,4 +1,4 @@
-// ignore for lint test
+// ignored for lint test purpose
 // ignore_for_file: unused_field, prefer_final_fields, unused_element
 
 import 'dart:async';
@@ -46,6 +46,8 @@ class _MissingDisposeStatefulWidgetState
   late final FocusNode _notDisposedController5;
   // expect_lint: avoid_missing_dispose
   late final ValueNotifier<int> _notDisposedController6;
+
+  late final AnimationController _ignoredInstance;
 
   @override
   void dispose() {
@@ -118,7 +120,6 @@ class StatelessMissingDisposeWidget extends StatelessWidget {
   // expect_lint: avoid_missing_dispose
   final controller = TextEditingController();
   final ScrollController scrollController;
-  // Ignored because of testing lint rule purpose
   final FocusNode _focusNode;
 
   @override
@@ -127,7 +128,6 @@ class StatelessMissingDisposeWidget extends StatelessWidget {
   }
 }
 
-// Should be ignored: Regular class (not State)
 class RegularClass {
   final controller = TextEditingController();
 }

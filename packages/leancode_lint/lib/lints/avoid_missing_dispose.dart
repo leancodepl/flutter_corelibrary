@@ -7,11 +7,35 @@ import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
+import 'package:yaml/yaml.dart';
+
+class AvoidMissingDisposeConfig {
+  const AvoidMissingDisposeConfig({this.ignoredInstances = const {}});
+
+  factory AvoidMissingDisposeConfig.fromConfig(Map<String, Object?> json) {
+    return AvoidMissingDisposeConfig(
+      ignoredInstances:
+          (json['ignored_instances'] as YamlList?)
+              ?.map((e) => e.toString())
+              .toSet() ??
+          {},
+    );
+  }
+
+  final Set<String> ignoredInstances;
+}
 
 /// Checks for proper disposal of resources in StatefulWidget classes.
 /// Warns when disposable resources are not properly disposed in the dispose() method.
 class AvoidMissingDispose extends DartLintRule {
-  AvoidMissingDispose() : super(code: _createCode());
+  AvoidMissingDispose({required this.config}) : super(code: _createCode());
+
+  AvoidMissingDispose.fromConfigs(CustomLintConfigs configs)
+    : this(
+        config: AvoidMissingDisposeConfig.fromConfig(
+          configs.rules[ruleName]?.json ?? {},
+        ),
+      );
 
   static LintCode _createCode() => const LintCode(
     name: ruleName,
@@ -19,6 +43,8 @@ class AvoidMissingDispose extends DartLintRule {
     correctionMessage: 'Add disposal of this resource.',
     errorSeverity: ErrorSeverity.WARNING,
   );
+
+  final AvoidMissingDisposeConfig config;
 
   static const ruleName = 'avoid_missing_dispose';
 
@@ -32,6 +58,13 @@ class AvoidMissingDispose extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addFieldDeclaration((node) {
+      final type = _getFieldDeclarationType(node);
+
+      if (type == null ||
+          config.ignoredInstances.contains(type.element3.name3)) {
+        return;
+      }
+
       final classNode = _getContainingClass(node);
       if (classNode == null) {
         return;
@@ -46,9 +79,7 @@ class AvoidMissingDispose extends DartLintRule {
         return;
       }
 
-      final type = _getFieldDeclarationType(node);
-
-      if (type == null || !_isDisposable(type)) {
+      if (!_isDisposable(type)) {
         return;
       }
 
@@ -69,6 +100,16 @@ class AvoidMissingDispose extends DartLintRule {
       }
     });
     context.registry.addInstanceCreationExpression((node) {
+      final type = switch (node.staticType) {
+        final InterfaceType type => type,
+        _ => null,
+      };
+
+      if (type == null ||
+          config.ignoredInstances.contains(type.element3.name3)) {
+        return;
+      }
+
       final classNode = _getContainingClass(node);
 
       if (classNode == null ||
@@ -76,12 +117,7 @@ class AvoidMissingDispose extends DartLintRule {
         return;
       }
 
-      final type = switch (node.staticType) {
-        final InterfaceType type => type,
-        _ => null,
-      };
-
-      if (type == null || !_isDisposable(type)) {
+      if (!_isDisposable(type)) {
         return;
       }
 

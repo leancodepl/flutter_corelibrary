@@ -35,7 +35,7 @@ class _Linter extends PluginBase {
     const UsePadding(),
     const UseDedicatedMediaQueryMethods(),
     const PreferCenterOverAlign(),
-    AvoidMissingDispose(),
+    AvoidMissingDispose.fromConfigs(configs),
   ];
 
   @override

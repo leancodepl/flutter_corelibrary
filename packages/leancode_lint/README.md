@@ -530,7 +530,16 @@ class MyWidgetState extends State<MyWidget> {
 
 #### Configuration
 
-None.
+```yaml
+custom_lint:
+  rules:
+    - avoid_missing_dispose:
+        ignored_instances:
+          - TextEditingController  # Skip TextEditingController instances
+          - FocusNode             # Skip FocusNode instances
+```
+
+`ignored_instances` skips checking dispose for specified types. This allows you to disable the lint rule for certain classes where you don't want to enforce dispose method checks.
 
 ## Assists
 
