@@ -219,28 +219,22 @@ class AvoidMissingDispose extends DartLintRule {
   }
 
   bool _isDisposable(InterfaceType type) {
-    // Checks if current class has dispose method
-    var hasDispose = type.methods2.any((method) => method.name3 == 'dispose');
-    // Checks if current class has dispose method in the inherited members
-    if (!hasDispose) {
-      hasDispose =
-          type.element3.inheritedMembers.entries.firstWhereOrNull(
-            (entry) =>
-                entry.key.name == 'dispose' &&
-                entry.value.baseElement is MethodElement2,
-          ) !=
-          null;
-    }
-    return hasDispose;
+    return type.methods2.any((method) => method.name3 == 'dispose') ||
+        type.element3.inheritedMembers.entries.any(
+          (entry) =>
+              entry.key.name == 'dispose' &&
+              entry.value.baseElement is MethodElement2,
+        );
   }
 
-  bool _isType(InterfaceType type, String typeName) {
-    if (type.element3.name3 == typeName) {
-      return true;
-    }
-    return type.element3.allSupertypes.any(
-      (supertype) => supertype.element3.name3 == typeName,
+  bool _isWidgetType(InterfaceType type) {
+    const widgetTypeChecker = TypeChecker.fromName(
+      'Widget',
+      packageName: 'flutter',
     );
+
+    return widgetTypeChecker.isExactlyType(type) ||
+        widgetTypeChecker.isSuperTypeOf(type);
   }
 
   bool _isInReturnWidget(InstanceCreationExpression node) {
@@ -255,7 +249,7 @@ class AvoidMissingDispose extends DartLintRule {
       }
       if (currentNode case MethodDeclaration(
         returnType: NamedType(type: final InterfaceType type),
-      ) when _isType(type, 'Widget')) {
+      ) when _isWidgetType(type)) {
         returnsWidget = true;
       }
 
