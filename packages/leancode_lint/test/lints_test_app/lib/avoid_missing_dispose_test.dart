@@ -45,7 +45,7 @@ class _MissingDisposeStatefulWidgetState
   late final FocusNode _notDisposedController5;
   // expect_lint: avoid_missing_dispose
   late final ValueNotifier<int> _notDisposedController6;
-  
+
   late final AnimationController _ignoredInstance;
 
   @override
