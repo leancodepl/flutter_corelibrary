@@ -9,20 +9,44 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
 import 'package:yaml/yaml.dart';
 
+class _IgnoredInstance {
+  const _IgnoredInstance({required this.name, required this.packageName});
+
+  final String name;
+  final String packageName;
+}
+
 class AvoidMissingDisposeConfig {
-  const AvoidMissingDisposeConfig({this.ignoredInstances = const {}});
+  const AvoidMissingDisposeConfig({
+    this.ignoredInstances = const {},
+    this.ignoredInstancesCheckers = const [],
+  });
 
   factory AvoidMissingDisposeConfig.fromConfig(Map<String, Object?> json) {
+    final ignoredInstances =
+        (json['ignored_instances'] as YamlList?)?.nodes
+            .map(
+              (e) => _IgnoredInstance(
+                name: (e as YamlMap)['ignore'] as String,
+                packageName: e['from_package'] as String,
+              ),
+            )
+            .toSet() ??
+        const {};
     return AvoidMissingDisposeConfig(
-      ignoredInstances:
-          (json['ignored_instances'] as YamlList?)
-              ?.map((e) => e.toString())
-              .toSet() ??
-          const {},
+      ignoredInstances: ignoredInstances,
+      ignoredInstancesCheckers: [
+        for (final _IgnoredInstance(:name, :packageName) in ignoredInstances)
+          if (packageName.startsWith('dart:'))
+            TypeChecker.fromUrl('$packageName#$name')
+          else
+            TypeChecker.fromName(name, packageName: packageName),
+      ],
     );
   }
 
-  final Set<String> ignoredInstances;
+  final Set<_IgnoredInstance> ignoredInstances;
+  final List<TypeChecker> ignoredInstancesCheckers;
 }
 
 /// Checks for proper disposal of resources in StatefulWidget classes.
@@ -39,12 +63,13 @@ class AvoidMissingDispose extends DartLintRule {
         ),
       );
 
-  AvoidMissingDispose.fromConfigs(CustomLintConfigs configs)
-    : this(
-        config: AvoidMissingDisposeConfig.fromConfig(
-          configs.rules[ruleName]?.json ?? {},
-        ),
-      );
+  factory AvoidMissingDispose.fromConfigs(CustomLintConfigs configs) {
+    final config = AvoidMissingDisposeConfig.fromConfig(
+      configs.rules[ruleName]?.json ?? {},
+    );
+
+    return AvoidMissingDispose(config: config);
+  }
 
   final AvoidMissingDisposeConfig config;
 
@@ -62,8 +87,7 @@ class AvoidMissingDispose extends DartLintRule {
     context.registry.addFieldDeclaration((node) {
       final type = _getFieldDeclarationType(node);
 
-      if (type == null ||
-          config.ignoredInstances.contains(type.element3.name3)) {
+      if (type == null || _isIgnoredInstance(type)) {
         return;
       }
 
@@ -77,11 +101,7 @@ class AvoidMissingDispose extends DartLintRule {
         return;
       }
 
-      if (!_isStateOfWidget(classNode)) {
-        return;
-      }
-
-      if (!_isDisposable(type)) {
+      if (!_isStateOfWidget(classNode) || !_isDisposable(type)) {
         return;
       }
 
@@ -107,19 +127,15 @@ class AvoidMissingDispose extends DartLintRule {
         _ => null,
       };
 
-      if (type == null ||
-          config.ignoredInstances.contains(type.element3.name3)) {
+      if (type == null || _isIgnoredInstance(type)) {
         return;
       }
 
       final classNode = _getContainingClass(node);
 
       if (classNode == null ||
-          !(_isWidget(classNode) || _isStateOfWidget(classNode))) {
-        return;
-      }
-
-      if (!_isDisposable(type)) {
+          !(_isWidget(classNode) || _isStateOfWidget(classNode)) ||
+          !_isDisposable(type)) {
         return;
       }
 
@@ -128,6 +144,14 @@ class AvoidMissingDispose extends DartLintRule {
         return;
       }
     });
+  }
+
+  bool _isIgnoredInstance(InterfaceType type) {
+    return config.ignoredInstancesCheckers.any(
+      // Remove this once analyzer is updated
+      // ignore: deprecated_member_use
+      (checker) => checker.isExactly(type.element),
+    );
   }
 
   InterfaceType? _getFieldDeclarationType(FieldDeclaration field) {
@@ -232,15 +256,12 @@ class AvoidMissingDispose extends DartLintRule {
               currentNode is ExpressionFunctionBody)) {
         isInReturn = true;
       }
-      if (currentNode is MethodDeclaration) {
-        if (currentNode.returnType case final NamedType returnType
-            when returnType.type is InterfaceType &&
-                _isType(returnType.type! as InterfaceType, 'Widget')) {
-          returnsWidget = true;
-        } else {
-          return false;
-        }
+      if (currentNode case MethodDeclaration(
+        returnType: NamedType(type: final InterfaceType type),
+      ) when _isType(type, 'Widget')) {
+        returnsWidget = true;
       }
+
       currentNode = currentNode.parent;
     }
     return returnsWidget && isInReturn;
@@ -289,12 +310,13 @@ class _DisposeExpressionsGatherer extends GeneralizingAstVisitor<void> {
 
   @override
   void visitExpressionStatement(ExpressionStatement node) {
-    if (node.expression case final MethodInvocation methodInvocation
-        when methodInvocation.methodName.name == disposeMethodName) {
-      if (methodInvocation.target case final SimpleIdentifier target
-          when target.name == targetName) {
-        _disposeExpressions.add(methodInvocation);
-      }
+    if (node.expression
+        case MethodInvocation(
+              methodName: SimpleIdentifier(name: disposeMethodName),
+              target: SimpleIdentifier(:final name),
+            ) &&
+            final invocation when name == targetName) {
+      _disposeExpressions.add(invocation);
     }
   }
 }

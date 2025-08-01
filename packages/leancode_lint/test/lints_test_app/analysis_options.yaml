@@ -20,7 +20,8 @@ custom_lint:
     - constructor_parameters_and_fields_should_have_the_same_order: true
     - avoid_missing_dispose:
       ignored_instances:
-        - AnimationController
+        - ignore: AnimationController
+          from_package: flutter
 
 analyzer:
   plugins:

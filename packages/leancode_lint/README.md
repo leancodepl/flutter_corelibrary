@@ -534,12 +534,14 @@ class MyWidgetState extends State<MyWidget> {
 custom_lint:
   rules:
     - avoid_missing_dispose:
-        ignored_instances:
-          - TextEditingController  # Skip TextEditingController instances
-          - FocusNode             # Skip FocusNode instances
+      ignored_instances:
+        - ignore: AnimationController
+          from_package: flutter
 ```
 
-`ignored_instances` skips checking dispose for specified types. This allows you to disable the lint rule for certain classes where you don't want to enforce dispose method checks.
+- `ignored_instances` - an optional YamlList - skips dispose checks for specified types. This allows disabling the lint rule for classes where dispose method checks are not needed.
+  - `ignore` - A required String - name of the instance to ignore
+  - `from_package` - A required String - name of the source package
 
 ## Assists
 

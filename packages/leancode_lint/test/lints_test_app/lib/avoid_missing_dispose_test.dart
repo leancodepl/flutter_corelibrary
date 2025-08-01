@@ -2,7 +2,6 @@
 // ignore_for_file: unused_field, prefer_final_fields, unused_element
 
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -46,7 +45,7 @@ class _MissingDisposeStatefulWidgetState
   late final FocusNode _notDisposedController5;
   // expect_lint: avoid_missing_dispose
   late final ValueNotifier<int> _notDisposedController6;
-
+  
   late final AnimationController _ignoredInstance;
 
   @override
@@ -54,7 +53,6 @@ class _MissingDisposeStatefulWidgetState
     _textControllerTest.dispose();
     _scrollController.dispose();
     _valueNotifier.dispose();
-    _ignoredInstance.dispose();
     _streamController.close();
     _focusNode.dispose();
     _focusNode2.dispose();
