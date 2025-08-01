@@ -29,7 +29,7 @@ class _Linter extends PluginBase {
     const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
     const AvoidSingleChildInMultiChildWidgets(),
     const UseAlign(),
-    AvoidMissingDispose(),
+    AvoidMissingDispose.fromConfigs(configs),
   ];
 
   @override
