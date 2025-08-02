@@ -341,6 +341,42 @@ Container(),
 
 None.
 
+### `use_align`
+
+**DO** Use Align widget instead of the Container widget with only the alignment parameter'
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Align(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.
