@@ -343,7 +343,7 @@ None.
 
 ### `use_align`
 
-**DO** Use the Align widget instead of the Container widget with only the alignment parameter.
+**DO** Use Align widget instead of the Container widget with only the alignment parameter'
 
 **BAD:**
 
