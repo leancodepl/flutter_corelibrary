@@ -341,6 +341,26 @@ Container(),
 
 None.
 
+### `avoid_single_child_in_multi_child_widgets`
+
+**AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf`. Instead prefer dedicated methods (example: `MediaQuery.paddingOf(context)`).
+
+**BAD:**
+
+```dart
+MediaQuery.of(context).size
+```
+
+**GOOD:**
+
+```dart
+MediaQuery.sizeOf(context)
+```
+
+#### Configuration
+
+None.
+
 ### `use_align`
 
 **DO** Use the Align widget instead of the Container widget with only the alignment parameter.
