@@ -435,6 +435,40 @@ class MyWidget extends StatelessWidget {
 
 None
 
+### `prefer_center_over_align`
+
+**DO** Use the Center widget instead of the Align widget with the alignment parameter set to Alignment.center
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Align(
+      child:  SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.
