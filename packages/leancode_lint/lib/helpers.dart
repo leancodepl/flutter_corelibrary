@@ -1,6 +1,8 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/error/error.dart' as error;
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -215,5 +217,74 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
 
       listener(buildMethod.body, diagnosticNode);
     });
+  }
+}
+
+bool isExpressionExactlyType(
+  Expression expression,
+  String typeName,
+  String packageName,
+) {
+  if (expression.staticType case final type?) {
+    return TypeChecker.fromName(
+      typeName,
+      packageName: packageName,
+    ).isExactlyType(type);
+  }
+  return false;
+}
+
+bool isInstanceCreationExpressionOnlyUsingParameter(
+  InstanceCreationExpression node, {
+  required String parameter,
+  List<String> ignoredParameters = const [],
+}) {
+  var hasParameter = false;
+
+  for (final argument in node.argumentList.arguments) {
+    if (argument
+        case NamedExpression(
+              name: Label(label: SimpleIdentifier(name: final argumentName)),
+            ) &&
+            final argument) {
+      if (ignoredParameters.contains(argumentName)) {
+        continue;
+      } else if (argumentName == parameter &&
+          argument.staticType?.nullabilitySuffix !=
+              NullabilitySuffix.question) {
+        hasParameter = true;
+      } else {
+        // Other named arguments are not allowed
+        return false;
+      }
+    } else {
+      // Other arguments are not allowed
+      return false;
+    }
+  }
+  return hasParameter;
+}
+
+class ChangeWidgetNameFix extends DartFix {
+  ChangeWidgetNameFix(this.widgetName);
+
+  final String widgetName;
+
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    error.AnalysisError analysisError,
+    List<error.AnalysisError> errors,
+  ) {
+    reporter
+        .createChangeBuilder(message: 'Replace with $widgetName', priority: 1)
+        .addDartFileEdit(
+          (builder) => builder.addSimpleReplacement(
+            analysisError.sourceRange,
+            widgetName,
+          ),
+        );
   }
 }
