@@ -265,6 +265,21 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
   return hasParameter;
 }
 
+/// A fix that replaces the widget constructor name with a new one specified as [widgetName].
+///
+/// Assumption: the corresponding lint diagnostic reports an error whose
+/// source range matches the constructor's name (identifier). The fix applies
+/// the replacement to that exact range.
+///
+/// Example:
+/// ```dart
+/// Container(alignment: null, child: const SizedBox());
+/// ```
+///
+/// will be replaced with:
+/// ```dart
+/// Align(alignment: null, child: const SizedBox());
+/// ```
 class ChangeWidgetNameFix extends DartFix {
   ChangeWidgetNameFix(this.widgetName);
 
