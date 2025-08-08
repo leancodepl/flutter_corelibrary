@@ -237,7 +237,7 @@ bool isExpressionExactlyType(
 bool isInstanceCreationExpressionOnlyUsingParameter(
   InstanceCreationExpression node, {
   required String parameter,
-  List<String> ignoredParameters = const [],
+  Set<String> ignoredParameters = const {},
 }) {
   var hasParameter = false;
 

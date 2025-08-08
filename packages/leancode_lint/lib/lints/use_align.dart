@@ -29,7 +29,7 @@ class UseAlign extends DartLintRule {
             node,
             parameter: 'alignment',
             // Ignores key and child parameters because both Container and Align have them
-            ignoredParameters: const ['key', 'child'],
+            ignoredParameters: const {'key', 'child'},
           )) {
         reporter.atNode(node.constructorName, code);
       }
