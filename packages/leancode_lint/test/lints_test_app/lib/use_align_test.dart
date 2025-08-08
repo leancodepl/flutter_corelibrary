@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:flutter/material.dart';
 
 class UseAlignTest {
@@ -27,5 +29,8 @@ class UseAlignTest {
     Container(alignment: Alignment.center);
 
     const Align(alignment: Alignment.bottomCenter, child: SizedBox());
+
+    // expect_lint: use_align
+    Container(alignment: null, child: const SizedBox());
   }
 }
