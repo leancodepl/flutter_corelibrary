@@ -31,7 +31,6 @@ class UseAlignTest {
 
     const Align(alignment: Alignment.bottomCenter, child: SizedBox());
 
-    // expect_lint: use_align
     Container(alignment: null, child: const SizedBox());
   }
 }

@@ -250,8 +250,7 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
       if (ignoredParameters.contains(argumentName)) {
         continue;
       } else if (argumentName == parameter &&
-          argument.staticType?.nullabilitySuffix !=
-              NullabilitySuffix.question) {
+          argument.expression is! NullLiteral) {
         hasParameter = true;
       } else {
         // Other named arguments are not allowed
