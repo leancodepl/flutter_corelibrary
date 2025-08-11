@@ -6,15 +6,16 @@ import 'package:leancode_lint/utils.dart';
 
 /// Enforces that some widgets that accept multiple children do not have a single child.
 class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
-  AvoidSingleChildInMultiChildWidgets() : super(code: _createCode(''));
-
-  static LintCode _createCode(String name) => LintCode(
-    name: 'avoid_single_child_in_multi_child_widgets',
-    problemMessage: 'Avoid using $name with a single child.',
-    correctionMessage:
-        'Remove the $name and achieve the same result using dedicated widgets.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
+  const AvoidSingleChildInMultiChildWidgets()
+    : super(
+        code: const LintCode(
+          name: 'avoid_single_child_in_multi_child_widgets',
+          problemMessage: 'Avoid using {0} with a single child.',
+          correctionMessage:
+              'Remove the {0} and achieve the same result using dedicated widgets.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   static const _complain = [
     ('children', TypeChecker.fromName('Column', packageName: 'flutter')),
@@ -81,7 +82,8 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
       if (_hasSingleElement(list)) {
         reporter.atNode(
           constructorName,
-          _createCode(constructorName.name2.lexeme),
+          code,
+          arguments: [constructorName.name2.lexeme],
         );
       }
     }

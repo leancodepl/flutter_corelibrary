@@ -1,3 +1,7 @@
+# Unreleased
+
+- chore: Refactor lint codes to use built-in positional parameters.
+
 # 17.0.0
 
 - Support Flutter 3.32 and Dart 3.8

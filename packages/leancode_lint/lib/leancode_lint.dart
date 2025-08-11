@@ -18,15 +18,15 @@ PluginBase createPlugin() => _Linter();
 class _Linter extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) => [
-    StartCommentsWithSpace(),
+    const StartCommentsWithSpace(),
     ...UseDesignSystemItem.getRulesListFromConfigs(configs),
     PrefixWidgetsReturningSlivers.fromConfigs(configs),
-    AddCubitSuffixForYourCubits(),
-    CatchParameterNames(),
-    AvoidConditionalHooks(),
-    HookWidgetDoesNotUseHooks(),
-    ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
-    AvoidSingleChildInMultiChildWidgets(),
+    const AddCubitSuffixForYourCubits(),
+    const CatchParameterNames(),
+    const AvoidConditionalHooks(),
+    const HookWidgetDoesNotUseHooks(),
+    const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
+    const AvoidSingleChildInMultiChildWidgets(),
     const UseAlign(),
   ];
 

@@ -7,9 +7,15 @@ import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
 class HookWidgetDoesNotUseHooks extends DartLintRule {
-  HookWidgetDoesNotUseHooks() : super(code: _getLintCode());
-
-  static const ruleName = 'hook_widget_does_not_use_hooks';
+  const HookWidgetDoesNotUseHooks()
+    : super(
+        code: const LintCode(
+          name: 'hook_widget_does_not_use_hooks',
+          problemMessage: 'This HookWidget does not use hooks.',
+          correctionMessage: 'Convert it to a StatelessWidget',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   void run(
@@ -34,19 +40,12 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
         return;
       }
 
-      reporter.atNode(diagnosticTarget, _getLintCode());
+      reporter.atNode(diagnosticTarget, code);
     });
   }
 
   @override
   List<Fix> getFixes() => [_ConvertHookWidgetToStatelessWidget()];
-
-  static LintCode _getLintCode() => const LintCode(
-    name: ruleName,
-    problemMessage: 'This HookWidget does not use hooks.',
-    correctionMessage: 'Convert it to a StatelessWidget',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
 }
 
 class _ConvertHookWidgetToStatelessWidget extends DartFix {
