@@ -51,6 +51,10 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
+      if (!_isMediaQuery(node)) {
+        return;
+      }
+
       if (_isValidMediaQueryUsage(node)) {
         return;
       }
@@ -112,19 +116,25 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
     };
   }
 
-  bool _isValidMediaQueryUsage(MethodInvocation node) {
-    if (node.beginToken.lexeme != 'MediaQuery') {
-      return true;
-    }
+  bool _isMediaQuery(MethodInvocation node) => switch (node.target) {
+    SimpleIdentifier(:final name) => name == 'MediaQuery',
+    _ => false,
+  };
 
+  bool _isValidMediaQueryUsage(MethodInvocation node) {
     final methodName = _getUsedMethodName(node);
 
     return methodName != 'of' && methodName != 'maybeOf';
   }
 
   String? _getUsedGetter(MethodInvocation node) {
-    if (node.parent case PropertyAccess(:final propertyName)) {
-      return propertyName.name;
+    if (node.parent case PropertyAccess(
+      target: MethodInvocation(
+        :final methodName,
+        target: SimpleIdentifier(name: final targetName),
+      ),
+    ) when targetName == 'MediaQuery') {
+      return methodName.name;
     }
     return null;
   }
