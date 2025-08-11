@@ -4,14 +4,16 @@ import 'package:analyzer/error/listener.dart';
 import 'package:collection/collection.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
-class AvoidUsingMediaQueryOfLint extends DartLintRule {
-  const AvoidUsingMediaQueryOfLint()
+class UseDedicatedMediaQueryMethods extends DartLintRule {
+  const UseDedicatedMediaQueryMethods()
     : super(
         code: const LintCode(
-          name: 'avoid_using_media_query_of',
+          name: 'use_dedicated_media_query_methods',
           errorSeverity: error.ErrorSeverity.WARNING,
-          problemMessage: 'Avoid using `MediaQuery.of(context)`',
-          correctionMessage: 'Use the dedicated `{0}` method instead',
+          problemMessage:
+              'Avoid using {0} to access only one property of MediaQueryData. '
+              'Using aspects of the `MediaQuery` avoids unnecessary rebuilds.\n',
+          correctionMessage: 'Use the dedicated `{1}` method instead.',
         ),
       );
 
@@ -63,7 +65,7 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
       reporter.atNode(
         parent,
         code,
-        arguments: [replacementSuggestion],
+        arguments: [node.toSource(), replacementSuggestion],
         data: replacementSuggestion,
       );
     });
@@ -83,12 +85,14 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
     final usedMaybe = methodReplacement.startsWith('maybe');
     final usedGetter = _getUsedGetter(node);
 
-    return 'MediaQuery.$methodReplacement($contextVariableName)${usedMaybe && usedGetter != null ? '?' : ''}';
+    return 'MediaQuery.$methodReplacement($contextVariableName)${usedMaybe && usedGetter != null && _isGrandParentPropertyAccess(node) ? '?' : ''}';
   }
 
-  String? _getContextVariableName(MethodInvocation node) {
-    return node.argumentList.arguments.firstOrNull?.toString();
-  }
+  bool _isGrandParentPropertyAccess(MethodInvocation node) =>
+      node.parent?.parent is PropertyAccess;
+
+  String? _getContextVariableName(MethodInvocation node) =>
+      node.argumentList.arguments.firstOrNull?.toString();
 
   String? _getReplacementMethodName(MethodInvocation node) {
     final usedGetter = _getUsedGetter(node);
@@ -102,7 +106,7 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
     return switch (usedMethodName) {
       'of' => '${usedGetter}Of',
       'maybeOf' when usedGetter.length > 1 =>
-        'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1).toLowerCase()}Of',
+        'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1)}Of',
       'maybeOf' => 'maybe${usedGetter.toUpperCase()}Of',
       _ => null,
     };
