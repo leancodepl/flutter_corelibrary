@@ -1,3 +1,8 @@
+# 0.1.2
+
+- Bump `custom_lint` dev dependency to `0.7.6`.
+- Bump `flutter_hooks` dependency to `0.21.2`.
+
 # 0.1.1
 
 - Bump `bloc` to `9.0.0`.
