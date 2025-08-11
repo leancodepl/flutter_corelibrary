@@ -234,6 +234,16 @@ bool isExpressionExactlyType(
   return false;
 }
 
+/// Checks whether an instance creation uses only the specified named parameter.
+///
+/// Returns true when the [node] has:
+/// - Only one relevant named argument whose name equals [parameter]
+/// - The argument value is not a null literal and the argument type is not
+///   nullable (i.e. not `T?`)
+/// - No other arguments are present, except those explicitly listed in
+///   [ignoredParameters]
+///
+/// Otherwise returns false.
 bool isInstanceCreationExpressionOnlyUsingParameter(
   InstanceCreationExpression node, {
   required String parameter,
