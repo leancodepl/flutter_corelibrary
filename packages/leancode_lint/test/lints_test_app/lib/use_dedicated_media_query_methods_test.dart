@@ -36,9 +36,6 @@ class FooWidget extends StatelessWidget {
     MediaQuery.maybeOf(context)?.textScaler;
 
     // expect_lint: use_dedicated_media_query_methods
-    MediaQuery.maybeOf(context)?.textScaler;
-
-    // expect_lint: use_dedicated_media_query_methods
     MediaQuery.of(context).padding;
 
     // expect_lint: use_dedicated_media_query_methods
