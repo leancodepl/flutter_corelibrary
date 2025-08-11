@@ -1,3 +1,6 @@
+// Ignore for test purposes
+// ignore_for_file: unnecessary_statements, deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class FooWidget extends StatelessWidget {
@@ -19,6 +22,63 @@ class FooWidget extends StatelessWidget {
 
     // expect_lint: avoid_using_media_query_of
     MediaQuery.maybeOf(context)?.size.height;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.orientation;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.devicePixelRatio;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.textScaleFactor;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.textScaler;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.textScaler;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.of(context).padding;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.viewInsets;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.systemGestureInsets;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.viewPadding;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.alwaysUse24HourFormat;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.accessibleNavigation;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.invertColors;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.highContrast;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.onOffSwitchLabels;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.disableAnimations;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.navigationMode;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.gestureSettings;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.displayFeatures;
+
+    // expect_lint: avoid_using_media_query_of
+    MediaQuery.maybeOf(context)?.supportsShowingSystemContextMenu;
 
     return Container(
       // expect_lint: avoid_using_media_query_of
