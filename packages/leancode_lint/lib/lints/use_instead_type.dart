@@ -15,28 +15,28 @@ abstract base class UseInsteadType extends DartLintRule {
     required String problemMessage,
     required String correctionMessage,
     ErrorSeverity errorSeverity = ErrorSeverity.WARNING,
-  })  : _checkers = [
-          for (final MapEntry(key: preferredItemName, value: forbidden)
-              in replacements.entries)
-            (
-              preferredItemName,
-              TypeChecker.any([
-                for (final (:name, :packageName) in forbidden)
-                  if (packageName.startsWith('dart:'))
-                    TypeChecker.fromUrl('$packageName#$name')
-                  else
-                    TypeChecker.fromName(name, packageName: packageName),
-              ])
-            ),
-        ],
-        super(
-          code: LintCode(
-            name: lintCodeName,
-            problemMessage: problemMessage,
-            correctionMessage: correctionMessage,
-            errorSeverity: errorSeverity,
-          ),
-        );
+  }) : _checkers = [
+         for (final MapEntry(key: preferredItemName, value: forbidden)
+             in replacements.entries)
+           (
+             preferredItemName,
+             TypeChecker.any([
+               for (final (:name, :packageName) in forbidden)
+                 if (packageName.startsWith('dart:'))
+                   TypeChecker.fromUrl('$packageName#$name')
+                 else
+                   TypeChecker.fromName(name, packageName: packageName),
+             ]),
+           ),
+       ],
+       super(
+         code: LintCode(
+           name: lintCodeName,
+           problemMessage: problemMessage,
+           correctionMessage: correctionMessage,
+           errorSeverity: errorSeverity,
+         ),
+       );
 
   final List<(String preferredItemName, TypeChecker)> _checkers;
 
@@ -63,11 +63,7 @@ abstract base class UseInsteadType extends DartLintRule {
     });
   }
 
-  void _handleElement(
-    ErrorReporter reporter,
-    Element element,
-    AstNode node,
-  ) {
+  void _handleElement(ErrorReporter reporter, Element element, AstNode node) {
     if (_isInHide(node)) {
       return;
     }

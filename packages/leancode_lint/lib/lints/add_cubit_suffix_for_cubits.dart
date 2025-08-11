@@ -7,14 +7,14 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 /// class name.
 class AddCubitSuffixForYourCubits extends DartLintRule {
   const AddCubitSuffixForYourCubits()
-      : super(
-          code: const LintCode(
-            name: 'add_cubit_suffix_for_your_cubits',
-            problemMessage: 'Add Cubit suffix for your cubits.',
-            correctionMessage: 'Ex. {0}Cubit',
-            errorSeverity: ErrorSeverity.WARNING,
-          ),
-        );
+    : super(
+        code: const LintCode(
+          name: 'add_cubit_suffix_for_your_cubits',
+          problemMessage: 'Add Cubit suffix for your cubits.',
+          correctionMessage: 'Ex. {0}Cubit',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   void run(
@@ -22,34 +22,28 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration(
-      (node) {
-        final isCubitClass = _isCubitClass(node);
-        if (!isCubitClass) {
-          return;
-        }
+    context.registry.addClassDeclaration((node) {
+      final isCubitClass = _isCubitClass(node);
+      if (!isCubitClass) {
+        return;
+      }
 
-        final nameEndsWithCubit = _hasCubitSuffix(node.name.lexeme);
-        if (nameEndsWithCubit) {
-          return;
-        }
+      final nameEndsWithCubit = _hasCubitSuffix(node.name.lexeme);
+      if (nameEndsWithCubit) {
+        return;
+      }
 
-        reporter.atToken(
-          node.name,
-          code,
-          arguments: [node.name.lexeme],
-        );
-      },
-    );
+      reporter.atToken(node.name, code, arguments: [node.name.lexeme]);
+    });
   }
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
 
   bool _isCubitClass(ClassDeclaration node) => switch (node.declaredElement) {
-        final element? => const TypeChecker.fromName(
-            'Cubit',
-            packageName: 'bloc',
-          ).isSuperOf(element),
-        _ => false,
-      };
+    final element? => const TypeChecker.fromName(
+      'Cubit',
+      packageName: 'bloc',
+    ).isSuperOf(element),
+    _ => false,
+  };
 }

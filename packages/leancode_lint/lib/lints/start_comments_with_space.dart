@@ -7,13 +7,13 @@ import 'package:leancode_lint/helpers.dart';
 /// Forces comments/docs to start with a space.
 class StartCommentsWithSpace extends DartLintRule {
   const StartCommentsWithSpace()
-      : super(
-          code: const LintCode(
-            name: 'start_comments_with_space',
-            problemMessage: 'Start {0} with a space.',
-            errorSeverity: ErrorSeverity.WARNING,
-          ),
-        );
+    : super(
+        code: const LintCode(
+          name: 'start_comments_with_space',
+          problemMessage: 'Start {0} with a space.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   List<Fix> getFixes() {

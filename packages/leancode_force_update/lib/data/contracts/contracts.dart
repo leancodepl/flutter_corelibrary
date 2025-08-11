@@ -7,15 +7,12 @@ enum PlatformDTO {
   @JsonValue(0)
   android,
   @JsonValue(1)
-  ios
+  ios,
 }
 
 @ContractsSerializable()
 class VersionSupport with EquatableMixin implements Query<VersionSupportDTO> {
-  VersionSupport({
-    required this.platform,
-    required this.version,
-  });
+  VersionSupport({required this.platform, required this.version});
 
   factory VersionSupport.fromJson(Map<String, dynamic> json) =>
       _$VersionSupportFromJson(json);
@@ -49,8 +46,11 @@ class VersionSupportDTO with EquatableMixin {
 
   final VersionSupportResultDTO result;
 
-  List<Object?> get props =>
-      [currentlySupportedVersion, minimumRequiredVersion, result];
+  List<Object?> get props => [
+    currentlySupportedVersion,
+    minimumRequiredVersion,
+    result,
+  ];
 
   Map<String, dynamic> toJson() => _$VersionSupportDTOToJson(this);
 }
@@ -61,7 +61,7 @@ enum VersionSupportResultDTO {
   @JsonValue(1)
   updateSuggested,
   @JsonValue(2)
-  upToDate
+  upToDate,
 }
 
 @ContractsSerializable()

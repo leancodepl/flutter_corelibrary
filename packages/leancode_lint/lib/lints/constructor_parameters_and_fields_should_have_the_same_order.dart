@@ -8,15 +8,14 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     extends DartLintRule {
   const ConstructorParametersAndFieldsShouldHaveTheSameOrder()
-      : super(
-          code: const LintCode(
-            name:
-                'constructor_parameters_and_fields_should_have_the_same_order',
-            problemMessage:
-                'Class parameters and fields should have the same order.',
-            errorSeverity: ErrorSeverity.WARNING,
-          ),
-        );
+    : super(
+        code: const LintCode(
+          name: 'constructor_parameters_and_fields_should_have_the_same_order',
+          problemMessage:
+              'Class parameters and fields should have the same order.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   // TODO: disabled until stabilized. Add documentation.
   @override
@@ -28,22 +27,20 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addClassDeclaration(
-      (node) {
-        final fields = node.members.whereType<FieldDeclaration>().toList();
+    context.registry.addClassDeclaration((node) {
+      final fields = node.members.whereType<FieldDeclaration>().toList();
 
-        if (fields.isEmpty) {
-          return;
-        }
+      if (fields.isEmpty) {
+        return;
+      }
 
-        final constructors = node.members.whereType<ConstructorDeclaration>();
-        for (final constructor in constructors) {
-          if (!_hasValidOrder(constructor, fields)) {
-            reporter.atNode(constructor, code);
-          }
+      final constructors = node.members.whereType<ConstructorDeclaration>();
+      for (final constructor in constructors) {
+        if (!_hasValidOrder(constructor, fields)) {
+          reporter.atNode(constructor, code);
         }
-      },
-    );
+      }
+    });
   }
 
   bool _hasValidOrder(
@@ -81,9 +78,11 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
         )
         .toList();
 
-    for (var i = 0;
-        i < namedParameters.length && i < fieldsWithNamedParameters.length;
-        i++) {
+    for (
+      var i = 0;
+      i < namedParameters.length && i < fieldsWithNamedParameters.length;
+      i++
+    ) {
       if (!_compareEffectiveNames(
         fieldsWithNamedParameters[i],
         namedParameters[i],
@@ -92,9 +91,11 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
       }
     }
 
-    for (var i = 0;
-        i < unnamedParameters.length && i < fieldsWithUnnamedParameters.length;
-        i++) {
+    for (
+      var i = 0;
+      i < unnamedParameters.length && i < fieldsWithUnnamedParameters.length;
+      i++
+    ) {
       if (!_compareEffectiveNames(
         fieldsWithUnnamedParameters[i],
         unnamedParameters[i],
@@ -121,8 +122,8 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
 
     final effectiveParameterName =
         parameter.name?.lexeme.startsWith('_') ?? false
-            ? parameter.name?.lexeme.substring(1)
-            : parameter.name?.lexeme;
+        ? parameter.name?.lexeme.substring(1)
+        : parameter.name?.lexeme;
 
     return effectiveParameterName == effectiveFieldName;
   }

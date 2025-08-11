@@ -80,7 +80,7 @@ class LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
 
 // Should not report warning since it's prefixed (with app prefix + private)
 class _LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
-  const _LncdSliverPrefixedWidgetReturningSliver({super.key});
+  const _LncdSliverPrefixedWidgetReturningSliver();
 
   @override
   Widget build(BuildContext context) {

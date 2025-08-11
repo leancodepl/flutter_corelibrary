@@ -1,5 +1,6 @@
-# Unreleased
+# 10.0.2
 
+- Make CommandResponse public.
 - Bump `leancode_lint` dev dependency to `12.0.0`.
 - Bump `custom_lint` dev dependency to `0.6.4`.
 

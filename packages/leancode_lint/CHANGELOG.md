@@ -2,6 +2,31 @@
 
 - chore: Refactor lint codes to use built-in positional parameters.
 
+# 17.0.0
+
+- Support Flutter 3.32 and Dart 3.8
+- Enable the following lints:
+  - [`unnecessary_ignore`](https://dart.dev/tools/linter-rules/unnecessary_ignore)
+  - [`use_null_aware_elements`](https://dart.dev/tools/linter-rules/use_null_aware_elements)
+
+# 16.0.0
+
+- Support Flutter 3.29 and Dart 3.7
+- Enable the following lints:
+  - [`strict_top_level_inference`](https://dart.dev/tools/linter-rules/strict_top_level_inference)
+  - [`unnecessary_underscores`](https://dart.dev/tools/linter-rules/unnecessary_underscores)
+  - [`omit_obvious_property_types`](https://dart.dev/tools/linter-rules/omit_obvious_property_types)
+  - [`unnecessary_async`](https://dart.dev/tools/linter-rules/unnecessary_async)
+  - [`unsafe_variance`](https://dart.dev/tools/linter-rules/unsafe_variance)
+- Remove the following lints which have been removed from Dart:
+  - [`package_api_docs`](https://dart.dev/tools/linter-rules/package_api_docs)
+  - [`unsafe_html`](https://dart.dev/tools/linter-rules/unsafe_html)
+- Disable the [`require_trailing_commas`](https://dart.dev/tools/linter-rules/require_trailing_commas) lint as it conflicts with Dart 3.7 formatter (https://github.com/dart-lang/sdk/issues/60119).
+
+# 15.1.0
+
+- Support `analyzer` 7.0.0
+
 # 15.0.0
 
 - Enable the following lints:

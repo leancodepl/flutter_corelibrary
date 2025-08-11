@@ -2,8 +2,8 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart'
-// `Placeholder` is forbidden, we check that no lint is raised for a `hide`
-    hide
+        // `Placeholder` is forbidden, we check that no lint is raised for a `hide`
+        hide
         Placeholder;
 
 class SampleWidget extends StatelessWidget {

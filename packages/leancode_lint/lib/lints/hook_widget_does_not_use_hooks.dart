@@ -8,14 +8,14 @@ import 'package:leancode_lint/helpers.dart';
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
 class HookWidgetDoesNotUseHooks extends DartLintRule {
   const HookWidgetDoesNotUseHooks()
-      : super(
-          code: const LintCode(
-            name: 'hook_widget_does_not_use_hooks',
-            problemMessage: 'This HookWidget does not use hooks.',
-            correctionMessage: 'Convert it to a StatelessWidget',
-            errorSeverity: ErrorSeverity.WARNING,
-          ),
-        );
+    : super(
+        code: const LintCode(
+          name: 'hook_widget_does_not_use_hooks',
+          problemMessage: 'This HookWidget does not use hooks.',
+          correctionMessage: 'Convert it to a StatelessWidget',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   void run(
@@ -23,30 +23,29 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
     ErrorReporter reporter,
     CustomLintContext context,
   ) {
-    context.registry.addHookWidgetBody(
-      isExactly: true,
-      (node, diagnosticTarget) {
-        // get all hook expressions from build method
-        final hookExpressions = switch (node) {
-          ExpressionFunctionBody(expression: final AstNode node) ||
-          BlockFunctionBody(block: final AstNode node) =>
-            getAllInnerHookExpressions(node),
-          _ => <Expression>[],
-        };
+    context.registry.addHookWidgetBody(isExactly: true, (
+      node,
+      diagnosticTarget,
+    ) {
+      // get all hook expressions from build method
+      final hookExpressions = switch (node) {
+        ExpressionFunctionBody(expression: final AstNode node) ||
+        BlockFunctionBody(
+          block: final AstNode node,
+        ) => getAllInnerHookExpressions(node),
+        _ => <Expression>[],
+      };
 
-        if (hookExpressions.isNotEmpty) {
-          return;
-        }
+      if (hookExpressions.isNotEmpty) {
+        return;
+      }
 
-        reporter.atNode(diagnosticTarget, code);
-      },
-    );
+      reporter.atNode(diagnosticTarget, code);
+    });
   }
 
   @override
-  List<Fix> getFixes() => [
-        _ConvertHookWidgetToStatelessWidget(),
-      ];
+  List<Fix> getFixes() => [_ConvertHookWidgetToStatelessWidget()];
 }
 
 class _ConvertHookWidgetToStatelessWidget extends DartFix {

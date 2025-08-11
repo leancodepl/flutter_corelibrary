@@ -11,17 +11,18 @@ class ForceUpdateResult {
   });
 
   ForceUpdateResult.fromJson(Map<String, dynamic> json)
-      : versionAtTimeOfRequest =
-            Version.parse(json['versionAtTimeOfRequest'] as String),
-        conclusion = VersionSupportResultDTO.values[json['conclusion'] as int];
+    : versionAtTimeOfRequest = Version.parse(
+        json['versionAtTimeOfRequest'] as String,
+      ),
+      conclusion = VersionSupportResultDTO.values[json['conclusion'] as int];
 
   final Version versionAtTimeOfRequest;
   final VersionSupportResultDTO conclusion;
 
   Map<String, dynamic> toJson() => {
-        'versionAtTimeOfRequest': versionAtTimeOfRequest.toString(),
-        'conclusion': conclusion.index,
-      };
+    'versionAtTimeOfRequest': versionAtTimeOfRequest.toString(),
+    'conclusion': conclusion.index,
+  };
 }
 
 class ForceUpdateStorage {
