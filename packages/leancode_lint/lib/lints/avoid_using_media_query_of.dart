@@ -49,7 +49,7 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
-      if (_isValidMediaQueryUsageOrNA(node)) {
+      if (_isValidMediaQueryUsage(node)) {
         return;
       }
 
@@ -81,7 +81,7 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
     }
 
     final usedMaybe = methodReplacement.startsWith('maybe');
-    final usedGetter = _usedGetter(node);
+    final usedGetter = _getUsedGetter(node);
 
     return 'MediaQuery.$methodReplacement($contextVariableName)${usedMaybe && usedGetter != null ? '?' : ''}';
   }
@@ -91,14 +91,14 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
   }
 
   String? _getReplacementMethodName(MethodInvocation node) {
-    final usedGetter = _usedGetter(node);
+    final usedGetter = _getUsedGetter(node);
 
     if (usedGetter == null ||
         _supportedGetters.none((getter) => getter == usedGetter)) {
       return null;
     }
 
-    final usedMethodName = _usedMethodName(node);
+    final usedMethodName = _getUsedMethodName(node);
 
     return switch (usedMethodName) {
       'of' => '${usedGetter}Of',
@@ -109,20 +109,24 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
     };
   }
 
-  bool _isValidMediaQueryUsageOrNA(MethodInvocation node) {
+  bool _isValidMediaQueryUsage(MethodInvocation node) {
     if (node.beginToken.lexeme != 'MediaQuery') {
       return true;
     }
 
-    final methodName = _usedMethodName(node);
+    final methodName = _getUsedMethodName(node);
 
     return methodName != 'of' && methodName != 'maybeOf';
   }
 
-  String? _usedGetter(MethodInvocation node) =>
-      node.parent?.toSource().split('.').lastOrNull;
+  String? _getUsedGetter(MethodInvocation node) {
+    if (node.parent case PropertyAccess(:final propertyName)) {
+      return propertyName.name;
+    }
+    return null;
+  }
 
-  String _usedMethodName(MethodInvocation node) =>
+  String _getUsedMethodName(MethodInvocation node) =>
       node.function.beginToken.lexeme;
 }
 
