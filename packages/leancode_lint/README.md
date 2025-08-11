@@ -341,7 +341,7 @@ Container(),
 
 None.
 
-### `avoid_using_media_query_of`
+### `use_dedicated_media_query_methods`
 
 **AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf`. Instead prefer the dedicated methods (example: `MediaQuery.paddingOf(context)`).
 
