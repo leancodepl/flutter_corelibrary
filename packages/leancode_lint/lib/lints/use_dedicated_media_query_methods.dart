@@ -88,8 +88,10 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
 
     final usedMaybe = methodReplacement.startsWith('maybe');
     final usedGetter = _getUsedGetter(node);
+    final shouldAddQuestionMark =
+        usedMaybe && usedGetter != null && _isGrandParentPropertyAccess(node);
 
-    return 'MediaQuery.$methodReplacement($contextVariableName)${usedMaybe && usedGetter != null && _isGrandParentPropertyAccess(node) ? '?' : ''}';
+    return 'MediaQuery.$methodReplacement($contextVariableName)${shouldAddQuestionMark ? '?' : ''}';
   }
 
   bool _isGrandParentPropertyAccess(MethodInvocation node) =>
@@ -117,7 +119,7 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
   }
 
   bool _isMediaQuery(MethodInvocation node) => switch (node.target) {
-    SimpleIdentifier(:final name) => name == 'MediaQuery',
+    SimpleIdentifier(name: 'MediaQuery') => true,
     _ => false,
   };
 
