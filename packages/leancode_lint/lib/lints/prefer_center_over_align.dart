@@ -9,13 +9,11 @@ class PreferCenterOverAlign extends DartLintRule {
   const PreferCenterOverAlign()
     : super(
         code: const LintCode(
-          name: ruleName,
+          name: 'prefer_center_over_align',
           problemMessage:
               'Use the Center widget instead of the Align widget with the alignment parameter set to Alignment.center',
         ),
       );
-
-  static const ruleName = 'prefer_center_over_align';
 
   @override
   List<Fix> getFixes() => [_PreferCenterOverAlignFix()];
