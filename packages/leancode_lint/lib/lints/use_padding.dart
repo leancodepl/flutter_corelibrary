@@ -29,7 +29,7 @@ class UsePadding extends DartLintRule {
             node,
             parameter: 'padding',
             // Ignores key and child parameters because both Container and Padding have them
-            ignoredParameters: const ['key', 'child'],
+            ignoredParameters: const {'key', 'child'},
           )) {
         reporter.atNode(node.constructorName, code);
       }

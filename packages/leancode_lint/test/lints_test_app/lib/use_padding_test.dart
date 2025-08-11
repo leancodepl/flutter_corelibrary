@@ -1,3 +1,6 @@
+// Ignored for test purposes
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:flutter/material.dart';
 
 class UsePaddingTest {
@@ -27,5 +30,10 @@ class UsePaddingTest {
     Container(padding: const EdgeInsets.all(10));
 
     const Padding(padding: EdgeInsets.all(10), child: SizedBox());
+
+    Container(padding: null, child: const SizedBox());
+
+    const EdgeInsets? nullablePadding = null;
+    Container(padding: nullablePadding, child: const SizedBox());
   }
 }
