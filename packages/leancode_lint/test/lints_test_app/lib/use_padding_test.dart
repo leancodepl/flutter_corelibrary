@@ -11,6 +11,7 @@ class UsePaddingTest {
     // expect_lint: use_padding
     Container(margin: const EdgeInsets.all(10), child: const SizedBox());
 
+    // expect_lint: use_padding
     Container(
       margin: const EdgeInsets.all(10),
       key: const Key('key'),
