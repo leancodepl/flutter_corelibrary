@@ -32,5 +32,9 @@ class UseAlignTest {
     const Align(alignment: Alignment.bottomCenter, child: SizedBox());
 
     Container(alignment: null, child: const SizedBox());
+
+    const AlignmentGeometry? nullableAlignment = null;
+
+    Container(alignment: nullableAlignment, child: const SizedBox());
   }
 }
