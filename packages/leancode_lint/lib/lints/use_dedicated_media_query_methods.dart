@@ -131,12 +131,10 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
 
   String? _getUsedGetter(MethodInvocation node) {
     if (node.parent case PropertyAccess(
-      target: MethodInvocation(
-        :final methodName,
-        target: SimpleIdentifier(name: 'MediaQuery'),
-      ),
+      target: MethodInvocation(target: SimpleIdentifier(name: 'MediaQuery')),
+      propertyName: SimpleIdentifier(name: final propertyName),
     )) {
-      return methodName.name;
+      return propertyName;
     }
     return null;
   }
