@@ -244,7 +244,7 @@ packages:
       path: "../.."
       relative: true
     source: path
-    version: "16.0.0"
+    version: "17.0.0"
   logging:
     dependency: transitive
     description:
@@ -475,5 +475,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.7.0 <4.0.0"
+  dart: ">=3.8.0 <4.0.0"
   flutter: ">=3.21.0-13.0.pre.4"

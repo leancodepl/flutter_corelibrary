@@ -6,20 +6,19 @@ import 'package:flutter/material.dart';
 class UsePaddingTest {
   void test() {
     // expect_lint: use_padding
-    Container(padding: const EdgeInsets.all(10), child: const SizedBox());
+    Container(margin: const EdgeInsets.all(10), child: const SizedBox());
 
     // expect_lint: use_padding
-    Container(padding: const EdgeInsets.all(10), child: const SizedBox());
+    Container(margin: const EdgeInsets.all(10), child: const SizedBox());
 
-    // expect_lint: use_padding
     Container(
-      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       key: const Key('key'),
       child: const SizedBox(),
     );
 
     Container(
-      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       color: Colors.red,
       child: const SizedBox(),
     );
@@ -27,13 +26,13 @@ class UsePaddingTest {
     Container(color: Colors.red, child: const SizedBox());
 
     // expect_lint: use_padding
-    Container(padding: const EdgeInsets.all(10));
+    Container(margin: const EdgeInsets.all(10));
 
     const Padding(padding: EdgeInsets.all(10), child: SizedBox());
 
-    Container(padding: null, child: const SizedBox());
+    Container(margin: null, child: const SizedBox());
 
     const EdgeInsets? nullablePadding = null;
-    Container(padding: nullablePadding, child: const SizedBox());
+    Container(margin: nullablePadding, child: const SizedBox());
   }
 }
