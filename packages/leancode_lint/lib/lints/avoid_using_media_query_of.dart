@@ -11,11 +11,11 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
           name: 'avoid_using_media_query_of',
           errorSeverity: error.ErrorSeverity.WARNING,
           problemMessage: 'Avoid using `MediaQuery.of(context)`',
-          correctionMessage: 'Use dedicated `{0}` method instead',
+          correctionMessage: 'Use the dedicated `{0}` method instead',
         ),
       );
 
-  static const _supportedGetters = [
+  static const _supportedGetters = {
     'size',
     'orientation',
     'devicePixelRatio',
@@ -37,7 +37,7 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
     'gestureSettings',
     'displayFeatures',
     'supportsShowingSystemContextMenu',
-  ];
+  };
 
   @override
   List<Fix> getFixes() => [_ReplaceMediaQueryOfWithDedicatedMethodFix()];
@@ -126,8 +126,7 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
     return null;
   }
 
-  String _getUsedMethodName(MethodInvocation node) =>
-      node.function.beginToken.lexeme;
+  String _getUsedMethodName(MethodInvocation node) => node.methodName.name;
 }
 
 class _ReplaceMediaQueryOfWithDedicatedMethodFix extends DartFix {

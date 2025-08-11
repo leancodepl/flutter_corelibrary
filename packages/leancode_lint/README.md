@@ -341,9 +341,11 @@ Container(),
 
 None.
 
-### `avoid_single_child_in_multi_child_widgets`
+### `avoid_using_media_query_of`
 
-**AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf`. Instead prefer dedicated methods (example: `MediaQuery.paddingOf(context)`).
+**AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf`. Instead prefer the dedicated methods (example: `MediaQuery.paddingOf(context)`).
+
+Dedicated methods offer better performance by minimizing unnecessary widget rebuilds.
 
 **BAD:**
 
