@@ -54,8 +54,6 @@ class UsePadding extends DartLintRule {
 }
 
 class _UsePaddingFix extends DartFix {
-  _UsePaddingFix();
-
   @override
   void run(
     CustomLintResolver resolver,
