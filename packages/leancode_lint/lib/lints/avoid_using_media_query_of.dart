@@ -93,8 +93,7 @@ class AvoidUsingMediaQueryOfLint extends DartLintRule {
   String? _getReplacementMethodName(MethodInvocation node) {
     final usedGetter = _getUsedGetter(node);
 
-    if (usedGetter == null ||
-        _supportedGetters.none((getter) => getter == usedGetter)) {
+    if (usedGetter == null || !_supportedGetters.contains(usedGetter)) {
       return null;
     }
 
