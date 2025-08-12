@@ -12,7 +12,7 @@ class UsePadding extends DartLintRule {
         code: const LintCode(
           name: ruleName,
           problemMessage:
-              'Use Padding widget instead of the Container widget with only the padding parameter',
+              'Use Padding widget instead of the Container widget with only the margin parameter',
         ),
       );
 
