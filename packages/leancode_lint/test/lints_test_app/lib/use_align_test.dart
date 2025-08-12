@@ -3,13 +3,20 @@
 
 import 'package:flutter/material.dart';
 
+// dart format off
 class UseAlignTest {
   void test() {
     // expect_lint: use_align
-    Container(alignment: Alignment.center, child: const SizedBox());
+    Container(
+      alignment: Alignment.center,
+      child: const SizedBox(),
+    );
 
     // expect_lint: use_align
-    Container(alignment: Alignment.centerLeft, child: const SizedBox());
+    Container(
+      alignment: Alignment.centerLeft,
+      child: const SizedBox(),
+    );
 
     // expect_lint: use_align
     Container(
@@ -24,17 +31,31 @@ class UseAlignTest {
       child: const SizedBox(),
     );
 
-    Container(color: Colors.red, child: const SizedBox());
+    Container(
+      color: Colors.red,
+      child: const SizedBox(),
+    );
 
     // expect_lint: use_align
-    Container(alignment: Alignment.center);
+    Container(
+      alignment: Alignment.center,
+    );
 
-    const Align(alignment: Alignment.bottomCenter, child: SizedBox());
+    const Align(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(),
+    );
 
-    Container(alignment: null, child: const SizedBox());
+    Container(
+      alignment: null,
+      child: const SizedBox(),
+    );
 
     const AlignmentGeometry? nullableAlignment = null;
 
-    Container(alignment: nullableAlignment, child: const SizedBox());
+    Container(
+      alignment: nullableAlignment,
+      child: const SizedBox(),
+    );
   }
 }
