@@ -11,6 +11,7 @@ import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
 import 'package:leancode_lint/lints/use_align.dart';
+import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
 import 'package:leancode_lint/lints/use_design_system_item.dart';
 
 PluginBase createPlugin() => _Linter();
@@ -28,6 +29,7 @@ class _Linter extends PluginBase {
     const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
     const AvoidSingleChildInMultiChildWidgets(),
     const UseAlign(),
+    const UseDedicatedMediaQueryMethods(),
   ];
 
   @override
