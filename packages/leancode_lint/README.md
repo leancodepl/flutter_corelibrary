@@ -343,7 +343,7 @@ None.
 
 ### `use_dedicated_media_query_methods`
 
-**AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf` to access only one property. Instead, prefer the dedicated methods (example: `MediaQuery.paddingOf(context)`).
+**AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf` to access only one property. Instead, prefer dedicated methods, for example `MediaQuery.paddingOf(context)`.
 
 Dedicated methods offer better performance by minimizing unnecessary widget rebuilds.
 
