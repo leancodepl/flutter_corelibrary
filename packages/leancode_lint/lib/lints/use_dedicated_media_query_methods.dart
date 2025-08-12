@@ -51,10 +51,6 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addMethodInvocation((node) {
-      if (!_isMediaQuery(node)) {
-        return;
-      }
-
       if (_isValidMediaQueryUsage(node)) {
         return;
       }
@@ -107,9 +103,7 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
       return null;
     }
 
-    final usedMethodName = _getUsedMethodName(node);
-
-    return switch (usedMethodName) {
+    return switch (node.methodName.name) {
       'of' => '${usedGetter}Of',
       'maybeOf' when usedGetter.length > 1 =>
         'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1)}Of',
@@ -118,28 +112,23 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
     };
   }
 
-  bool _isMediaQuery(MethodInvocation node) => switch (node.target) {
-    SimpleIdentifier(name: 'MediaQuery') => true,
-    _ => false,
+  bool _isValidMediaQueryUsage(MethodInvocation node) => switch (node) {
+    MethodInvocation(
+      target: SimpleIdentifier(name: 'MediaQuery'),
+      methodName: SimpleIdentifier(name: 'of' || 'maybeOf'),
+    ) =>
+      false,
+    _ => true,
   };
 
-  bool _isValidMediaQueryUsage(MethodInvocation node) {
-    final methodName = _getUsedMethodName(node);
-
-    return methodName != 'of' && methodName != 'maybeOf';
-  }
-
-  String? _getUsedGetter(MethodInvocation node) {
-    if (node.parent case PropertyAccess(
+  String? _getUsedGetter(MethodInvocation node) => switch (node.parent) {
+    PropertyAccess(
       target: MethodInvocation(target: SimpleIdentifier(name: 'MediaQuery')),
       propertyName: SimpleIdentifier(name: final propertyName),
-    )) {
-      return propertyName;
-    }
-    return null;
-  }
-
-  String _getUsedMethodName(MethodInvocation node) => node.methodName.name;
+    ) =>
+      propertyName,
+    _ => null,
+  };
 }
 
 class _ReplaceMediaQueryOfWithDedicatedMethodFix extends DartFix {
