@@ -58,3 +58,4 @@ class UsePaddingTest {
     );
   }
 }
+// dart format on
