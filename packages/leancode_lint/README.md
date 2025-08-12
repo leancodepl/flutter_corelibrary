@@ -377,6 +377,80 @@ class MyWidget extends StatelessWidget {
 
 None
 
+### `avoid_missing_dispose`
+
+**DO** dispose of resources that require `dispose()` in StatefulWidget `State` classes.
+
+Resources such as controllers and focus nodes must be disposed in the `dispose()` method to prevent memory leaks.
+
+**BAD:**`
+
+```dart
+class MyWidgetState extends State<MyWidget> {
+  late final TextEditingController controller = TextEditingController();
+  late final FocusNode focusNode = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: controller, focusNode: focusNode);
+  }
+}
+```
+
+**BAD:**
+
+```dart
+class MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: TextEditingController());
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidgetState extends State<MyWidget> {
+  late final TextEditingController controller;
+  late final FocusNode focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+    focusNode = FocusNode();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: controller, focusNode: focusNode);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
+}
+```
+
+#### Configuration
+
+```yaml
+custom_lint:
+  rules:
+    - avoid_missing_dispose:
+      ignored_instances:
+        - ignore: AnimationController
+          from_package: flutter
+```
+
+- `ignored_instances` - an optional YamlList - skips dispose checks for specified types. This allows disabling the lint rule for classes where dispose method checks are not needed.
+  - `ignore` - A required String - name of the instance to ignore
+  - `from_package` - A required String - name of the source package
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.
