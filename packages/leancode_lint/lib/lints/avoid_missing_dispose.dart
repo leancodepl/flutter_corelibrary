@@ -24,9 +24,9 @@ class AvoidMissingDisposeConfig {
     this.ignoredInstancesCheckers = const [],
   });
 
-  factory AvoidMissingDisposeConfig.fromConfig(Map<String, Object?> json) {
+  factory AvoidMissingDisposeConfig.fromConfig(Map<String, YamlList?> json) {
     final ignoredInstances =
-        (json['ignored_instances'] as YamlList?)?.nodes
+        json['ignored_instances']?.nodes
             .map(
               (e) => _IgnoredInstance(
                 name: (e as YamlMap)['ignore'] as String,
@@ -67,7 +67,7 @@ class AvoidMissingDispose extends DartLintRule {
 
   factory AvoidMissingDispose.fromConfigs(CustomLintConfigs configs) {
     final config = AvoidMissingDisposeConfig.fromConfig(
-      configs.rules[ruleName]?.json ?? {},
+      configs.rules[ruleName]?.json.cast<String, YamlList?>() ?? {},
     );
 
     return AvoidMissingDispose(config: config);
