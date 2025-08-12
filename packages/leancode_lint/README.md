@@ -379,7 +379,7 @@ None
 
 ### `use_padding`
 
-**DO** Use Padding widget instead of the Container widget with only the padding parameter
+**DO** Use Padding widget instead of the Container widget with only the margin parameter
 
 **BAD:**
 
