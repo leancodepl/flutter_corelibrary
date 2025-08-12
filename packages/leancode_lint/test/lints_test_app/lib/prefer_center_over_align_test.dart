@@ -3,19 +3,37 @@
 
 import 'package:flutter/material.dart';
 
+// dart format off
 class PreferCenterOverAlignTest {
   void test() {
     // expect_lint: prefer_center_over_align
-    const Align(child: SizedBox());
+    const Align(
+      child: SizedBox(),
+    );
 
     // expect_lint: prefer_center_over_align
-    const Align(alignment: Alignment(0, 0), child: SizedBox());
+    const Align(
+      alignment: Alignment(0, 0),
+      child: SizedBox(),
+    );
 
     // expect_lint: prefer_center_over_align
-    const Align(alignment: Alignment(0.0, 0.0), child: SizedBox());
+    const Align(
+      alignment: Alignment(0.0, 0.0),
+      child: SizedBox(),
+    );
 
     // expect_lint: prefer_center_over_align
-    const Align(alignment: Alignment.center, child: SizedBox());
+    const Align(
+      alignment: Alignment(0, 0.0),
+      child: SizedBox(),
+    );
+
+    // expect_lint: prefer_center_over_align
+    const Align(
+      alignment: Alignment.center,
+      child: SizedBox(),
+    );
 
     // expect_lint: prefer_center_over_align
     const Align(
@@ -25,11 +43,22 @@ class PreferCenterOverAlignTest {
     );
 
     // expect_lint: prefer_center_over_align
-    const Align(alignment: Alignment(0, 0), key: Key('key'), child: SizedBox());
+    const Align(
+      alignment: Alignment(0, 0),
+      key: Key('key'),
+      child: SizedBox(),
+    );
 
     // expect_lint: prefer_center_over_align
     const Align(
       alignment: Alignment(0.0, 0.0),
+      widthFactor: 0.5,
+      heightFactor: 1,
+      child: SizedBox(),
+    );
+
+    // expect_lint: prefer_center_over_align
+    const Align(
       widthFactor: 0.5,
       heightFactor: 1,
       child: SizedBox(),
@@ -48,10 +77,18 @@ class PreferCenterOverAlignTest {
       child: SizedBox(),
     );
 
-    const Align(alignment: Alignment.centerLeft, child: SizedBox());
+    const Align(
+      alignment: Alignment.centerLeft,
+      child: SizedBox(),
+    );
 
-    const Center(child: SizedBox());
+    const Center(
+      child: SizedBox(),
+    );
 
-    const Align(alignment: Alignment.bottomCenter, child: SizedBox());
+    const Align(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(),
+    );
   }
 }

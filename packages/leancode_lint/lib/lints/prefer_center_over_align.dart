@@ -63,25 +63,25 @@ class PreferCenterOverAlign extends DartLintRule {
       argument.name.label.name == 'alignment';
 
   bool _isValueAlignmentCenter(NamedExpression argument) {
-    if (argument.expression case PrefixedIdentifier(name: 'Alignment.center')) {
-      return true;
-    } else if (argument.expression case InstanceCreationExpression(
-      staticType: final type,
-      argumentList: ArgumentList(:final arguments),
-    ) when type?.getDisplayString() == 'Alignment') {
-      if (arguments.length == 2 &&
-          arguments.every(
-            (argument) => switch (argument) {
-              IntegerLiteral(value: final value) when value == 0 => true,
-              DoubleLiteral(value: final value) when value == 0.0 => true,
-              _ => false,
-            },
-          )) {
-        return true;
-      }
-    }
-    return false;
+    return switch (argument.expression) {
+      PrefixedIdentifier(name: 'Alignment.center') => true,
+      InstanceCreationExpression(
+        staticType: final type,
+        argumentList: ArgumentList(:final arguments),
+      )
+          when type?.getDisplayString() == 'Alignment' &&
+              arguments.length == 2 =>
+        _isEveryValueZero(arguments),
+      _ => false,
+    };
   }
+
+  bool _isEveryValueZero(List<Expression> arguments) => arguments.every(
+    (argument) => switch (argument) {
+      IntegerLiteral(value: 0) || DoubleLiteral(value: 0) => true,
+      _ => false,
+    },
+  );
 }
 
 class _PreferCenterOverAlignData {
