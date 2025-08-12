@@ -471,11 +471,11 @@ None
 
 ### `avoid_missing_dispose`
 
-**DO** dispose of disposable resources in StatefulWidget State classes.
+**DO** dispose of resources that require `dispose()` in StatefulWidget `State` classes.
 
-Disposable resources like controllers, and focus nodes must be properly disposed in the `dispose()` method to prevent memory leaks.
+Resources such as controllers and focus nodes must be disposed in the `dispose()` method to prevent memory leaks.
 
-**BAD:**
+**BAD:**`
 
 ```dart
 class MyWidgetState extends State<MyWidget> {
