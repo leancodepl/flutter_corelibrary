@@ -11,8 +11,8 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
 import 'package:yaml/yaml.dart';
 
-class _IgnoredInstance {
-  const _IgnoredInstance({required this.name, required this.packageName});
+class _IgnoredTypes {
+  const _IgnoredTypes({required this.name, required this.packageName});
 
   final String name;
   final String packageName;
@@ -20,15 +20,15 @@ class _IgnoredInstance {
 
 class AvoidMissingDisposeConfig {
   const AvoidMissingDisposeConfig({
-    this.ignoredInstances = const {},
+    this.ignoredTypes = const {},
     this.ignoredInstancesCheckers = const [],
   });
 
   factory AvoidMissingDisposeConfig.fromConfig(Map<String, YamlList?> json) {
-    final ignoredInstances =
+    final ignoredTypes =
         json['ignored_instances']?.nodes
             .map(
-              (e) => _IgnoredInstance(
+              (e) => _IgnoredTypes(
                 name: (e as YamlMap)['ignore'] as String,
                 packageName: e['from_package'] as String,
               ),
@@ -36,9 +36,9 @@ class AvoidMissingDisposeConfig {
             .toSet() ??
         const {};
     return AvoidMissingDisposeConfig(
-      ignoredInstances: ignoredInstances,
+      ignoredTypes: ignoredTypes,
       ignoredInstancesCheckers: [
-        for (final _IgnoredInstance(:name, :packageName) in ignoredInstances)
+        for (final _IgnoredTypes(:name, :packageName) in ignoredTypes)
           if (packageName.startsWith('dart:'))
             TypeChecker.fromUrl('$packageName#$name')
           else
@@ -47,7 +47,7 @@ class AvoidMissingDisposeConfig {
     );
   }
 
-  final Set<_IgnoredInstance> ignoredInstances;
+  final Set<_IgnoredTypes> ignoredTypes;
   final List<TypeChecker> ignoredInstancesCheckers;
 }
 
@@ -199,13 +199,7 @@ class AvoidMissingDispose extends DartLintRule {
   ConstructorDeclaration? _getConstructorDeclaration(
     ClassDeclaration classNode,
   ) {
-    return classNode.members.firstWhereOrNull(
-          (member) => switch (member) {
-            final ConstructorDeclaration _ => true,
-            _ => false,
-          },
-        )
-        as ConstructorDeclaration?;
+    return classNode.members.whereType<ConstructorDeclaration>().firstOrNull;
   }
 
   ClassDeclaration? _getContainingClass(AstNode node) {
