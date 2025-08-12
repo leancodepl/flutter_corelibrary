@@ -8,8 +8,11 @@ class FooWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dart format off
     // expect_lint: use_dedicated_media_query_methods
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size
+    .width;
+    // dart format on
 
     // expect_lint: use_dedicated_media_query_methods
     final padding = MediaQuery.of(context).padding;
@@ -20,8 +23,11 @@ class FooWidget extends StatelessWidget {
 
     MediaQuery.maybeOf(context);
 
+    // dart format off
     // expect_lint: use_dedicated_media_query_methods
-    MediaQuery.maybeOf(context)?.size.height;
+    MediaQuery.maybeOf(context)?.size
+    .height;
+    // dart format on
 
     // expect_lint: use_dedicated_media_query_methods
     MediaQuery.maybeOf(context)?.orientation;
@@ -75,8 +81,12 @@ class FooWidget extends StatelessWidget {
     MediaQuery.maybeOf(context)?.supportsShowingSystemContextMenu;
 
     return Container(
+      // dart format off
+      height: 
       // expect_lint: use_dedicated_media_query_methods
-      height: MediaQuery.of(context).size.height * 0.8,
+      MediaQuery.of(context).size
+      .height * 0.8,
+      // dart format on
       width: width,
       padding: padding,
     );
@@ -88,19 +98,29 @@ class FooWithDifferentBuildContextNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext customContextName) {
+    // dart format off
+    final width = 
     // expect_lint: use_dedicated_media_query_methods
-    final width = MediaQuery.of(customContextName).size.width;
-
+    MediaQuery.of(customContextName).size
+    .width;
+    // dart format on
+    // dart format off
+    final padding = 
     // expect_lint: use_dedicated_media_query_methods
-    final padding = MediaQuery.of(customContextName).padding;
+    MediaQuery.of(customContextName).padding;
+    // dart format on
 
     MediaQuery.of(customContextName).runtimeType;
 
     MediaQuery.of(customContextName);
 
     return Container(
+      // dart format off
+      height:
       // expect_lint: use_dedicated_media_query_methods
-      height: MediaQuery.of(customContextName).size.height * 0.8,
+      MediaQuery.of(customContextName).size
+      .height * 0.8,
+      // dart format on
       width: width,
       padding: padding,
     );
