@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/share_button.dart';
+import 'package:leancode_debug_page/src/ui/typography.dart';
 import 'package:logging/logging.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -47,12 +48,14 @@ class LoggerLogDetailsScreen extends StatelessWidget {
       MapView(map: logDetailsMap),
       const SizedBox(height: 16),
       if (logRecord.message.isNotEmpty) ...[
-        const Text(
+        Text(
           'Message:',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: DebugPageTypography.medium.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
-        Text(logRecord.message),
+        Text(logRecord.message, style: DebugPageTypography.medium),
         const SizedBox(height: 16),
       ],
     ];
@@ -60,9 +63,11 @@ class LoggerLogDetailsScreen extends StatelessWidget {
     // Add stack trace if available
     if (logRecord.stackTrace != null) {
       widgets.addAll([
-        const Text(
+        Text(
           'Stack trace:',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: DebugPageTypography.medium.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         Container(
@@ -76,9 +81,8 @@ class LoggerLogDetailsScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Text(
               logRecord.stackTrace.toString(),
-              style: const TextStyle(
+              style: DebugPageTypography.small.copyWith(
                 fontFamily: 'monospace',
-                fontSize: 12,
               ),
             ),
           ),
