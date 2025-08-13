@@ -100,12 +100,9 @@ class LoggerLogDetailsScreen extends StatelessWidget {
         title: const Text('Logger log details'),
         backgroundColor: logRecord.level.color,
       ),
-      body: SingleChildScrollView(
+      body: ListView(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: widgets,
-        ),
+        children: widgets,
       ),
     );
   }
