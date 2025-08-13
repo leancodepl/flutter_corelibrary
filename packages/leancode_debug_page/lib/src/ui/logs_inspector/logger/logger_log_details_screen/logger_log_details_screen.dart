@@ -44,7 +44,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
     }
 
     // Build the widgets list
-    final List<Widget> widgets = [
+    final widgets = [
       MapView(map: logDetailsMap),
       const SizedBox(height: 16),
       if (logRecord.message.isNotEmpty) ...[
