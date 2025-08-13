@@ -70,8 +70,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(12),
+        DecoratedBox(
           decoration: BoxDecoration(
             color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(8),
@@ -79,6 +78,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
           ),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.all(12),
             child: Text(
               logRecord.stackTrace.toString(),
               style: DebugPageTypography.small.copyWith(
