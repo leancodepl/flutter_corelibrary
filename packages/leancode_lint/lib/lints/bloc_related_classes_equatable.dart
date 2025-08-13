@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -25,8 +25,8 @@ class BlocRelatedClassesEquatable extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addBloc((node, data) {
-      void check(InterfaceElement? element) {
-        if (element is! ClassElement ||
+      void check(InterfaceElement2? element) {
+        if (element is! ClassElement2 ||
             !inSameFile(data.blocElement, element)) {
           return;
         }
@@ -34,10 +34,12 @@ class BlocRelatedClassesEquatable extends DartLintRule {
         final isEquatableMixin = element.mixins.any(
           TypeCheckers.equatableMixin.isExactlyType,
         );
-        final isEquatable = TypeCheckers.equatable.isAssignableFrom(element);
+        final isEquatable = TypeCheckers.equatable.isAssignableFromType(
+          element.thisType,
+        );
 
         if (!isEquatableMixin && !isEquatable) {
-          reporter.atElement(element, code, arguments: [element.name]);
+          reporter.atElement2(element, code, arguments: [element.displayName]);
         }
       }
 
@@ -60,13 +62,12 @@ class AddMixin extends DartFix {
     reporter
         .createChangeBuilder(message: 'Add EquatableMixin', priority: 1)
         .addDartFileEdit(
-          (builder) =>
-              builder
-                ..importLibrary(Uri.parse('package:equatable/equatable.dart'))
-                ..addSimpleInsertion(
-                  analysisError.offset + analysisError.length,
-                  ' with EquatableMixin',
-                ),
+          (builder) => builder
+            ..importLibrary(Uri.parse('package:equatable/equatable.dart'))
+            ..addSimpleInsertion(
+              analysisError.offset + analysisError.length,
+              ' with EquatableMixin',
+            ),
         );
   }
 }

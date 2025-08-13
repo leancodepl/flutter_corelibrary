@@ -31,14 +31,23 @@ class BlocConstConstructors extends DartLintRule {
       };
 
       for (final element in elements) {
-        if (element.unnamedConstructor case final unnamedConstructor?
+        if (element.unnamedConstructor2 case final unnamedConstructor?
             when !unnamedConstructor.isConst &&
                 inSameFile(data.blocElement, element)) {
-          reporter.atElement(
-            unnamedConstructor.isSynthetic ? element : unnamedConstructor,
-            code,
-            arguments: [element.name],
-          );
+          if (unnamedConstructor.isSynthetic) {
+            reporter.atElement2(
+              element,
+              code,
+              arguments: [element.displayName],
+            );
+          } else {
+            reporter.atOffset(
+              offset: unnamedConstructor.firstFragment.typeNameOffset!,
+              length: unnamedConstructor.firstFragment.typeName!.length,
+              errorCode: code,
+              arguments: [element.displayName],
+            );
+          }
         }
       }
     });

@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -21,12 +21,12 @@ class BlocRelatedClassNaming extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addBloc((node, data) {
-      void checkClass(InterfaceElement? element, String type, String suffix) {
+      void checkClass(InterfaceElement2? element, String type, String suffix) {
         final expectedName = '${data.baseName}$suffix';
         if (element != null &&
-            element.name != expectedName &&
+            element.displayName != expectedName &&
             inSameFile(data.blocElement, element)) {
-          reporter.atElement(
+          reporter.atElement2(
             element,
             code,
             arguments: [node.name.lexeme, type, expectedName],

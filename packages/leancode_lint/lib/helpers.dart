@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -73,15 +73,15 @@ List<InvocationExpression> getAllInnerHookExpressions(AstNode node) {
 
 /// Given an instance creation, returns the builder function body if the node is a HookBuilder.
 FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
-  final classElement = node.constructorName.type.element;
-  if (classElement == null) {
+  final type = node.constructorName.type.type;
+  if (type == null) {
     return null;
   }
 
   final isHookBuilder = const TypeChecker.any([
     TypeCheckers.hookBuilder,
     TypeCheckers.hookConsumer,
-  ]).isExactly(classElement);
+  ]).isExactlyType(type);
   if (!isHookBuilder) {
     return null;
   }
@@ -127,14 +127,15 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
   };
 }
 
-bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-  final element? => const TypeChecker.any([
-    TypeCheckers.statelessWidget,
-    TypeCheckers.state,
-    TypeCheckers.hookWidget,
-  ]).isSuperOf(element),
-  _ => false,
-};
+bool isWidgetClass(ClassDeclaration node) =>
+    switch (node.declaredFragment?.element.thisType) {
+      final type? => const TypeChecker.any([
+        TypeCheckers.statelessWidget,
+        TypeCheckers.state,
+        TypeCheckers.hookWidget,
+      ]).isSuperTypeOf(type),
+      _ => false,
+    };
 
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
@@ -178,8 +179,8 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       }
     });
     addClassDeclaration((node) {
-      final element = node.declaredElement;
-      if (element == null) {
+      final thisType = node.declaredFragment?.element.thisType;
+      if (thisType == null) {
         return;
       }
 
@@ -191,18 +192,18 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       final AstNode diagnosticNode;
       if (isExactly) {
         final superclass = node.extendsClause?.superclass;
-        final superclassElement = superclass?.element;
-        if (superclass == null || superclassElement == null) {
+        final superclassType = superclass?.type;
+        if (superclass == null || superclassType == null) {
           return;
         }
 
-        final isDirectHookWidget = checker.isExactly(superclassElement);
+        final isDirectHookWidget = checker.isExactlyType(superclassType);
         if (!isDirectHookWidget) {
           return;
         }
         diagnosticNode = superclass;
       } else {
-        final isHookWidget = checker.isSuperOf(element);
+        final isHookWidget = checker.isSuperTypeOf(thisType);
         if (!isHookWidget) {
           return;
         }
@@ -229,17 +230,17 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
 
 typedef _BlocData = ({
   String baseName,
-  InterfaceElement blocElement,
-  InterfaceElement stateElement,
-  InterfaceElement? eventElement,
-  InterfaceElement? presentationEventElement,
+  InterfaceElement2 blocElement,
+  InterfaceElement2 stateElement,
+  InterfaceElement2? eventElement,
+  InterfaceElement2? presentationEventElement,
 });
 
 _BlocData? _maybeBlocData(ClassDeclaration clazz) {
-  final blocElement = clazz.declaredElement;
+  final blocElement = clazz.declaredFragment?.element;
 
   if (blocElement == null ||
-      !TypeCheckers.blocBase.isAssignableFrom(blocElement)) {
+      !TypeCheckers.blocBase.isAssignableFromType(blocElement.thisType)) {
     return null;
   }
 
@@ -253,8 +254,8 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
     return null;
   }
 
-  final stateElement = stateType.element;
-  if (stateElement is! InterfaceElement) {
+  final stateElement = stateType.element3;
+  if (stateElement is! InterfaceElement2) {
     return null;
   }
 
@@ -262,8 +263,8 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
       .firstWhereOrNull(TypeCheckers.bloc.isExactlyType)
       ?.typeArguments
       .firstOrNull
-      ?.element;
-  if (eventElement is! InterfaceElement?) {
+      ?.element3;
+  if (eventElement is! InterfaceElement2?) {
     return null;
   }
 
@@ -271,8 +272,8 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
       .firstWhereOrNull(TypeCheckers.blocPresentation.isExactlyType)
       ?.typeArguments
       .elementAtOrNull(1)
-      ?.element;
-  if (presentationEventElement is! InterfaceElement?) {
+      ?.element3;
+  if (presentationEventElement is! InterfaceElement2?) {
     return null;
   }
 
@@ -285,23 +286,21 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
   );
 }
 
-bool inSameFile(Element element1, Element element2) {
-  final file1 = element1.source?.uri;
-  final file2 = element2.source?.uri;
+bool inSameFile(Element2 element1, Element2 element2) {
+  final library1 = element1.library2?.uri;
+  final library2 = element2.library2?.uri;
 
-  return file1 != null && file2 != null && file1 == file2;
+  return library1 != null && library2 != null && library1 == library2;
 }
 
-extension TypeSubclasses on InterfaceElement {
-  Iterable<ClassElement> get subclasses {
+extension TypeSubclasses on InterfaceElement2 {
+  Iterable<ClassElement2> get subclasses {
     final typeChecker = TypeChecker.fromStatic(thisType);
-    return library.units
-        .expand((u) => u.classes)
-        .where(
-          (clazz) =>
-              typeChecker.isAssignableFrom(clazz) &&
-              !typeChecker.isExactly(clazz),
-        );
+    return library2.classes.where(
+      (clazz) =>
+          typeChecker.isAssignableFromType(clazz.thisType) &&
+          !typeChecker.isExactlyType(clazz.thisType),
+    );
   }
 }
 

@@ -38,10 +38,10 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
   ) {
     context.registry.addInstanceCreationExpression((node) {
       final constructorName = node.constructorName.type;
-      if (constructorName.element case final typeElement?) {
+      if (constructorName.type case final type?) {
         // is it something we want to complain about?
         final match = _complain.firstWhereOrNull(
-          (e) => e.$2.isExactly(typeElement),
+          (e) => e.$2.isExactlyType(type),
         );
         if (match == null) {
           return;
@@ -49,7 +49,7 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
 
         // does it have a children argument?
         var children = node.argumentList.arguments.firstWhereOrNull(
-          (e) => e.staticParameterElement?.name == match.$1,
+          (e) => e.correspondingParameter?.displayName == match.$1,
         );
         if (children == null) {
           return;

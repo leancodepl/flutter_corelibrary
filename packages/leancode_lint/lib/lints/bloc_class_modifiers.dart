@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -21,8 +21,8 @@ class BlocClassModifiers extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addBloc((node, data) {
-      void checkHierarchy(InterfaceElement? element) {
-        if (element is! ClassElement ||
+      void checkHierarchy(InterfaceElement2? element) {
+        if (element is! ClassElement2 ||
             !inSameFile(data.blocElement, element)) {
           return;
         }
@@ -31,19 +31,19 @@ class BlocClassModifiers extends DartLintRule {
 
         if (subclasses.isNotEmpty) {
           if (!element.isSealed) {
-            reporter.atElement(
+            reporter.atElement2(
               element,
               code,
-              arguments: [element.name, 'sealed'],
+              arguments: [element.displayName, 'sealed'],
               data: 'sealed',
             );
           }
         } else {
           if (!element.isFinal) {
-            reporter.atElement(
+            reporter.atElement2(
               element,
               code,
-              arguments: [element.name, 'final'],
+              arguments: [element.displayName, 'final'],
               data: 'final',
             );
           }
