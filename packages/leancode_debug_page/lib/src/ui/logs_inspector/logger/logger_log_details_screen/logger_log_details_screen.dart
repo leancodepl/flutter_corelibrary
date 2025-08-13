@@ -110,30 +110,32 @@ class LoggerLogDetailsScreen extends StatelessWidget {
   }
 
   String _shareLogDetails() {
-    final buffer = StringBuffer();
-    buffer.writeln('Logger: ${logRecord.loggerName}');
-    buffer.writeln('Level: ${logRecord.level}');
-    buffer.writeln('Time: ${logRecord.time}');
-    buffer.writeln('Sequence: ${logRecord.sequenceNumber}');
-    
+    final buffer = StringBuffer()
+      ..writeln('Logger: ${logRecord.loggerName}')
+      ..writeln('Level: ${logRecord.level}')
+      ..writeln('Time: ${logRecord.time}')
+      ..writeln('Sequence: ${logRecord.sequenceNumber}');
+
     if (logRecord.zone != Zone.root) {
       buffer.writeln('Zone: ${logRecord.zone}');
     }
-    
+
     if (logRecord.error != null) {
       buffer.writeln('Error: ${logRecord.error}');
     }
-    
+
     if (logRecord.message.isNotEmpty) {
-      buffer.writeln('\nMessage:');
-      buffer.writeln(logRecord.message);
+      buffer
+        ..writeln('\nMessage:')
+        ..writeln(logRecord.message);
     }
-    
+
     if (logRecord.stackTrace != null) {
-      buffer.writeln('\nStack trace:');
-      buffer.writeln(logRecord.stackTrace);
+      buffer
+        ..writeln('\nStack trace:')
+        ..writeln(logRecord.stackTrace);
     }
-    
+
     return buffer.toString();
   }
 }
