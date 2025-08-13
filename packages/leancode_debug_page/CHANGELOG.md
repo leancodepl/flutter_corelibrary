@@ -1,3 +1,14 @@
+## 2.2.0
+
+- Enhanced logger log details screen with comprehensive debugging information
+- Added error objects display for debugging FlutterErrors and other exceptions
+- Added full stack traces display in styled, horizontally scrollable containers
+- Added sequence numbers display for better log ordering and timing analysis
+- Added zone information display when logs are created in custom zones
+- Improved layout with organized sections and clear headers
+- Enhanced sharing functionality to include all log information instead of just the message
+- Updated example app with comprehensive test log generation including FlutterError simulations
+
 ## 2.1.3
 
 - Fix a bug causing an exception on web (#466)
