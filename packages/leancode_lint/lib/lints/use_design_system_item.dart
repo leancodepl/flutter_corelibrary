@@ -27,6 +27,9 @@ final class UseDesignSystemItem extends UseInsteadType {
     required Iterable<ForbiddenItem> replacements,
   }) : super(
          lintCodeName: '${ruleName}_$preferredItemName',
+         problemMessage: '{0} is forbidden within this design system.',
+         correctionMessage:
+             'Use the alternative defined in the design system: {1}.',
          replacements: {preferredItemName: replacements.toList()},
        );
 
@@ -45,15 +48,5 @@ final class UseDesignSystemItem extends UseInsteadType {
         replacements: entry.value,
       ),
     );
-  }
-
-  @override
-  String correctionMessage(String preferredItemName) {
-    return 'Use the alternative defined in the design system: $preferredItemName.';
-  }
-
-  @override
-  String problemMessage(String itemName) {
-    return '$itemName is forbidden within this design system.';
   }
 }

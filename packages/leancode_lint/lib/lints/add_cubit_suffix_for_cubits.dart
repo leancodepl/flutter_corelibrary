@@ -7,9 +7,15 @@ import 'package:leancode_lint/common_type_checkers.dart';
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
 /// class name.
 class AddCubitSuffixForYourCubits extends DartLintRule {
-  AddCubitSuffixForYourCubits() : super(code: _getLintCode());
-
-  static const ruleName = 'add_cubit_suffix_for_your_cubits';
+  const AddCubitSuffixForYourCubits()
+    : super(
+        code: const LintCode(
+          name: 'add_cubit_suffix_for_your_cubits',
+          problemMessage: 'Add Cubit suffix for your cubits.',
+          correctionMessage: 'Ex. {0}Cubit',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   void run(
@@ -28,7 +34,7 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
         return;
       }
 
-      reporter.atToken(node.name, _getLintCode(node.name.lexeme));
+      reporter.atToken(node.name, code, arguments: [node.name.lexeme]);
     });
   }
 
@@ -38,20 +44,4 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
     final element? => TypeCheckers.cubit.isSuperOf(element),
     _ => false,
   };
-
-  static LintCode _getLintCode([String? className]) {
-    const problemMessageBase = 'Add Cubit suffix for your cubits.';
-
-    final exampleName = switch (className) {
-      final name? => '${name}Cubit',
-      null => null,
-    };
-
-    return LintCode(
-      name: ruleName,
-      problemMessage: problemMessageBase,
-      correctionMessage: exampleName != null ? 'Ex. $exampleName' : null,
-      errorSeverity: ErrorSeverity.WARNING,
-    );
-  }
 }

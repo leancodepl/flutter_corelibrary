@@ -7,9 +7,14 @@ import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning for conditional hooks usage.
 class AvoidConditionalHooks extends DartLintRule {
-  AvoidConditionalHooks() : super(code: _getLintCode());
-
-  static const ruleName = 'avoid_conditional_hooks';
+  const AvoidConditionalHooks()
+    : super(
+        code: const LintCode(
+          name: 'avoid_conditional_hooks',
+          problemMessage: "Don't use hooks conditionally",
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   void run(
@@ -29,19 +34,18 @@ class AvoidConditionalHooks extends DartLintRule {
 
       final returnExpressions = getAllReturnExpressions(node).nonNulls;
       // everything past that return is considered conditional
-      final firstReturn =
-          returnExpressions.isEmpty
-              ? null
-              : returnExpressions.reduce(
-                (acc, curr) => acc.offset < curr.offset ? acc : curr,
-              );
+      final firstReturn = returnExpressions.isEmpty
+          ? null
+          : returnExpressions.reduce(
+              (acc, curr) => acc.offset < curr.offset ? acc : curr,
+            );
 
       final hooksCalledConditionally = hookExpressions.where(
         (e) => _isConditional(firstReturn, e, node),
       );
 
       for (final hookExpression in hooksCalledConditionally) {
-        reporter.atNode(hookExpression, _getLintCode());
+        reporter.atNode(hookExpression, code);
       }
     });
   }
@@ -100,10 +104,4 @@ class AvoidConditionalHooks extends DartLintRule {
     return isConditional(node, child: node) ||
         (firstReturn != null && isBefore(firstReturn, node));
   }
-
-  static LintCode _getLintCode() => const LintCode(
-    name: ruleName,
-    problemMessage: "Don't use hooks conditionally",
-    errorSeverity: ErrorSeverity.WARNING,
-  );
 }

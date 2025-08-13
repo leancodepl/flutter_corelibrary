@@ -7,11 +7,15 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 /// declared fields order. Works for the both named and unnamed parameters.
 class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     extends DartLintRule {
-  ConstructorParametersAndFieldsShouldHaveTheSameOrder()
-    : super(code: _getLintCode());
-
-  static const ruleName =
-      'constructor_parameters_and_fields_should_have_the_same_order';
+  const ConstructorParametersAndFieldsShouldHaveTheSameOrder()
+    : super(
+        code: const LintCode(
+          name: 'constructor_parameters_and_fields_should_have_the_same_order',
+          problemMessage:
+              'Class parameters and fields should have the same order.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   // TODO: disabled until stabilized. Add documentation.
   @override
@@ -33,7 +37,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
       final constructors = node.members.whereType<ConstructorDeclaration>();
       for (final constructor in constructors) {
         if (!_hasValidOrder(constructor, fields)) {
-          reporter.atNode(constructor, _getLintCode());
+          reporter.atNode(constructor, code);
         }
       }
     });
@@ -48,37 +52,31 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
       return true;
     }
 
-    final namedParameters =
-        parameters
-            .where(
-              (parameter) => parameter.isNamed && _isNotSuperFormal(parameter),
-            )
-            .toList();
+    final namedParameters = parameters
+        .where((parameter) => parameter.isNamed && _isNotSuperFormal(parameter))
+        .toList();
 
-    final unnamedParameters =
-        parameters
-            .where(
-              (parameter) => !parameter.isNamed && _isNotSuperFormal(parameter),
-            )
-            .toList();
+    final unnamedParameters = parameters
+        .where(
+          (parameter) => !parameter.isNamed && _isNotSuperFormal(parameter),
+        )
+        .toList();
 
-    final fieldsWithNamedParameters =
-        fields
-            .where(
-              (field) => namedParameters.any(
-                (parameter) => _compareEffectiveNames(field, parameter),
-              ),
-            )
-            .toList();
+    final fieldsWithNamedParameters = fields
+        .where(
+          (field) => namedParameters.any(
+            (parameter) => _compareEffectiveNames(field, parameter),
+          ),
+        )
+        .toList();
 
-    final fieldsWithUnnamedParameters =
-        fields
-            .where(
-              (field) => unnamedParameters.any(
-                (parameter) => _compareEffectiveNames(field, parameter),
-              ),
-            )
-            .toList();
+    final fieldsWithUnnamedParameters = fields
+        .where(
+          (field) => unnamedParameters.any(
+            (parameter) => _compareEffectiveNames(field, parameter),
+          ),
+        )
+        .toList();
 
     for (
       var i = 0;
@@ -118,22 +116,15 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
   ) {
     final relevantField = field.fields.variables.first;
 
-    final effectiveFieldName =
-        relevantField.name.lexeme.startsWith('_')
-            ? relevantField.name.lexeme.substring(1)
-            : relevantField.name.lexeme;
+    final effectiveFieldName = relevantField.name.lexeme.startsWith('_')
+        ? relevantField.name.lexeme.substring(1)
+        : relevantField.name.lexeme;
 
     final effectiveParameterName =
         parameter.name?.lexeme.startsWith('_') ?? false
-            ? parameter.name?.lexeme.substring(1)
-            : parameter.name?.lexeme;
+        ? parameter.name?.lexeme.substring(1)
+        : parameter.name?.lexeme;
 
     return effectiveParameterName == effectiveFieldName;
   }
-
-  static LintCode _getLintCode() => const LintCode(
-    name: ruleName,
-    problemMessage: 'Class parameters and fields should have the same order.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
 }

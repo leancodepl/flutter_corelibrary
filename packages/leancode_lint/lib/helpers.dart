@@ -2,6 +2,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/common_type_checkers.dart';
 import 'package:leancode_lint/utils.dart';
@@ -225,14 +227,13 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
   }
 }
 
-typedef _BlocData =
-    ({
-      String baseName,
-      InterfaceElement blocElement,
-      InterfaceElement stateElement,
-      InterfaceElement? eventElement,
-      InterfaceElement? presentationEventElement,
-    });
+typedef _BlocData = ({
+  String baseName,
+  InterfaceElement blocElement,
+  InterfaceElement stateElement,
+  InterfaceElement? eventElement,
+  InterfaceElement? presentationEventElement,
+});
 
 _BlocData? _maybeBlocData(ClassDeclaration clazz) {
   final blocElement = clazz.declaredElement;
@@ -244,11 +245,10 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
 
   final baseName = clazz.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
 
-  final stateType =
-      blocElement.allSupertypes
-          .firstWhere(TypeCheckers.blocBase.isExactlyType)
-          .typeArguments
-          .singleOrNull;
+  final stateType = blocElement.allSupertypes
+      .firstWhere(TypeCheckers.blocBase.isExactlyType)
+      .typeArguments
+      .singleOrNull;
   if (stateType == null) {
     return null;
   }
@@ -258,22 +258,20 @@ _BlocData? _maybeBlocData(ClassDeclaration clazz) {
     return null;
   }
 
-  final eventElement =
-      blocElement.allSupertypes
-          .firstWhereOrNull(TypeCheckers.bloc.isExactlyType)
-          ?.typeArguments
-          .firstOrNull
-          ?.element;
+  final eventElement = blocElement.allSupertypes
+      .firstWhereOrNull(TypeCheckers.bloc.isExactlyType)
+      ?.typeArguments
+      .firstOrNull
+      ?.element;
   if (eventElement is! InterfaceElement?) {
     return null;
   }
 
-  final presentationEventElement =
-      blocElement.mixins
-          .firstWhereOrNull(TypeCheckers.blocPresentation.isExactlyType)
-          ?.typeArguments
-          .elementAtOrNull(1)
-          ?.element;
+  final presentationEventElement = blocElement.mixins
+      .firstWhereOrNull(TypeCheckers.blocPresentation.isExactlyType)
+      ?.typeArguments
+      .elementAtOrNull(1)
+      ?.element;
   if (presentationEventElement is! InterfaceElement?) {
     return null;
   }
@@ -303,6 +301,100 @@ extension TypeSubclasses on InterfaceElement {
           (clazz) =>
               typeChecker.isAssignableFrom(clazz) &&
               !typeChecker.isExactly(clazz),
+        );
+  }
+}
+
+bool isExpressionExactlyType(
+  Expression expression,
+  String typeName,
+  String packageName,
+) {
+  if (expression.staticType case final type?) {
+    return TypeChecker.fromName(
+      typeName,
+      packageName: packageName,
+    ).isExactlyType(type);
+  }
+  return false;
+}
+
+/// Checks whether an instance creation uses only the specified named parameter.
+///
+/// Returns true when the [node] has:
+/// - Only one relevant named argument whose name equals [parameter]
+/// - The argument value is not a null literal and the argument type is not
+///   nullable (i.e. not `T?`)
+/// - No other arguments are present, except those explicitly listed in
+///   [ignoredParameters]
+///
+/// Otherwise returns false.
+bool isInstanceCreationExpressionOnlyUsingParameter(
+  InstanceCreationExpression node, {
+  required String parameter,
+  Set<String> ignoredParameters = const {},
+}) {
+  var hasParameter = false;
+
+  for (final argument in node.argumentList.arguments) {
+    if (argument case NamedExpression(
+      name: Label(label: SimpleIdentifier(name: final argumentName)),
+      :final expression,
+      :final staticType,
+    )) {
+      if (ignoredParameters.contains(argumentName)) {
+        continue;
+      } else if (argumentName == parameter &&
+          expression is! NullLiteral &&
+          staticType?.nullabilitySuffix != NullabilitySuffix.question) {
+        hasParameter = true;
+      } else {
+        // Other named arguments are not allowed
+        return false;
+      }
+    } else {
+      // Other arguments are not allowed
+      return false;
+    }
+  }
+  return hasParameter;
+}
+
+/// A fix that replaces the widget constructor name with a new one specified as [widgetName].
+///
+/// Assumption: the corresponding lint diagnostic reports an error whose
+/// source range matches the constructor's name (identifier). The fix applies
+/// the replacement to that exact range.
+///
+/// Example:
+/// ```dart
+/// Container(alignment: null, child: const SizedBox());
+/// ```
+///
+/// will be replaced with:
+/// ```dart
+/// Align(alignment: null, child: const SizedBox());
+/// ```
+class ChangeWidgetNameFix extends DartFix {
+  ChangeWidgetNameFix(this.widgetName);
+
+  final String widgetName;
+
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    AnalysisError analysisError,
+    List<AnalysisError> errors,
+  ) {
+    reporter
+        .createChangeBuilder(message: 'Replace with $widgetName', priority: 1)
+        .addDartFileEdit(
+          (builder) => builder.addSimpleReplacement(
+            analysisError.sourceRange,
+            widgetName,
+          ),
         );
   }
 }

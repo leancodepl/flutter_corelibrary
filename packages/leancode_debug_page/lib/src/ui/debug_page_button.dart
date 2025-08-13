@@ -53,9 +53,16 @@ class _DraggableFloatingButtonState extends State<_DraggableFloatingButton> {
     final horizontalCenter = width / 2;
     final verticalCenter = height / 2;
 
-    final floatingActionButton = FloatingActionButton(
-      onPressed: () => widget._controller.visible.value = true,
-      child: const Icon(Icons.bug_report),
+    final floatingActionButton = GestureDetector(
+      onTap: () => widget._controller.visible.value = true,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(Icons.bug_report),
+      ),
     );
 
     return Align(

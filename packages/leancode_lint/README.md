@@ -341,6 +341,78 @@ Container(),
 
 None.
 
+### `use_align`
+
+**DO** Use the Align widget instead of the Container widget with only the alignment parameter.
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: const SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Align(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
+### `use_padding`
+
+**DO** Use Padding widget instead of the Container widget with only the margin parameter
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: const SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(10),
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
 ### `bloc_class_modifiers`
 
 **DO** add `final` or `sealed` modifiers to bloc state, event, and presentation event classes.

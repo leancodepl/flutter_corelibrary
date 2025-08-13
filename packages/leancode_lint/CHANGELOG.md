@@ -1,3 +1,14 @@
+# Unreleased
+
+- chore: Refactor lint codes to use built-in positional parameters.
+
+# 17.0.0
+
+- Support Flutter 3.32 and Dart 3.8
+- Enable the following lints:
+  - [`unnecessary_ignore`](https://dart.dev/tools/linter-rules/unnecessary_ignore)
+  - [`use_null_aware_elements`](https://dart.dev/tools/linter-rules/use_null_aware_elements)
+
 # 16.0.0
 
 - Support Flutter 3.29 and Dart 3.7

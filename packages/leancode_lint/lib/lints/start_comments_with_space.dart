@@ -6,15 +6,14 @@ import 'package:leancode_lint/helpers.dart';
 
 /// Forces comments/docs to start with a space.
 class StartCommentsWithSpace extends DartLintRule {
-  StartCommentsWithSpace() : super(code: _createCode(_CommentType.comment));
-
-  static const ruleName = 'start_comments_with_space';
-
-  static LintCode _createCode(_CommentType param) => LintCode(
-    name: ruleName,
-    problemMessage: 'Start ${param.name}s with a space.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
+  const StartCommentsWithSpace()
+    : super(
+        code: const LintCode(
+          name: 'start_comments_with_space',
+          problemMessage: 'Start {0} with a space.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   List<Fix> getFixes() {
@@ -32,7 +31,8 @@ class StartCommentsWithSpace extends DartLintRule {
         reporter.atOffset(
           offset: token.offset + contentStart,
           length: 0,
-          errorCode: _createCode(_CommentType.comment),
+          errorCode: code,
+          arguments: [_CommentType.comment.pluralName],
         );
       }
     });
@@ -43,7 +43,8 @@ class StartCommentsWithSpace extends DartLintRule {
           reporter.atOffset(
             offset: token.offset + contentStart,
             length: 0,
-            errorCode: _createCode(_CommentType.doc),
+            errorCode: code,
+            arguments: [_CommentType.doc.pluralName],
           );
         }
       }
@@ -69,7 +70,14 @@ class StartCommentsWithSpace extends DartLintRule {
   }
 }
 
-enum _CommentType { comment, doc }
+enum _CommentType {
+  comment('comments'),
+  doc('doc comments');
+
+  const _CommentType(this.pluralName);
+
+  final String pluralName;
+}
 
 class _AddStartingSpaceToComment extends DartFix {
   @override
