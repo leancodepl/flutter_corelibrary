@@ -83,6 +83,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
               logRecord.stackTrace.toString(),
               style: DebugPageTypography.small.copyWith(
                 fontFamily: 'monospace',
+                fontFamilyFallback: ['Courier'],
               ),
             ),
           ),
