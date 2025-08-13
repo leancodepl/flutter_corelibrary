@@ -16,7 +16,7 @@ class UseEquatableMixin extends DartLintRule {
       );
 
   @override
-  List<Fix> getFixes() => [ConvertToMixin()];
+  List<Fix> getFixes() => [_ConvertToMixin()];
 
   @override
   void run(
@@ -53,7 +53,7 @@ class UseEquatableMixin extends DartLintRule {
   }
 }
 
-class ConvertToMixin extends DartFix {
+class _ConvertToMixin extends DartFix {
   @override
   void run(
     CustomLintResolver resolver,

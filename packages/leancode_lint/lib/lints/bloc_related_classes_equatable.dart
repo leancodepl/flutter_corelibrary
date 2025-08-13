@@ -16,7 +16,7 @@ class BlocRelatedClassesEquatable extends DartLintRule {
       );
 
   @override
-  List<Fix> getFixes() => [AddMixin()];
+  List<Fix> getFixes() => [_AddMixin()];
 
   @override
   void run(
@@ -50,7 +50,7 @@ class BlocRelatedClassesEquatable extends DartLintRule {
   }
 }
 
-class AddMixin extends DartFix {
+class _AddMixin extends DartFix {
   @override
   void run(
     CustomLintResolver resolver,
