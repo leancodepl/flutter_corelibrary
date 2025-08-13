@@ -91,3 +91,62 @@ final class Test4StateInitial extends Test4State {}
 sealed class Test4Event {}
 
 final class Test4EventFoo extends Test4Event {}
+
+///////////////////////////////////////////////////////////////////////
+
+// Bloc's state, event, and presentation event classes not final without descendants are flagged
+class Test5Bloc extends Bloc<Test5Event, Test5State>
+    with BlocPresentationMixin<Test5State, Test5PresentationEvent> {
+  Test5Bloc() : super(const Test5State(1));
+}
+
+class
+// expect_lint: bloc_class_modifiers
+Test5State {
+  const Test5State(this.x);
+
+  final int x;
+}
+
+class
+// expect_lint: bloc_class_modifiers
+Test5Event {
+  const Test5Event(this.value);
+
+  final int value;
+}
+
+class
+// expect_lint: bloc_class_modifiers
+Test5PresentationEvent {
+  const Test5PresentationEvent(this.value);
+
+  final String value;
+}
+
+///////////////////////////////////////////////////////////////////////
+
+// Bloc's state, event, and presentation event classes that are final without descendants are not flagged
+class Test6Bloc extends Bloc<Test6Event, Test6State>
+    with BlocPresentationMixin<Test6State, Test6PresentationEvent> {
+  Test6Bloc() : super(const Test6State(1, 2));
+}
+
+final class Test6State {
+  const Test6State(this.x, this.y);
+
+  final int x;
+  final int y;
+}
+
+final class Test6Event {
+  const Test6Event(this.value);
+
+  final int value;
+}
+
+final class Test6PresentationEvent {
+  const Test6PresentationEvent(this.value);
+
+  final String value;
+}
