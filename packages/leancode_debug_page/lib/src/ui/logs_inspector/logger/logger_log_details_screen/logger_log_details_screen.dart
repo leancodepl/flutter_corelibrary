@@ -81,10 +81,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Text(
               logRecord.stackTrace.toString(),
-              style: DebugPageTypography.small.copyWith(
-                fontFamily: 'monospace',
-                fontFamilyFallback: ['Monaco', 'Courier'],
-              ),
+              style: DebugPageTypography.codeBlock,
             ),
           ),
         ),
