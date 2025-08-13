@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:example/util.dart';
@@ -8,6 +9,12 @@ import 'package:logging/logging.dart';
 
 void main() {
   final loggingHttpClient = LoggingHttpClient();
+
+  FlutterError.onError = (details) {
+    Logger(
+      'FlutterError',
+    ).warning(details.summary, details.exception, details.stack);
+  };
 
   runApp(MyApp(loggingHttpClient: loggingHttpClient));
 }
@@ -123,6 +130,37 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _generateTestLogs() {
+    // Generate various types of logs to demonstrate the enhanced log details
+
+    // Simple info log
+    _logger.info('This is a simple info message');
+
+    // Log with error but no stack trace
+    _logger.severe(
+        'Database connection failed', StateError('Connection timeout'));
+
+    // Log with both error and stack trace
+    try {
+      throw const FormatException('Invalid data format in user input');
+    } catch (err, st) {
+      _logger.severe('Failed to parse user input', err, st);
+    }
+
+    // Log in a custom zone to show zone information
+    runZoned(() {
+      final zoneLogger = Logger('ZoneLogger');
+      zoneLogger.warning('This log was created in a custom zone');
+    }, zoneValues: {#customZone: 'demo-zone'});
+
+    // Simulate a Flutter error
+    throw FlutterError.fromParts([
+      ErrorSummary('Widget build failed'),
+      ErrorDescription('The widget could not be built due to invalid state'),
+      ErrorHint('Check the widget configuration and try again'),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,6 +180,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 child: const Text('Show a dialog'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _generateTestLogs,
+                child: const Text('Generate test logs'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(

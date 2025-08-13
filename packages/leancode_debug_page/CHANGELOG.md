@@ -1,3 +1,9 @@
+## 2.2.0
+
+- Revamped log details: organized UI with error objects, sequence numbers, zone info, and full scrollable stack traces.
+- Sharing now includes complete log context, not just the message.
+- Updated example app with comprehensive test logs and FlutterError simulations.
+
 ## 2.1.3
 
 - Fix a bug causing an exception on web (#466)
