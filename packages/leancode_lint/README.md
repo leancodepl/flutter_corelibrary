@@ -377,6 +377,42 @@ class MyWidget extends StatelessWidget {
 
 None
 
+### `use_padding`
+
+**DO** Use Padding widget instead of the Container widget with only the margin parameter
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: const SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(10),
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.

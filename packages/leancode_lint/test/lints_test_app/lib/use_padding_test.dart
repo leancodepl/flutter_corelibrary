@@ -1,32 +1,32 @@
-// Ignored for testing purposes
+// Ignored for test purposes
 // ignore_for_file: avoid_redundant_argument_values
 
 import 'package:flutter/material.dart';
 
 // dart format off
-class UseAlignTest {
+class UsePaddingTest {
   void test() {
-    // expect_lint: use_align
+    // expect_lint: use_padding
     Container(
-      alignment: Alignment.center,
+      margin: const EdgeInsets.all(10),
       child: const SizedBox(),
     );
 
-    // expect_lint: use_align
+    // expect_lint: use_padding
     Container(
-      alignment: Alignment.centerLeft,
+      margin: const EdgeInsets.all(10),
       child: const SizedBox(),
     );
 
-    // expect_lint: use_align
+    // expect_lint: use_padding
     Container(
-      alignment: Alignment.topCenter,
+      margin: const EdgeInsets.all(10),
       key: const Key('key'),
       child: const SizedBox(),
     );
 
     Container(
-      alignment: Alignment.center,
+      margin: const EdgeInsets.all(10),
       color: Colors.red,
       child: const SizedBox(),
     );
@@ -36,25 +36,24 @@ class UseAlignTest {
       child: const SizedBox(),
     );
 
-    // expect_lint: use_align
+    // expect_lint: use_padding
     Container(
-      alignment: Alignment.center,
+      margin: const EdgeInsets.all(10),
     );
 
-    const Align(
-      alignment: Alignment.bottomCenter,
+    const Padding(
+      padding: EdgeInsets.all(10),
       child: SizedBox(),
     );
 
     Container(
-      alignment: null,
+      margin: null,
       child: const SizedBox(),
     );
 
-    const AlignmentGeometry? nullableAlignment = null;
-
+    const EdgeInsets? nullablePadding = null;
     Container(
-      alignment: nullableAlignment,
+      margin: nullablePadding,
       child: const SizedBox(),
     );
   }
