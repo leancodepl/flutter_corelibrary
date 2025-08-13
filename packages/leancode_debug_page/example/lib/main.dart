@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:example/util.dart';
@@ -123,6 +124,41 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _generateTestLogs() {
+    // Generate various types of logs to demonstrate the enhanced log details
+    
+    // Simple info log
+    _logger.info('This is a simple info message');
+    
+    // Log with error but no stack trace
+    _logger.severe('Database connection failed', StateError('Connection timeout'));
+    
+    // Log with both error and stack trace
+    try {
+      throw FormatException('Invalid data format in user input');
+    } catch (error, stackTrace) {
+      _logger.severe('Failed to parse user input', error, stackTrace);
+    }
+    
+    // Log in a custom zone to show zone information
+    runZoned(() {
+      final zoneLogger = Logger('ZoneLogger');
+      zoneLogger.warning('This log was created in a custom zone');
+    }, zoneValues: {#customZone: 'demo-zone'});
+    
+    // FlutterError simulation
+    try {
+      // Simulate a Flutter error
+      throw FlutterError.fromParts([
+        ErrorSummary('Widget build failed'),
+        ErrorDescription('The widget could not be built due to invalid state'),
+        ErrorHint('Check the widget configuration and try again'),
+      ]);
+    } catch (error, stackTrace) {
+      _logger.severe('Flutter widget error occurred', error, stackTrace);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,6 +178,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 child: const Text('Show a dialog'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _generateTestLogs,
+                child: const Text('Generate test logs'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
