@@ -7,15 +7,15 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 /// - if it's a catch-all, the exception should be named `err` and the stacktrace `st`
 /// - if it's a typed catch, the stacktrace has to be named `st`
 class CatchParameterNames extends DartLintRule {
-  CatchParameterNames()
-    : super(code: _createCode(_CatchClauseParameter.exception));
-
-  static LintCode _createCode(_CatchClauseParameter param) => LintCode(
-    name: 'catch_parameter_names',
-    problemMessage: 'Parameter name for the ${param.name} is non-standard.',
-    correctionMessage: 'Rename the parameter to `${param.preferredName}`.',
-    errorSeverity: ErrorSeverity.WARNING,
-  );
+  const CatchParameterNames()
+    : super(
+        code: const LintCode(
+          name: 'catch_parameter_names',
+          problemMessage: 'Parameter name for the {0} is non-standard.',
+          correctionMessage: 'Rename the parameter to {1}`.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
 
   @override
   void run(
@@ -48,7 +48,7 @@ class CatchParameterNames extends DartLintRule {
   ) {
     if (node != null &&
         !{'_', param.preferredName}.contains(node.name.lexeme)) {
-      reporter.atNode(node, _createCode(param));
+      reporter.atNode(node, code, arguments: [param.name, param.preferredName]);
     }
   }
 }
