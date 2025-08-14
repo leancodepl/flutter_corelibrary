@@ -22,8 +22,17 @@ class DebugPageOverlay extends StatelessWidget {
       fit: StackFit.passthrough,
       children: [
         child,
-        if (_controller.showEntryButton)
-          DebugPageButton(controller: _controller),
+        ValueListenableBuilder(
+          valueListenable: _controller.isOpen,
+          builder: (context, isOpen, child) {
+            if (_controller.showEntryButton && !isOpen) {
+              return child!;
+            }
+
+            return const SizedBox();
+          },
+          child: DebugPageButton(controller: _controller),
+        ),
       ],
     );
   }

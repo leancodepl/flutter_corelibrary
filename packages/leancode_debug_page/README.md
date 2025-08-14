@@ -41,6 +41,8 @@ Wrap your `MaterialApp` with a `DebugPageOverlay` and provide a `DebugPageContro
 
 - a navigator key, which is used to navigate to the debug page.
 
+***Make sure to pass the controller's `navigatorObserver` to your app widget.***
+
 ```dart
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -77,6 +79,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: 'Debug Page Demo',
         navigatorKey: navigatorKey,
+        navigatorObservers: [_debugPageController.navigatorObserver],
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

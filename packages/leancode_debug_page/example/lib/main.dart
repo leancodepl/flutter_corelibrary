@@ -54,6 +54,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: 'Debug Page Demo',
         navigatorKey: navigatorKey,
+        navigatorObservers: [_debugPageController.navigatorObserver],
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

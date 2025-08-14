@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:leancode_debug_page/src/core/logger_listener.dart';
 import 'package:leancode_debug_page/src/core/logging_http_client.dart';
@@ -44,6 +45,11 @@ class DebugPageController {
       );
     }
   }
+
+  late final NavigatorObserver navigatorObserver = _Observer(_isOpen);
+
+  final _isOpen = ValueNotifier<bool>(false);
+  ValueListenable<bool> get isOpen => _isOpen;
 
   final bool showEntryButton;
   final bool showOnShake;
@@ -96,5 +102,33 @@ class DebugPageController {
 
     _sourceLoggerLogsStreamSubscription.cancel();
     loggerFilters.dispose();
+  }
+}
+
+class _Observer extends NavigatorObserver {
+  _Observer(this.notifier);
+
+  final ValueNotifier<bool> notifier;
+
+  final _debugPageRoutes = <DebugPageRoute>[];
+
+  void _updateNotifier() {
+    notifier.value = _debugPageRoutes.isNotEmpty;
+  }
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (route is DebugPageRoute) {
+      _debugPageRoutes.add(route);
+      _updateNotifier();
+    }
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (route is DebugPageRoute) {
+      _debugPageRoutes.remove(route);
+      _updateNotifier();
+    }
   }
 }

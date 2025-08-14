@@ -1,7 +1,8 @@
 ## 3.0.0
 
 - **Breaking:** Fix navigation inside the debug page.
-  `DebugPageController` now requires passing a navigator key.
+  - `DebugPageController` now requires a navigator key.
+  - `DebugPageController`'s `navigatorObserver` now needs to be passed to the app widget.
 
 ## 2.2.0
 
