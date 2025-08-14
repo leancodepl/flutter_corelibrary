@@ -4,15 +4,22 @@ import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_detai
 import 'package:leancode_debug_page/src/ui/typography.dart';
 
 extension _ColorExtension on RequestStatus {
-  Color get color {
-    return switch (this) {
-      RequestStatus.success => Colors.green,
-      RequestStatus.redirect => Colors.orange,
-      RequestStatus.clientError => Colors.red.shade400,
-      RequestStatus.serverError => Colors.red,
-      RequestStatus.unknown => Colors.grey,
-    };
-  }
+  Color color(BuildContext context) => switch (Theme.of(context).brightness) {
+        Brightness.dark => switch (this) {
+            RequestStatus.success => Colors.green.shade800,
+            RequestStatus.redirect => Colors.orange.shade800,
+            RequestStatus.clientError => Colors.red,
+            RequestStatus.serverError => Colors.red.shade800,
+            RequestStatus.unknown => Colors.grey.shade700,
+          },
+        Brightness.light => switch (this) {
+            RequestStatus.success => Colors.green,
+            RequestStatus.redirect => Colors.orange,
+            RequestStatus.clientError => Colors.red.shade400,
+            RequestStatus.serverError => Colors.red,
+            RequestStatus.unknown => Colors.grey,
+          },
+      };
 }
 
 class RequestLogTile extends StatelessWidget {
@@ -37,22 +44,24 @@ class RequestLogTile extends StatelessWidget {
       url = url.substring(ignoredBasePath.length);
     }
 
-    return ListTile(
-      trailing: Text(
-        log.statusCode.toString(),
-        style: DebugPageTypography.small,
-      ),
-      tileColor: log.status.color,
-      onTap: () => Navigator.of(context).push(RequestDetailsRoute(log)),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(url, style: DebugPageTypography.medium),
-          Text(
-            '${log.method}, ${_formatTime(log.startTime)}',
-            style: DebugPageTypography.small,
-          ),
-        ],
+    return Material(
+      color: log.status.color(context),
+      child: ListTile(
+        trailing: Text(
+          log.statusCode.toString(),
+          style: DebugPageTypography.small,
+        ),
+        onTap: () => Navigator.of(context).push(RequestDetailsRoute(log)),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(url, style: DebugPageTypography.medium),
+            Text(
+              '${log.method}, ${_formatTime(log.startTime)}',
+              style: DebugPageTypography.small,
+            ),
+          ],
+        ),
       ),
     );
   }

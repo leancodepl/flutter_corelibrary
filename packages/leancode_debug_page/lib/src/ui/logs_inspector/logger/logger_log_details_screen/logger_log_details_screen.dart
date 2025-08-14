@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:leancode_debug_page/src/ui/debug_page_route.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/share_button.dart';
@@ -8,7 +9,7 @@ import 'package:leancode_debug_page/src/ui/typography.dart';
 import 'package:logging/logging.dart';
 import 'package:share_plus/share_plus.dart';
 
-class LoggerLogDetailsRoute extends MaterialPageRoute<void> {
+class LoggerLogDetailsRoute extends DebugPageRoute {
   LoggerLogDetailsRoute({required LogRecord logRecord})
       : super(
           builder: (context) => LoggerLogDetailsScreen(logRecord: logRecord),
@@ -25,6 +26,8 @@ class LoggerLogDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     // Build the map with all available information
     final Map<Object, Object> logDetailsMap = {
       'Logger name': logRecord.loggerName,
@@ -72,9 +75,9 @@ class LoggerLogDetailsScreen extends StatelessWidget {
         const SizedBox(height: 8),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.grey.shade100,
+            color: theme.colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(color: theme.colorScheme.outline),
           ),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -95,7 +98,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
       ),
       appBar: AppBar(
         title: const Text('Logger log details'),
-        backgroundColor: logRecord.level.color,
+        backgroundColor: logRecord.level.color(context),
       ),
       body: ListView(
         padding: const EdgeInsets.all(24),

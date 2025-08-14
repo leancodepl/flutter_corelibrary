@@ -11,7 +11,7 @@ class MapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTextStyle(
+    return DefaultTextStyle.merge(
       style: DebugPageTypography.medium,
       child: Table(
         children: map.entries.map(
