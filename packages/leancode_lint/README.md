@@ -413,6 +413,203 @@ class MyWidget extends StatelessWidget {
 
 None
 
+### `bloc_class_modifiers`
+
+**DO** add `final` or `sealed` modifiers to bloc state, event, and presentation event classes.
+
+**BAD:**
+
+```dart
+class MyState {}
+
+class MyStateInitial extends MyState {}
+
+class MyStateLoading extends MyState {}
+```
+
+**GOOD:**
+
+```dart
+sealed class MyState {}
+
+final class MyStateInitial extends MyState {}
+
+final class MyStateLoading extends MyState {}
+```
+
+#### Configuration
+
+None.
+
+### `bloc_const_constructors`
+
+**DO** define unnamed const constructors for bloc state, event, and presentation event classes.
+
+**BAD:**
+
+```dart
+class MyState {}
+```
+
+**BAD:**
+
+```dart
+class MyState {
+  MyState();
+}
+```
+
+**GOOD:**
+
+```dart
+class MyState {
+  const MyState();
+}
+```
+
+#### Configuration
+
+None.
+
+### `bloc_related_classes_equatable`
+
+**DO** mix in `EquatableMixin` in bloc state, event, and presentation event classes.
+
+**BAD:**
+
+```dart
+class MyState {
+  MyState(this.value);
+
+  final int value;
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class MyState with EquatableMixin {
+  const MyState(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+```
+
+#### Configuration
+
+None.
+
+### `bloc_related_class_naming`
+
+**DO** prefix bloc state, event, and presentation event classes with the name of the bloc.
+
+**BAD:**
+
+```dart
+class MyAwesomeBloc extends Bloc<WrongEvent, SomeState> {
+  // ...
+}
+
+class WrongEvent {}
+
+class SomeState {}
+```
+
+**GOOD:**
+
+```dart
+class MyAwesomeBloc extends Bloc<MyAwesomeEvent, MyAwesomeState> {
+  // ...
+}
+
+class MyAwesomeEvent {}
+
+class MyAwesomeState {}
+```
+
+#### Configuration
+
+None.
+
+### `bloc_subclasses_naming`
+
+**DO** prefix bloc state, event and presentation event subclasses with the name of the base class.
+
+**BAD:**
+
+```dart
+class MyAwesomeBloc extends Bloc<MyAwesomeEvent, MyAwesomeState> {
+  // ...
+}
+
+sealed class MyAwesomeState {}
+
+final class SomeState extends MyAwesomeState {}
+
+final class AnotherState extends MyAwesomeState {}
+```
+
+**GOOD:**
+
+```dart
+class MyAwesomeBloc extends Bloc<MyAwesomeEvent, MyAwesomeState> {
+  // ...
+}
+
+sealed class MyAwesomeState {}
+
+final class MyAwesomeStateInitial extends MyAwesomeState {}
+
+final class MyAwesomeStateLoading extends MyAwesomeState {}
+```
+
+#### Configuration
+
+None.
+
+### `prefer_equatable_mixin`
+
+**DO** mix in `EquatableMixin` instead of extending `Equatable`.
+
+**BAD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar extends Equatable {
+  const Foobar(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar with EquatableMixin {
+  const Foobar(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+```
+
+#### Configuration
+
+None.
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.

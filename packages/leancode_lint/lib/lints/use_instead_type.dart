@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -52,29 +52,29 @@ abstract base class UseInsteadType extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addIdentifier((node) {
-      if (node.staticElement case final element?) {
-        _handleElement(reporter, element, node);
+      if (node.staticType case final type?) {
+        _handleElement(reporter, type, node);
       }
     });
     context.registry.addNamedType((node) {
-      if (node.element case final element?) {
-        _handleElement(reporter, element, node);
+      if (node.type case final type?) {
+        _handleElement(reporter, type, node);
       }
     });
   }
 
-  void _handleElement(ErrorReporter reporter, Element element, AstNode node) {
+  void _handleElement(ErrorReporter reporter, DartType type, AstNode node) {
     if (_isInHide(node)) {
       return;
     }
 
     for (final (preferredItemName, checker) in _checkers) {
       try {
-        if (checker.isExactly(element)) {
+        if (checker.isExactlyType(type)) {
           reporter.atNode(
             node,
             code,
-            arguments: [element.displayName, preferredItemName],
+            arguments: [type.getDisplayString(), preferredItemName],
           );
         }
       } catch (err) {

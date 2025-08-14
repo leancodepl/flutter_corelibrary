@@ -1,9 +1,11 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/error/error.dart' as error;
+import 'package:analyzer/error/error.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/common_type_checkers.dart';
 import 'package:leancode_lint/utils.dart';
 
 String typeParametersString(
@@ -71,15 +73,15 @@ List<InvocationExpression> getAllInnerHookExpressions(AstNode node) {
 
 /// Given an instance creation, returns the builder function body if the node is a HookBuilder.
 FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
-  final classElement = node.constructorName.type.element;
-  if (classElement == null) {
+  final type = node.constructorName.type.type;
+  if (type == null) {
     return null;
   }
 
   final isHookBuilder = const TypeChecker.any([
-    TypeChecker.fromName('HookBuilder', packageName: 'flutter_hooks'),
-    TypeChecker.fromName('HookConsumer', packageName: 'hooks_riverpod'),
-  ]).isExactly(classElement);
+    TypeCheckers.hookBuilder,
+    TypeCheckers.hookConsumer,
+  ]).isExactlyType(type);
   if (!isHookBuilder) {
     return null;
   }
@@ -125,14 +127,15 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
   };
 }
 
-bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-  final element? => const TypeChecker.any([
-    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-    TypeChecker.fromName('State', packageName: 'flutter'),
-    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-  ]).isSuperOf(element),
-  _ => false,
-};
+bool isWidgetClass(ClassDeclaration node) =>
+    switch (node.declaredFragment?.element.thisType) {
+      final type? => const TypeChecker.any([
+        TypeCheckers.statelessWidget,
+        TypeCheckers.state,
+        TypeCheckers.hookWidget,
+      ]).isSuperTypeOf(type),
+      _ => false,
+    };
 
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
@@ -176,34 +179,31 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       }
     });
     addClassDeclaration((node) {
-      final element = node.declaredElement;
-      if (element == null) {
+      final thisType = node.declaredFragment?.element.thisType;
+      if (thisType == null) {
         return;
       }
 
       const checker = TypeChecker.any([
-        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-        TypeChecker.fromName(
-          'HookConsumerWidget',
-          packageName: 'hooks_riverpod',
-        ),
+        TypeCheckers.hookWidget,
+        TypeCheckers.hookConsumerWidget,
       ]);
 
       final AstNode diagnosticNode;
       if (isExactly) {
         final superclass = node.extendsClause?.superclass;
-        final superclassElement = superclass?.element;
-        if (superclass == null || superclassElement == null) {
+        final superclassType = superclass?.type;
+        if (superclass == null || superclassType == null) {
           return;
         }
 
-        final isDirectHookWidget = checker.isExactly(superclassElement);
+        final isDirectHookWidget = checker.isExactlyType(superclassType);
         if (!isDirectHookWidget) {
           return;
         }
         diagnosticNode = superclass;
       } else {
-        final isHookWidget = checker.isSuperOf(element);
+        final isHookWidget = checker.isSuperTypeOf(thisType);
         if (!isHookWidget) {
           return;
         }
@@ -217,6 +217,90 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
 
       listener(buildMethod.body, diagnosticNode);
     });
+  }
+
+  void addBloc(void Function(ClassDeclaration node, _BlocData data) listener) {
+    addClassDeclaration((node) {
+      if (_maybeBlocData(node) case final data?) {
+        listener(node, data);
+      }
+    });
+  }
+}
+
+typedef _BlocData = ({
+  String baseName,
+  InterfaceElement2 blocElement,
+  InterfaceElement2 stateElement,
+  InterfaceElement2? eventElement,
+  InterfaceElement2? presentationEventElement,
+});
+
+_BlocData? _maybeBlocData(ClassDeclaration clazz) {
+  final blocElement = clazz.declaredFragment?.element;
+
+  if (blocElement == null ||
+      !TypeCheckers.blocBase.isAssignableFromType(blocElement.thisType)) {
+    return null;
+  }
+
+  final baseName = clazz.name.lexeme.replaceAll(RegExp(r'(Cubit|Bloc)$'), '');
+
+  final stateType = blocElement.allSupertypes
+      .firstWhere(TypeCheckers.blocBase.isExactlyType)
+      .typeArguments
+      .singleOrNull;
+  if (stateType == null) {
+    return null;
+  }
+
+  final stateElement = stateType.element3;
+  if (stateElement is! InterfaceElement2) {
+    return null;
+  }
+
+  final eventElement = blocElement.allSupertypes
+      .firstWhereOrNull(TypeCheckers.bloc.isExactlyType)
+      ?.typeArguments
+      .firstOrNull
+      ?.element3;
+  if (eventElement is! InterfaceElement2?) {
+    return null;
+  }
+
+  final presentationEventElement = blocElement.mixins
+      .firstWhereOrNull(TypeCheckers.blocPresentation.isExactlyType)
+      ?.typeArguments
+      .elementAtOrNull(1)
+      ?.element3;
+  if (presentationEventElement is! InterfaceElement2?) {
+    return null;
+  }
+
+  return (
+    baseName: baseName,
+    blocElement: blocElement,
+    stateElement: stateElement,
+    eventElement: eventElement,
+    presentationEventElement: presentationEventElement,
+  );
+}
+
+bool inSameFile(Element2 element1, Element2 element2) {
+  final library1 = element1.library2?.uri;
+  final library2 = element2.library2?.uri;
+
+  return library1 != null && library2 != null && library1 == library2;
+}
+
+extension TypeSubclasses on InterfaceElement2 {
+  Iterable<ClassElement2> get subclasses {
+    final typeChecker = TypeChecker.fromStatic(thisType);
+    return library2.classes.where(
+      (clazz) =>
+          typeChecker.isAssignableFromType(clazz.thisType) &&
+          !typeChecker.isExactlyType(clazz.thisType),
+    );
   }
 }
 
@@ -300,8 +384,8 @@ class ChangeWidgetNameFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    error.AnalysisError analysisError,
-    List<error.AnalysisError> errors,
+    AnalysisError analysisError,
+    List<AnalysisError> errors,
   ) {
     reporter
         .createChangeBuilder(message: 'Replace with $widgetName', priority: 1)
