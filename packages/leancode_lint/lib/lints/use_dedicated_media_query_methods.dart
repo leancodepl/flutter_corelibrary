@@ -12,7 +12,7 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
           errorSeverity: error.ErrorSeverity.WARNING,
           problemMessage:
               'Avoid using {0} to access only one property of MediaQueryData. '
-              'Using aspects of the `MediaQuery` avoids unnecessary rebuilds.\n',
+              'Using aspects of the `MediaQuery` avoids unnecessary rebuilds.',
           correctionMessage: 'Use the dedicated `{1}` method instead.',
         ),
       );
@@ -105,9 +105,8 @@ class UseDedicatedMediaQueryMethods extends DartLintRule {
 
     return switch (node.methodName.name) {
       'of' => '${usedGetter}Of',
-      'maybeOf' when usedGetter.length > 1 =>
+      'maybeOf' =>
         'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1)}Of',
-      'maybeOf' => 'maybe${usedGetter.toUpperCase()}Of',
       _ => null,
     };
   }
