@@ -48,7 +48,7 @@ class DebugPageController {
 
   late final NavigatorObserver navigatorObserver = _Observer(_isOpen);
 
-  final _isOpen = ValueNotifier<bool>(false);
+  final _isOpen = ValueNotifier(false);
   ValueListenable<bool> get isOpen => _isOpen;
 
   final bool showEntryButton;
