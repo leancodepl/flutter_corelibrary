@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 void main() {
   final loggingHttpClient = LoggingHttpClient();
 
+  Logger.root.level = Level.ALL;
   FlutterError.onError = (details) {
     Logger(
       'FlutterError',
@@ -133,6 +134,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _generateTestLogs() {
     // Generate various types of logs to demonstrate the enhanced log details
+
+    // Simple debug log
+    _logger.fine("That's a fine message!");
 
     // Simple info log
     _logger.info('This is a simple info message');

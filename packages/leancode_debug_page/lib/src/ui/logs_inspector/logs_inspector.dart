@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_debug_page/leancode_debug_page.dart';
-import 'package:leancode_debug_page/src/ui/colors.dart';
 import 'package:leancode_debug_page/src/ui/debug_page_route.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/logger/logs_inspector_logger_tab.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/requests/logs_inspector_requests_tab.dart';
@@ -65,11 +64,6 @@ class _LogsInspectorState extends State<LogsInspector> {
         ),
         body: Column(
           children: [
-            Container(
-              color: DebugPageColors.background,
-              width: double.infinity,
-              height: 16,
-            ),
             Expanded(
               child: TabBarView(
                 children: [
