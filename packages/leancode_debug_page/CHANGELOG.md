@@ -3,6 +3,7 @@
 - **Breaking:** Fix navigation inside the debug page.
   - `DebugPageController` now requires a navigator key.
   - `DebugPageController`'s `navigatorObserver` now needs to be passed to the app widget.
+- Debug page now uses the app's global theme.
 
 ## 2.2.0
 
