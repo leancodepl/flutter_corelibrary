@@ -42,7 +42,7 @@ class PreferCenterOverAlign extends DartLintRule {
     var hasAlignmentArgument = false;
 
     for (final argument in arguments.whereType<NamedExpression>()) {
-      if (_isArgumentNameAlignment(argument)) {
+      if (argument.name.label.name == 'alignment') {
         hasAlignmentArgument = true;
         if (_isValueAlignmentCenter(argument)) {
           return _PreferCenterOverAlignData(
@@ -58,9 +58,6 @@ class PreferCenterOverAlign extends DartLintRule {
     }
     return null;
   }
-
-  bool _isArgumentNameAlignment(NamedExpression argument) =>
-      argument.name.label.name == 'alignment';
 
   bool _isValueAlignmentCenter(NamedExpression argument) {
     return switch (argument.expression) {
