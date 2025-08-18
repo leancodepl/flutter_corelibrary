@@ -59,6 +59,8 @@ class PreferCenterOverAlign extends DartLintRule {
     return null;
   }
 
+  // TODO: Refactor method below with: computeConstantValue() (https://github.com/dart-lang/sdk/blob/4c4a1d3815a754f7a14112fb0f96030869e305f9/pkg/analyzer/lib/src/dart/ast/ast.dart#L7663)
+  // once leancode_lint is upgraded
   bool _isValueAlignmentCenter(NamedExpression argument) {
     return switch (argument.expression) {
       PrefixedIdentifier(name: 'Alignment.center') => true,
