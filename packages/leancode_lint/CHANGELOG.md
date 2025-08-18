@@ -1,7 +1,6 @@
-# Unreleased
-
 # 18.0.0
 
+- chore: Refactor lint codes to use built-in positional parameters.
 - Support Flutter 3.35 and Dart 3.9
 - Enable the following lints:
   - [`switch_on_type`](https://dart.dev/tools/linter-rules/switch_on_type)
