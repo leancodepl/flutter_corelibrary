@@ -341,6 +341,28 @@ Container(),
 
 None.
 
+### `use_dedicated_media_query_methods`
+
+**AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf` to access only one property. Instead, prefer dedicated methods, for example `MediaQuery.paddingOf(context)`.
+
+Dedicated methods offer better performance by minimizing unnecessary widget rebuilds.
+
+**BAD:**
+
+```dart
+MediaQuery.of(context).size
+```
+
+**GOOD:**
+
+```dart
+MediaQuery.sizeOf(context)
+```
+
+#### Configuration
+
+None.
+
 ### `use_align`
 
 **DO** Use the Align widget instead of the Container widget with only the alignment parameter.
