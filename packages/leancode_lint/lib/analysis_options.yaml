@@ -89,7 +89,6 @@ analyzer:
     null_check_on_nullable_type_parameter: warning
     null_closures: warning
     omit_obvious_local_variable_types: warning
-    omit_obvious_property_types: warning
     only_throw_errors: warning
     overridden_fields: warning
     package_names: warning
@@ -139,6 +138,7 @@ analyzer:
     sort_pub_dependencies: warning
     sort_unnamed_constructors_first: warning
     strict_top_level_inference: warning
+    switch_on_type: warning
     test_types_in_equals: warning
     throw_in_finally: warning
     tighten_type_of_initializing_formals: warning
@@ -173,6 +173,7 @@ analyzer:
     unnecessary_string_interpolations: warning
     unnecessary_this: warning
     unnecessary_to_list_in_spreads: warning
+    unnecessary_unawaited: warning
     unnecessary_underscores: warning
     unrelated_type_equality_checks: warning
     unsafe_variance: warning
@@ -321,7 +322,7 @@ linter:
     null_check_on_nullable_type_parameter: true
     null_closures: true
     omit_obvious_local_variable_types: true
-    omit_obvious_property_types: true
+    omit_obvious_property_types: false
     one_member_abstracts: false
     only_throw_errors: true
     overridden_fields: true
@@ -380,6 +381,7 @@ linter:
     sort_pub_dependencies: true
     sort_unnamed_constructors_first: true
     strict_top_level_inference: true
+    switch_on_type: true
     test_types_in_equals: true
     throw_in_finally: true
     tighten_type_of_initializing_formals: true
@@ -415,6 +417,7 @@ linter:
     unnecessary_string_interpolations: true
     unnecessary_this: true
     unnecessary_to_list_in_spreads: true
+    unnecessary_unawaited: true
     unnecessary_underscores: true
     unreachable_from_main: false
     unrelated_type_equality_checks: true

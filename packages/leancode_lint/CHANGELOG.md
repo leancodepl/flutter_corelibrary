@@ -1,6 +1,12 @@
 # Unreleased
 
-- chore: Refactor lint codes to use built-in positional parameters.
+# 18.0.0
+
+- Support Flutter 3.35 and Dart 3.9
+- Enable the following lints:
+  - [`switch_on_type`](https://dart.dev/tools/linter-rules/switch_on_type)
+  - [`unnecessary_unawaited`](https://dart.dev/tools/linter-rules/unnecessary_unawaited)
+- Disable the [`omit_obvious_property_types`](https://dart.dev/tools/linter-rules/omit_obvious_property_types) lint due to conflict with [`type_annotate_public_apis`](https://dart.dev/tools/linter-rules/type_annotate_public_apis) ([Dart SDK issue #60642](https://github.com/dart-lang/sdk/issues/60642))
 
 # 17.0.0
 
