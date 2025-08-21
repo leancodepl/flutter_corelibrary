@@ -21,7 +21,7 @@ class RequestDetailsScreenResponseTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: DefaultTextStyle(
+      child: DefaultTextStyle.merge(
         style: DebugPageTypography.medium,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

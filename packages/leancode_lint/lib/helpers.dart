@@ -1,3 +1,5 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
 import 'package:analysis_server_plugin/registry.dart';
 import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
@@ -5,8 +7,11 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/source_range.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:leancode_lint/type_checker.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -75,7 +80,7 @@ List<InvocationExpression> getAllInnerHookExpressions(AstNode node) {
 
 /// Given an instance creation, returns the builder function body if the node is a HookBuilder.
 FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
-  final classElement = node.constructorName.type.element2;
+  final classElement = node.constructorName.type.element;
   if (classElement == null) {
     return null;
   }
@@ -225,7 +230,7 @@ class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
     final AstNode diagnosticNode;
     if (isExactly) {
       final superclass = node.extendsClause?.superclass;
-      final superclassElement = superclass?.element2;
+      final superclassElement = superclass?.element;
       if (superclass == null || superclassElement == null) {
         return;
       }
@@ -261,5 +266,106 @@ mixin AnalysisRuleWithFixes on AnalysisRule {
         registry.registerFixForRule(code, fix);
       }
     }
+  }
+}
+
+bool isExpressionExactlyType(
+  Expression expression,
+  String typeName,
+  String packageName,
+) {
+  if (expression.staticType case final type?) {
+    return TypeChecker.fromName(
+      typeName,
+      packageName: packageName,
+    ).isExactlyType(type);
+  }
+  return false;
+}
+
+/// Checks whether an instance creation uses only the specified named parameter.
+///
+/// Returns true when the [node] has:
+/// - Only one relevant named argument whose name equals [parameter]
+/// - The argument value is not a null literal and the argument type is not
+///   nullable (i.e. not `T?`)
+/// - No other arguments are present, except those explicitly listed in
+///   [ignoredParameters]
+///
+/// Otherwise returns false.
+bool isInstanceCreationExpressionOnlyUsingParameter(
+  InstanceCreationExpression node, {
+  required String parameter,
+  Set<String> ignoredParameters = const {},
+}) {
+  var hasParameter = false;
+
+  for (final argument in node.argumentList.arguments) {
+    if (argument case NamedExpression(
+      name: Label(label: SimpleIdentifier(name: final argumentName)),
+      :final expression,
+      :final staticType,
+    )) {
+      if (ignoredParameters.contains(argumentName)) {
+        continue;
+      } else if (argumentName == parameter &&
+          expression is! NullLiteral &&
+          staticType?.nullabilitySuffix != NullabilitySuffix.question) {
+        hasParameter = true;
+      } else {
+        // Other named arguments are not allowed
+        return false;
+      }
+    } else {
+      // Other arguments are not allowed
+      return false;
+    }
+  }
+  return hasParameter;
+}
+
+/// A fix that replaces the widget constructor name with a new one specified as [widgetName].
+///
+/// Assumption: the corresponding lint diagnostic reports an error whose
+/// source range matches the constructor's name (identifier). The fix applies
+/// the replacement to that exact range.
+///
+/// Example:
+/// ```dart
+/// Container(alignment: null, child: const SizedBox());
+/// ```
+///
+/// will be replaced with:
+/// ```dart
+/// Align(alignment: null, child: const SizedBox());
+/// ```
+class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
+  ChangeWidgetNameFix(this.widgetName, {required super.context});
+
+  static ProducerGenerator producerGeneratorFor(String widgetName) =>
+      ({required context}) => ChangeWidgetNameFix(widgetName, context: context);
+
+  final String widgetName;
+
+  @override
+  FixKind? get fixKind => FixKind(
+    'leancode.lint.replaceWith$widgetName',
+    DartFixKindPriority.standard,
+    'Replace with $widgetName',
+  );
+
+  @override
+  CorrectionApplicability get applicability =>
+      CorrectionApplicability.singleLocation;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    await builder.addDartFileEdit(
+      file,
+      (builder) => builder.addSimpleReplacement(
+        SourceRange(diagnosticOffset!, diagnosticLength!),
+        widgetName,
+      ),
+    );
   }
 }

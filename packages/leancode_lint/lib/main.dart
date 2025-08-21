@@ -5,7 +5,11 @@ import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
+import 'package:leancode_lint/lints/prefer_center_over_align.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
+import 'package:leancode_lint/lints/use_align.dart';
+import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
+import 'package:leancode_lint/lints/use_padding.dart';
 
 final plugin = _Linter();
 
@@ -27,6 +31,12 @@ class _Linter extends Plugin {
       ..registerWarningRule(
         HookWidgetDoesNotUseHooks()..registerFixes(registry),
       )
-      ..registerWarningRule(AvoidSingleChildInMultiChildWidgets());
+      ..registerWarningRule(AvoidSingleChildInMultiChildWidgets())
+      ..registerWarningRule(UseAlign()..registerFixes(registry))
+      ..registerWarningRule(UsePadding())
+      ..registerWarningRule(
+        UseDedicatedMediaQueryMethods()..registerFixes(registry),
+      )
+      ..registerWarningRule(PreferCenterOverAlign()..registerFixes(registry));
   }
 }

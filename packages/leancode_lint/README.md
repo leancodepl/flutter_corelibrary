@@ -341,6 +341,134 @@ Container(),
 
 None.
 
+### `use_dedicated_media_query_methods`
+
+**AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf` to access only one property. Instead, prefer dedicated methods, for example `MediaQuery.paddingOf(context)`.
+
+Dedicated methods offer better performance by minimizing unnecessary widget rebuilds.
+
+**BAD:**
+
+```dart
+MediaQuery.of(context).size
+```
+
+**GOOD:**
+
+```dart
+MediaQuery.sizeOf(context)
+```
+
+#### Configuration
+
+None.
+
+### `use_align`
+
+**DO** Use the Align widget instead of the Container widget with only the alignment parameter.
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: const SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Align(
+      alignment: Alignment.bottomCenter,
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
+### `use_padding`
+
+**DO** Use Padding widget instead of the Container widget with only the margin parameter
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: const SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(10),
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
+### `prefer_center_over_align`
+
+**DO** Use the Center widget instead of the Align widget with the alignment parameter set to Alignment.center
+
+**BAD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Align(
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: SizedBox(),
+    );
+  }
+}
+```
+
+#### Configuration
+
+None
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.

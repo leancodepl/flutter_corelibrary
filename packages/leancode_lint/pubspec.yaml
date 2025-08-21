@@ -1,5 +1,5 @@
 name: leancode_lint
-version: 17.0.0
+version: 18.0.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: Robust, high-quality lint rules used at LeanCode.
@@ -9,7 +9,7 @@ topics:
   - lints
 
 environment:
-  sdk: 3.9.0-268.0.dev
+  sdk: 3.10.0-118.0.dev
 
 dependencies:
   _fe_analyzer_shared:
@@ -28,6 +28,7 @@ dependencies:
     git:
       url: https://github.com/dart-lang/sdk
       path: pkg/analyzer_plugin
+  collection: ^1.19.1
   meta: ^1.16.0
   path: ^1.9.1
   source_span: ^1.10.1

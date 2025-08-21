@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leancode_debug_page/leancode_debug_page.dart';
 import 'package:leancode_debug_page/src/core/filters/logger_filters.dart';
-import 'package:leancode_debug_page/src/ui/colors.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/filtered_search_field.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
@@ -65,8 +64,7 @@ class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-      color: DebugPageColors.background,
-      child: DefaultTextStyle(
+      child: DefaultTextStyle.merge(
         style: DebugPageTypography.medium,
         child: Column(
           mainAxisSize: MainAxisSize.min,

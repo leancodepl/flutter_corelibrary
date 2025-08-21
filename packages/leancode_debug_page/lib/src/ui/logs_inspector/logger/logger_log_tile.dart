@@ -15,16 +15,18 @@ class LoggerLogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: log.level.color,
-      onTap: () => Navigator.of(context).push(
-        LoggerLogDetailsRoute(logRecord: log),
-      ),
-      title: Text(
-        log.format(),
-        style: DebugPageTypography.medium,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
+    return Material(
+      color: log.level.color(context),
+      child: ListTile(
+        onTap: () => Navigator.of(context).push(
+          LoggerLogDetailsRoute(logRecord: log),
+        ),
+        title: Text(
+          log.format(),
+          style: DebugPageTypography.medium,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }

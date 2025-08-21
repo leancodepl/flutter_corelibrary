@@ -26,9 +26,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  sensors_plus: 7229095999f30740798f0eeef5cd120357a8f4f2
-  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  sensors_plus: 6a11ed0c2e1d0bd0b20b4029d3bad27d96e0c65b
+  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
 
 PODFILE CHECKSUM: 23c5db403a9f2d103e08afd68b26a1601b49de37
 
