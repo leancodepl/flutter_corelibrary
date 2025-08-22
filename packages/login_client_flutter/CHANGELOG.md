@@ -3,8 +3,9 @@
 # 3.1.0
 
 - Add configurable `FlutterSecureStorage` support to `FlutterSecureCredentialsStorage`. The constructor now accepts an optional `storage` parameter, allowing users to provide a custom `FlutterSecureStorage` instance with platform-specific configuration options (e.g., iOS KeyChain accessibility settings).
-- Bump `leancode_lint` dev dependency to `12.0.0`.
-- Bump `custom_lint` dev dependency to `0.6.4`.
+- Bump minimum Dart SDK version to `3.7.0`.
+- Bump minimum Flutter version to `3.29.0`.
+- Bump `leancode_lint` dev dependency to `16.0.0`.
 
 # 3.0.0
 
