@@ -469,6 +469,85 @@ class MyWidget extends StatelessWidget {
 
 None
 
+### `missing_cleanup`
+
+**DO** cleanup of resources that require `dispose()`, `close()` or `cancel()` in StatefulWidget `State` classes.
+
+Resources such as controllers, stream controllers or focus nodes must be cleanup in the `dispose()` method to prevent memory leaks.
+
+**BAD:**`
+
+```dart
+class MyWidgetState extends State<MyWidget> {
+  late final TextEditingController controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: controller);
+  }
+}
+```
+
+**BAD:**
+
+```dart
+class MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: TextEditingController());
+  }
+}
+```
+
+**GOOD:**
+
+```dart
+class MyWidgetState extends State<MyWidget> {
+  late final TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: controller);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+```
+
+#### Configuration
+
+```yaml
+custom_lint:
+  rules:
+    - missing_cleanup:
+      ignored_types:
+        - ignore: AnimationController
+          from_package: flutter
+      cleanup_methods:
+        close: true
+        dispose: true
+        cancel: true
+
+```
+
+- `ignored_types` - an optional YamlList - skips dispose checks for specified types. This allows disabling the lint rule for classes where dispose method checks are not needed.
+  - `ignore` - A required String - name of the instance to ignore
+  - `from_package` - A required String - name of the source package
+- `cleanup_methods` - an optional YamlMap - controls which disposal methods the lint rule should recognize and check for. By default, the rule looks for `dispose`, `close`, and `cancel` methods. You can selectively enable or disable checking for each of these methods.
+  - `dispose` - A boolean (default: true) - whether to check for `dispose()` method calls
+  - `close` - A boolean (default: true) - whether to check for `close()` method calls  
+  - `cancel` - A boolean (default: true) - whether to check for `cancel()` method calls
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.

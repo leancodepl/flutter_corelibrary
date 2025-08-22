@@ -1,0 +1,374 @@
+// Replace this once analyzer is updated
+// ignore_for_file: deprecated_member_use
+
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
+import 'package:analyzer/error/listener.dart';
+import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/utils.dart';
+import 'package:yaml/yaml.dart';
+
+class _IgnoredTypes {
+  const _IgnoredTypes({required this.name, required this.packageName});
+
+  final String name;
+  final String packageName;
+}
+
+class MissingCleanupConfig {
+  const MissingCleanupConfig({
+    this.ignoredTypesCheckers = const [],
+    this.cleanupMethods = const {},
+  });
+
+  factory MissingCleanupConfig.fromConfig(Map<String, YamlNode?> json) {
+    final ignoredTypes =
+        (json['ignored_types'] as YamlList?)?.nodes
+            .map(
+              (e) => _IgnoredTypes(
+                name: (e as YamlMap)['ignore'] as String,
+                packageName: e['from_package'] as String,
+              ),
+            )
+            .toSet() ??
+        const {};
+
+    final cleanupMethodsMap = (json['cleanup_methods'] as YamlMap?)?.nodes.map(
+      (key, value) => MapEntry(
+        (key as YamlScalar).value as String,
+        (value as YamlScalar).value as bool,
+      ),
+    );
+
+    final cleanupMethods = {
+      if (cleanupMethodsMap?['dispose'] ?? true) 'dispose',
+      if (cleanupMethodsMap?['close'] ?? true) 'close',
+      if (cleanupMethodsMap?['cancel'] ?? true) 'cancel',
+    };
+
+    return MissingCleanupConfig(
+      ignoredTypesCheckers: [
+        for (final _IgnoredTypes(:name, :packageName) in ignoredTypes)
+          if (packageName.startsWith('dart:'))
+            TypeChecker.fromUrl('$packageName#$name')
+          else
+            TypeChecker.fromName(name, packageName: packageName),
+      ],
+      cleanupMethods: cleanupMethods,
+    );
+  }
+
+  final List<TypeChecker> ignoredTypesCheckers;
+  final Set<String> cleanupMethods;
+}
+
+/// Checks for proper disposal of resources in StatefulWidget classes.
+/// Warns when disposable resources are not properly disposed in the dispose() method.
+class MissingCleanup extends DartLintRule {
+  const MissingCleanup({required this.config})
+    : super(
+        code: const LintCode(
+          name: ruleName,
+          problemMessage:
+              'Resource should be disposed in the dispose() method.',
+          correctionMessage: 'Add disposal of this resource.',
+          errorSeverity: ErrorSeverity.WARNING,
+        ),
+      );
+
+  factory MissingCleanup.fromConfigs(CustomLintConfigs configs) {
+    final config = MissingCleanupConfig.fromConfig(
+      configs.rules[ruleName]?.json.cast<String, YamlNode?>() ?? {},
+    );
+
+    return MissingCleanup(config: config);
+  }
+
+  final MissingCleanupConfig config;
+
+  static const ruleName = 'missing_cleanup';
+
+  @override
+  List<Fix> getFixes() => [_AddDisposeMethod()];
+
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ErrorReporter reporter,
+    CustomLintContext context,
+  ) {
+    context.registry.addFieldDeclaration((node) {
+      final type = _getFieldDeclarationType(node);
+
+      if (type == null || _isIgnoredInstance(type)) {
+        return;
+      }
+
+      final classNode = _getContainingClass(node);
+      if (classNode == null) {
+        return;
+      }
+
+      if (_isWidgetClass(classNode) &&
+          !_isFieldUsedByConstructor(classNode, node)) {
+        reporter.atNode(node, code);
+        return;
+      }
+
+      final disposableMethodName = _getDisposableMethodName(type);
+      if (!_isStateOfWidget(classNode) || disposableMethodName == null) {
+        return;
+      }
+
+      final disposeExpressions = _DisposeExpressionsGatherer.gatherForTarget(
+        node: classNode,
+        targetName: node.fields.variables.first.name.lexeme,
+      );
+
+      if (disposeExpressions.isEmpty) {
+        reporter.atNode(
+          node,
+          code,
+          data: _AvoidMissingDisposeAnalysisData(
+            instanceName: node.fields.variables.first.name.lexeme,
+            classNode: classNode,
+            disposeMethodName: disposableMethodName,
+          ),
+        );
+      }
+    });
+    context.registry.addInstanceCreationExpression((node) {
+      final type = switch (node.staticType) {
+        final InterfaceType type => type,
+        _ => null,
+      };
+
+      if (type == null || _isIgnoredInstance(type)) {
+        return;
+      }
+
+      final classNode = _getContainingClass(node);
+
+      if (classNode == null ||
+          !(_isWidgetClass(classNode) || _isStateOfWidget(classNode)) ||
+          _getDisposableMethodName(type) == null) {
+        return;
+      }
+
+      if (_isInReturnWidget(node)) {
+        reporter.atNode(node, code);
+      }
+    });
+  }
+
+  bool _isIgnoredInstance(InterfaceType type) => config.ignoredTypesCheckers
+      .any((checker) => checker.isExactly(type.element));
+
+  InterfaceType? _getFieldDeclarationType(FieldDeclaration field) {
+    if (field.fields.type?.type case final InterfaceType type) {
+      return type;
+    }
+    return switch (field.fields.variables.first.initializer?.staticType) {
+      final InterfaceType type => type,
+      _ => null,
+    };
+  }
+
+  bool _isFieldUsedByConstructor(
+    ClassDeclaration classNode,
+    FieldDeclaration node,
+  ) {
+    final constructorDeclaration = _getConstructorDeclaration(classNode);
+    if (constructorDeclaration == null) {
+      return false;
+    }
+
+    return _hasConstructorParameterOrInitializer(
+      constructorDeclaration,
+      node.fields.variables.first.name.lexeme,
+    );
+  }
+
+  bool _hasConstructorParameterOrInitializer(
+    ConstructorDeclaration constructorDeclaration,
+    String parameterName,
+  ) {
+    if (constructorDeclaration.parameters.parameters.any(
+      (parameter) => parameter.name?.lexeme == parameterName,
+    )) {
+      return true;
+    }
+
+    return constructorDeclaration.initializers
+        .whereType<ConstructorFieldInitializer>()
+        .any((initializer) => initializer.fieldName.name == parameterName);
+  }
+
+  ConstructorDeclaration? _getConstructorDeclaration(
+    ClassDeclaration classNode,
+  ) => classNode.members.whereType<ConstructorDeclaration>().firstOrNull;
+
+  ClassDeclaration? _getContainingClass(AstNode node) {
+    var classNode = node.parent;
+    while (classNode != null && classNode is! ClassDeclaration) {
+      classNode = classNode.parent;
+    }
+    return switch (classNode) {
+      final ClassDeclaration classNode => classNode,
+      _ => null,
+    };
+  }
+
+  String? _getDisposableMethodName(InterfaceType type) {
+    return type.methods2
+            .firstWhereOrNull(
+              (method) => config.cleanupMethods.contains(method.name3),
+            )
+            ?.name3 ??
+        type.element3.inheritedMembers.entries
+            .firstWhereOrNull(
+              (entry) =>
+                  config.cleanupMethods.contains(entry.key.name) &&
+                  entry.value.baseElement is MethodElement2,
+            )
+            ?.key
+            .name;
+  }
+
+  bool _isWidgetType(InterfaceType type) {
+    const widgetTypeChecker = TypeChecker.fromName(
+      'Widget',
+      packageName: 'flutter',
+    );
+
+    return widgetTypeChecker.isExactlyType(type) ||
+        widgetTypeChecker.isSuperTypeOf(type);
+  }
+
+  bool _isInReturnWidget(InstanceCreationExpression node) {
+    AstNode? currentNode = node;
+    var returnsWidget = false;
+    var isInReturn = false;
+
+    bool isCurrentNodeReturn() =>
+        currentNode is ReturnStatement || currentNode is ExpressionFunctionBody;
+
+    while (currentNode != null && !(returnsWidget && isInReturn)) {
+      if (!isInReturn && isCurrentNodeReturn()) {
+        isInReturn = true;
+      }
+      if (currentNode case MethodDeclaration(
+        returnType: NamedType(:final InterfaceType type),
+      ) when _isWidgetType(type)) {
+        returnsWidget = true;
+      }
+
+      currentNode = currentNode.parent;
+    }
+    return returnsWidget && isInReturn;
+  }
+
+  bool _isStateOfWidget(ClassDeclaration classNode) =>
+      switch (classNode.declaredElement) {
+        final element? => const TypeChecker.fromName(
+          'State',
+          packageName: 'flutter',
+        ).isAssignableFrom(element),
+        _ => false,
+      };
+
+  bool _isWidgetClass(ClassDeclaration classNode) =>
+      switch (classNode.declaredElement) {
+        final element? => const TypeChecker.fromName(
+          'Widget',
+          packageName: 'flutter',
+        ).isAssignableFrom(element),
+        _ => false,
+      };
+}
+
+class _DisposeExpressionsGatherer extends GeneralizingAstVisitor<void> {
+  _DisposeExpressionsGatherer({required this.targetName});
+
+  final String targetName;
+
+  final List<InvocationExpression> _disposeExpressions = [];
+
+  static List<InvocationExpression> gatherForTarget({
+    required AstNode node,
+    required String targetName,
+  }) {
+    final visitor = _DisposeExpressionsGatherer(targetName: targetName);
+    node.accept(visitor);
+    return visitor._disposeExpressions;
+  }
+
+  @override
+  void visitExpressionStatement(ExpressionStatement node) {
+    if (node.expression
+        case MethodInvocation(
+              methodName: SimpleIdentifier(
+                name: 'dispose' || 'close' || 'cancel',
+              ),
+              target: SimpleIdentifier(:final name),
+            ) &&
+            final invocation when name == targetName) {
+      _disposeExpressions.add(invocation);
+    }
+  }
+}
+
+class _AddDisposeMethod extends DartFix {
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    AnalysisError analysisError,
+    List<AnalysisError> others,
+  ) {
+    if (analysisError.data case _AvoidMissingDisposeAnalysisData(
+      :final classNode,
+      :final instanceName,
+      :final disposeMethodName,
+    )) {
+      final disposeMethodNode = _getStateDisposeMethod(classNode);
+      if (disposeMethodNode?.body case BlockFunctionBody(
+        block: Block(statements: [final statement, ...]),
+      )) {
+        reporter
+            .createChangeBuilder(
+              message:
+                  'Add $instanceName.$disposeMethodName() to the state dispose method',
+              priority: 80,
+            )
+            .addDartFileEdit((builder) {
+              builder.addSimpleInsertion(
+                statement.offset,
+                '$instanceName.$disposeMethodName();\n    ',
+              );
+            });
+      }
+    }
+  }
+
+  MethodDeclaration? _getStateDisposeMethod(ClassDeclaration classNode) =>
+      classNode.members.whereType<MethodDeclaration>().firstWhereOrNull(
+        (member) => member.name.lexeme == 'dispose',
+      );
+}
+
+class _AvoidMissingDisposeAnalysisData {
+  const _AvoidMissingDisposeAnalysisData({
+    required this.instanceName,
+    required this.classNode,
+    required this.disposeMethodName,
+  });
+
+  final String instanceName;
+  final ClassDeclaration classNode;
+  final String disposeMethodName;
+}
