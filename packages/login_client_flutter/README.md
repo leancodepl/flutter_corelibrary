@@ -8,8 +8,29 @@
 ## Usage
 
 ```dart
+// Default usage
 final loginClient = LoginClient(
   credentialsStorage: const FlutterSecureCredentialsStorage(),
+  // ...
+);
+```
+
+### Custom Configuration
+
+You can provide a custom `FlutterSecureStorage` instance to configure platform-specific options:
+
+```dart
+final loginClient = LoginClient(
+  credentialsStorage: const FlutterSecureCredentialsStorage(
+    storage: FlutterSecureStorage(
+      aOptions: AndroidOptions(
+        encryptedSharedPreferences: true,
+      ),
+      iOptions: IOSOptions(
+        accessibility: KeychainAccessibility.first_unlock_this_device,
+      ),
+    ),
+  ),
   // ...
 );
 ```
