@@ -12,7 +12,7 @@ class MissingDisposeStatefulWidget extends StatefulWidget {
     required FocusNode focusNode,
   }) : _focusNode = focusNode,
        _streamController = StreamController<String>();
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   final controller = TextEditingController();
   final ScrollController scrollController;
   final FocusNode _focusNode;
@@ -33,25 +33,32 @@ class _MissingDisposeStatefulWidgetState
   late final _focusNode2 = FocusNode();
   final _pageController = PageController();
   final _streamController = StreamController<String>();
+  // expect_lint: missing_cleanup
+  final _streamController2 = StreamController<String>();
   late AnimationController _animationController;
+  final _timer = Timer(Duration.zero, () {});
+  final _timer2 = Timer(Duration.zero, () {});
 
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   var _notDisposedController = ScrollController();
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   late final _notDisposedController2 = FocusNode();
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   final _notDisposedController3 = ValueNotifier(0);
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   late final ScrollController _notDisposedController4;
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   late final FocusNode _notDisposedController5;
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   late final ValueNotifier<int> _notDisposedController6;
+  // expect_lint: missing_cleanup
+  late final Timer _notDisposedTimer;
 
   late final AnimationController _ignoredInstance;
 
   @override
   void dispose() {
+    _timer.cancel();
     _streamController.close();
     _textControllerTest.dispose();
     _scrollController.dispose();
@@ -66,6 +73,10 @@ class _MissingDisposeStatefulWidgetState
     _animationController.dispose();
   }
 
+  void _disposeTimer() {
+    _timer2.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     final animationController2 = useAnimationController(
@@ -73,7 +84,7 @@ class _MissingDisposeStatefulWidgetState
     );
     return Column(
       children: [
-        // expect_lint: avoid_missing_dispose
+        // expect_lint: missing_cleanup
         TextField(controller: TextEditingController()),
         _buildTextField(),
         AnimatedBuilder(
@@ -90,7 +101,7 @@ class _MissingDisposeStatefulWidgetState
   }
 
   TextField _buildTextField() {
-    // expect_lint: avoid_missing_dispose
+    // expect_lint: missing_cleanup
     return TextField(controller: TextEditingController());
   }
 }
@@ -102,7 +113,7 @@ class StatelessMissingDisposeWidget extends StatelessWidget {
     required FocusNode focusNode,
   }) : _focusNode = focusNode;
 
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   final controller = TextEditingController();
   final ScrollController scrollController;
   final FocusNode _focusNode;

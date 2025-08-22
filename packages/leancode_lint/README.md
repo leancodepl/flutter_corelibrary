@@ -469,11 +469,11 @@ class MyWidget extends StatelessWidget {
 
 None
 
-### `avoid_missing_dispose`
+### `missing_cleanup`
 
-**DO** dispose of resources that require `dispose()` in StatefulWidget `State` classes.
+**DO** cleanup of resources that require `dispose()`, `close()` or `cancel()` in StatefulWidget `State` classes.
 
-Resources such as controllers and focus nodes must be disposed in the `dispose()` method to prevent memory leaks.
+Resources such as controllers, stream controllers or focus nodes must be cleanup in the `dispose()` method to prevent memory leaks.
 
 **BAD:**`
 
@@ -529,11 +529,11 @@ class MyWidgetState extends State<MyWidget> {
 ```yaml
 custom_lint:
   rules:
-    - avoid_missing_dispose:
+    - missing_cleanup:
       ignored_types:
         - ignore: AnimationController
           from_package: flutter
-      disposal_methods:
+      cleanup_methods:
         close: true
         dispose: true
         cancel: true
@@ -543,7 +543,7 @@ custom_lint:
 - `ignored_types` - an optional YamlList - skips dispose checks for specified types. This allows disabling the lint rule for classes where dispose method checks are not needed.
   - `ignore` - A required String - name of the instance to ignore
   - `from_package` - A required String - name of the source package
-- `disposal_methods` - an optional YamlMap - controls which disposal methods the lint rule should recognize and check for. By default, the rule looks for `dispose`, `close`, and `cancel` methods. You can selectively enable or disable checking for each of these methods.
+- `cleanup_methods` - an optional YamlMap - controls which disposal methods the lint rule should recognize and check for. By default, the rule looks for `dispose`, `close`, and `cancel` methods. You can selectively enable or disable checking for each of these methods.
   - `dispose` - A boolean (default: true) - whether to check for `dispose()` method calls
   - `close` - A boolean (default: true) - whether to check for `close()` method calls  
   - `cancel` - A boolean (default: true) - whether to check for `cancel()` method calls

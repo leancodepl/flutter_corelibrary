@@ -18,13 +18,13 @@ class _IgnoredTypes {
   final String packageName;
 }
 
-class AvoidMissingDisposeConfig {
-  const AvoidMissingDisposeConfig({
+class MissingCleanupConfig {
+  const MissingCleanupConfig({
     this.ignoredTypesCheckers = const [],
-    this.disposalMethods = const {},
+    this.cleanupMethods = const {},
   });
 
-  factory AvoidMissingDisposeConfig.fromConfig(Map<String, YamlNode?> json) {
+  factory MissingCleanupConfig.fromConfig(Map<String, YamlNode?> json) {
     final ignoredTypes =
         (json['ignored_types'] as YamlList?)?.nodes
             .map(
@@ -36,21 +36,20 @@ class AvoidMissingDisposeConfig {
             .toSet() ??
         const {};
 
-    final disposalMethodsMap = (json['disposal_methods'] as YamlMap?)?.nodes
-        .map(
-          (key, value) => MapEntry(
-            (key as YamlScalar).value as String,
-            (value as YamlScalar).value as bool,
-          ),
-        );
+    final cleanupMethodsMap = (json['cleanup_methods'] as YamlMap?)?.nodes.map(
+      (key, value) => MapEntry(
+        (key as YamlScalar).value as String,
+        (value as YamlScalar).value as bool,
+      ),
+    );
 
-    final disposalMethods = {
-      if (disposalMethodsMap?['dispose'] ?? true) 'dispose',
-      if (disposalMethodsMap?['close'] ?? true) 'close',
-      if (disposalMethodsMap?['cancel'] ?? true) 'cancel',
+    final cleanupMethods = {
+      if (cleanupMethodsMap?['dispose'] ?? true) 'dispose',
+      if (cleanupMethodsMap?['close'] ?? true) 'close',
+      if (cleanupMethodsMap?['cancel'] ?? true) 'cancel',
     };
 
-    return AvoidMissingDisposeConfig(
+    return MissingCleanupConfig(
       ignoredTypesCheckers: [
         for (final _IgnoredTypes(:name, :packageName) in ignoredTypes)
           if (packageName.startsWith('dart:'))
@@ -58,18 +57,18 @@ class AvoidMissingDisposeConfig {
           else
             TypeChecker.fromName(name, packageName: packageName),
       ],
-      disposalMethods: disposalMethods,
+      cleanupMethods: cleanupMethods,
     );
   }
 
   final List<TypeChecker> ignoredTypesCheckers;
-  final Set<String> disposalMethods;
+  final Set<String> cleanupMethods;
 }
 
 /// Checks for proper disposal of resources in StatefulWidget classes.
 /// Warns when disposable resources are not properly disposed in the dispose() method.
-class AvoidMissingDispose extends DartLintRule {
-  const AvoidMissingDispose({required this.config})
+class MissingCleanup extends DartLintRule {
+  const MissingCleanup({required this.config})
     : super(
         code: const LintCode(
           name: ruleName,
@@ -80,17 +79,17 @@ class AvoidMissingDispose extends DartLintRule {
         ),
       );
 
-  factory AvoidMissingDispose.fromConfigs(CustomLintConfigs configs) {
-    final config = AvoidMissingDisposeConfig.fromConfig(
+  factory MissingCleanup.fromConfigs(CustomLintConfigs configs) {
+    final config = MissingCleanupConfig.fromConfig(
       configs.rules[ruleName]?.json.cast<String, YamlNode?>() ?? {},
     );
 
-    return AvoidMissingDispose(config: config);
+    return MissingCleanup(config: config);
   }
 
-  final AvoidMissingDisposeConfig config;
+  final MissingCleanupConfig config;
 
-  static const ruleName = 'avoid_missing_dispose';
+  static const ruleName = 'missing_cleanup';
 
   @override
   List<Fix> getFixes() => [_AddDisposeMethod()];
@@ -226,13 +225,13 @@ class AvoidMissingDispose extends DartLintRule {
   String? _getDisposableMethodName(InterfaceType type) {
     return type.methods2
             .firstWhereOrNull(
-              (method) => config.disposalMethods.contains(method.name3),
+              (method) => config.cleanupMethods.contains(method.name3),
             )
             ?.name3 ??
         type.element3.inheritedMembers.entries
             .firstWhereOrNull(
               (entry) =>
-                  config.disposalMethods.contains(entry.key.name) &&
+                  config.cleanupMethods.contains(entry.key.name) &&
                   entry.value.baseElement is MethodElement2,
             )
             ?.key

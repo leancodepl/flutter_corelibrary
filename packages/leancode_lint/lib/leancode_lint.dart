@@ -4,12 +4,12 @@ import 'package:leancode_lint/assists/convert_positional_to_named_formal.dart';
 import 'package:leancode_lint/assists/convert_record_into_nominal_type.dart';
 import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
-import 'package:leancode_lint/lints/avoid_missing_dispose.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:leancode_lint/lints/prefer_center_over_align.dart';
+import 'package:leancode_lint/lints/missing_cleanup.dart';
 import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
 import 'package:leancode_lint/lints/use_align.dart';
@@ -35,7 +35,7 @@ class _Linter extends PluginBase {
     const UsePadding(),
     const UseDedicatedMediaQueryMethods(),
     const PreferCenterOverAlign(),
-    AvoidMissingDispose.fromConfigs(configs),
+    MissingCleanup.fromConfigs(configs),
   ];
 
   @override

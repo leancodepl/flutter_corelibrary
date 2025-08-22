@@ -19,9 +19,9 @@ class BlocStatefulWidget extends StatefulWidget {
 
 class _BlocStatefulWidgetState extends State<BlocStatefulWidget> {
   late CounterBloc _counterBloc;
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   final _notDisposedBloc = CounterBloc();
-  // expect_lint: avoid_missing_dispose
+  // expect_lint: missing_cleanup
   late final CounterBloc _notDisposedBlocLate;
 
   @override
