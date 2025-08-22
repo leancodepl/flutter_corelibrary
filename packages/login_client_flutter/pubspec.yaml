@@ -7,8 +7,8 @@ description: >-
   for the login_client package.
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.10.0'
+  sdk: '>=3.7.0 <4.0.0'
+  flutter: '>=3.29.0'
 
 dependencies:
   flutter:
