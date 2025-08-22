@@ -18,14 +18,22 @@ import 'package:login_client/login_client.dart';
 /// A `flutter_secure_storage` implementation of the [CredentialsStorage].
 class FlutterSecureCredentialsStorage implements CredentialsStorage {
   /// Creates the [CredentialsStorage].
-  const FlutterSecureCredentialsStorage();
+  ///
+  /// The optional [storage] parameter allows you to provide a custom
+  /// [FlutterSecureStorage] instance with specific configuration options.
+  /// If not provided, a default instance will be used.
+  const FlutterSecureCredentialsStorage({FlutterSecureStorage? storage})
+      : _storage = storage;
 
   static const _key = 'login_client_flutter_credentials';
-  FlutterSecureStorage get _storage => const FlutterSecureStorage();
+  final FlutterSecureStorage? _storage;
+  
+  FlutterSecureStorage get _secureStorage => 
+      _storage ?? const FlutterSecureStorage();
 
   @override
   Future<Credentials?> read() async {
-    final json = await _storage.read(key: _key);
+    final json = await _secureStorage.read(key: _key);
     if (json == null) {
       return null;
     }
@@ -39,11 +47,11 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
 
   @override
   Future<void> save(Credentials credentials) {
-    return _storage.write(key: _key, value: credentials.toJson());
+    return _secureStorage.write(key: _key, value: credentials.toJson());
   }
 
   @override
   Future<void> clear() {
-    return _storage.delete(key: _key);
+    return _secureStorage.delete(key: _key);
   }
 }
