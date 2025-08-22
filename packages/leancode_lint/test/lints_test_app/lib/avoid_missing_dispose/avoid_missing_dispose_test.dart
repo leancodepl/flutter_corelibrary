@@ -33,7 +33,11 @@ class _MissingDisposeStatefulWidgetState
   late final _focusNode2 = FocusNode();
   final _pageController = PageController();
   final _streamController = StreamController<String>();
+  // expect_lint: avoid_missing_dispose
+  final _streamController2 = StreamController<String>();
   late AnimationController _animationController;
+  final _timer = Timer(Duration.zero, () {});
+  final _timer2 = Timer(Duration.zero, () {});
 
   // expect_lint: avoid_missing_dispose
   var _notDisposedController = ScrollController();
@@ -47,11 +51,14 @@ class _MissingDisposeStatefulWidgetState
   late final FocusNode _notDisposedController5;
   // expect_lint: avoid_missing_dispose
   late final ValueNotifier<int> _notDisposedController6;
+  // expect_lint: avoid_missing_dispose
+  late final Timer _notDisposedTimer;
 
   late final AnimationController _ignoredInstance;
 
   @override
   void dispose() {
+    _timer.cancel();
     _streamController.close();
     _textControllerTest.dispose();
     _scrollController.dispose();
@@ -64,6 +71,10 @@ class _MissingDisposeStatefulWidgetState
 
   void _disposeAnimationController() {
     _animationController.dispose();
+  }
+
+  void _disposeTimer() {
+    _timer2.cancel();
   }
 
   @override

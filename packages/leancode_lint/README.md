@@ -480,11 +480,10 @@ Resources such as controllers and focus nodes must be disposed in the `dispose()
 ```dart
 class MyWidgetState extends State<MyWidget> {
   late final TextEditingController controller = TextEditingController();
-  late final FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    return TextField(controller: controller, focusNode: focusNode);
+    return TextField(controller: controller);
   }
 }
 ```
@@ -505,24 +504,21 @@ class MyWidgetState extends State<MyWidget> {
 ```dart
 class MyWidgetState extends State<MyWidget> {
   late final TextEditingController controller;
-  late final FocusNode focusNode;
 
   @override
   void initState() {
     super.initState();
     controller = TextEditingController();
-    focusNode = FocusNode();
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(controller: controller, focusNode: focusNode);
+    return TextField(controller: controller);
   }
 
   @override
   void dispose() {
     controller.dispose();
-    focusNode.dispose();
     super.dispose();
   }
 }
@@ -534,14 +530,23 @@ class MyWidgetState extends State<MyWidget> {
 custom_lint:
   rules:
     - avoid_missing_dispose:
-      ignored_instances:
+      ignored_types:
         - ignore: AnimationController
           from_package: flutter
+      disposal_methods:
+        close: true
+        dispose: true
+        cancel: true
+
 ```
 
-- `ignored_instances` - an optional YamlList - skips dispose checks for specified types. This allows disabling the lint rule for classes where dispose method checks are not needed.
+- `ignored_types` - an optional YamlList - skips dispose checks for specified types. This allows disabling the lint rule for classes where dispose method checks are not needed.
   - `ignore` - A required String - name of the instance to ignore
   - `from_package` - A required String - name of the source package
+- `disposal_methods` - an optional YamlMap - controls which disposal methods the lint rule should recognize and check for. By default, the rule looks for `dispose`, `close`, and `cancel` methods. You can selectively enable or disable checking for each of these methods.
+  - `dispose` - A boolean (default: true) - whether to check for `dispose()` method calls
+  - `close` - A boolean (default: true) - whether to check for `close()` method calls  
+  - `cancel` - A boolean (default: true) - whether to check for `cancel()` method calls
 
 ## Assists
 

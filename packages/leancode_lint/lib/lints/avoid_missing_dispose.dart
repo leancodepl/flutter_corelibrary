@@ -19,11 +19,14 @@ class _IgnoredTypes {
 }
 
 class AvoidMissingDisposeConfig {
-  const AvoidMissingDisposeConfig({this.ignoredTypesCheckers = const []});
+  const AvoidMissingDisposeConfig({
+    this.ignoredTypesCheckers = const [],
+    this.disposalMethods = const {},
+  });
 
-  factory AvoidMissingDisposeConfig.fromConfig(Map<String, YamlList?> json) {
+  factory AvoidMissingDisposeConfig.fromConfig(Map<String, YamlNode?> json) {
     final ignoredTypes =
-        json['ignored_instances']?.nodes
+        (json['ignored_types'] as YamlList?)?.nodes
             .map(
               (e) => _IgnoredTypes(
                 name: (e as YamlMap)['ignore'] as String,
@@ -32,6 +35,21 @@ class AvoidMissingDisposeConfig {
             )
             .toSet() ??
         const {};
+
+    final disposalMethodsMap = (json['disposal_methods'] as YamlMap?)?.nodes
+        .map(
+          (key, value) => MapEntry(
+            (key as YamlScalar).value as String,
+            (value as YamlScalar).value as bool,
+          ),
+        );
+
+    final disposalMethods = {
+      if (disposalMethodsMap?['dispose'] ?? true) 'dispose',
+      if (disposalMethodsMap?['close'] ?? true) 'close',
+      if (disposalMethodsMap?['cancel'] ?? true) 'cancel',
+    };
+
     return AvoidMissingDisposeConfig(
       ignoredTypesCheckers: [
         for (final _IgnoredTypes(:name, :packageName) in ignoredTypes)
@@ -40,10 +58,12 @@ class AvoidMissingDisposeConfig {
           else
             TypeChecker.fromName(name, packageName: packageName),
       ],
+      disposalMethods: disposalMethods,
     );
   }
 
   final List<TypeChecker> ignoredTypesCheckers;
+  final Set<String> disposalMethods;
 }
 
 /// Checks for proper disposal of resources in StatefulWidget classes.
@@ -62,7 +82,7 @@ class AvoidMissingDispose extends DartLintRule {
 
   factory AvoidMissingDispose.fromConfigs(CustomLintConfigs configs) {
     final config = AvoidMissingDisposeConfig.fromConfig(
-      configs.rules[ruleName]?.json.cast<String, YamlList?>() ?? {},
+      configs.rules[ruleName]?.json.cast<String, YamlNode?>() ?? {},
     );
 
     return AvoidMissingDispose(config: config);
@@ -99,7 +119,8 @@ class AvoidMissingDispose extends DartLintRule {
         return;
       }
 
-      if (!_isStateOfWidget(classNode) || !_isDisposable(type)) {
+      final disposableMethodName = _getDisposableMethodName(type);
+      if (!_isStateOfWidget(classNode) || disposableMethodName == null) {
         return;
       }
 
@@ -115,6 +136,7 @@ class AvoidMissingDispose extends DartLintRule {
           data: _AvoidMissingDisposeAnalysisData(
             instanceName: node.fields.variables.first.name.lexeme,
             classNode: classNode,
+            disposeMethodName: disposableMethodName,
           ),
         );
       }
@@ -133,7 +155,7 @@ class AvoidMissingDispose extends DartLintRule {
 
       if (classNode == null ||
           !(_isWidgetClass(classNode) || _isStateOfWidget(classNode)) ||
-          !_isDisposable(type)) {
+          _getDisposableMethodName(type) == null) {
         return;
       }
 
@@ -201,13 +223,21 @@ class AvoidMissingDispose extends DartLintRule {
     };
   }
 
-  bool _isDisposable(InterfaceType type) =>
-      type.methods2.any((method) => method.name3 == 'dispose') ||
-      type.element3.inheritedMembers.entries.any(
-        (entry) =>
-            entry.key.name == 'dispose' &&
-            entry.value.baseElement is MethodElement2,
-      );
+  String? _getDisposableMethodName(InterfaceType type) {
+    return type.methods2
+            .firstWhereOrNull(
+              (method) => config.disposalMethods.contains(method.name3),
+            )
+            ?.name3 ??
+        type.element3.inheritedMembers.entries
+            .firstWhereOrNull(
+              (entry) =>
+                  config.disposalMethods.contains(entry.key.name) &&
+                  entry.value.baseElement is MethodElement2,
+            )
+            ?.key
+            .name;
+  }
 
   bool _isWidgetType(InterfaceType type) {
     const widgetTypeChecker = TypeChecker.fromName(
@@ -277,13 +307,13 @@ class _DisposeExpressionsGatherer extends GeneralizingAstVisitor<void> {
     return visitor._disposeExpressions;
   }
 
-  static const disposeMethodName = 'dispose';
-
   @override
   void visitExpressionStatement(ExpressionStatement node) {
     if (node.expression
         case MethodInvocation(
-              methodName: SimpleIdentifier(name: disposeMethodName),
+              methodName: SimpleIdentifier(
+                name: 'dispose' || 'close' || 'cancel',
+              ),
               target: SimpleIdentifier(:final name),
             ) &&
             final invocation when name == targetName) {
@@ -304,6 +334,7 @@ class _AddDisposeMethod extends DartFix {
     if (analysisError.data case _AvoidMissingDisposeAnalysisData(
       :final classNode,
       :final instanceName,
+      :final disposeMethodName,
     )) {
       final disposeMethodNode = _getStateDisposeMethod(classNode);
       if (disposeMethodNode?.body case BlockFunctionBody(
@@ -312,13 +343,13 @@ class _AddDisposeMethod extends DartFix {
         reporter
             .createChangeBuilder(
               message:
-                  'Add $instanceName.dispose() to the state dispose method',
+                  'Add $instanceName.$disposeMethodName() to the state dispose method',
               priority: 80,
             )
             .addDartFileEdit((builder) {
               builder.addSimpleInsertion(
                 statement.offset,
-                '$instanceName.dispose();\n    ',
+                '$instanceName.$disposeMethodName();\n    ',
               );
             });
       }
@@ -335,8 +366,10 @@ class _AvoidMissingDisposeAnalysisData {
   const _AvoidMissingDisposeAnalysisData({
     required this.instanceName,
     required this.classNode,
+    required this.disposeMethodName,
   });
 
   final String instanceName;
   final ClassDeclaration classNode;
+  final String disposeMethodName;
 }

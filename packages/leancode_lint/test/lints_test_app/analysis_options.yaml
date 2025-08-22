@@ -19,9 +19,13 @@ custom_lint:
     # TODO: remove explicit enable once enabled by default
     - constructor_parameters_and_fields_should_have_the_same_order: true
     - avoid_missing_dispose:
-      ignored_instances:
+      ignored_types:
         - ignore: AnimationController
           from_package: flutter
+      disposal_methods:
+        close: true
+        dispose: true
+        cancel: true
 
 analyzer:
   plugins:
