@@ -23,17 +23,14 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   /// [FlutterSecureStorage] instance with specific configuration options.
   /// If not provided, a default instance will be used.
   const FlutterSecureCredentialsStorage({FlutterSecureStorage? storage})
-      : _storage = storage;
+      : _storage = storage ?? const FlutterSecureStorage();
 
   static const _key = 'login_client_flutter_credentials';
-  final FlutterSecureStorage? _storage;
-  
-  FlutterSecureStorage get _secureStorage => 
-      _storage ?? const FlutterSecureStorage();
+  final FlutterSecureStorage _storage;
 
   @override
   Future<Credentials?> read() async {
-    final json = await _secureStorage.read(key: _key);
+    final json = await _storage.read(key: _key);
     if (json == null) {
       return null;
     }
@@ -47,11 +44,11 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
 
   @override
   Future<void> save(Credentials credentials) {
-    return _secureStorage.write(key: _key, value: credentials.toJson());
+    return _storage.write(key: _key, value: credentials.toJson());
   }
 
   @override
   Future<void> clear() {
-    return _secureStorage.delete(key: _key);
+    return _storage.delete(key: _key);
   }
 }
