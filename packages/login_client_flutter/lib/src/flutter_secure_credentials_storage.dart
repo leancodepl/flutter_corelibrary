@@ -22,8 +22,9 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   /// The optional [storage] parameter allows you to provide a custom
   /// [FlutterSecureStorage] instance with specific configuration options.
   /// If not provided, a default instance will be used.
-  const FlutterSecureCredentialsStorage({FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage();
+  const FlutterSecureCredentialsStorage({
+    FlutterSecureStorage storage = const FlutterSecureStorage(),
+  }) : _storage = storage;
 
   static const _key = 'login_client_flutter_credentials';
   final FlutterSecureStorage _storage;
