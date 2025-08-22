@@ -1,7 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:login_client_flutter/login_client_flutter.dart';
-// ignore: depend_on_referenced_packages - for testing credentials
+// for testing credentials
+// ignore: depend_on_referenced_packages
 import 'package:oauth2/oauth2.dart';
 
 // Mock FlutterSecureStorage for testing
