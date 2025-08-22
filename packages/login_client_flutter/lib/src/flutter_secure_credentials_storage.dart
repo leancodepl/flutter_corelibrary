@@ -15,6 +15,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:login_client/login_client.dart';
 
+export 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 /// A `flutter_secure_storage` implementation of the [CredentialsStorage].
 class FlutterSecureCredentialsStorage implements CredentialsStorage {
   /// Creates the [CredentialsStorage].
