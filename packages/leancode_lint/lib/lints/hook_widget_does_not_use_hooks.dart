@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
@@ -12,8 +11,7 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
-class HookWidgetDoesNotUseHooks extends AnalysisRule
-    with AnalysisRuleWithFixes {
+class HookWidgetDoesNotUseHooks extends AnalysisRule {
   HookWidgetDoesNotUseHooks()
     : super(
         name: 'hook_widget_does_not_use_hooks',
@@ -49,9 +47,6 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule
       reportAtNode(diagnosticTarget);
     });
   }
-
-  @override
-  List<ProducerGenerator> get fixes => [ConvertHookWidgetToStatelessWidget.new];
 }
 
 class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {

@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
@@ -14,7 +13,7 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 
-class PreferCenterOverAlign extends AnalysisRule with AnalysisRuleWithFixes {
+class PreferCenterOverAlign extends AnalysisRule {
   PreferCenterOverAlign()
     : super(
         name: 'prefer_center_over_align',
@@ -25,9 +24,6 @@ class PreferCenterOverAlign extends AnalysisRule with AnalysisRuleWithFixes {
   @override
   LintCode get diagnosticCode =>
       LintCode(name, description, correctionMessage: 'Replace with Center');
-
-  @override
-  List<ProducerGenerator> get fixes => [_PreferCenterOverAlignFix.new];
 
   @override
   void registerNodeProcessors(
@@ -116,8 +112,8 @@ class _PreferCenterOverAlignData {
   final NodeList<Expression>? listOfArguments;
 }
 
-class _PreferCenterOverAlignFix extends ResolvedCorrectionProducer {
-  _PreferCenterOverAlignFix({required super.context});
+class PreferCenterOverAlignFix extends ResolvedCorrectionProducer {
+  PreferCenterOverAlignFix({required super.context});
 
   @override
   FixKind? get fixKind => const FixKind(

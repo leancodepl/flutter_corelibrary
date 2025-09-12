@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
@@ -12,7 +11,6 @@ import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:collection/collection.dart';
-import 'package:leancode_lint/helpers.dart';
 
 const _supportedGetters = {
   'size',
@@ -38,8 +36,7 @@ const _supportedGetters = {
   'supportsShowingSystemContextMenu',
 };
 
-class UseDedicatedMediaQueryMethods extends AnalysisRule
-    with AnalysisRuleWithFixes {
+class UseDedicatedMediaQueryMethods extends AnalysisRule {
   UseDedicatedMediaQueryMethods()
     : super(
         name: 'use_dedicated_media_query_methods',
@@ -54,11 +51,6 @@ class UseDedicatedMediaQueryMethods extends AnalysisRule
     description,
     correctionMessage: 'Use the dedicated `{1}` method instead.',
   );
-
-  @override
-  List<ProducerGenerator> get fixes => [
-    _ReplaceMediaQueryOfWithDedicatedMethodFix.new,
-  ];
 
   @override
   void registerNodeProcessors(
@@ -155,9 +147,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   };
 }
 
-class _ReplaceMediaQueryOfWithDedicatedMethodFix
+class ReplaceMediaQueryOfWithDedicatedMethodFix
     extends ResolvedCorrectionProducer {
-  _ReplaceMediaQueryOfWithDedicatedMethodFix({required super.context});
+  ReplaceMediaQueryOfWithDedicatedMethodFix({required super.context});
 
   @override
   FixKind? get fixKind => const FixKind(

@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analysis_server_plugin/registry.dart';
 import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
@@ -8,7 +7,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
@@ -254,18 +252,6 @@ class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
     }
 
     listener(buildMethod.body, diagnosticNode);
-  }
-}
-
-mixin AnalysisRuleWithFixes on AnalysisRule {
-  List<ProducerGenerator> get fixes;
-
-  void registerFixes(PluginRegistry registry) {
-    if (diagnosticCode case final LintCode code) {
-      for (final fix in fixes) {
-        registry.registerFixForRule(code, fix);
-      }
-    }
   }
 }
 

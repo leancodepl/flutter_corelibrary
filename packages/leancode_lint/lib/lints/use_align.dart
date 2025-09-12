@@ -1,4 +1,3 @@
-import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
@@ -7,7 +6,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/helpers.dart';
 
-class UseAlign extends AnalysisRule with AnalysisRuleWithFixes {
+class UseAlign extends AnalysisRule {
   UseAlign()
     : super(
         name: 'use_align',
@@ -18,11 +17,6 @@ class UseAlign extends AnalysisRule with AnalysisRuleWithFixes {
   @override
   LintCode get diagnosticCode =>
       LintCode(name, description, correctionMessage: 'Replace with Align');
-
-  @override
-  List<ProducerGenerator> get fixes => [
-    ChangeWidgetNameFix.producerGeneratorFor('Align'),
-  ];
 
   @override
   void registerNodeProcessors(

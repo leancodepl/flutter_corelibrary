@@ -1,7 +1,6 @@
 import 'package:_fe_analyzer_shared/src/scanner/token.dart';
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
@@ -13,7 +12,7 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Forces comments/docs to start with a space.
-class StartCommentsWithSpace extends AnalysisRule with AnalysisRuleWithFixes {
+class StartCommentsWithSpace extends AnalysisRule {
   StartCommentsWithSpace()
     : super(
         name: 'start_comments_with_space',
@@ -22,9 +21,6 @@ class StartCommentsWithSpace extends AnalysisRule with AnalysisRuleWithFixes {
 
   @override
   LintCode get diagnosticCode => LintCode(name, description);
-
-  @override
-  List<ProducerGenerator> get fixes => [AddStartingSpaceToComment.new];
 
   @override
   void registerNodeProcessors(

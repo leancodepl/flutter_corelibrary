@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
@@ -15,7 +14,7 @@ import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 import 'package:leancode_lint/utils.dart';
 
-class UsePadding extends AnalysisRule with AnalysisRuleWithFixes {
+class UsePadding extends AnalysisRule {
   UsePadding()
     : super(
         name: 'use_padding',
@@ -26,9 +25,6 @@ class UsePadding extends AnalysisRule with AnalysisRuleWithFixes {
   @override
   LintCode get diagnosticCode =>
       LintCode(name, description, correctionMessage: 'Replace with Padding');
-
-  @override
-  List<ProducerGenerator> get fixes => [_UsePaddingFix.new];
 
   @override
   void registerNodeProcessors(
@@ -70,8 +66,8 @@ class _Visitor extends SimpleAstVisitor<void> {
           .label;
 }
 
-class _UsePaddingFix extends ResolvedCorrectionProducer {
-  _UsePaddingFix({required super.context});
+class UsePaddingFix extends ResolvedCorrectionProducer {
+  UsePaddingFix({required super.context});
 
   @override
   FixKind? get fixKind => const FixKind(

@@ -3,6 +3,7 @@ import 'package:analysis_server_plugin/registry.dart';
 import 'package:leancode_lint/assists/convert_iterable_map_to_collection_for.dart';
 import 'package:leancode_lint/assists/convert_positional_to_named_formal.dart';
 import 'package:leancode_lint/assists/convert_record_into_nominal_type.dart';
+import 'package:leancode_lint/helpers.dart';
 import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
@@ -30,19 +31,36 @@ class _Linter extends Plugin {
       ..registerAssist(ConvertRecordIntoNominalType.new)
       ..registerAssist(ConvertPositionalToNamedFormal.new)
       ..registerAssist(ConvertIterableMapToCollectionFor.new)
-      ..registerWarningRule(StartCommentsWithSpace()..registerFixes(registry))
+      ..registerWarningRule(StartCommentsWithSpace())
+      ..registerFixForRule(
+        StartCommentsWithSpace().diagnosticCode,
+        AddStartingSpaceToComment.new,
+      )
       ..registerWarningRule(AddCubitSuffixForYourCubits())
       ..registerWarningRule(CatchParameterNames())
       ..registerWarningRule(AvoidConditionalHooks())
-      ..registerWarningRule(
-        HookWidgetDoesNotUseHooks()..registerFixes(registry),
+      ..registerWarningRule(HookWidgetDoesNotUseHooks())
+      ..registerFixForRule(
+        HookWidgetDoesNotUseHooks().diagnosticCode,
+        ConvertHookWidgetToStatelessWidget.new,
       )
       ..registerWarningRule(AvoidSingleChildInMultiChildWidgets())
-      ..registerWarningRule(UseAlign()..registerFixes(registry))
-      ..registerWarningRule(UsePadding())
-      ..registerWarningRule(
-        UseDedicatedMediaQueryMethods()..registerFixes(registry),
+      ..registerWarningRule(UseAlign())
+      ..registerFixForRule(
+        UseAlign().diagnosticCode,
+        ChangeWidgetNameFix.producerGeneratorFor('Align'),
       )
-      ..registerWarningRule(PreferCenterOverAlign()..registerFixes(registry));
+      ..registerWarningRule(UsePadding())
+      ..registerFixForRule(UsePadding().diagnosticCode, UsePaddingFix.new)
+      ..registerWarningRule(UseDedicatedMediaQueryMethods())
+      ..registerFixForRule(
+        UseDedicatedMediaQueryMethods().diagnosticCode,
+        ReplaceMediaQueryOfWithDedicatedMethodFix.new,
+      )
+      ..registerWarningRule(PreferCenterOverAlign())
+      ..registerFixForRule(
+        PreferCenterOverAlign().diagnosticCode,
+        PreferCenterOverAlignFix.new,
+      );
   }
 }
