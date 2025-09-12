@@ -21,4 +21,4 @@ custom_lint:
 
 plugins:
   leancode_lint:
-    path: ../../../leancode_lint
+    path: ../../leancode_lint
