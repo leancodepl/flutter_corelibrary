@@ -2,7 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/error/error.dart' as error;
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -301,16 +301,14 @@ class ChangeWidgetNameFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    error.AnalysisError analysisError,
-    List<error.AnalysisError> errors,
+    Diagnostic diagnostic,
+    List<Diagnostic> diagnostics,
   ) {
     reporter
         .createChangeBuilder(message: 'Replace with $widgetName', priority: 1)
         .addDartFileEdit(
-          (builder) => builder.addSimpleReplacement(
-            analysisError.sourceRange,
-            widgetName,
-          ),
+          (builder) =>
+              builder.addSimpleReplacement(diagnostic.sourceRange, widgetName),
         );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
@@ -11,7 +12,7 @@ class StartCommentsWithSpace extends DartLintRule {
         code: const LintCode(
           name: 'start_comments_with_space',
           problemMessage: 'Start {0} with a space.',
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
@@ -23,7 +24,7 @@ class StartCommentsWithSpace extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addRegularComment((token) {
@@ -31,7 +32,7 @@ class StartCommentsWithSpace extends DartLintRule {
         reporter.atOffset(
           offset: token.offset + contentStart,
           length: 0,
-          errorCode: code,
+          diagnosticCode: code,
           arguments: [_CommentType.comment.pluralName],
         );
       }
@@ -43,7 +44,7 @@ class StartCommentsWithSpace extends DartLintRule {
           reporter.atOffset(
             offset: token.offset + contentStart,
             length: 0,
-            errorCode: code,
+            diagnosticCode: code,
             arguments: [_CommentType.doc.pluralName],
           );
         }
@@ -85,8 +86,8 @@ class _AddStartingSpaceToComment extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     reporter
         .createChangeBuilder(

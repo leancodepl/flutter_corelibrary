@@ -13,7 +13,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
           name: 'constructor_parameters_and_fields_should_have_the_same_order',
           problemMessage:
               'Class parameters and fields should have the same order.',
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
@@ -24,7 +24,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {

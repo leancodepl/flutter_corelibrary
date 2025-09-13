@@ -12,14 +12,14 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
           name: 'add_cubit_suffix_for_your_cubits',
           problemMessage: 'Add Cubit suffix for your cubits.',
           correctionMessage: 'Ex. {0}Cubit',
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
