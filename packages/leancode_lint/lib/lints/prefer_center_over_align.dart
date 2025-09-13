@@ -1,4 +1,6 @@
+import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
@@ -18,6 +20,33 @@ class PreferCenterOverAlign extends DartLintRule {
   @override
   List<Fix> getFixes() => [_PreferCenterOverAlignFix()];
 
+  static final _alignmentConstantKey = Object();
+
+  @override
+  Future<void> startUp(
+    CustomLintResolver resolver,
+    CustomLintContext context,
+  ) async {
+    final unit = await resolver.getResolvedUnitResult();
+    final session = unit.session;
+
+    final alignmentPath = session.uriConverter.uriToPath(
+      Uri.parse('package:flutter/src/painting/alignment.dart'),
+    )!;
+    final object = switch (await session.getResolvedLibrary(alignmentPath)) {
+      ResolvedLibraryResult(:final element) =>
+        element
+            .getClass('Alignment')
+            ?.getField('center')
+            ?.computeConstantValue(),
+      _ => null,
+    };
+
+    context.sharedState[_alignmentConstantKey] = object;
+
+    return super.startUp(resolver, context);
+  }
+
   @override
   void run(
     CustomLintResolver resolver,
@@ -25,7 +54,10 @@ class PreferCenterOverAlign extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
-      final data = _analyzeAlignInstanceCreationExpression(node);
+      final data = _analyzeAlignInstanceCreationExpression(
+        node,
+        context.sharedState[_alignmentConstantKey] as DartObject?,
+      );
       if (data case final data? when data.isAlignmentCenter) {
         reporter.atNode(node.constructorName, code, data: data);
       }
@@ -34,6 +66,7 @@ class PreferCenterOverAlign extends DartLintRule {
 
   _PreferCenterOverAlignData? _analyzeAlignInstanceCreationExpression(
     InstanceCreationExpression node,
+    DartObject? alignmentCenterConstantValue,
   ) {
     if (!isExpressionExactlyType(node, 'Align', 'flutter')) {
       return null;
@@ -44,7 +77,8 @@ class PreferCenterOverAlign extends DartLintRule {
     for (final argument in arguments.whereType<NamedExpression>()) {
       if (argument.name.label.name == 'alignment') {
         hasAlignmentArgument = true;
-        if (_isValueAlignmentCenter(argument)) {
+        if (argument.expression.computeConstantValue()?.value ==
+            alignmentCenterConstantValue) {
           return _PreferCenterOverAlignData(
             isAlignmentCenter: true,
             alignmentExpression: argument,
@@ -58,29 +92,6 @@ class PreferCenterOverAlign extends DartLintRule {
     }
     return null;
   }
-
-  // TODO: Refactor method below with: computeConstantValue() (https://github.com/dart-lang/sdk/blob/4c4a1d3815a754f7a14112fb0f96030869e305f9/pkg/analyzer/lib/src/dart/ast/ast.dart#L7663)
-  // once leancode_lint is upgraded
-  bool _isValueAlignmentCenter(NamedExpression argument) {
-    return switch (argument.expression) {
-      PrefixedIdentifier(name: 'Alignment.center') => true,
-      InstanceCreationExpression(
-        staticType: final type,
-        argumentList: ArgumentList(:final arguments),
-      )
-          when type?.getDisplayString() == 'Alignment' &&
-              arguments.length == 2 =>
-        _isEveryValueZero(arguments),
-      _ => false,
-    };
-  }
-
-  bool _isEveryValueZero(List<Expression> arguments) => arguments.every(
-    (argument) => switch (argument) {
-      IntegerLiteral(value: 0) || DoubleLiteral(value: 0) => true,
-      _ => false,
-    },
-  );
 }
 
 class _PreferCenterOverAlignData {
