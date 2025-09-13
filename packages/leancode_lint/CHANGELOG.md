@@ -1,3 +1,8 @@
+# 19.0.0
+
+- Support `analyzer` 8.1.0
+- Support `custom_lint_builder` 0.8.1
+
 # 18.0.0
 
 - chore: Refactor lint codes to use built-in positional parameters.
