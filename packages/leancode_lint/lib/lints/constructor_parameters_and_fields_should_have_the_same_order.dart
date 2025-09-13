@@ -108,7 +108,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
   }
 
   bool _isNotSuperFormal(FormalParameter parameter) =>
-      !(parameter.declaredElement?.isSuperFormal ?? false);
+      !(parameter.declaredFragment?.element.isSuperFormal ?? false);
 
   bool _compareEffectiveNames(
     FieldDeclaration field,

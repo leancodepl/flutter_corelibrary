@@ -125,14 +125,15 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
   };
 }
 
-bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-  final element? => const TypeChecker.any([
-    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-    TypeChecker.fromName('State', packageName: 'flutter'),
-    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-  ]).isSuperOf(element),
-  _ => false,
-};
+bool isWidgetClass(ClassDeclaration node) =>
+    switch (node.declaredFragment?.element) {
+      final element? => const TypeChecker.any([
+        TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
+        TypeChecker.fromName('State', packageName: 'flutter'),
+        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+      ]).isSuperOf(element),
+      _ => false,
+    };
 
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
@@ -176,7 +177,7 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       }
     });
     addClassDeclaration((node) {
-      final element = node.declaredElement;
+      final element = node.declaredFragment?.element;
       if (element == null) {
         return;
       }

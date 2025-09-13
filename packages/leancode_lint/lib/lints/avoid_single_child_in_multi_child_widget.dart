@@ -60,7 +60,7 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
 
         // does it have a children argument?
         var children = node.argumentList.arguments.firstWhereOrNull(
-          (e) => e.staticParameterElement?.name == match.$1,
+          (e) => e.correspondingParameter?.name == match.$1,
         );
         if (children == null) {
           return;

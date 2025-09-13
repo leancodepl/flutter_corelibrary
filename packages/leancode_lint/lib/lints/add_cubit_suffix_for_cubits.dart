@@ -39,11 +39,12 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
 
-  bool _isCubitClass(ClassDeclaration node) => switch (node.declaredElement) {
-    final element? => const TypeChecker.fromName(
-      'Cubit',
-      packageName: 'bloc',
-    ).isSuperOf(element),
-    _ => false,
-  };
+  bool _isCubitClass(ClassDeclaration node) =>
+      switch (node.declaredFragment?.element) {
+        final element? => const TypeChecker.fromName(
+          'Cubit',
+          packageName: 'bloc',
+        ).isSuperOf(element),
+        _ => false,
+      };
 }

@@ -52,7 +52,7 @@ abstract base class UseInsteadType extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addIdentifier((node) {
-      if (node.staticElement case final element?) {
+      if (node.element case final element?) {
         _handleElement(reporter, element, node);
       }
     });
