@@ -1,3 +1,10 @@
+# 19.0.0
+
+- Support `analyzer` 8.1.0
+- Support `custom_lint_builder` 0.8.1
+- Enable the following lints:
+  - [`prefer_center_over_align`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_center_over_align)
+
 # 18.0.0
 
 - chore: Refactor lint codes to use built-in positional parameters.
@@ -5,6 +12,9 @@
 - Enable the following lints:
   - [`switch_on_type`](https://dart.dev/tools/linter-rules/switch_on_type)
   - [`unnecessary_unawaited`](https://dart.dev/tools/linter-rules/unnecessary_unawaited)
+  - [`use_dedicated_media_query_methods`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_dedicated_media_query_methods)
+  - [`use_align`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_align)
+  - [`use_padding`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_padding)
 - Disable the [`omit_obvious_property_types`](https://dart.dev/tools/linter-rules/omit_obvious_property_types) lint due to conflict with [`type_annotate_public_apis`](https://dart.dev/tools/linter-rules/type_annotate_public_apis) ([Dart SDK issue #60642](https://github.com/dart-lang/sdk/issues/60642))
 
 # 17.0.0

@@ -2,7 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/error/error.dart' as error;
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -125,14 +125,15 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
   };
 }
 
-bool isWidgetClass(ClassDeclaration node) => switch (node.declaredElement) {
-  final element? => const TypeChecker.any([
-    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-    TypeChecker.fromName('State', packageName: 'flutter'),
-    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-  ]).isSuperOf(element),
-  _ => false,
-};
+bool isWidgetClass(ClassDeclaration node) =>
+    switch (node.declaredFragment?.element) {
+      final element? => const TypeChecker.any([
+        TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
+        TypeChecker.fromName('State', packageName: 'flutter'),
+        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+      ]).isSuperOf(element),
+      _ => false,
+    };
 
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
@@ -176,7 +177,7 @@ extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
       }
     });
     addClassDeclaration((node) {
-      final element = node.declaredElement;
+      final element = node.declaredFragment?.element;
       if (element == null) {
         return;
       }
@@ -300,16 +301,14 @@ class ChangeWidgetNameFix extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    error.AnalysisError analysisError,
-    List<error.AnalysisError> errors,
+    Diagnostic diagnostic,
+    List<Diagnostic> diagnostics,
   ) {
     reporter
         .createChangeBuilder(message: 'Replace with $widgetName', priority: 1)
         .addDartFileEdit(
-          (builder) => builder.addSimpleReplacement(
-            analysisError.sourceRange,
-            widgetName,
-          ),
+          (builder) =>
+              builder.addSimpleReplacement(diagnostic.sourceRange, widgetName),
         );
   }
 }

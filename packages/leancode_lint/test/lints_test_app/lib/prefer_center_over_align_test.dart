@@ -3,6 +3,12 @@
 
 import 'package:flutter/material.dart';
 
+class SomethingWithCenter {
+  final center = const Alignment(1, 2);
+}
+
+typedef RenamedAlignment = Alignment;
+
 // dart format off
 class PreferCenterOverAlignTest {
   void test() {
@@ -34,6 +40,30 @@ class PreferCenterOverAlignTest {
       alignment: Alignment.center,
       child: SizedBox(),
     );
+    
+    // expect_lint: prefer_center_over_align
+    const Align(
+      alignment: RenamedAlignment.center,
+      child: SizedBox(),
+    );
+    
+    const differentName = Alignment.center;
+    // expect_lint: prefer_center_over_align
+    const Align(
+      alignment: differentName,
+      child: SizedBox(),
+    );
+
+    {
+      // Testing name shadowing
+      // ignore: non_constant_identifier_names
+      final Alignment = SomethingWithCenter();
+
+      Align(
+        alignment: Alignment.center,
+        child: const SizedBox(),
+      );
+    }
 
     // expect_lint: prefer_center_over_align
     const Align(

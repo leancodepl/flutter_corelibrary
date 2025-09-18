@@ -13,14 +13,14 @@ class CatchParameterNames extends DartLintRule {
           name: 'catch_parameter_names',
           problemMessage: 'Parameter name for the {0} is non-standard.',
           correctionMessage: 'Rename the parameter to {1}`.',
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addCatchClause((node) {
@@ -44,7 +44,7 @@ class CatchParameterNames extends DartLintRule {
   void _checkParameter(
     CatchClauseParameter? node,
     _CatchClauseParameter param,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     if (node != null &&
         !{'_', param.preferredName}.contains(node.name.lexeme)) {

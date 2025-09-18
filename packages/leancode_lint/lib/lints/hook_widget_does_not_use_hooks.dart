@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/source/source_range.dart';
@@ -13,14 +14,14 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
           name: 'hook_widget_does_not_use_hooks',
           problemMessage: 'This HookWidget does not use hooks.',
           correctionMessage: 'Convert it to a StatelessWidget',
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addHookWidgetBody(isExactly: true, (
@@ -54,8 +55,8 @@ class _ConvertHookWidgetToStatelessWidget extends DartFix {
     CustomLintResolver resolver,
     ChangeReporter reporter,
     CustomLintContext context,
-    AnalysisError analysisError,
-    List<AnalysisError> others,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
   ) {
     reporter
         .createChangeBuilder(

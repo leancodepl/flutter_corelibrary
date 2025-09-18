@@ -12,14 +12,14 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
           name: 'add_cubit_suffix_for_your_cubits',
           problemMessage: 'Add Cubit suffix for your cubits.',
           correctionMessage: 'Ex. {0}Cubit',
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addClassDeclaration((node) {
@@ -39,11 +39,12 @@ class AddCubitSuffixForYourCubits extends DartLintRule {
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
 
-  bool _isCubitClass(ClassDeclaration node) => switch (node.declaredElement) {
-    final element? => const TypeChecker.fromName(
-      'Cubit',
-      packageName: 'bloc',
-    ).isSuperOf(element),
-    _ => false,
-  };
+  bool _isCubitClass(ClassDeclaration node) =>
+      switch (node.declaredFragment?.element) {
+        final element? => const TypeChecker.fromName(
+          'Cubit',
+          packageName: 'bloc',
+        ).isSuperOf(element),
+        _ => false,
+      };
 }

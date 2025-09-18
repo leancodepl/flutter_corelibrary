@@ -13,7 +13,7 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
           problemMessage: 'Avoid using {0} with a single child.',
           correctionMessage:
               'Remove the {0} and achieve the same result using dedicated widgets.',
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
@@ -44,7 +44,7 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addInstanceCreationExpression((node) {
@@ -60,7 +60,7 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
 
         // does it have a children argument?
         var children = node.argumentList.arguments.firstWhereOrNull(
-          (e) => e.staticParameterElement?.name == match.$1,
+          (e) => e.correspondingParameter?.name == match.$1,
         );
         if (children == null) {
           return;
@@ -76,14 +76,14 @@ class AvoidSingleChildInMultiChildWidgets extends DartLintRule {
   void _checkInstanceCreation(
     NamedType constructorName,
     Expression children,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
   ) {
     if (children case final ListLiteral list) {
       if (_hasSingleElement(list)) {
         reporter.atNode(
           constructorName,
           code,
-          arguments: [constructorName.name2.lexeme],
+          arguments: [constructorName.name.lexeme],
         );
       }
     }

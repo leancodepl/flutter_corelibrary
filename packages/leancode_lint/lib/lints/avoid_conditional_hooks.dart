@@ -12,14 +12,14 @@ class AvoidConditionalHooks extends DartLintRule {
         code: const LintCode(
           name: 'avoid_conditional_hooks',
           problemMessage: "Don't use hooks conditionally",
-          errorSeverity: ErrorSeverity.WARNING,
+          errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     context.registry.addHookWidgetBody((node, diagnosticNode) {

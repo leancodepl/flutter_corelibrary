@@ -17,7 +17,7 @@ dependencies:
   sliver_tools: ^0.2.12
 
 dev_dependencies:
-  custom_lint: ^0.7.5
+  custom_lint: ^0.8.1
   leancode_lint:
     path: ../../../leancode_lint
 
