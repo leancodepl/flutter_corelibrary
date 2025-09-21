@@ -14,7 +14,7 @@
 //     required String lintCodeName,
 //     required String problemMessage,
 //     required String correctionMessage,
-//     ErrorSeverity errorSeverity = ErrorSeverity.WARNING,
+//     DiagnosticSeverity errorSeverity = DiagnosticSeverity.WARNING,
 //   }) : _checkers = [
 //          for (final MapEntry(key: preferredItemName, value: forbidden)
 //              in replacements.entries)
@@ -48,11 +48,11 @@
 //   @override
 //   void run(
 //     CustomLintResolver resolver,
-//     ErrorReporter reporter,
+//     DiagnosticReporter reporter,
 //     CustomLintContext context,
 //   ) {
 //     context.registry.addIdentifier((node) {
-//       if (node.staticElement case final element?) {
+//       if (node.element case final element?) {
 //         _handleElement(reporter, element, node);
 //       }
 //     });
@@ -63,7 +63,11 @@
 //     });
 //   }
 //
-//   void _handleElement(ErrorReporter reporter, Element element, AstNode node) {
+//   void _handleElement(
+//     DiagnosticReporter reporter,
+//     Element element,
+//     AstNode node,
+//   ) {
 //     if (_isInHide(node)) {
 //       return;
 //     }

@@ -132,14 +132,15 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
   };
 }
 
-bool isWidgetClass(ClassDeclaration node) => switch (node.declaredFragment) {
-  final fragment? => const TypeChecker.any([
-    TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-    TypeChecker.fromName('State', packageName: 'flutter'),
-    TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-  ]).isSuperOf(fragment.element),
-  _ => false,
-};
+bool isWidgetClass(ClassDeclaration node) =>
+    switch (node.declaredFragment?.element) {
+      final element? => const TypeChecker.any([
+        TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
+        TypeChecker.fromName('State', packageName: 'flutter'),
+        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+      ]).isSuperOf(element),
+      _ => false,
+    };
 
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()

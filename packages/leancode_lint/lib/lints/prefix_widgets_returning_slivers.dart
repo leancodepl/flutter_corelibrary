@@ -29,7 +29,7 @@
 //           problemMessage:
 //               'Prefix widget names of widgets which return slivers in the build method.',
 //           correctionMessage: 'Consider renaming to {0}',
-//           errorSeverity: ErrorSeverity.WARNING,
+//           errorSeverity: DiagnosticSeverity.WARNING,
 //         ),
 //       );
 //
@@ -47,7 +47,7 @@
 //   @override
 //   void run(
 //     CustomLintResolver resolver,
-//     ErrorReporter reporter,
+//     DiagnosticReporter reporter,
 //     CustomLintContext context,
 //   ) {
 //     context.registry.addClassDeclaration((node) {
@@ -96,7 +96,7 @@
 //   bool _anyIsSliver(Iterable<Expression> expressions) => expressions.any(
 //     (expression) =>
 //         expression is InstanceCreationExpression &&
-//         _hasSliverPrefix(expression.constructorName.type.name2.lexeme),
+//         _hasSliverPrefix(expression.constructorName.type.name.lexeme),
 //   );
 //
 //   static String _getSuggestedClassName(
