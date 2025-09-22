@@ -56,18 +56,19 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
-    if (node case final FormalParameterList node) {
+    if (node case final FormalParameter node) {
+      final paramList = node.thisOrAncestorOfType<FormalParameterList>()!;
       // parameter list has positional optional parameters, named params cannot be added
-      if (node.leftDelimiter?.kind == TokenType.OPEN_SQUARE_BRACKET.kind) {
+      if (paramList.leftDelimiter?.kind == TokenType.OPEN_SQUARE_BRACKET.kind) {
         return;
       }
 
-      final parameters = node.parameters.where(
+      final parameters = paramList.parameters.where(
         (parameter) => parameter.isRequiredPositional,
       );
 
       final nextItem = parameters.skip(1).cast<SyntacticEntity>().followedBy([
-        node.leftDelimiter ?? node.rightParenthesis,
+        paramList.leftDelimiter ?? paramList.rightParenthesis,
       ]);
 
       final target = SourceRange(selectionOffset, selectionLength);
@@ -91,13 +92,13 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
         final namedParam =
             '${Keyword.REQUIRED.lexeme} ${Keyword.THIS.lexeme}.${parameter.name},';
 
-        if (node.leftDelimiter case final brace?) {
+        if (paramList.leftDelimiter case final brace?) {
           // has named parameters, add to list
           builder.addSimpleInsertion(brace.offset + 1, namedParam);
         } else {
           // no named parameters, create
           builder.addSimpleInsertion(
-            node.rightParenthesis.offset,
+            paramList.rightParenthesis.offset,
             '{$namedParam}',
           );
         }
