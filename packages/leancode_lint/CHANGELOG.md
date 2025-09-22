@@ -1,3 +1,7 @@
+# 20.0.0-dev.1
+
+- Rewrite lints using the [new analyzer plugin system](https://github.com/dart-lang/sdk/issues/53402)
+
 # 19.0.0
 
 - Support `analyzer` 8.1.0
