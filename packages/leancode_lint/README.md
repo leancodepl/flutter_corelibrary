@@ -9,7 +9,7 @@ An opinionated set of high-quality, robust, and up-to-date lint rules used at Le
 1. Add `leancode_lint` as a dev dependency in your project's `pubspec.yaml`.
 
    ```sh
-   dart pub add leancode_lint custom_lint --dev
+   dart pub add leancode_lint --dev
    ```
 
 2. In your `analysis_options.yaml` add `include: package:leancode_lint/analysis_options.yaml`. You might want to exclude some files
