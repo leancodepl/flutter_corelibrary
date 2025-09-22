@@ -25,6 +25,9 @@ class _Linter extends Plugin {
   // ];
 
   @override
+  String get name => 'leancode_lint';
+
+  @override
   void register(PluginRegistry registry) {
     registry
       ..registerAssist(ConvertRecordIntoNominalType.new)
