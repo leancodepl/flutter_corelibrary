@@ -5,7 +5,6 @@ import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
@@ -61,6 +60,8 @@ class UseDedicatedMediaQueryMethods extends AnalysisRule {
   }
 }
 
+final _ruleData = Expando<String>();
+
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
@@ -80,12 +81,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    rule.reportAtNode(
+    final diagnostic = context.definingUnit.diagnosticReporter.atNode(
       parent,
+      rule.diagnosticCode,
       arguments: [node.toSource(), replacementSuggestion],
-      // FIXME: use expando instead of data when possible
-      // data: replacementSuggestion,
     );
+
+    _ruleData[diagnostic] = replacementSuggestion;
   }
 
   String? _getReplacementSuggestion(MethodInvocation node) {
@@ -164,15 +166,12 @@ class ReplaceMediaQueryOfWithDedicatedMethodFix
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
-    if (diagnostic case Diagnostic(
-      data: final String suggestedReplacement,
-      :final offset,
-      :final length,
-    )) {
+    if (diagnostic case final diagnostic?) {
+      final suggestedReplacement = _ruleData[diagnostic]!;
       await builder.addDartFileEdit(
         file,
         (builder) => builder.addSimpleReplacement(
-          SourceRange(offset, length),
+          SourceRange(diagnostic.offset, diagnostic.length),
           suggestedReplacement,
         ),
       );
