@@ -1,6 +1,14 @@
-# 20.0.0-dev.1
+# 20.0.0-dev
 
 - Rewrite lints using the [new analyzer plugin system](https://github.com/dart-lang/sdk/issues/53402)
+
+## 20.0.0-dev.1
+
+- Initial rewrite
+
+## 20.0.0-dev.2
+
+- Rewrite reporting diagnostics with custom data using expandos
 
 # 19.0.0
 
