@@ -72,9 +72,9 @@ class UsePaddingFix extends ResolvedCorrectionProducer {
 
   @override
   FixKind? get fixKind => const FixKind(
-    'leancode.lint.convertHookWidgetToStatelessWidget',
+    'leancode.lint.usePadding',
     DartFixKindPriority.standard,
-    'Convert HookWidget to StatelessWidget',
+    'Use Padding instead of Container',
   );
 
   @override
