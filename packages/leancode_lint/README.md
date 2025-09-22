@@ -6,7 +6,7 @@ An opinionated set of high-quality, robust, and up-to-date lint rules used at Le
 
 ## Installation
 
-1. Add `leancode_lint` and `custom_lint` as a dev dependency in your project's `pubspec.yaml`.
+1. Add `leancode_lint` as a dev dependency in your project's `pubspec.yaml`.
 
    ```sh
    dart pub add leancode_lint custom_lint --dev
@@ -15,7 +15,7 @@ An opinionated set of high-quality, robust, and up-to-date lint rules used at Le
 2. In your `analysis_options.yaml` add `include: package:leancode_lint/analysis_options.yaml`. You might want to exclude some files
    (e.g generated json serializable) from analysis.
 
-3. Enable the `custom_lint` analyzer plugin in `analysis_options.yaml`. You can customize lint rules by adding a `custom_lint` config
+3. Enable the `leancode_lint` analyzer plugin in `analysis_options.yaml`. You can customize lint rules by adding a `custom_lint` config
    with a `rules` section.
 
 4. Run `flutter pub get` in your project main directory and restart your IDE. You're ready to go!
@@ -24,6 +24,9 @@ Example `analysis_options.yaml`:
 
 ```yaml
 include: package:leancode_lint/analysis_options.yaml
+
+plugins:
+  leancode_lint: ^20.0.0-dev.1
 
 # Optional lint rules configuration
 custom_lint:
@@ -39,9 +42,6 @@ custom_lint:
           from_package: flutter
 
 analyzer:
-  plugins:
-    # Required for our custom lints support
-    - custom_lint
   exclude:
     - '**/*.g.dart'
 ```
