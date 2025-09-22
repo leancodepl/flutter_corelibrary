@@ -9,7 +9,7 @@ topics:
   - lints
 
 environment:
-  sdk: ^3.10.0-193.0.dev
+  sdk: ^3.9.3
 
 dependencies:
   analysis_server_plugin: ^0.2.2
