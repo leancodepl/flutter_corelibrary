@@ -10,6 +10,13 @@
 
 - Rewrite reporting diagnostics with custom data using expandos
 
+## 20.0.0-dev.3
+
+- Update dependencies, support `analysis_server_plugin: ^0.3.1`.
+- Bring back reading lint config from `analysis_options.yaml`.
+- Bring back and re-write the `use_design_system_item` and `prefix_widgets_returning_slivers` rules.
+- Update the README.md to show new usages.
+
 # 19.0.0
 
 - Support `analyzer` 8.1.0
