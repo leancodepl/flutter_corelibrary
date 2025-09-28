@@ -9,6 +9,7 @@ import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
+import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
 import 'package:leancode_lint/lints/use_align.dart';
 import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
@@ -20,7 +21,6 @@ class _Linter extends Plugin {
   // @override
   // List<LintRule> getLintRules(CustomLintConfigs configs) => [
   //   ...UseDesignSystemItem.getRulesListFromConfigs(configs),
-  //   PrefixWidgetsReturningSlivers.fromConfigs(configs),
   //   const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
   // ];
 
@@ -34,6 +34,7 @@ class _Linter extends Plugin {
       ..registerAssist(ConvertPositionalToNamedFormal.new)
       ..registerAssist(ConvertIterableMapToCollectionFor.new)
       ..registerWarningRule(StartCommentsWithSpace())
+      ..registerWarningRule(PrefixWidgetsReturningSlivers())
       ..registerFixForRule(
         StartCommentsWithSpace().diagnosticCode,
         AddStartingSpaceToComment.new,
