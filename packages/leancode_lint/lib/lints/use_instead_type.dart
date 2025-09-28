@@ -1,100 +1,90 @@
-// import 'package:analyzer/dart/ast/ast.dart';
-// import 'package:analyzer/dart/element/element.dart';
-// import 'package:analyzer/error/error.dart' hide LintCode;
-// import 'package:analyzer/error/listener.dart';
-// import 'package:custom_lint_builder/custom_lint_builder.dart';
-//
-// typedef ForbiddenItem = ({String name, String packageName});
-//
-// /// Enforces that items that have replacements defined are used.
-// abstract base class UseInsteadType extends DartLintRule {
-//   UseInsteadType({
-//     /// preferred item -> forbidden items
-//     required Map<String, List<ForbiddenItem>> replacements,
-//     required String lintCodeName,
-//     required String problemMessage,
-//     required String correctionMessage,
-//     DiagnosticSeverity errorSeverity = DiagnosticSeverity.WARNING,
-//   }) : _checkers = [
-//          for (final MapEntry(key: preferredItemName, value: forbidden)
-//              in replacements.entries)
-//            (
-//              preferredItemName,
-//              TypeChecker.any([
-//                for (final (:name, :packageName) in forbidden)
-//                  if (packageName.startsWith('dart:'))
-//                    TypeChecker.fromUrl('$packageName#$name')
-//                  else
-//                    TypeChecker.fromName(name, packageName: packageName),
-//              ]),
-//            ),
-//        ],
-//        super(
-//          code: LintCode(
-//            name: lintCodeName,
-//            problemMessage: problemMessage,
-//            correctionMessage: correctionMessage,
-//            errorSeverity: errorSeverity,
-//          ),
-//        );
-//
-//   final List<(String preferredItemName, TypeChecker)> _checkers;
-//
-//   @override
-//   bool isEnabled(CustomLintConfigs configs) {
-//     return _checkers.isNotEmpty;
-//   }
-//
-//   @override
-//   void run(
-//     CustomLintResolver resolver,
-//     DiagnosticReporter reporter,
-//     CustomLintContext context,
-//   ) {
-//     context.registry.addIdentifier((node) {
-//       if (node.element case final element?) {
-//         _handleElement(reporter, element, node);
-//       }
-//     });
-//     context.registry.addNamedType((node) {
-//       if (node.element case final element?) {
-//         _handleElement(reporter, element, node);
-//       }
-//     });
-//   }
-//
-//   void _handleElement(
-//     DiagnosticReporter reporter,
-//     Element element,
-//     AstNode node,
-//   ) {
-//     if (_isInHide(node)) {
-//       return;
-//     }
-//
-//     for (final (preferredItemName, checker) in _checkers) {
-//       try {
-//         if (checker.isExactly(element)) {
-//           reporter.atNode(
-//             node,
-//             code,
-//             arguments: [element.displayName, preferredItemName],
-//           );
-//         }
-//       } catch (err) {
-//         // isExactly crashes sometimes
-//       }
-//     }
-//   }
-//
-//   bool _isInHide(AstNode node) {
-//     if (node.parent case final parent?) {
-//       if (parent is HideCombinator) {
-//         return true;
-//       }
-//       return _isInHide(parent);
-//     } else {
-//       return false;
-//     }
-//   }
-// }
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:leancode_lint/type_checker.dart';
+
+abstract base class UseInsteadType extends AnalysisRule {
+  UseInsteadType({
+    required super.name,
+    required super.description,
+    required this.correctionMessage,
+  });
+
+  final String correctionMessage;
+
+  @override
+  LintCode get diagnosticCode =>
+      LintCode(name, description, correctionMessage: correctionMessage);
+
+  List<(String, TypeChecker)> getCheckers(RuleContext context);
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    final visitor = _Visitor(this, context);
+    registry
+      ..addPrefixedIdentifier(this, visitor)
+      ..addSimpleIdentifier(this, visitor)
+      ..addLibraryIdentifier(this, visitor)
+      ..addNamedType(this, visitor);
+  }
+}
+
+class _Visitor extends GeneralizingAstVisitor<void> {
+  _Visitor(this.rule, this.context) : checkers = rule.getCheckers(context);
+
+  final UseInsteadType rule;
+  final RuleContext context;
+  final List<(String, TypeChecker)> checkers;
+
+  @override
+  void visitIdentifier(Identifier node) {
+    if (node.element case final element?) {
+      _handleElement(element, node);
+    }
+  }
+
+  @override
+  void visitNamedType(NamedType node) {
+    if (node.element case final element?) {
+      _handleElement(element, node);
+    }
+  }
+
+  void _handleElement(Element element, AstNode node) {
+    if (_isInHide(node)) {
+      return;
+    }
+
+    for (final (preferredItemName, checker) in checkers) {
+      try {
+        if (checker.isExactly(element)) {
+          // TODO: use item-specific lint codes
+          rule.reportAtNode(
+            node,
+            arguments: [element.displayName, preferredItemName],
+          );
+        }
+      } catch (err) {
+        // isExactly crashes sometimes
+      }
+    }
+  }
+
+  bool _isInHide(AstNode node) {
+    if (node.parent case final parent?) {
+      if (parent is HideCombinator) {
+        return true;
+      }
+      return _isInHide(parent);
+    } else {
+      return false;
+    }
+  }
+}

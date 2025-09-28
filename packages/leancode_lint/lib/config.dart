@@ -43,4 +43,23 @@ class LeancodeLintConfig {
     {'application_prefix': final String prefix} => prefix,
     _ => null,
   };
+
+  Map<String, List<({String name, String packageName})>>?
+  get designSystemItemReplacements {
+    final map = configMap['use_design_system_item'];
+    if (map is! YamlMap) {
+      return null;
+    }
+
+    return {
+      for (final entry in map.entries)
+        entry.key as String: [
+          for (final (forbidden as YamlMap) in entry.value as List)
+            (
+              name: forbidden['instead_of'] as String,
+              packageName: forbidden['from_package'] as String,
+            ),
+        ],
+    };
+  }
 }

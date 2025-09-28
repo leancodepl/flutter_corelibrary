@@ -13,6 +13,7 @@ import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
 import 'package:leancode_lint/lints/use_align.dart';
 import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
+import 'package:leancode_lint/lints/use_design_system_item.dart';
 import 'package:leancode_lint/lints/use_padding.dart';
 
 final plugin = _Linter();
@@ -20,7 +21,6 @@ final plugin = _Linter();
 class _Linter extends Plugin {
   // @override
   // List<LintRule> getLintRules(CustomLintConfigs configs) => [
-  //   ...UseDesignSystemItem.getRulesListFromConfigs(configs),
   //   const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
   //   const PreferCenterOverAlign(),
   // ];
@@ -31,6 +31,7 @@ class _Linter extends Plugin {
   @override
   void register(PluginRegistry registry) {
     registry
+      ..registerWarningRule(UseDesignSystemItem())
       ..registerAssist(ConvertRecordIntoNominalType.new)
       ..registerAssist(ConvertPositionalToNamedFormal.new)
       ..registerAssist(ConvertIterableMapToCollectionFor.new)
