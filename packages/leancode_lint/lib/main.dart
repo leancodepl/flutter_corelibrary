@@ -22,6 +22,7 @@ class _Linter extends Plugin {
   // List<LintRule> getLintRules(CustomLintConfigs configs) => [
   //   ...UseDesignSystemItem.getRulesListFromConfigs(configs),
   //   const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
+  //   const PreferCenterOverAlign(),
   // ];
 
   @override
