@@ -9,7 +9,7 @@ topics:
   - lints
 
 environment:
-  sdk: ^3.9.3
+  sdk: ^3.9.2
 
 dependencies:
   _fe_analyzer_shared: ^89.0.0
