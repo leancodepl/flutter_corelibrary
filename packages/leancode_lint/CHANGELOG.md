@@ -17,6 +17,11 @@
 - Bring back and re-write the `use_design_system_item` and `prefix_widgets_returning_slivers` rules.
 - Update the README.md to show new usages.
 
+## 20.0.0-dev.4
+
+- Bring back the `constructor_parameters_and_fields_should_have_the_same_order` lint
+- Restore default lint severities
+
 # 19.0.0
 
 - Support `analyzer` 8.1.0
