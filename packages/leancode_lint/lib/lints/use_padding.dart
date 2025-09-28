@@ -22,8 +22,12 @@ class UsePadding extends AnalysisRule {
       );
 
   @override
-  LintCode get diagnosticCode =>
-      LintCode(name, description, correctionMessage: 'Replace with Padding');
+  LintCode get diagnosticCode => LintCode(
+    name,
+    description,
+    correctionMessage: 'Replace with Padding',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
   @override
   void registerNodeProcessors(

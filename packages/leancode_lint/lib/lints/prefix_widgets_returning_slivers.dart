@@ -19,8 +19,12 @@ class PrefixWidgetsReturningSlivers extends AnalysisRule {
       );
 
   @override
-  LintCode get diagnosticCode =>
-      LintCode(name, description, correctionMessage: 'Rename to {0}');
+  LintCode get diagnosticCode => LintCode(
+    name,
+    description,
+    correctionMessage: 'Rename to {0}',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
   @override
   void registerNodeProcessors(

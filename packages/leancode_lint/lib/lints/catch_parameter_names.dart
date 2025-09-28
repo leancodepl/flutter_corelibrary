@@ -21,6 +21,7 @@ class CatchParameterNames extends AnalysisRule {
     name,
     'Parameter name for the {0} is non-standard.',
     correctionMessage: 'Rename the parameter to {1}`.',
+    severity: DiagnosticSeverity.WARNING,
   );
 
   @override

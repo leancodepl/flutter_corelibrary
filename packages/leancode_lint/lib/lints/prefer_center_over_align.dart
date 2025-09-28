@@ -14,6 +14,7 @@
 //           name: 'prefer_center_over_align',
 //           problemMessage:
 //               'Use the Center widget instead of the Align widget with the alignment parameter set to Alignment.center',
+//           errorSeverity: DiagnosticSeverity.WARNING,
 //         ),
 //       );
 //

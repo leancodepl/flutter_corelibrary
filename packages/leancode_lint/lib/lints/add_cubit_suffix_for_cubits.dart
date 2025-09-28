@@ -16,8 +16,12 @@ class AddCubitSuffixForYourCubits extends AnalysisRule {
       );
 
   @override
-  LintCode get diagnosticCode =>
-      LintCode(name, description, correctionMessage: 'Ex. {0}Cubit');
+  LintCode get diagnosticCode => LintCode(
+    name,
+    description,
+    correctionMessage: 'Ex. {0}Cubit',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
   @override
   void registerNodeProcessors(

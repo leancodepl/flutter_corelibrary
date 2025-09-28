@@ -15,8 +15,12 @@ class UseAlign extends AnalysisRule {
       );
 
   @override
-  LintCode get diagnosticCode =>
-      LintCode(name, description, correctionMessage: 'Replace with Align');
+  LintCode get diagnosticCode => LintCode(
+    name,
+    description,
+    correctionMessage: 'Replace with Align',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
   @override
   void registerNodeProcessors(

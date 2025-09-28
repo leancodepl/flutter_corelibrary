@@ -21,6 +21,7 @@ class AvoidSingleChildInMultiChildWidgets extends AnalysisRule {
     description,
     correctionMessage:
         'Remove the {0} and achieve the same result using dedicated widgets.',
+    severity: DiagnosticSeverity.WARNING,
   );
 
   @override

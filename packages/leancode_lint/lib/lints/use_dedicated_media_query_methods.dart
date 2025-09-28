@@ -49,6 +49,7 @@ class UseDedicatedMediaQueryMethods extends AnalysisRule {
     name,
     description,
     correctionMessage: 'Use the dedicated `{1}` method instead.',
+    severity: DiagnosticSeverity.WARNING,
   );
 
   @override

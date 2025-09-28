@@ -1,4 +1,5 @@
 import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/lints/use_instead_type.dart';
 import 'package:leancode_lint/type_checker.dart';
@@ -10,6 +11,7 @@ final class UseDesignSystemItem extends UseInsteadType {
         description: '{0} is forbidden within this design system.',
         correctionMessage:
             'Use the alternative defined in the design system: {1}.',
+        severity: DiagnosticSeverity.WARNING,
       );
 
   @override

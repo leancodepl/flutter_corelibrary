@@ -12,13 +12,19 @@ abstract base class UseInsteadType extends AnalysisRule {
     required super.name,
     required super.description,
     required this.correctionMessage,
+    this.severity = DiagnosticSeverity.WARNING,
   });
 
   final String correctionMessage;
+  final DiagnosticSeverity severity;
 
   @override
-  LintCode get diagnosticCode =>
-      LintCode(name, description, correctionMessage: correctionMessage);
+  LintCode get diagnosticCode => LintCode(
+    name,
+    description,
+    correctionMessage: correctionMessage,
+    severity: severity,
+  );
 
   List<(String, TypeChecker)> getCheckers(RuleContext context);
 

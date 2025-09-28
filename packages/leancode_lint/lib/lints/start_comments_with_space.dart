@@ -20,7 +20,8 @@ class StartCommentsWithSpace extends AnalysisRule {
       );
 
   @override
-  LintCode get diagnosticCode => LintCode(name, description);
+  LintCode get diagnosticCode =>
+      LintCode(name, description, severity: DiagnosticSeverity.WARNING);
 
   @override
   void registerNodeProcessors(

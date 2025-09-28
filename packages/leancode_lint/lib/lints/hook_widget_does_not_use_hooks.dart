@@ -23,6 +23,7 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule {
     name,
     description,
     correctionMessage: 'Convert it to a StatelessWidget',
+    severity: DiagnosticSeverity.WARNING,
   );
 
   @override
