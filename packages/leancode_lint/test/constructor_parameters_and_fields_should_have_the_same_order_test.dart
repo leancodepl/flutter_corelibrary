@@ -1,8 +1,34 @@
-// for tests
-// ignore_for_file: unused_field
+import 'package:analyzer/src/lint/registry.dart';
+import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+import 'package:leancode_lint/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
+import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(
+      ConstructorParametersAndFieldsShouldHaveTheSameOrderTest,
+    );
+  });
+}
+
+@reflectiveTest
+class ConstructorParametersAndFieldsShouldHaveTheSameOrderTest
+    extends AnalysisRuleTest {
+  final rule = ConstructorParametersAndFieldsShouldHaveTheSameOrder();
+
+  @override
+  void setUp() {
+    Registry.ruleRegistry.registerWarningRule(rule);
+    super.setUp();
+  }
+
+  @override
+  String get analysisRule => rule.name;
+
+  Future<void> test_invalid_unnamed_parameters_order() async {
+    await assertDiagnostics(
+      '''
 class ClassWithInvalidUnnamedParametersOrder {
-  // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
   const ClassWithInvalidUnnamedParametersOrder(
     this.third,
     this.second,
@@ -11,7 +37,6 @@ class ClassWithInvalidUnnamedParametersOrder {
     this.fifth,
   );
 
-  // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
   const ClassWithInvalidUnnamedParametersOrder.anotherConstructor(
     this.third,
     this.second,
@@ -26,9 +51,15 @@ class ClassWithInvalidUnnamedParametersOrder {
   final int fourth;
   final int fifth;
 }
+''',
+      [lint(49, 132), lint(185, 151)],
+    );
+  }
 
+  Future<void> test_invalid_named_parameters_order() async {
+    await assertDiagnostics(
+      '''
 class ClassWithInvalidNamedParametersOrder {
-  // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
   const ClassWithInvalidNamedParametersOrder({
     required this.third,
     required this.first,
@@ -43,7 +74,13 @@ class ClassWithInvalidNamedParametersOrder {
   final int fourth;
   final int fifth;
 }
+''',
+      [lint(47, 177)],
+    );
+  }
 
+  Future<void> test_valid_unnamed_parameters_order() async {
+    await assertNoDiagnostics('''
 class ClassWithValidUnnamedParametersOrder {
   const ClassWithValidUnnamedParametersOrder(
     this.first,
@@ -67,7 +104,11 @@ class ClassWithValidUnnamedParametersOrder {
   final int fourth;
   final int fifth;
 }
+''');
+  }
 
+  Future<void> test_valid_named_parameters_order() async {
+    await assertNoDiagnostics('''
 class ClassWithValidNamedParametersOrder {
   const ClassWithValidNamedParametersOrder({
     required this.first,
@@ -91,9 +132,14 @@ class ClassWithValidNamedParametersOrder {
   final int fourth;
   final int fifth;
 }
+''');
+  }
 
+  Future<void>
+  test_invalid_named_parameters_order_and_with_non_this_parameter() async {
+    await assertDiagnostics(
+      '''
 class ClassWithInvalidNamedParametersOrderAndWithNonThisParameter {
-  // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
   const ClassWithInvalidNamedParametersOrderAndWithNonThisParameter({
     required this.first,
     required this.second,
@@ -111,7 +157,14 @@ class ClassWithInvalidNamedParametersOrderAndWithNonThisParameter {
 
   final String _otherParameter;
 }
+''',
+      [lint(70, 271)],
+    );
+  }
 
+  Future<void>
+  test_valid_named_parameters_order_and_with_non_this_parameter() async {
+    await assertNoDiagnostics('''
 class ClassWithValidNamedParametersOrderAndWithNonThisParameter {
   const ClassWithValidNamedParametersOrderAndWithNonThisParameter({
     required this.first,
@@ -130,9 +183,14 @@ class ClassWithValidNamedParametersOrderAndWithNonThisParameter {
 
   final String _otherParameter;
 }
+''');
+  }
 
+  Future<void>
+  test_invalid_unnamed_parameters_order_and_with_non_this_parameter() async {
+    await assertDiagnostics(
+      '''
 class ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter {
-  // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
   const ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter(
     this.third,
     this.second,
@@ -150,7 +208,14 @@ class ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter {
 
   final String _otherParameter;
 }
+''',
+      [lint(72, 217)],
+    );
+  }
 
+  Future<void>
+  test_valid_unnamed_parameters_order_and_with_non_this_parameter() async {
+    await assertNoDiagnostics('''
 class ClassWithValidUnnamedParametersOrderAndWithNonThisParameter {
   const ClassWithValidUnnamedParametersOrderAndWithNonThisParameter(
     this.first,
@@ -169,7 +234,12 @@ class ClassWithValidUnnamedParametersOrderAndWithNonThisParameter {
 
   final String _otherParameter;
 }
+''');
+  }
 
+  Future<void>
+  test_valid_unnamed_parameters_order_and_with_super_parameter() async {
+    await assertNoDiagnostics('''
 class ClassWithValidUnnamedParametersOrderAndWithSuperParameter
     extends _AbstractClassWithField {
   const ClassWithValidUnnamedParametersOrderAndWithSuperParameter(
@@ -193,7 +263,11 @@ abstract class _AbstractClassWithField {
 
   final int a;
 }
+''');
+  }
 
+  Future<void> test_mixed_parameters_with_valid_order() async {
+    await assertNoDiagnostics('''
 class ClassWithMixedParametersWithValidOrder extends _AbstractClassWithField {
   const ClassWithMixedParametersWithValidOrder(
     super.a,
@@ -214,8 +288,18 @@ class ClassWithMixedParametersWithValidOrder extends _AbstractClassWithField {
   final String _test;
 }
 
+abstract class _AbstractClassWithField {
+  const _AbstractClassWithField(this.a);
+
+  final int a;
+}
+''');
+  }
+
+  Future<void> test_mixed_parameters_with_invalid_order() async {
+    await assertDiagnostics(
+      '''
 class ClassWithMixedParametersWithInvalidOrder extends _AbstractClassWithField {
-  // expect_lint: constructor_parameters_and_fields_should_have_the_same_order
   const ClassWithMixedParametersWithInvalidOrder(
     super.a,
     this.second,
@@ -235,6 +319,18 @@ class ClassWithMixedParametersWithInvalidOrder extends _AbstractClassWithField {
   final String _test;
 }
 
+abstract class _AbstractClassWithField {
+  const _AbstractClassWithField(this.a);
+
+  final int a;
+}
+''',
+      [lint(83, 218)],
+    );
+  }
+
+  Future<void> test_valid_order_but_one_field_set_in_constructor_body() async {
+    await assertNoDiagnostics('''
 class ClassWithValidOrderButOneFieldSetInConstructorBody {
   const ClassWithValidOrderButOneFieldSetInConstructorBody({
     required this.first,
@@ -249,7 +345,11 @@ class ClassWithValidOrderButOneFieldSetInConstructorBody {
   final int fourth;
   final int fifth;
 }
+''');
+  }
 
+  Future<void> test_valid_order_but_one_field_has_initializer() async {
+    await assertNoDiagnostics('''
 class ClassWithValidOrderButOneFieldHasInitializer {
   const ClassWithValidOrderButOneFieldHasInitializer({
     required this.first,
@@ -264,7 +364,11 @@ class ClassWithValidOrderButOneFieldHasInitializer {
   final int fourth;
   final int fifth;
 }
+''');
+  }
 
+  Future<void> test_valid_order_but_one_field_is_nullable_and_mutable() async {
+    await assertNoDiagnostics('''
 class ClassWithValidOrderButOneFieldIsNullableAndMutable {
   ClassWithValidOrderButOneFieldIsNullableAndMutable({
     required this.first,
@@ -278,4 +382,7 @@ class ClassWithValidOrderButOneFieldIsNullableAndMutable {
   int? third;
   final int fourth;
   final int fifth;
+}
+''');
+  }
 }
