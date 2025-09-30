@@ -5,7 +5,9 @@ enum MockLibrary {
   flutter('flutter', 'material.dart', _flutterMock),
   bloc('bloc', 'bloc.dart', _blocMock),
   flutterBloc('flutter_bloc', 'flutter_bloc.dart', _flutterBlocMock),
-  sliverTools('sliver_tools', 'sliver_tools.dart', _sliverToolsMock);
+  sliverTools('sliver_tools', 'sliver_tools.dart', _sliverToolsMock),
+  flutterHooks('flutter_hooks', 'flutter_hooks.dart', _flutterHooksMock),
+  hooksRiverpod('hooks_riverpod', 'hooks_riverpod.dart', _hooksRiverpodMock);
 
   const MockLibrary(this.name, this.importFile, this.content);
 
@@ -147,6 +149,18 @@ class EdgeInsets {
 class Colors {
   static const red = Color(0xFFFF0000);
 }
+
+class ValueNotifier<T> {
+  T get value => throw UnimplementedError();
+}
+
+class TextEditingController {}
+
+class PageController {}
+
+class PageView extends StatelessWidget {
+  PageView({PageController? controller});
+}
 ''';
 
 const _blocMock = '''
@@ -164,5 +178,49 @@ import 'package:flutter/material.dart';
 
 class MultiSliver extends StatelessWidget {
   MultiSliver({required List<Widget> children});
+}
+''';
+
+const _flutterHooksMock = '''
+import 'package:flutter/material.dart';
+
+void useAutomaticKeepAlive() {}
+
+ValueNotifier<T> useState<T>(T initialData) {}
+
+TextEditingController useTextEditingController() {}
+
+PageController usePageController() {}
+
+class HookWidget extends StatelessWidget {
+  const HookWidget({super.key});
+}
+
+class HookBuilder extends HookWidget {
+  const HookBuilder({required Widget Function(BuildContext context) builder});
+}
+''';
+
+const _hooksRiverpodMock = '''
+import 'package:flutter/material.dart';
+
+class WidgetRef {}
+
+abstract class ConsumerWidget extends StatefulWidget {
+  Widget build(BuildContext context, WidgetRef ref);
+
+  @override
+  State<ConsumerWidget> createState() => throw UnimplementedError();
+}
+
+abstract class HookConsumerWidget extends ConsumerWidget {
+  const HookConsumerWidget({super.key});
+}
+
+typedef ConsumerBuilder =
+    Widget Function(BuildContext context, WidgetRef ref, Widget? child);
+
+class HookConsumer extends HookConsumerWidget {
+  const HookConsumer({required ConsumerBuilder builder});
 }
 ''';
