@@ -5,6 +5,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/utils.dart';
 
 /// Converts required positional parameters to named ones.
@@ -74,9 +75,7 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
       final target = SourceRange(selectionOffset, selectionLength);
       final found = parameters
           .zip(nextItem)
-          .map(
-            (e) => (e.$1, SourceRange(e.$1.offset, e.$2.offset - e.$1.offset)),
-          )
+          .map((e) => (e.$1, range.startStart(e.$1, e.$2)))
           .firstWhereOrNull((e) => target.intersects(e.$2));
 
       if (found == null) {
@@ -103,7 +102,7 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
           );
         }
 
-        builder.format(SourceRange(node.offset, node.length));
+        builder.format(range.node(node));
       });
     }
   }

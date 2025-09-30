@@ -7,9 +7,9 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/type_checker.dart';
 import 'package:leancode_lint/utils.dart';
 
@@ -145,10 +145,6 @@ bool isWidgetClass(ClassDeclaration node) =>
 MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
     .whereType<MethodDeclaration>()
     .firstWhereOrNull((member) => member.name.lexeme == 'build');
-
-extension ExpressionExtensions on Expression {
-  SourceRange get sourceRange => SourceRange(offset, length);
-}
 
 extension NodeLintRegistryExtensions on RuleVisitorRegistry {
   void addRegularComment(
@@ -350,7 +346,7 @@ class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
     await builder.addDartFileEdit(
       file,
       (builder) => builder.addSimpleReplacement(
-        SourceRange(diagnosticOffset!, diagnosticLength!),
+        range.diagnostic(diagnostic!),
         widgetName,
       ),
     );

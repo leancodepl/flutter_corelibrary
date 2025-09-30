@@ -5,9 +5,9 @@ import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
@@ -69,7 +69,7 @@ class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {
     await builder.addDartFileEdit(
       file,
       (builder) => builder.addSimpleReplacement(
-        SourceRange(diagnosticOffset!, diagnosticLength!),
+        range.diagnostic(diagnostic!),
         'StatelessWidget',
       ),
     );

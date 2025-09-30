@@ -4,6 +4,7 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning for conditional hooks usage.
@@ -97,7 +98,7 @@ class AvoidConditionalHooks extends AnalysisRule {
     bool isBefore(Expression firstReturn, InvocationExpression node) {
       return firstReturn.offset < node.offset &&
           // make sure the hook isn't inside of the return
-          !firstReturn.sourceRange.covers(node.sourceRange);
+          !range.node(firstReturn).covers(range.node(node));
     }
 
     return isConditional(node, child: node) ||

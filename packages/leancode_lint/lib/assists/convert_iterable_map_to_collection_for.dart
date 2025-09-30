@@ -1,8 +1,8 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 import 'package:leancode_lint/type_checker.dart';
 
@@ -53,11 +53,7 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
     const iterableChecker = TypeChecker.fromUrl('dart:core#Iterable');
 
     if (node case MethodInvocation(
-      target: Expression(
-        staticType: final targetType?,
-        offset: final targetOffset,
-        end: final targetEnd,
-      ),
+      target: Expression(staticType: final targetType?) && final target,
       methodName: SimpleIdentifier(name: 'map'),
       :final parent,
       argumentList: ArgumentList(
@@ -81,17 +77,14 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
       builder.addDartFileEdit(file, (builder) {
         builder
           ..addSimpleReplacement(
-            SourceRange(
-              nodeWithCollect.offset,
-              targetOffset - nodeWithCollect.offset,
-            ),
+            range.startStart(nodeWithCollect, target),
             '${collectKind.startDelimiter}for(final $parameter in ',
           )
           ..addSimpleReplacement(
-            SourceRange(targetEnd, nodeWithCollect.end - targetEnd),
+            range.endEnd(target, nodeWithCollect),
             ') $expression${collectKind.endDelimiter}',
           )
-          ..format(nodeWithCollect.sourceRange);
+          ..format(range.node(nodeWithCollect));
       });
     }
   }

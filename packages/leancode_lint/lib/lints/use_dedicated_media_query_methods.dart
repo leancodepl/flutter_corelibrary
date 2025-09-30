@@ -6,9 +6,9 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:collection/collection.dart';
 
 const _supportedGetters = {
@@ -172,7 +172,7 @@ class ReplaceMediaQueryOfWithDedicatedMethodFix
       await builder.addDartFileEdit(
         file,
         (builder) => builder.addSimpleReplacement(
-          SourceRange(diagnostic.offset, diagnostic.length),
+          range.diagnostic(diagnostic),
           suggestedReplacement,
         ),
       );

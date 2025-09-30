@@ -2,9 +2,9 @@ import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Converts type aliases of records into classes. This preserves
@@ -56,7 +56,7 @@ class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
       :final typeParameters,
       type: final RecordTypeAnnotation record,
     )) {
-      final sourceRange = SourceRange(node.offset, node.length);
+      final sourceRange = range.node(node);
       final klass = _classFromRecord(name, typeParameters, record);
       await builder.addDartFileEdit(file, (builder) {
         builder
