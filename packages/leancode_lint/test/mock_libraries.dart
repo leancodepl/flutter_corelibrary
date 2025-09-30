@@ -4,7 +4,8 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 enum MockLibrary {
   flutter('flutter', 'material.dart', _flutterMock),
   bloc('bloc', 'bloc.dart', _blocMock),
-  flutterBloc('flutter_bloc', 'flutter_bloc.dart', _flutterBlocMock);
+  flutterBloc('flutter_bloc', 'flutter_bloc.dart', _flutterBlocMock),
+  sliverTools('sliver_tools', 'sliver_tools.dart', _sliverToolsMock);
 
   const MockLibrary(this.name, this.importFile, this.content);
 
@@ -98,6 +99,47 @@ class Builder extends StatelessWidget {
   final Widget Function(BuildContext context) builder;
 }
 
+enum Axis { horizontal, vertical }
+
+class Flex extends StatelessWidget {
+  const Flex({
+    required Axis direction,
+    required List<Widget> children,
+  });
+}
+
+class Column extends Flex {
+  const Column({required super.children}) : super(direction: Axis.vertical);
+}
+
+class Row extends Flex {
+  const Row({required super.children}) : super(direction: Axis.horizontal);
+}
+
+class Wrap extends StatelessWidget {
+  const Wrap({List<Widget> children = const []});
+}
+
+class SliverChildListDelegate {
+  SliverChildListDelegate(List<Widget> children);
+}
+
+class SliverList extends StatelessWidget {
+  SliverList.list({required List<Widget> children});
+}
+
+class SliverMainAxisGroup extends StatelessWidget {
+  const SliverMainAxisGroup({required List<Widget> slivers});
+}
+
+class SliverCrossAxisGroup extends StatelessWidget {
+  const SliverCrossAxisGroup({required List<Widget> slivers});
+}
+
+class SliverToBoxAdapter extends StatelessWidget {
+  const SliverToBoxAdapter({Widget? child});
+}
+
 class EdgeInsets {
   const EdgeInsets.all(double _);
 }
@@ -115,4 +157,12 @@ abstract class Cubit<State> extends BlocBase<State> {
 
 const _flutterBlocMock = '''
 export 'package:bloc/bloc.dart';
+''';
+
+const _sliverToolsMock = '''
+import 'package:flutter/material.dart';
+
+class MultiSliver extends StatelessWidget {
+  MultiSliver({required List<Widget> children});
+}
 ''';
