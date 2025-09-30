@@ -1,8 +1,9 @@
 import 'package:analyzer/src/lint/registry.dart';
-import 'package:analyzer/utilities/package_config_file_builder.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
+
+import 'mock_libraries.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -19,23 +20,7 @@ class AddCubitSuffixForYourCubitsTest extends AnalysisRuleTest {
     Registry.ruleRegistry.registerWarningRule(rule);
     super.setUp();
 
-    const blocPath = '/packages/bloc';
-    newFile('$blocPath/lib/bloc.dart', '''
-abstract class Cubit<State> extends BlocBase<State> {
-  Cubit(State initialState) : super(initialState);
-}
-''');
-
-    const flutterBlocPath = '/packages/flutter_bloc';
-    newFile('$flutterBlocPath/lib/flutter_bloc.dart', '''
-export 'package:bloc/bloc.dart';
-''');
-
-    writeTestPackageConfig(
-      PackageConfigFileBuilder()
-        ..add(name: 'bloc', rootPath: convertPath(blocPath))
-        ..add(name: 'flutter_bloc', rootPath: convertPath(flutterBlocPath)),
-    );
+    addMocks([MockLibrary.bloc, MockLibrary.flutterBloc]);
   }
 
   @override
