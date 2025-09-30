@@ -28,6 +28,18 @@ extension AddMockLibraryX on AnalysisRuleTest {
     }
     writeTestPackageConfig(builder);
   }
+
+  void addAnalysisOptions({String applicationPrefix = 'Lncd'}) {
+    final existingAnalysisOptions = resourceProvider
+        .getFile(join(testPackageRootPath, 'analysis_options.yaml'))
+        .readAsStringSync();
+    newAnalysisOptionsYamlFile(testPackageRootPath, '''
+$existingAnalysisOptions
+
+leancode_lint:
+  application_prefix: $applicationPrefix
+''');
+  }
 }
 
 const _flutterMock = '''
@@ -35,9 +47,25 @@ class Key {
   const Key(String _);
 }
 
+class BuildContext {}
+
 class Widget {
-  const Widget();
+  const Widget({Key? key});
 }
+
+abstract class StatelessWidget extends Widget {
+  const StatelessWidget({super.key});
+
+  Widget build(BuildContext context);
+}
+
+abstract class StatefulWidget extends Widget {
+  const StatefulWidget({super.key});
+
+  State createState();
+}
+
+abstract class State<T extends StatefulWidget> extends StatelessWidget {}
 
 class Container extends Widget {
   Container({
@@ -58,6 +86,16 @@ class Padding extends Widget {
     EdgeInsets? padding,
     Widget? child,
   });
+}
+
+class SliverToBoxAdapter extends Widget {
+  const SliverToBoxAdapter();
+}
+
+class Builder extends StatelessWidget {
+  const Builder({super.key, required this.builder});
+
+  final Widget Function(BuildContext context) builder;
 }
 
 class EdgeInsets {

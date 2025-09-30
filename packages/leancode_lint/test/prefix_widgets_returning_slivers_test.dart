@@ -1,11 +1,39 @@
-// for tests
-// ignore_for_file: unused_element
+import 'package:analyzer/src/lint/registry.dart';
+import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
+import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import 'mock_libraries.dart';
+
+void main() {
+  defineReflectiveSuite(() {
+    defineReflectiveTests(PrefixWidgetsReturningSliversTest);
+  });
+}
+
+@reflectiveTest
+class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest {
+  final rule = PrefixWidgetsReturningSlivers();
+
+  @override
+  void setUp() {
+    Registry.ruleRegistry.registerWarningRule(rule);
+    super.setUp();
+
+    addMocks([MockLibrary.flutter]);
+    addAnalysisOptions();
+  }
+
+  @override
+  String get analysisRule => rule.name;
+
+  Future<void> test_return_from_internal_blocks() async {
+    await assertDiagnostics(
+      '''
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-// expect_lint: prefix_widgets_returning_slivers
 class WidgetReturningSliverFromInternalBlocks extends StatelessWidget {
   const WidgetReturningSliverFromInternalBlocks({super.key});
 
@@ -18,6 +46,15 @@ class WidgetReturningSliverFromInternalBlocks extends StatelessWidget {
     }
   }
 }
+''',
+      [lint(68, 39)],
+    );
+  }
+
+  Future<void> test_stateful() async {
+    await assertDiagnostics(
+      '''
+import 'package:flutter/material.dart';
 
 class Stateful extends StatefulWidget {
   const Stateful({super.key});
@@ -26,19 +63,25 @@ class Stateful extends StatefulWidget {
   State<Stateful> createState() => _StatefulState();
 }
 
-// expect_lint: prefix_widgets_returning_slivers
 class _StatefulState extends State<Stateful> {
   @override
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter();
   }
 }
+''',
+      [lint(187, 14)],
+    );
+  }
+
+  Future<void> test_impostor() async {
+    await assertNoDiagnostics('''
+import 'package:flutter/material.dart';
 
 abstract class WidgetImpostorInterface {
   Widget build(BuildContext context);
 }
 
-// Should not report warning since it's not real widget
 class WidgetImpostor extends WidgetImpostorInterface {
   WidgetImpostor();
 
@@ -47,8 +90,14 @@ class WidgetImpostor extends WidgetImpostorInterface {
     return const SliverToBoxAdapter();
   }
 }
+''');
+  }
 
-// expect_lint: prefix_widgets_returning_slivers
+  Future<void> test_not_prefixed() async {
+    await assertDiagnostics(
+      '''
+import 'package:flutter/material.dart';
+
 class NotPrefixedWidgetReturningSliver extends StatelessWidget {
   const NotPrefixedWidgetReturningSliver({super.key});
 
@@ -57,8 +106,15 @@ class NotPrefixedWidgetReturningSliver extends StatelessWidget {
     return const SliverToBoxAdapter();
   }
 }
+''',
+      [lint(47, 32)],
+    );
+  }
 
-// Should not report warning since it's prefixed
+  Future<void> test_prefixed_public() async {
+    await assertNoDiagnostics('''
+import 'package:flutter/material.dart';
+
 class SliverPrefixedWidgetReturningSliver extends StatelessWidget {
   const SliverPrefixedWidgetReturningSliver({super.key});
 
@@ -66,9 +122,44 @@ class SliverPrefixedWidgetReturningSliver extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter();
   }
-}
+}''');
+  }
 
-// Should not report warning since it's prefixed (with app prefix)
+  Future<void> test_app_prefixed_public() async {
+    await assertNoDiagnostics('''
+import 'package:flutter/material.dart';
+
+class LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
+  const LncdSliverPrefixedWidgetReturningSliver({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverToBoxAdapter();
+  }
+}
+''');
+  }
+
+  Future<void> test_app_prefixed_private() async {
+    await assertNoDiagnostics('''
+import 'package:flutter/material.dart';
+
+class _LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
+  const _LncdSliverPrefixedWidgetReturningSliver();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverToBoxAdapter();
+  }
+}
+''');
+  }
+
+  Future<void> test_returning_app_prefixed_sliver() async {
+    await assertDiagnostics(
+      '''
+import 'package:flutter/material.dart';
+
 class LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
   const LncdSliverPrefixedWidgetReturningSliver({super.key});
 
@@ -78,17 +169,6 @@ class LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
   }
 }
 
-// Should not report warning since it's prefixed (with app prefix + private)
-class _LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
-  const _LncdSliverPrefixedWidgetReturningSliver();
-
-  @override
-  Widget build(BuildContext context) {
-    return const SliverToBoxAdapter();
-  }
-}
-
-// expect_lint: prefix_widgets_returning_slivers
 class LncdReturningAppPrefixedSliver extends StatelessWidget {
   const LncdReturningAppPrefixedSliver({super.key});
 
@@ -97,8 +177,15 @@ class LncdReturningAppPrefixedSliver extends StatelessWidget {
     return const LncdSliverPrefixedWidgetReturningSliver();
   }
 }
+''',
+      [lint(279, 30)],
+    );
+  }
 
-// Should not report warning since it's not returning sliver
+  Future<void> test_not_prefix_not_returning_sliver() async {
+    await assertNoDiagnostics('''
+import 'package:flutter/material.dart';
+
 class NotPrefixedWidgetNotReturningSliver extends StatelessWidget {
   const NotPrefixedWidgetNotReturningSliver({super.key});
 
@@ -109,5 +196,8 @@ class NotPrefixedWidgetNotReturningSliver extends StatelessWidget {
         return const SizedBox();
       },
     );
+  }
+}
+''');
   }
 }
