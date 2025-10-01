@@ -77,6 +77,8 @@ class Container extends Widget {
     EdgeInsets? padding,
     AlignmentGeometry? alignment,
     Color? color,
+    double? width,
+    double? height,
     Widget? child,
   });
 }
@@ -145,6 +147,8 @@ class SliverToBoxAdapter extends StatelessWidget {
 
 class EdgeInsets {
   const EdgeInsets.all(double _);
+  
+  double get bottom => throw UnimplementedError();
 }
 
 class Colors {
@@ -181,6 +185,36 @@ class Align extends StatelessWidget {
     AlignmentGeometry alignment = Alignment.center,
     Widget? child,
   });
+}
+
+class MediaQuery extends Widget {
+  static MediaQueryData of(BuildContext context) {}
+  static MediaQueryData? maybeOf(BuildContext context) {}
+}
+
+class MediaQueryData {
+  final Size size;
+  final Orientation orientation;
+  final double devicePixelRatio;
+  final double textScaleFactor;
+  final TextScaler textScaler;
+  final Brightness platformBrightness;
+  final EdgeInsets viewInsets;
+  final EdgeInsets padding;
+  final EdgeInsets viewPadding;
+  final EdgeInsets systemGestureInsets;
+  final bool alwaysUse24HourFormat;
+  final bool accessibleNavigation;
+  final bool invertColors;
+  final bool highContrast;
+  final bool onOffSwitchLabels;
+  final bool disableAnimations;
+  final bool boldText;
+  final bool supportsAnnounce;
+  final NavigationMode navigationMode;
+  final DeviceGestureSettings gestureSettings;
+  final List<ui.DisplayFeature> displayFeatures;
+  final bool supportsShowingSystemContextMenu;
 }
 ''';
 
