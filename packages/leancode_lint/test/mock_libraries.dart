@@ -75,6 +75,7 @@ class Container extends Widget {
     Key? key,
     EdgeInsets? margin,
     EdgeInsets? padding,
+    AlignmentGeometry? alignment,
     Color? color,
     Widget? child,
   });
@@ -160,6 +161,26 @@ class PageController {}
 
 class PageView extends StatelessWidget {
   PageView({PageController? controller});
+}
+
+abstract class AlignmentGeometry {
+  const AlignmentGeometry();
+}
+
+class Alignment extends AlignmentGeometry {
+  const Alignment(double x, double y);
+
+  static const center = Alignment(0, 0);
+  static const centerLeft = Alignment(-1, 0);
+  static const topCenter = Alignment(0, -1);
+  static const bottomCenter = Alignment(0, 1);
+}
+
+class Align extends StatelessWidget {
+  const Align({
+    AlignmentGeometry alignment = Alignment.center,
+    Widget? child,
+  });
 }
 ''';
 
