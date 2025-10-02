@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// [WidgetsBinding.addPostFrameCallback].
 void usePostFrameEffect(
   VoidCallback effect, {
-  List<Object?> keys = const [],
+  List<Object?>? keys = const [],
 }) {
   useEffect(
     () {
