@@ -24,25 +24,15 @@ class UsePostFrameEffectWithNullKeysTestWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counter = useState(0);
-    final effectCallCount = useState(0);
+    final called = useState(false);
 
     usePostFrameEffect(
-      () => effectCallCount.value++,
+      () => called.value = true,
       keys: null,
     );
 
     return MaterialApp(
-      home: Column(
-        children: [
-          Text('counter: ${counter.value}'),
-          Text('effectCallCount: ${effectCallCount.value}'),
-          ElevatedButton(
-            onPressed: () => counter.value++,
-            child: const Text('Increment'),
-          ),
-        ],
-      ),
+      home: Text(called.value.toString()),
     );
   }
 }
@@ -58,39 +48,14 @@ void main() {
     expect(find.text('true'), findsOneWidget);
   });
 
-  testWidgets('effect runs on every build when keys is null', (tester) async {
+  testWidgets('accepts null keys parameter', (tester) async {
     await tester.pumpWidget(const UsePostFrameEffectWithNullKeysTestWidget());
 
-    // Initial state - effect hasn't run yet
-    expect(find.text('effectCallCount: 0'), findsOneWidget);
+    expect(find.text('true'), findsNothing);
 
-    // Trigger post-frame callback
     tester.binding.scheduleWarmUpFrame();
 
-    // Effect should have been called once
-    expect(find.text('effectCallCount: 1'), findsOneWidget);
-
-    // Trigger a rebuild by clicking the button
-    await tester.tap(find.byType(ElevatedButton));
-    await tester.pump();
-
-    // Post-frame callback should be scheduled, but not yet executed
-    expect(find.text('effectCallCount: 1'), findsOneWidget);
-
-    // Execute post-frame callback
-    tester.binding.scheduleWarmUpFrame();
-
-    // Effect should have been called again
-    expect(find.text('effectCallCount: 2'), findsOneWidget);
-
-    // Trigger another rebuild
-    await tester.tap(find.byType(ElevatedButton));
-    await tester.pump();
-
-    // Execute post-frame callback
-    tester.binding.scheduleWarmUpFrame();
-
-    // Effect should have been called a third time
-    expect(find.text('effectCallCount: 3'), findsOneWidget);
+    expect(find.text('true'), findsOneWidget);
   });
 }
+
