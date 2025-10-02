@@ -61,22 +61,34 @@ void main() {
   testWidgets('effect runs on every build when keys is null', (tester) async {
     await tester.pumpWidget(const UsePostFrameEffectWithNullKeysTestWidget());
 
-    // Wait for first post-frame callback
-    await tester.pumpAndSettle();
+    // Initial state - effect hasn't run yet
+    expect(find.text('effectCallCount: 0'), findsOneWidget);
+
+    // Trigger post-frame callback
+    tester.binding.scheduleWarmUpFrame();
 
     // Effect should have been called once
     expect(find.text('effectCallCount: 1'), findsOneWidget);
 
     // Trigger a rebuild by clicking the button
     await tester.tap(find.byType(ElevatedButton));
-    await tester.pumpAndSettle();
+    await tester.pump();
+
+    // Post-frame callback should be scheduled, but not yet executed
+    expect(find.text('effectCallCount: 1'), findsOneWidget);
+
+    // Execute post-frame callback
+    tester.binding.scheduleWarmUpFrame();
 
     // Effect should have been called again
     expect(find.text('effectCallCount: 2'), findsOneWidget);
 
     // Trigger another rebuild
     await tester.tap(find.byType(ElevatedButton));
-    await tester.pumpAndSettle();
+    await tester.pump();
+
+    // Execute post-frame callback
+    tester.binding.scheduleWarmUpFrame();
 
     // Effect should have been called a third time
     expect(find.text('effectCallCount: 3'), findsOneWidget);
