@@ -12,6 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// endpoint deeplink that contains url encoded API endpoint to be used
 /// eg. `apiAddress` in `app://app/override?apiAddress=https%3A%2F%2Fexample.com`
 ///
+/// To clear the persisted endpoint and return to the default one, use 'clear'
+/// as the query parameter value
+/// eg. `app://app/override?apiAddress=clear`
+///
 /// The `defaultEndpoint` is fallback url that should be used if app does not
 /// have any endpoint introduced via deeplink or if `deeplinkQueryParameter` is
 /// not provided
@@ -34,10 +38,10 @@ Future<Uri> overrideApiEndpoint({
   if (initial != null && initial.path.contains(deeplinkOverrideSegment)) {
     final endpointFromDeeplink =
         initial.queryParameters[deeplinkQueryParameter];
-    if (endpointFromDeeplink?.isEmpty ?? true) {
+    if (endpointFromDeeplink == 'clear') {
       await sharedPreferences.remove(apiEndpointKey);
       apiEndpoint = defaultEndpoint;
-    } else {
+    } else if (endpointFromDeeplink?.isNotEmpty ?? false) {
       apiEndpoint = Uri.parse(endpointFromDeeplink!);
       await sharedPreferences.setString(apiEndpointKey, apiEndpoint.toString());
     }
