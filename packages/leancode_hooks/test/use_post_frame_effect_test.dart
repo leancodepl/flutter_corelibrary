@@ -19,6 +19,24 @@ class UsePostFrameEffectTestWidget extends HookWidget {
   }
 }
 
+class UsePostFrameEffectWithNullKeysTestWidget extends HookWidget {
+  const UsePostFrameEffectWithNullKeysTestWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final called = useState(false);
+
+    usePostFrameEffect(
+      () => called.value = true,
+      keys: null,
+    );
+
+    return MaterialApp(
+      home: Text(called.value.toString()),
+    );
+  }
+}
+
 void main() {
   testWidgets('effect gets called post frame', (tester) async {
     await tester.pumpWidget(const UsePostFrameEffectTestWidget());
@@ -29,4 +47,15 @@ void main() {
 
     expect(find.text('true'), findsOneWidget);
   });
+
+  testWidgets('accepts null keys parameter', (tester) async {
+    await tester.pumpWidget(const UsePostFrameEffectWithNullKeysTestWidget());
+
+    expect(find.text('true'), findsNothing);
+
+    tester.binding.scheduleWarmUpFrame();
+
+    expect(find.text('true'), findsOneWidget);
+  });
 }
+

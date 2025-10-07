@@ -1,3 +1,7 @@
+# 0.1.2
+
+- Make `usePostFrameEffect` `keys` parameter nullable to allow effect to run on every build.
+
 # 0.1.1
 
 - Bump `bloc` to `9.0.0`.
