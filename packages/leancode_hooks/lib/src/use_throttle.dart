@@ -19,7 +19,7 @@ class _Throttler {
 
   final Duration duration;
 
-  bool _locked = false;
+  var _locked = false;
 
   Future<void> run(VoidCallback callback) async {
     if (!_locked) {

@@ -1,3 +1,11 @@
+# 0.1.2
+
+- Bump `custom_lint` dev dependency to `0.8.1`.
+- Bump `flutter_hooks` dependency to `0.21.3`.
+- Bump `leancode_lint` dev dependency to `>=19.0.0`.
+- Bump minimum Dart version to 3.9.
+- Bump minimum Flutter version to 3.35.0.
+
 # 0.1.1
 
 - Bump `bloc` to `9.0.0`.
