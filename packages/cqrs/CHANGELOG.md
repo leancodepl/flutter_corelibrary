@@ -1,3 +1,7 @@
+# 10.1.0
+
+- Add optional `rawData` to `QuerySuccess`.
+
 # 10.0.2
 
 - Make CommandResponse public.
