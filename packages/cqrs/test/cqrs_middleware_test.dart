@@ -7,7 +7,7 @@ void main() {
   group('CqrsMiddleware', () {
     group('handleQueryResult', () {
       test('returns the same result by default', () async {
-        const resultIn = QuerySuccess(true);
+        const resultIn = QuerySuccess(true, rawData: 'true');
         final resultOut = await middleware.handleQueryResult(resultIn);
         expect(resultIn, resultOut);
       });

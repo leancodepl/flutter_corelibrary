@@ -178,7 +178,7 @@ class Cqrs {
           final dynamic json = jsonDecode(response.body);
           final result = query.resultFactory(json);
           _log(query, _ResultType.success);
-          return QuerySuccess(result);
+          return QuerySuccess(result, rawData: response.body);
         } catch (err, st) {
           _log(query, _ResultType.jsonError, err, st);
           return QueryFailure<T>(QueryError.unknown);

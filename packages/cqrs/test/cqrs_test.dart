@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cqrs/cqrs.dart';
-
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 import 'package:mocktail/mocktail.dart';
@@ -23,9 +22,11 @@ void main() {
 
     setUpAll(() {
       registerFallbackValue(Uri());
-      registerFallbackValue(const QuerySuccess<bool?>(true));
       registerFallbackValue(
-        Future.value(const QuerySuccess<bool?>(true)),
+        const QuerySuccess<bool?>(true, rawData: 'true'),
+      );
+      registerFallbackValue(
+        Future.value(const QuerySuccess<bool?>(true, rawData: 'true')),
       );
       registerFallbackValue(const CommandSuccess());
       registerFallbackValue(
@@ -101,7 +102,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const QuerySuccess<bool?>(true));
+        expect(result, const QuerySuccess<bool?>(true, rawData: 'true'));
 
         verify(
           () => client.post(
@@ -130,7 +131,7 @@ void main() {
 
         final result = await cqrs.get(ExampleQuery());
 
-        expect(result, const QuerySuccess<bool?>(null));
+        expect(result, const QuerySuccess<bool?>(null, rawData: 'null'));
       });
 
       test(
