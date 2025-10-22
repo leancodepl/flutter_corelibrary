@@ -61,8 +61,6 @@ class UseDedicatedMediaQueryMethods extends AnalysisRule {
   }
 }
 
-final _ruleData = Expando<String>();
-
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
@@ -82,73 +80,70 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    final diagnostic = context.definingUnit.diagnosticReporter.atNode(
+    rule.reportAtNode(
       parent,
-      rule.diagnosticCode,
       arguments: [node.toSource(), replacementSuggestion],
     );
+  }
+}
 
-    _ruleData[diagnostic] = replacementSuggestion;
+String? _getReplacementSuggestion(MethodInvocation node) {
+  final methodReplacement = _getReplacementMethodName(node);
+  if (methodReplacement == null) {
+    return null;
   }
 
-  String? _getReplacementSuggestion(MethodInvocation node) {
-    final methodReplacement = _getReplacementMethodName(node);
-    if (methodReplacement == null) {
-      return null;
-    }
-
-    final contextVariableName = _getContextVariableName(node);
-    if (contextVariableName == null) {
-      return null;
-    }
-
-    final usedMaybe = methodReplacement.startsWith('maybe');
-    final usedGetter = _getUsedGetter(node);
-    final shouldAddQuestionMark =
-        usedMaybe && usedGetter != null && _isGrandParentPropertyAccess(node);
-
-    return 'MediaQuery.$methodReplacement($contextVariableName)${shouldAddQuestionMark ? '?' : ''}';
+  final contextVariableName = _getContextVariableName(node);
+  if (contextVariableName == null) {
+    return null;
   }
 
-  bool _isGrandParentPropertyAccess(MethodInvocation node) =>
-      node.parent?.parent is PropertyAccess;
+  final usedMaybe = methodReplacement.startsWith('maybe');
+  final usedGetter = _getUsedGetter(node);
+  final shouldAddQuestionMark =
+      usedMaybe && usedGetter != null && _isGrandParentPropertyAccess(node);
 
-  String? _getContextVariableName(MethodInvocation node) =>
-      node.argumentList.arguments.firstOrNull?.toString();
+  return 'MediaQuery.$methodReplacement($contextVariableName)${shouldAddQuestionMark ? '?' : ''}';
+}
 
-  String? _getReplacementMethodName(MethodInvocation node) {
-    final usedGetter = _getUsedGetter(node);
+bool _isGrandParentPropertyAccess(MethodInvocation node) =>
+    node.parent?.parent is PropertyAccess;
 
-    if (usedGetter == null || !_supportedGetters.contains(usedGetter)) {
-      return null;
-    }
+String? _getContextVariableName(MethodInvocation node) =>
+    node.argumentList.arguments.firstOrNull?.toString();
 
-    return switch (node.methodName.name) {
-      'of' => '${usedGetter}Of',
-      'maybeOf' =>
-        'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1)}Of',
-      _ => null,
-    };
+String? _getReplacementMethodName(MethodInvocation node) {
+  final usedGetter = _getUsedGetter(node);
+
+  if (usedGetter == null || !_supportedGetters.contains(usedGetter)) {
+    return null;
   }
 
-  bool _isValidMediaQueryUsage(MethodInvocation node) => switch (node) {
-    MethodInvocation(
-      target: SimpleIdentifier(name: 'MediaQuery'),
-      methodName: SimpleIdentifier(name: 'of' || 'maybeOf'),
-    ) =>
-      false,
-    _ => true,
-  };
-
-  String? _getUsedGetter(MethodInvocation node) => switch (node.parent) {
-    PropertyAccess(
-      target: MethodInvocation(target: SimpleIdentifier(name: 'MediaQuery')),
-      propertyName: SimpleIdentifier(name: final propertyName),
-    ) =>
-      propertyName,
+  return switch (node.methodName.name) {
+    'of' => '${usedGetter}Of',
+    'maybeOf' =>
+      'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1)}Of',
     _ => null,
   };
 }
+
+bool _isValidMediaQueryUsage(MethodInvocation node) => switch (node) {
+  MethodInvocation(
+    target: SimpleIdentifier(name: 'MediaQuery'),
+    methodName: SimpleIdentifier(name: 'of' || 'maybeOf'),
+  ) =>
+    false,
+  _ => true,
+};
+
+String? _getUsedGetter(MethodInvocation node) => switch (node.parent) {
+  PropertyAccess(
+    target: MethodInvocation(target: SimpleIdentifier(name: 'MediaQuery')),
+    propertyName: SimpleIdentifier(name: final propertyName),
+  ) =>
+    propertyName,
+  _ => null,
+};
 
 class ReplaceMediaQueryOfWithDedicatedMethodFix
     extends ResolvedCorrectionProducer {
@@ -168,7 +163,10 @@ class ReplaceMediaQueryOfWithDedicatedMethodFix
   @override
   Future<void> compute(ChangeBuilder builder) async {
     if (diagnostic case final diagnostic?) {
-      final suggestedReplacement = _ruleData[diagnostic]!;
+      final suggestedReplacement = _getReplacementSuggestion(
+        node.childEntities.whereType<MethodInvocation>().first,
+      )!;
+
       await builder.addDartFileEdit(
         file,
         (builder) => builder.addSimpleReplacement(

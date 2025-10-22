@@ -37,8 +37,6 @@ class UsePadding extends AnalysisRule {
   }
 }
 
-final _ruleData = Expando<SimpleIdentifier>();
-
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
@@ -54,21 +52,17 @@ class _Visitor extends SimpleAstVisitor<void> {
           // Ignores key and child parameters because both Container and Padding have them
           ignoredParameters: const {'key', 'child'},
         )) {
-      final diagnostic = context.definingUnit.diagnosticReporter.atNode(
-        node.constructorName,
-        rule.diagnosticCode,
-      );
-      _ruleData[diagnostic] = findMarginParameterLabel(node);
+      rule.reportAtNode(node.constructorName);
     }
   }
-
-  SimpleIdentifier? findMarginParameterLabel(InstanceCreationExpression node) =>
-      node.argumentList.arguments
-          .whereType<NamedExpression>()
-          .firstWhereOrNull((e) => e.name.label.name == 'margin')
-          ?.name
-          .label;
 }
+
+SimpleIdentifier? _findMarginParameterLabel(InstanceCreationExpression node) =>
+    node.argumentList.arguments
+        .whereType<NamedExpression>()
+        .firstWhereOrNull((e) => e.name.label.name == 'margin')
+        ?.name
+        .label;
 
 class UsePaddingFix extends ResolvedCorrectionProducer {
   UsePaddingFix({required super.context});
@@ -87,7 +81,8 @@ class UsePaddingFix extends ResolvedCorrectionProducer {
   @override
   Future<void> compute(ChangeBuilder builder) async {
     if (diagnostic case final diagnostic?) {
-      final margin = _ruleData[diagnostic]!;
+      final expr = node.thisOrAncestorOfType<InstanceCreationExpression>()!;
+      final margin = _findMarginParameterLabel(expr)!;
       await builder.addDartFileEdit(file, (builder) {
         builder
           ..addSimpleReplacement(range.diagnostic(diagnostic), 'Padding')
