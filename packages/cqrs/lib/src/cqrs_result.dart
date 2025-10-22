@@ -33,16 +33,16 @@ sealed class QueryResult<T> extends Equatable {
 /// Generic class which represents a result of succesful query execution.
 final class QuerySuccess<T> extends QueryResult<T> {
   /// Creates a [QuerySuccess] class.
-  const QuerySuccess(this.data, {this.rawData});
+  const QuerySuccess(this.data, {this.rawBody});
 
   /// Data of type [T] returned from query execution.
   final T data;
 
-  /// Raw data (most likely JSON) returned from query execution.
-  final String? rawData;
+  /// Raw body received in query response.
+  final String? rawBody;
 
   @override
-  List<Object?> get props => [data, rawData];
+  List<Object?> get props => [data, rawBody];
 }
 
 /// Generic class which represents a result of unsuccesful query execution.

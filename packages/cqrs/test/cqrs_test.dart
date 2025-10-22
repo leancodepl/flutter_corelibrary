@@ -23,10 +23,10 @@ void main() {
     setUpAll(() {
       registerFallbackValue(Uri());
       registerFallbackValue(
-        const QuerySuccess<bool?>(true, rawData: 'true'),
+        const QuerySuccess<bool?>(true, rawBody: 'true'),
       );
       registerFallbackValue(
-        Future.value(const QuerySuccess<bool?>(true, rawData: 'true')),
+        Future.value(const QuerySuccess<bool?>(true, rawBody: 'true')),
       );
       registerFallbackValue(const CommandSuccess());
       registerFallbackValue(
@@ -102,7 +102,7 @@ void main() {
           headers: {'X-Test': 'foobar'},
         );
 
-        expect(result, const QuerySuccess<bool?>(true, rawData: 'true'));
+        expect(result, const QuerySuccess<bool?>(true, rawBody: 'true'));
 
         verify(
           () => client.post(
@@ -131,7 +131,7 @@ void main() {
 
         final result = await cqrs.get(ExampleQuery());
 
-        expect(result, const QuerySuccess<bool?>(null, rawData: 'null'));
+        expect(result, const QuerySuccess<bool?>(null, rawBody: 'null'));
       });
 
       test(
