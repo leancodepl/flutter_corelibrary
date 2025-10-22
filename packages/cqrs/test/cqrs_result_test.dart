@@ -8,7 +8,7 @@ void main() {
   group('QueryResult', () {
     group('fields values are correct', () {
       test('when constructed as success', () {
-        const result = QuerySuccess(true, rawData: 'true');
+        const result = QuerySuccess(true);
 
         expect(result.isSuccess, true);
         expect(result.isFailure, false);
