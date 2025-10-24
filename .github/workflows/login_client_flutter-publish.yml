@@ -12,6 +12,7 @@ jobs:
 
     permissions:
       id-token: write
+      contents: write
 
     defaults:
       run:
@@ -32,5 +33,7 @@ jobs:
           flutter-version: '3.19.x'
           cache: true
 
-      - name: Publish
-        run: dart pub publish -f
+      - name: Publish and release
+        uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
+        with:
+          path: packages/login_client_flutter

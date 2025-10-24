@@ -12,6 +12,7 @@ jobs:
 
     permissions:
       id-token: write
+      contents: write
 
     defaults:
       run:
@@ -26,5 +27,7 @@ jobs:
         with:
           sdk: 3.3
 
-      - name: Publish
-        run: dart pub publish -f
+      - name: Publish and release
+        uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
+        with:
+          path: packages/login_client
