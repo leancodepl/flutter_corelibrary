@@ -22,6 +22,11 @@
 - Bring back the `constructor_parameters_and_fields_should_have_the_same_order` lint
 - Restore default lint severities
 
+## 20.0.0-dev.5
+
+- Rewrite most tests for the new system.
+- Update dependencies, support `analysis_server_plugin: ^0.3.3`.
+
 # 19.0.0
 
 - Support `analyzer` 8.1.0
