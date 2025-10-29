@@ -39,19 +39,18 @@ class _LogsInspectorState extends State<LogsInspector> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.startFloat,
-            floatingActionButton: LogsInspectorShareButton(
-              controller: widget._controller,
-            ),
-            appBar: AppBar(
-              leading: const BackButton(),
-              title: const Text('Logs inspector'),
-              actions: [
-                IconButton(
+      child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: LogsInspectorShareButton(
+          controller: widget._controller,
+        ),
+        appBar: AppBar(
+          leading: const BackButton(),
+          title: const Text('Logs inspector'),
+          actions: [
+            Builder(
+              builder: (context) {
+                return IconButton(
                   icon: const Icon(Icons.clear),
                   tooltip: 'Clear logs',
                   onPressed: () {
@@ -62,41 +61,41 @@ class _LogsInspectorState extends State<LogsInspector> {
                       widget._controller.clearLoggerLogs();
                     }
                   },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.tune),
-                  onPressed: () => setState(() => showFilters = !showFilters),
-                ),
-              ],
-              bottom: TabBar(
-                labelPadding: const EdgeInsets.only(bottom: 8),
-                labelStyle: DebugPageTypography.medium,
-                tabs: const [
-                  Text('Requests'),
-                  Text('Logs'),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.tune),
+              onPressed: () => setState(() => showFilters = !showFilters),
+            ),
+          ],
+          bottom: TabBar(
+            labelPadding: const EdgeInsets.only(bottom: 8),
+            labelStyle: DebugPageTypography.medium,
+            tabs: const [
+              Text('Requests'),
+              Text('Logs'),
+            ],
+          ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: TabBarView(
+                children: [
+                  LogsInspectorRequestsTab(
+                    controller: widget._controller,
+                    showFilters: showFilters,
+                  ),
+                  LogsInspectorLoggerTab(
+                    controller: widget._controller,
+                    showFilters: showFilters,
+                  ),
                 ],
               ),
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      LogsInspectorRequestsTab(
-                        controller: widget._controller,
-                        showFilters: showFilters,
-                      ),
-                      LogsInspectorLoggerTab(
-                        controller: widget._controller,
-                        showFilters: showFilters,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
