@@ -103,6 +103,7 @@ void main() {
     });
 
     test('clear logger logs', () async {
+      await pumpEventQueue();
       expect(controller.loggerLogs.length, 7);
 
       controller.clearLoggerLogs();
