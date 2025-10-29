@@ -145,7 +145,7 @@ void main() {
 
       controller.clearRequestsLogs();
 
-      await Future<void>.delayed(Duration.zero);
+      await pumpEventQueue();
       expect(controller.requestsLogs, isEmpty);
     });
   });

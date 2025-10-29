@@ -107,7 +107,7 @@ void main() {
 
       controller.clearLoggerLogs();
 
-      await Future<void>.delayed(Duration.zero);
+      await pumpEventQueue();
       expect(controller.loggerLogs, isEmpty);
     });
   });
