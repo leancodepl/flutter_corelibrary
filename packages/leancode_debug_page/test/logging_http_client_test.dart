@@ -80,6 +80,22 @@ void main() {
           expect(response.reasonPhrase, reasonPhrase);
         },
       );
+
+      test(
+        'clear logs',
+        () async {
+          await loggingHttpClient.get(homeUrl);
+          expect(loggingHttpClient.logs, hasLength(1));
+
+          loggingHttpClient.clear();
+
+          expect(loggingHttpClient.logs, isEmpty);
+          await expectLater(
+            loggingHttpClient.logStream,
+            emits(isEmpty),
+          );
+        },
+      );
     },
   );
 }

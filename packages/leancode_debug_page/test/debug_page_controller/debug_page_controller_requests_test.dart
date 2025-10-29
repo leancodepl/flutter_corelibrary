@@ -134,5 +134,19 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       expect(controller.requestsLogs.length, 1);
     });
+
+    test('clear requests logs', () async {
+      await Future.wait([
+        loggingHttpClient.get(homeUrl),
+        loggingHttpClient.get(nonExistingUrl),
+      ]);
+
+      expect(controller.requestsLogs.length, 2);
+
+      controller.clearRequestsLogs();
+
+      await pumpEventQueue();
+      expect(controller.requestsLogs, isEmpty);
+    });
   });
 }

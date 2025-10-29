@@ -19,6 +19,10 @@ class LoggingHttpClient extends http.BaseClient
   @override
   List<RequestLogRecord> get logs => _logsController.value;
 
+  void clear() {
+    _logsController.add([]);
+  }
+
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     final startTime = DateTime.now();

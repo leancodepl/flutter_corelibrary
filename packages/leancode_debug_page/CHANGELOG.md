@@ -1,3 +1,7 @@
+## 3.1.0
+
+- Add clear button to logs inspector for clearing requests and logs
+
 ## 3.0.0
 
 - **Breaking:** Fix navigation inside the debug page.
