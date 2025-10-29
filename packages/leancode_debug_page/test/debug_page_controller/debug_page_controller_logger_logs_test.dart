@@ -101,5 +101,14 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       expect(controller.loggerLogs.length, 1);
     });
+
+    test('clear logger logs', () async {
+      expect(controller.loggerLogs.length, 7);
+
+      controller.clearLoggerLogs();
+
+      await Future<void>.delayed(Duration.zero);
+      expect(controller.loggerLogs, isEmpty);
+    });
   });
 }
