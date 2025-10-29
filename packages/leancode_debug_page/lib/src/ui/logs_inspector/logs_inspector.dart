@@ -35,65 +35,68 @@ class LogsInspector extends StatefulWidget {
 class _LogsInspectorState extends State<LogsInspector> {
   bool showFilters = false;
 
-  void _clearCurrentTab() {
-    final tabController = DefaultTabController.of(context);
-    if (tabController.index == 0) {
-      widget._controller.clearRequestsLogs();
-    } else {
-      widget._controller.clearLoggerLogs();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        floatingActionButton: LogsInspectorShareButton(
-          controller: widget._controller,
-        ),
-        appBar: AppBar(
-          leading: const BackButton(),
-          title: const Text('Logs inspector'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.clear),
-              tooltip: 'Clear logs',
-              onPressed: _clearCurrentTab,
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.startFloat,
+            floatingActionButton: LogsInspectorShareButton(
+              controller: widget._controller,
             ),
-            IconButton(
-              icon: const Icon(Icons.tune),
-              onPressed: () => setState(() => showFilters = !showFilters),
-            ),
-          ],
-          bottom: TabBar(
-            labelPadding: const EdgeInsets.only(bottom: 8),
-            labelStyle: DebugPageTypography.medium,
-            tabs: const [
-              Text('Requests'),
-              Text('Logs'),
-            ],
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: TabBarView(
-                children: [
-                  LogsInspectorRequestsTab(
-                    controller: widget._controller,
-                    showFilters: showFilters,
-                  ),
-                  LogsInspectorLoggerTab(
-                    controller: widget._controller,
-                    showFilters: showFilters,
-                  ),
+            appBar: AppBar(
+              leading: const BackButton(),
+              title: const Text('Logs inspector'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.clear),
+                  tooltip: 'Clear logs',
+                  onPressed: () {
+                    final tabController = DefaultTabController.of(context);
+                    if (tabController.index == 0) {
+                      widget._controller.clearRequestsLogs();
+                    } else {
+                      widget._controller.clearLoggerLogs();
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.tune),
+                  onPressed: () => setState(() => showFilters = !showFilters),
+                ),
+              ],
+              bottom: TabBar(
+                labelPadding: const EdgeInsets.only(bottom: 8),
+                labelStyle: DebugPageTypography.medium,
+                tabs: const [
+                  Text('Requests'),
+                  Text('Logs'),
                 ],
               ),
             ),
-          ],
-        ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      LogsInspectorRequestsTab(
+                        controller: widget._controller,
+                        showFilters: showFilters,
+                      ),
+                      LogsInspectorLoggerTab(
+                        controller: widget._controller,
+                        showFilters: showFilters,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
