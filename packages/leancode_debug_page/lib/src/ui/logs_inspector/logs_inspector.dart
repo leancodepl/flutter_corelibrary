@@ -35,6 +35,15 @@ class LogsInspector extends StatefulWidget {
 class _LogsInspectorState extends State<LogsInspector> {
   bool showFilters = false;
 
+  void _clearCurrentTab() {
+    final tabController = DefaultTabController.of(context);
+    if (tabController.index == 0) {
+      widget._controller.clearRequestsLogs();
+    } else {
+      widget._controller.clearLoggerLogs();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -48,6 +57,11 @@ class _LogsInspectorState extends State<LogsInspector> {
           leading: const BackButton(),
           title: const Text('Logs inspector'),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.clear),
+              tooltip: 'Clear logs',
+              onPressed: _clearCurrentTab,
+            ),
             IconButton(
               icon: const Icon(Icons.tune),
               onPressed: () => setState(() => showFilters = !showFilters),

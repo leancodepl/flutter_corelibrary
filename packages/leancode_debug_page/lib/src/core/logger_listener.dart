@@ -20,6 +20,10 @@ class LoggerListener implements LogGatherer<LogRecord> {
   @override
   List<LogRecord> get logs => _logsController.value;
 
+  void clear() {
+    _logsController.add([]);
+  }
+
   StreamSubscription<LogRecord>? _subscription;
 
   void dispose() {
