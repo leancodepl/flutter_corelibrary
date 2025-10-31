@@ -50,7 +50,9 @@ class Key {
   const Key(String _);
 }
 
-class BuildContext {}
+class BuildContext {
+  bool get mounted;
+}
 
 class Widget {
   const Widget({Key? key});
@@ -216,6 +218,10 @@ class MediaQueryData {
   final List<ui.DisplayFeature> displayFeatures;
   final bool supportsShowingSystemContextMenu;
 }
+
+class TextField extends StatelessWidget {
+  TextField({TextEditingController? controller});
+}
 ''';
 
 const _blocMock = '''
@@ -254,6 +260,13 @@ class HookWidget extends StatelessWidget {
 class HookBuilder extends HookWidget {
   const HookBuilder({required Widget Function(BuildContext context) builder});
 }
+
+BuildContext useContext() {}
+
+T useMemoized<T>(
+  T Function() valueBuilder, [
+  List<Object?> keys = const <Object>[],
+]) {}
 ''';
 
 const _hooksRiverpodMock = '''

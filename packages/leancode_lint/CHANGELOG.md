@@ -27,6 +27,10 @@
 - Rewrite most tests for the new system.
 - Update dependencies, support `analysis_server_plugin: ^0.3.3`.
 
+## NEXT
+
+- Rewrite more tests for the new system.
+
 # 19.0.0
 
 - Support `analyzer` 8.1.0
