@@ -48,6 +48,22 @@ class _LogsInspectorState extends State<LogsInspector> {
           leading: const BackButton(),
           title: const Text('Logs inspector'),
           actions: [
+            Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: const Icon(Icons.clear),
+                  tooltip: 'Clear logs',
+                  onPressed: () {
+                    final tabController = DefaultTabController.of(context);
+                    if (tabController.index == 0) {
+                      widget._controller.clearRequestsLogs();
+                    } else {
+                      widget._controller.clearLoggerLogs();
+                    }
+                  },
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.tune),
               onPressed: () => setState(() => showFilters = !showFilters),

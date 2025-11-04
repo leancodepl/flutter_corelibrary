@@ -92,6 +92,14 @@ class DebugPageController {
   void close() =>
       navigatorKey.currentState!.popUntil((route) => route is! DebugPageRoute);
 
+  void clearRequestsLogs() {
+    loggingHttpClient.clear();
+  }
+
+  void clearLoggerLogs() {
+    loggerListener.clear();
+  }
+
   void dispose() {
     loggerListener.dispose();
 
