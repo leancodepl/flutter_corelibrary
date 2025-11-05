@@ -1,9 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+
+/// Delay before cleaning up temporary share files.
+///
+/// This allows enough time for the sharing operation to complete and for
+/// the receiving application to read the file before it's deleted.
+const _cleanupDelay = Duration(seconds: 5);
 
 /// Helper function to share text with proper UTF-8 encoding.
 ///
@@ -41,11 +48,17 @@ Future<void> shareTextWithEncoding(String text) async {
     );
 
     // Clean up the temporary file after a delay to ensure sharing is complete
-    Future.delayed(const Duration(seconds: 5), () {
-      if (file.existsSync()) {
-        file.deleteSync();
-      }
-    });
+    unawaited(
+      Future.delayed(_cleanupDelay, () {
+        try {
+          if (file.existsSync()) {
+            file.deleteSync();
+          }
+        } catch (_) {
+          // Ignore cleanup errors as they're not critical
+        }
+      }),
+    );
   } catch (e) {
     // Fallback to regular share if file sharing fails
     await Share.share(text);
