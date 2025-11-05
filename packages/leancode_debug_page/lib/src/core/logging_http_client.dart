@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:leancode_debug_page/src/models/log_gatherer.dart';
@@ -59,9 +60,10 @@ class LoggingHttpClient extends http.BaseClient
 
     return http.StreamedResponse(
       response.stream.doOnData(responseBodyBytes.addAll).doOnDone(() {
-        responseBodyCompleter.complete(
-          http.Response.bytes(responseBodyBytes, response.statusCode).body,
-        );
+        // Decode the response body using UTF-8 encoding to properly handle
+        // special characters like Polish letters (Ł, Ń, ą, etc.)
+        final responseBody = utf8.decode(responseBodyBytes, allowMalformed: true);
+        responseBodyCompleter.complete(responseBody);
       }),
       response.statusCode,
       contentLength: response.contentLength,

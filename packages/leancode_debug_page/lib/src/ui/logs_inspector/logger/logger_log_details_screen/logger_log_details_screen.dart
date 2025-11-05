@@ -5,9 +5,9 @@ import 'package:leancode_debug_page/src/ui/debug_page_route.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/share_button.dart';
-import 'package:leancode_debug_page/src/ui/share_text_helper.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
 import 'package:logging/logging.dart';
+import 'package:share_plus/share_plus.dart';
 
 class LoggerLogDetailsRoute extends DebugPageRoute {
   LoggerLogDetailsRoute({required LogRecord logRecord})
@@ -94,7 +94,7 @@ class LoggerLogDetailsScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: ShareButton(
-        onPressed: () => shareTextWithEncoding(_shareLogDetails()),
+        onPressed: () => Share.share(_shareLogDetails()),
       ),
       appBar: AppBar(
         title: const Text('Logger log details'),

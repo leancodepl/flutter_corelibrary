@@ -5,7 +5,7 @@ import 'package:leancode_debug_page/src/core/logs_summarizers/request_logs_summa
 import 'package:leancode_debug_page/src/ui/logs_inspector/logs_inspector.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/share_button.dart';
-import 'package:leancode_debug_page/src/ui/share_text_helper.dart';
+import 'package:share_plus/share_plus.dart';
 
 class LogsInspectorShareButton extends StatelessWidget {
   const LogsInspectorShareButton({
@@ -40,7 +40,9 @@ class LogsInspectorShareButton extends StatelessWidget {
           throw StateError('Unknown tab');
         }
 
-        await shareTextWithEncoding(sharedData);
+        if (sharedData.isNotEmpty) {
+          await Share.share(sharedData);
+        }
       },
     );
   }

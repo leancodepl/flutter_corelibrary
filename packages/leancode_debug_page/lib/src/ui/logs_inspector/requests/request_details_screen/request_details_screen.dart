@@ -6,7 +6,7 @@ import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_detai
 import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/request_details_screen_response_tab.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/share_button.dart';
-import 'package:leancode_debug_page/src/ui/share_text_helper.dart';
+import 'package:share_plus/share_plus.dart';
 
 class RequestDetailsRoute extends DebugPageRoute {
   RequestDetailsRoute(RequestLogRecord requestLog)
@@ -28,7 +28,9 @@ class RequestDetailsScreen extends StatelessWidget {
       const RequestSharingConfiguration(includeResponse: true),
     );
 
-    await shareTextWithEncoding(summary);
+    if (summary.isNotEmpty) {
+      await Share.share(summary);
+    }
   }
 
   @override
