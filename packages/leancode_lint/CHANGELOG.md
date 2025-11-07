@@ -1,3 +1,7 @@
+# 19.0.1
+
+- fix: Make `prefer_center_over_align` not crash in non-Flutter packages.
+
 # 19.0.0
 
 - Support `analyzer` 8.1.0

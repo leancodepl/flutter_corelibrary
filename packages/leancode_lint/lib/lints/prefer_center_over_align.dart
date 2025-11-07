@@ -32,17 +32,19 @@ class PreferCenterOverAlign extends DartLintRule {
 
     final alignmentPath = session.uriConverter.uriToPath(
       Uri.parse('package:flutter/src/painting/alignment.dart'),
-    )!;
-    final object = switch (await session.getResolvedLibrary(alignmentPath)) {
-      ResolvedLibraryResult(:final element) =>
-        element
-            .getClass('Alignment')
-            ?.getField('center')
-            ?.computeConstantValue(),
-      _ => null,
-    };
+    );
 
-    context.sharedState[_alignmentConstantKey] = object;
+    if (alignmentPath != null) {
+      context.sharedState[_alignmentConstantKey] = switch (await session
+          .getResolvedLibrary(alignmentPath)) {
+        ResolvedLibraryResult(:final element) =>
+          element
+              .getClass('Alignment')
+              ?.getField('center')
+              ?.computeConstantValue(),
+        _ => null,
+      };
+    }
 
     return super.startUp(resolver, context);
   }
@@ -53,10 +55,15 @@ class PreferCenterOverAlign extends DartLintRule {
     DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
+    final centerConstantValue = context.sharedState[_alignmentConstantKey];
+    if (centerConstantValue is! DartObject) {
+      return;
+    }
+
     context.registry.addInstanceCreationExpression((node) {
       final data = _analyzeAlignInstanceCreationExpression(
         node,
-        context.sharedState[_alignmentConstantKey] as DartObject?,
+        centerConstantValue,
       );
       if (data case final data? when data.isAlignmentCenter) {
         reporter.atNode(node.constructorName, code, data: data);
@@ -66,7 +73,7 @@ class PreferCenterOverAlign extends DartLintRule {
 
   _PreferCenterOverAlignData? _analyzeAlignInstanceCreationExpression(
     InstanceCreationExpression node,
-    DartObject? alignmentCenterConstantValue,
+    DartObject alignmentCenterConstantValue,
   ) {
     if (!isExpressionExactlyType(node, 'Align', 'flutter')) {
       return null;
