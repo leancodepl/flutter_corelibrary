@@ -7,12 +7,21 @@ import 'package:leancode_lint/type_checker.dart';
 final class UseDesignSystemItem extends UseInsteadType {
   UseDesignSystemItem()
     : super(
-        name: 'use_design_system_item',
-        description: '{0} is forbidden within this design system.',
-        correctionMessage:
-            'Use the alternative defined in the design system: {1}.',
-        severity: DiagnosticSeverity.WARNING,
+        name: code.name,
+        description: code.problemMessage,
+        correctionMessage: code.correctionMessage!,
+        severity: code.severity,
       );
+
+  static const code = LintCode(
+    'use_design_system_item',
+    '{0} is forbidden within this design system.',
+    correctionMessage: 'Use the alternative defined in the design system: {1}.',
+    severity: DiagnosticSeverity.WARNING,
+  );
+
+  @override
+  LintCode get diagnosticCode => code;
 
   @override
   List<(String, TypeChecker)> getCheckers(RuleContext context) {

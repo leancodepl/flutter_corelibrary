@@ -37,20 +37,17 @@ const _supportedGetters = {
 
 class UseDedicatedMediaQueryMethods extends AnalysisRule {
   UseDedicatedMediaQueryMethods()
-    : super(
-        name: 'use_dedicated_media_query_methods',
-        description:
-            'Avoid using {0} to access only one property of MediaQueryData. '
-            'Using aspects of the `MediaQuery` avoids unnecessary rebuilds.',
-      );
+    : super(name: code.name, description: code.problemMessage);
 
-  @override
-  LintCode get diagnosticCode => LintCode(
-    name,
-    description,
+  static const code = LintCode(
+    'use_dedicated_media_query_methods',
+    'Avoid using {0} to access only one property of MediaQueryData. Using aspects of the `MediaQuery` avoids unnecessary rebuilds.',
     correctionMessage: 'Use the dedicated `{1}` method instead.',
     severity: DiagnosticSeverity.WARNING,
   );
+
+  @override
+  LintCode get diagnosticCode => code;
 
   @override
   void registerNodeProcessors(

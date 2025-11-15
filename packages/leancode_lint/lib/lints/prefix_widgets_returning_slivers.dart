@@ -12,19 +12,17 @@ import 'package:leancode_lint/helpers.dart';
 /// `AppPrefix` is specified in the config) prefix in their name.
 class PrefixWidgetsReturningSlivers extends AnalysisRule {
   PrefixWidgetsReturningSlivers()
-    : super(
-        name: 'prefix_widgets_returning_slivers',
-        description:
-            'Prefix widget names of widgets which return slivers in the build method.',
-      );
+    : super(name: code.name, description: code.problemMessage);
 
-  @override
-  LintCode get diagnosticCode => LintCode(
-    name,
-    description,
+  static const code = LintCode(
+    'prefix_widgets_returning_slivers',
+    'Prefix widget names of widgets which return slivers in the build method.',
     correctionMessage: 'Rename to {0}',
     severity: DiagnosticSeverity.WARNING,
   );
+
+  @override
+  LintCode get diagnosticCode => code;
 
   @override
   void registerNodeProcessors(

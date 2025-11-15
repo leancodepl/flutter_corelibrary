@@ -10,18 +10,17 @@ import 'package:leancode_lint/type_checker.dart';
 /// class name.
 class AddCubitSuffixForYourCubits extends AnalysisRule {
   AddCubitSuffixForYourCubits()
-    : super(
-        name: 'add_cubit_suffix_for_your_cubits',
-        description: 'Add Cubit suffix for your cubits.',
-      );
+    : super(name: code.name, description: code.problemMessage);
 
-  @override
-  LintCode get diagnosticCode => LintCode(
-    name,
-    description,
+  static const code = LintCode(
+    'add_cubit_suffix_for_your_cubits',
+    'Add Cubit suffix for your cubits.',
     correctionMessage: 'Ex. {0}Cubit',
     severity: DiagnosticSeverity.WARNING,
   );
+
+  @override
+  LintCode get diagnosticCode => code;
 
   @override
   void registerNodeProcessors(

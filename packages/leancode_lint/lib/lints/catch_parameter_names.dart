@@ -10,19 +10,17 @@ import 'package:analyzer/error/error.dart';
 /// - if it's a typed catch, the stacktrace has to be named `st`
 class CatchParameterNames extends AnalysisRule {
   CatchParameterNames()
-    : super(
-        name: 'catch_parameter_names',
-        description:
-            'Enforces that a catch clause has correctly named variable bindings.',
-      );
+    : super(name: code.name, description: code.problemMessage);
 
-  @override
-  LintCode get diagnosticCode => LintCode(
-    name,
+  static const code = LintCode(
+    'catch_parameter_names',
     'Parameter name for the {0} is non-standard.',
     correctionMessage: 'Rename the parameter to {1}`.',
     severity: DiagnosticSeverity.WARNING,
   );
+
+  @override
+  LintCode get diagnosticCode => code;
 
   @override
   void registerNodeProcessors(

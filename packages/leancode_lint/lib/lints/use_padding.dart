@@ -13,20 +13,17 @@ import 'package:leancode_lint/helpers.dart';
 import 'package:leancode_lint/utils.dart';
 
 class UsePadding extends AnalysisRule {
-  UsePadding()
-    : super(
-        name: 'use_padding',
-        description:
-            'Use Padding widget instead of the Container widget with only the margin parameter',
-      );
+  UsePadding() : super(name: code.name, description: code.problemMessage);
 
-  @override
-  LintCode get diagnosticCode => LintCode(
-    name,
-    description,
+  static const code = LintCode(
+    'use_padding',
+    'Use Padding widget instead of the Container widget with only the margin parameter',
     correctionMessage: 'Replace with Padding',
     severity: DiagnosticSeverity.WARNING,
   );
+
+  @override
+  LintCode get diagnosticCode => code;
 
   @override
   void registerNodeProcessors(

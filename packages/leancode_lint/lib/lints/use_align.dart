@@ -7,20 +7,17 @@ import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/helpers.dart';
 
 class UseAlign extends AnalysisRule {
-  UseAlign()
-    : super(
-        name: 'use_align',
-        description:
-            'Use Align widget instead of the Container widget with only the alignment parameter',
-      );
+  UseAlign() : super(name: code.name, description: code.problemMessage);
 
-  @override
-  LintCode get diagnosticCode => LintCode(
-    name,
-    description,
+  static const code = LintCode(
+    'use_align',
+    'Use Align widget instead of the Container widget with only the alignment parameter',
     correctionMessage: 'Replace with Align',
     severity: DiagnosticSeverity.WARNING,
   );
+
+  @override
+  LintCode get diagnosticCode => code;
 
   @override
   void registerNodeProcessors(

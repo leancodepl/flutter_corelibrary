@@ -39,7 +39,7 @@ class _Linter extends Plugin {
       ..registerWarningRule(StartCommentsWithSpace())
       ..registerWarningRule(PrefixWidgetsReturningSlivers())
       ..registerFixForRule(
-        StartCommentsWithSpace().diagnosticCode,
+        StartCommentsWithSpace.code,
         AddStartingSpaceToComment.new,
       )
       ..registerWarningRule(AddCubitSuffixForYourCubits())
@@ -47,7 +47,7 @@ class _Linter extends Plugin {
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(HookWidgetDoesNotUseHooks())
       ..registerFixForRule(
-        HookWidgetDoesNotUseHooks().diagnosticCode,
+        HookWidgetDoesNotUseHooks.code,
         ConvertHookWidgetToStatelessWidget.new,
       )
       // TODO: disabled by default until stabilized. Add documentation.
@@ -55,14 +55,14 @@ class _Linter extends Plugin {
       ..registerWarningRule(AvoidSingleChildInMultiChildWidgets())
       ..registerWarningRule(UseAlign())
       ..registerFixForRule(
-        UseAlign().diagnosticCode,
+        UseAlign.code,
         ChangeWidgetNameFix.producerGeneratorFor('Align'),
       )
       ..registerWarningRule(UsePadding())
-      ..registerFixForRule(UsePadding().diagnosticCode, UsePaddingFix.new)
+      ..registerFixForRule(UsePadding.code, UsePaddingFix.new)
       ..registerWarningRule(UseDedicatedMediaQueryMethods())
       ..registerFixForRule(
-        UseDedicatedMediaQueryMethods().diagnosticCode,
+        UseDedicatedMediaQueryMethods.code,
         ReplaceMediaQueryOfWithDedicatedMethodFix.new,
       );
   }

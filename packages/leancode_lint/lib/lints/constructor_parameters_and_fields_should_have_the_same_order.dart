@@ -10,14 +10,16 @@ import 'package:analyzer/error/error.dart';
 class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     extends AnalysisRule {
   ConstructorParametersAndFieldsShouldHaveTheSameOrder()
-    : super(
-        name: 'constructor_parameters_and_fields_should_have_the_same_order',
-        description: 'Class parameters and fields should have the same order.',
-      );
+    : super(name: code.name, description: code.problemMessage);
+
+  static const code = LintCode(
+    'constructor_parameters_and_fields_should_have_the_same_order',
+    'Class parameters and fields should have the same order.',
+    severity: DiagnosticSeverity.WARNING,
+  );
 
   @override
-  LintCode get diagnosticCode =>
-      LintCode(name, description, severity: DiagnosticSeverity.WARNING);
+  LintCode get diagnosticCode => code;
 
   @override
   void registerNodeProcessors(
