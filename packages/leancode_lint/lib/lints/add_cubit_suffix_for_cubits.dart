@@ -16,7 +16,7 @@ class AddCubitSuffixForYourCubits extends AnalysisRule {
     'add_cubit_suffix_for_your_cubits',
     'Add Cubit suffix for your cubits.',
     correctionMessage: 'Ex. {0}Cubit',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override

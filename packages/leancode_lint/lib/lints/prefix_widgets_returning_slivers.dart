@@ -18,7 +18,7 @@ class PrefixWidgetsReturningSlivers extends AnalysisRule {
     'prefix_widgets_returning_slivers',
     'Prefix widget names of widgets which return slivers in the build method.',
     correctionMessage: 'Rename to {0}',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override

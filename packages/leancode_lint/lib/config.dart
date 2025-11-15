@@ -19,7 +19,7 @@ class LeancodeLintConfig {
         .parent
         .getChildAssumingFile('analysis_options.yaml');
 
-    return LeancodeLintConfig.fromAnalysisOptions(analysisOptionsFile);
+    return .fromAnalysisOptions(analysisOptionsFile);
   }
 
   static LeancodeLintConfig? fromAnalysisOptions(File analysisOptionsFile) {
@@ -34,7 +34,7 @@ class LeancodeLintConfig {
       return null;
     }
 
-    return LeancodeLintConfig._(configMap);
+    return ._(configMap);
   }
 
   final YamlMap configMap;

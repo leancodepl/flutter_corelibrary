@@ -28,15 +28,14 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
   ConvertIterableMapToCollectionFor({required super.context});
 
   @override
-  AssistKind? get assistKind => const AssistKind(
+  AssistKind? get assistKind => const .new(
     'leancode_lint.assist.convertIterableMapToCollectionFor',
     50,
     'Convert to collection-for',
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
@@ -71,7 +70,7 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
       }
 
       final parentCollectKind = _checkCollectKind(parent);
-      final collectKind = parentCollectKind?.$1 ?? _IterableCollect.list;
+      final collectKind = parentCollectKind?.$1 ?? .list;
       final nodeWithCollect = parentCollectKind?.$2 ?? node;
 
       builder.addDartFileEdit(file, (builder) {

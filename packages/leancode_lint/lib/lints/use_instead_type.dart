@@ -12,14 +12,14 @@ abstract base class UseInsteadType extends AnalysisRule {
     required super.name,
     required super.description,
     required this.correctionMessage,
-    this.severity = DiagnosticSeverity.WARNING,
+    this.severity = .WARNING,
   });
 
   final String correctionMessage;
   final DiagnosticSeverity severity;
 
   @override
-  LintCode get diagnosticCode => LintCode(
+  LintCode get diagnosticCode => .new(
     name,
     description,
     correctionMessage: correctionMessage,

@@ -13,7 +13,7 @@ class UseAlign extends AnalysisRule {
     'use_align',
     'Use Align widget instead of the Container widget with only the alignment parameter',
     correctionMessage: 'Replace with Align',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override

@@ -45,15 +45,14 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
   ConvertPositionalToNamedFormal({required super.context});
 
   @override
-  AssistKind? get assistKind => const AssistKind(
+  AssistKind? get assistKind => const .new(
     'leancode_lint.assist.convertPositionalToNamedFormal',
     50,
     'Convert to a named formal parameter',
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {

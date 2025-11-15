@@ -19,7 +19,7 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule {
     'hook_widget_does_not_use_hooks',
     'This HookWidget does not use hooks.',
     correctionMessage: 'Convert it to a StatelessWidget',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override
@@ -60,8 +60,7 @@ class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {

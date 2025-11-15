@@ -19,7 +19,7 @@ class StartCommentsWithSpace extends AnalysisRule {
   static const code = LintCode(
     'start_comments_with_space',
     'Start {0} with a space.',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override
@@ -101,8 +101,7 @@ class AddStartingSpaceToComment extends ResolvedCorrectionProducer {
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {

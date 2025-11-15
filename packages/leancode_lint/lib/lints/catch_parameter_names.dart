@@ -16,7 +16,7 @@ class CatchParameterNames extends AnalysisRule {
     'catch_parameter_names',
     'Parameter name for the {0} is non-standard.',
     correctionMessage: 'Rename the parameter to {1}`.',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override
@@ -41,10 +41,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitCatchClause(CatchClause node) {
     // not a typed catch `} on TypeName {`
     if (node.exceptionType == null) {
-      _checkParameter(node.exceptionParameter, _CatchClauseParameter.exception);
+      _checkParameter(node.exceptionParameter, .exception);
     }
 
-    _checkParameter(node.stackTraceParameter, _CatchClauseParameter.stackTrace);
+    _checkParameter(node.stackTraceParameter, .stackTrace);
   }
 
   void _checkParameter(

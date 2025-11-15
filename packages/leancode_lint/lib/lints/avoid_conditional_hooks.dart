@@ -15,7 +15,7 @@ class AvoidConditionalHooks extends AnalysisRule {
   static const code = LintCode(
     'avoid_conditional_hooks',
     "Don't use hooks conditionally",
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override
@@ -69,9 +69,7 @@ class AvoidConditionalHooks extends AnalysisRule {
         ) when condition != child => true,
         BinaryExpression(
           operator: Token(
-            type: TokenType.QUESTION_QUESTION ||
-                TokenType.AMPERSAND_AMPERSAND ||
-                TokenType.BAR_BAR,
+            type: .QUESTION_QUESTION || .AMPERSAND_AMPERSAND || .BAR_BAR,
           ),
           :final rightOperand,
         )
@@ -79,10 +77,10 @@ class AvoidConditionalHooks extends AnalysisRule {
           true,
         AssignmentExpression(
           operator: Token(
-            type: TokenType.QUESTION_QUESTION_EQ ||
-                TokenType.AMPERSAND_EQ ||
-                TokenType.BAR_EQ ||
-                TokenType.CARET_EQ,
+            type: .QUESTION_QUESTION_EQ ||
+                .AMPERSAND_EQ ||
+                .BAR_EQ ||
+                .CARET_EQ,
           ),
           :final rightHandSide,
         )

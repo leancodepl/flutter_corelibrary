@@ -19,7 +19,7 @@ class UsePadding extends AnalysisRule {
     'use_padding',
     'Use Padding widget instead of the Container widget with only the margin parameter',
     correctionMessage: 'Replace with Padding',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override
@@ -72,8 +72,7 @@ class UsePaddingFix extends ResolvedCorrectionProducer {
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {

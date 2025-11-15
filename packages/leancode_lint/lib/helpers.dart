@@ -6,7 +6,6 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
@@ -84,8 +83,8 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   }
 
   final isHookBuilder = const TypeChecker.any([
-    TypeChecker.fromName('HookBuilder', packageName: 'flutter_hooks'),
-    TypeChecker.fromName('HookConsumer', packageName: 'hooks_riverpod'),
+    .fromName('HookBuilder', packageName: 'flutter_hooks'),
+    .fromName('HookConsumer', packageName: 'hooks_riverpod'),
   ]).isExactly(classElement);
   if (!isHookBuilder) {
     return null;
@@ -135,9 +134,9 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
 bool isWidgetClass(ClassDeclaration node) =>
     switch (node.declaredFragment?.element) {
       final element? => const TypeChecker.any([
-        TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-        TypeChecker.fromName('State', packageName: 'flutter'),
-        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+        .fromName('StatelessWidget', packageName: 'flutter'),
+        .fromName('State', packageName: 'flutter'),
+        .fromName('HookWidget', packageName: 'flutter_hooks'),
       ]).isSuperOf(element),
       _ => false,
     };
@@ -218,8 +217,8 @@ class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
     }
 
     const checker = TypeChecker.any([
-      TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-      TypeChecker.fromName('HookConsumerWidget', packageName: 'hooks_riverpod'),
+      .fromName('HookWidget', packageName: 'flutter_hooks'),
+      .fromName('HookConsumerWidget', packageName: 'hooks_riverpod'),
     ]);
 
     final AstNode diagnosticNode;
@@ -293,7 +292,7 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
         continue;
       } else if (argumentName == parameter &&
           expression is! NullLiteral &&
-          staticType?.nullabilitySuffix != NullabilitySuffix.question) {
+          staticType?.nullabilitySuffix != .question) {
         hasParameter = true;
       } else {
         // Other named arguments are not allowed
@@ -338,8 +337,7 @@ class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {

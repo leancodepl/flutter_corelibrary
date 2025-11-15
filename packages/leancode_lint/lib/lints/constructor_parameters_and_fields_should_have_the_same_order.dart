@@ -15,7 +15,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
   static const code = LintCode(
     'constructor_parameters_and_fields_should_have_the_same_order',
     'Class parameters and fields should have the same order.',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override

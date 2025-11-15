@@ -43,7 +43,7 @@ class UseDedicatedMediaQueryMethods extends AnalysisRule {
     'use_dedicated_media_query_methods',
     'Avoid using {0} to access only one property of MediaQueryData. Using aspects of the `MediaQuery` avoids unnecessary rebuilds.',
     correctionMessage: 'Use the dedicated `{1}` method instead.',
-    severity: DiagnosticSeverity.WARNING,
+    severity: .WARNING,
   );
 
   @override
@@ -154,8 +154,7 @@ class ReplaceMediaQueryOfWithDedicatedMethodFix
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {

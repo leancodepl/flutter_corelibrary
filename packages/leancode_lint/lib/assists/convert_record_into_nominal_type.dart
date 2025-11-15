@@ -1,7 +1,6 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
@@ -39,15 +38,14 @@ class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
   ConvertRecordIntoNominalType({required super.context});
 
   @override
-  AssistKind? get assistKind => const AssistKind(
+  AssistKind? get assistKind => const .new(
     'leancode_lint.assist.convertRecordIntoNominalType',
     50,
     'Convert to nominal type',
   );
 
   @override
-  CorrectionApplicability get applicability =>
-      CorrectionApplicability.singleLocation;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
@@ -60,7 +58,7 @@ class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
       final klass = _classFromRecord(name, typeParameters, record);
       await builder.addDartFileEdit(file, (builder) {
         builder
-          ..importLibraryElement(Uri.parse('package:meta/meta.dart'))
+          ..importLibraryElement(.parse('package:meta/meta.dart'))
           ..addSimpleReplacement(sourceRange, klass)
           ..format(sourceRange);
       });
@@ -95,7 +93,7 @@ class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
 ${Keyword.CLASS.lexeme} $name$typeParameters {
   ${Keyword.CONST.lexeme} $name(
 ${positionals.map((e) => '    ${Keyword.THIS.lexeme}.${e.$1},\n').join()}
-${named.isEmpty ? ');' : '{\n${named.map((e) => '    ${e.$2.type?.nullabilitySuffix == NullabilitySuffix.question ? '' : '${Keyword.REQUIRED.lexeme} '}${Keyword.THIS.lexeme}.${e.$1},\n').join()}});'}
+${named.isEmpty ? ');' : '{\n${named.map((e) => '    ${e.$2.type?.nullabilitySuffix == .question ? '' : '${Keyword.REQUIRED.lexeme} '}${Keyword.THIS.lexeme}.${e.$1},\n').join()}});'}
 
 ${positionals.followedBy(named).map((e) => '  ${Keyword.FINAL.lexeme} ${e.$2.toSource()} ${e.$1};\n').join()}
 }
