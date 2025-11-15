@@ -40,7 +40,7 @@ class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
 
   @override
   AssistKind? get assistKind => const AssistKind(
-    'leancode.lint.convertRecordIntoNominalType',
+    'leancode_lint.assist.convertRecordIntoNominalType',
     50,
     'Convert to nominal type',
   );

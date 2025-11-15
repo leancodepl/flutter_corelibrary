@@ -151,7 +151,7 @@ class ReplaceMediaQueryOfWithDedicatedMethodFix
 
   @override
   FixKind? get fixKind => const FixKind(
-    'leancode.lint.replaceMediaQueryOfWithDedicatedMethod',
+    'leancode_lint.fix.replaceMediaQueryOfWithDedicatedMethod',
     DartFixKindPriority.standard,
     'Replace with the dedicated MediaQuery method',
   );

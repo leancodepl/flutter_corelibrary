@@ -332,7 +332,7 @@ class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
 
   @override
   FixKind? get fixKind => FixKind(
-    'leancode.lint.replaceWith$widgetName',
+    'leancode_lint.fix.replaceWith$widgetName',
     DartFixKindPriority.standard,
     'Replace with $widgetName',
   );

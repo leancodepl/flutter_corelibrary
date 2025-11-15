@@ -46,7 +46,7 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
 
   @override
   AssistKind? get assistKind => const AssistKind(
-    'leancode.lint.convertPositionalToNamedFormal',
+    'leancode_lint.assist.convertPositionalToNamedFormal',
     50,
     'Convert to a named formal parameter',
   );

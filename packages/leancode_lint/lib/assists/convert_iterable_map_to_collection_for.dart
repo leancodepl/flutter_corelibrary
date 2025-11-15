@@ -29,7 +29,7 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
 
   @override
   AssistKind? get assistKind => const AssistKind(
-    'leancode.lint.convertIterableMapToCollectionFor',
+    'leancode_lint.assist.convertIterableMapToCollectionFor',
     50,
     'Convert to collection-for',
   );
