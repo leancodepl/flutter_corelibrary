@@ -17,7 +17,7 @@ class AvoidSingleChildInMultiChildWidgetsTest extends AnalysisRuleTest {
     rule = AvoidSingleChildInMultiChildWidgets();
     super.setUp();
 
-    addMocks([MockLibrary.flutter, MockLibrary.sliverTools]);
+    addMocks([.flutter, .sliverTools]);
   }
 
   Future<void> test_column_is_marked() async {

@@ -17,11 +17,7 @@ class AvoidConditionalHooksTest extends AnalysisRuleTest {
     rule = AvoidConditionalHooks();
     super.setUp();
 
-    addMocks([
-      MockLibrary.flutter,
-      MockLibrary.flutterHooks,
-      MockLibrary.hooksRiverpod,
-    ]);
+    addMocks([.flutter, .flutterHooks, .hooksRiverpod]);
   }
 
   Future<void> test_hooksOutsideBuild() async {

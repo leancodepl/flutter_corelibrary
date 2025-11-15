@@ -17,7 +17,7 @@ class MissingCubitSuffixTest extends AnalysisRuleTest {
     rule = MissingCubitSuffix();
     super.setUp();
 
-    addMocks([MockLibrary.bloc, MockLibrary.flutterBloc]);
+    addMocks([.bloc, .flutterBloc]);
   }
 
   Future<void> test_main() async {

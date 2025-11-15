@@ -17,7 +17,7 @@ class UseAlignTest extends AnalysisRuleTest {
     rule = UseAlign();
     super.setUp();
 
-    addMocks([MockLibrary.flutter]);
+    addMocks([.flutter]);
   }
 
   Future<void> test_container_with_only_align() async {

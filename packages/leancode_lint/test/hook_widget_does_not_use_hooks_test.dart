@@ -17,11 +17,7 @@ class HookWidgetDoesNotUseHooksTest extends AnalysisRuleTest {
     rule = HookWidgetDoesNotUseHooks();
     super.setUp();
 
-    addMocks([
-      MockLibrary.flutter,
-      MockLibrary.flutterHooks,
-      MockLibrary.hooksRiverpod,
-    ]);
+    addMocks([.flutter, .flutterHooks, .hooksRiverpod]);
   }
 
   Future<void> test_sample_hook_widget_not_using_hooks() async {

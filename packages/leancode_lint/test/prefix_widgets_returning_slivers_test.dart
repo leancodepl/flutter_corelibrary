@@ -17,7 +17,7 @@ class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest {
     rule = PrefixWidgetsReturningSlivers();
     super.setUp();
 
-    addMocks([MockLibrary.flutter]);
+    addMocks([.flutter]);
     addAnalysisOptions();
   }
 
