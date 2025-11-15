@@ -20,7 +20,7 @@ class MissingCubitSuffix extends AnalysisRule {
 
   static const code = LintCode(
     'missing_cubit_suffix',
-    'Cubit class names should end with `Cubit`',
+    'Cubit class names should end with `Cubit`.',
     correctionMessage:
         'Add the `Cubit` suffix to the class name, e.g. {0}Cubit.',
     severity: .WARNING,

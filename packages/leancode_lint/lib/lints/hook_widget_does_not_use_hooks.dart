@@ -24,7 +24,7 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule {
   static const code = LintCode(
     'hook_widget_does_not_use_hooks',
     'This HookWidget does not use hooks.',
-    correctionMessage: 'Convert it to a StatelessWidget',
+    correctionMessage: 'Convert it to a StatelessWidget.',
     severity: .WARNING,
   );
 

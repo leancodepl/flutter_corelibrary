@@ -17,8 +17,8 @@ class UseAlign extends AnalysisRule {
 
   static const code = LintCode(
     'use_align',
-    'Use Align widget instead of the Container widget with only the alignment parameter',
-    correctionMessage: 'Replace with Align',
+    'Use Align widget instead of the Container widget with only the alignment parameter.',
+    correctionMessage: 'Replace with Align.',
     severity: .WARNING,
   );
 

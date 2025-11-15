@@ -23,8 +23,8 @@ class UsePadding extends AnalysisRule {
 
   static const code = LintCode(
     'use_padding',
-    'Use Padding widget instead of the Container widget with only the margin parameter',
-    correctionMessage: 'Replace with Padding',
+    'Use Padding widget instead of the Container widget with only the margin parameter.',
+    correctionMessage: 'Replace with Padding.',
     severity: .WARNING,
   );
 

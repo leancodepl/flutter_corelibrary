@@ -21,7 +21,7 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
 
   static const code = LintCode(
     'constructor_parameters_and_fields_should_have_the_same_order',
-    'The order of constructor parameters does not match the order of class fields',
+    'The order of constructor parameters does not match the order of class fields.',
     correctionMessage:
         'Reorder the constructor parameters to match the order of the class fields.',
     severity: .WARNING,

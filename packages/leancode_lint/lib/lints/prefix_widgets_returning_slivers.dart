@@ -22,8 +22,8 @@ class PrefixWidgetsReturningSlivers extends AnalysisRule {
 
   static const code = LintCode(
     'prefix_widgets_returning_slivers',
-    'This widget returns a Sliver but does not start with `Sliver`',
-    correctionMessage: 'Rename to {0}',
+    'This widget returns a Sliver but does not start with `Sliver`.',
+    correctionMessage: 'Rename to {0}.',
     severity: .WARNING,
   );
 

@@ -24,7 +24,7 @@ class StartCommentsWithSpace extends AnalysisRule {
 
   static const code = LintCode(
     'start_comments_with_space',
-    'This comment does not start with a space',
+    'This comment does not start with a space.',
     correctionMessage: 'Add a leading space to this comment.',
     severity: .WARNING,
   );
