@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analysis_server_plugin/src/correction/fix_generators.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
@@ -324,7 +323,10 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
 class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
   ChangeWidgetNameFix(this.widgetName, {required super.context});
 
-  static ProducerGenerator producerGeneratorFor(String widgetName) =>
+  static ChangeWidgetNameFix Function({
+    required CorrectionProducerContext context,
+  })
+  producerGeneratorFor(String widgetName) =>
       ({required context}) => ChangeWidgetNameFix(widgetName, context: context);
 
   final String widgetName;

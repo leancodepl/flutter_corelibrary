@@ -1,10 +1,10 @@
-import 'package:_fe_analyzer_shared/src/scanner/token.dart';
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
@@ -41,7 +41,7 @@ class StartCommentsWithSpace extends AnalysisRule {
         token.offset + contentStart,
         0,
         arguments: [
-          if (token is DocumentationCommentToken)
+          if (token.lexeme.startsWith('///'))
             _CommentType.doc.pluralName
           else
             _CommentType.comment.pluralName,
