@@ -1,4 +1,3 @@
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -13,18 +12,13 @@ void main() {
 
 @reflectiveTest
 class UseDedicatedMediaQueryMethodsTest extends AnalysisRuleTest {
-  final rule = UseDedicatedMediaQueryMethods();
-
   @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(rule);
+    rule = UseDedicatedMediaQueryMethods();
     super.setUp();
 
     addMocks([MockLibrary.flutter]);
   }
-
-  @override
-  String get analysisRule => rule.name;
 
   Future<void> test_media_query_of_context() async {
     await assertDiagnostics(

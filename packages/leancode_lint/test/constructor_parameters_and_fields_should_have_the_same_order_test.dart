@@ -1,4 +1,3 @@
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -14,16 +13,11 @@ void main() {
 @reflectiveTest
 class ConstructorParametersAndFieldsShouldHaveTheSameOrderTest
     extends AnalysisRuleTest {
-  final rule = ConstructorParametersAndFieldsShouldHaveTheSameOrder();
-
   @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(rule);
+    rule = ConstructorParametersAndFieldsShouldHaveTheSameOrder();
     super.setUp();
   }
-
-  @override
-  String get analysisRule => rule.name;
 
   Future<void> test_invalid_unnamed_parameters_order() async {
     await assertDiagnostics(

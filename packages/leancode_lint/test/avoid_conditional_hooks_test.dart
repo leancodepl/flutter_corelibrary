@@ -1,4 +1,3 @@
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -13,11 +12,9 @@ void main() {
 
 @reflectiveTest
 class AvoidConditionalHooksTest extends AnalysisRuleTest {
-  final rule = AvoidConditionalHooks();
-
   @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(rule);
+    rule = AvoidConditionalHooks();
     super.setUp();
 
     addMocks([
@@ -26,9 +23,6 @@ class AvoidConditionalHooksTest extends AnalysisRuleTest {
       MockLibrary.hooksRiverpod,
     ]);
   }
-
-  @override
-  String get analysisRule => rule.name;
 
   Future<void> test_hooksOutsideBuild() async {
     await assertNoDiagnostics('''

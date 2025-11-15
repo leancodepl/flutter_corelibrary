@@ -1,4 +1,3 @@
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -13,11 +12,9 @@ void main() {
 
 @reflectiveTest
 class HookWidgetDoesNotUseHooksTest extends AnalysisRuleTest {
-  final rule = HookWidgetDoesNotUseHooks();
-
   @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(rule);
+    rule = HookWidgetDoesNotUseHooks();
     super.setUp();
 
     addMocks([
@@ -26,9 +23,6 @@ class HookWidgetDoesNotUseHooksTest extends AnalysisRuleTest {
       MockLibrary.hooksRiverpod,
     ]);
   }
-
-  @override
-  String get analysisRule => rule.name;
 
   Future<void> test_sample_hook_widget_not_using_hooks() async {
     await assertDiagnostics(

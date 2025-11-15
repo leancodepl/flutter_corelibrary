@@ -30,6 +30,7 @@
 ## NEXT
 
 - Rewrite more tests for the new system.
+- Update dependencies, support `analysis_server_plugin: ^0.3.4` and `analyzer: ^9.0.0`.
 
 # 19.0.0
 

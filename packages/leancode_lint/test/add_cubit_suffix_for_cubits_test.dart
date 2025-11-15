@@ -1,4 +1,3 @@
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -13,18 +12,13 @@ void main() {
 
 @reflectiveTest
 class AddCubitSuffixForYourCubitsTest extends AnalysisRuleTest {
-  final rule = AddCubitSuffixForYourCubits();
-
   @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(rule);
+    rule = AddCubitSuffixForYourCubits();
     super.setUp();
 
     addMocks([MockLibrary.bloc, MockLibrary.flutterBloc]);
   }
-
-  @override
-  String get analysisRule => rule.name;
 
   Future<void> test_main() async {
     await assertDiagnostics(

@@ -1,4 +1,3 @@
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/use_align.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -13,18 +12,13 @@ void main() {
 
 @reflectiveTest
 class UseAlignTest extends AnalysisRuleTest {
-  final rule = UseAlign();
-
   @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(rule);
+    rule = UseAlign();
     super.setUp();
 
     addMocks([MockLibrary.flutter]);
   }
-
-  @override
-  String get analysisRule => rule.name;
 
   Future<void> test_container_with_only_align() async {
     await assertDiagnostics(

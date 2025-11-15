@@ -1,4 +1,3 @@
-import 'package:analyzer/src/lint/registry.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
@@ -13,21 +12,13 @@ void main() {
 
 @reflectiveTest
 class AvoidSingleChildInMultiChildWidgetsTest extends AnalysisRuleTest {
-  final rule = AvoidSingleChildInMultiChildWidgets();
-
   @override
   void setUp() {
-    Registry.ruleRegistry.registerWarningRule(rule);
+    rule = AvoidSingleChildInMultiChildWidgets();
     super.setUp();
 
     addMocks([MockLibrary.flutter, MockLibrary.sliverTools]);
   }
-
-  @override
-  String get analysisRule => rule.name;
-
-  @override
-  bool get dumpAstOnFailures => false;
 
   Future<void> test_column_is_marked() async {
     await assertDiagnostics(
