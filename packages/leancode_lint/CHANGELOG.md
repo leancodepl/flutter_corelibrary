@@ -31,6 +31,7 @@
 
 - Rewrite more tests for the new system.
 - Update dependencies, support `analysis_server_plugin: ^0.3.4` and `analyzer: ^9.0.0`.
+- Rename the `add_cubit_suffix_for_your_cubits` rule to `missing_cubit_suffix`.
 
 # 19.0.0
 

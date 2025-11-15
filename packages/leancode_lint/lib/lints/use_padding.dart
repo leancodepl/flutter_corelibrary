@@ -13,7 +13,13 @@ import 'package:leancode_lint/helpers.dart';
 import 'package:leancode_lint/utils.dart';
 
 class UsePadding extends AnalysisRule {
-  UsePadding() : super(name: code.name, description: code.problemMessage);
+  UsePadding()
+    : super(
+        name: code.name,
+        description:
+            'Replace Container used solely for margin with the dedicated Padding widget. '
+            'Padding clarifies intent and avoids overusing Container when only spacing is required.',
+      );
 
   static const code = LintCode(
     'use_padding',

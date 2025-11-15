@@ -14,11 +14,18 @@ import 'package:leancode_lint/helpers.dart';
 /// Forces comments/docs to start with a space.
 class StartCommentsWithSpace extends AnalysisRule {
   StartCommentsWithSpace()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Ensure that both line comments (//) and documentation comments (///) '
+            'start with a space after the slashes to keep formatting consistent. '
+            'For example, prefer "// comment" over "//comment" and "/// Doc" over "///Doc".',
+      );
 
   static const code = LintCode(
     'start_comments_with_space',
-    'Start {0} with a space.',
+    'This comment does not start with a space',
+    correctionMessage: 'Add a leading space to this comment.',
     severity: .WARNING,
   );
 
@@ -37,16 +44,7 @@ class StartCommentsWithSpace extends AnalysisRule {
 
   void _visitCommentToken(Token token) {
     if (_commentErrorOffset(token) case final contentStart?) {
-      reportAtOffset(
-        token.offset + contentStart,
-        0,
-        arguments: [
-          if (token.lexeme.startsWith('///'))
-            _CommentType.doc.pluralName
-          else
-            _CommentType.comment.pluralName,
-        ],
-      );
+      reportAtOffset(token.offset + contentStart, 0);
     }
   }
 }
@@ -79,15 +77,6 @@ int? _commentErrorOffset(Token comment) {
     return contentStart;
   }
   return null;
-}
-
-enum _CommentType {
-  comment('comments'),
-  doc('doc comments');
-
-  const _CommentType(this.pluralName);
-
-  final String pluralName;
 }
 
 class AddStartingSpaceToComment extends ResolvedCorrectionProducer {

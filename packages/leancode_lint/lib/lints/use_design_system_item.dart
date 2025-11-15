@@ -8,7 +8,11 @@ final class UseDesignSystemItem extends UseInsteadType {
   UseDesignSystemItem()
     : super(
         name: code.name,
-        description: code.problemMessage,
+        description:
+            'Define a project-specific allow/deny list for UI elements. '
+            'Forbid using certain platform or package widgets/types directly '
+            'and guide developers to the approved design-system alternatives '
+            'configured in analysis options.',
         correctionMessage: code.correctionMessage!,
         severity: code.severity,
       );

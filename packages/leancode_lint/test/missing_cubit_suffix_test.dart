@@ -1,20 +1,20 @@
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
-import 'package:leancode_lint/lints/add_cubit_suffix_for_cubits.dart';
+import 'package:leancode_lint/lints/missing_cubit_suffix.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import 'mock_libraries.dart';
 
 void main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(AddCubitSuffixForYourCubitsTest);
+    defineReflectiveTests(MissingCubitSuffixTest);
   });
 }
 
 @reflectiveTest
-class AddCubitSuffixForYourCubitsTest extends AnalysisRuleTest {
+class MissingCubitSuffixTest extends AnalysisRuleTest {
   @override
   void setUp() {
-    rule = AddCubitSuffixForYourCubits();
+    rule = MissingCubitSuffix();
     super.setUp();
 
     addMocks([MockLibrary.bloc, MockLibrary.flutterBloc]);

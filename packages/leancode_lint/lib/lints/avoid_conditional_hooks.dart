@@ -10,11 +10,19 @@ import 'package:leancode_lint/helpers.dart';
 /// Displays warning for conditional hooks usage.
 class AvoidConditionalHooks extends AnalysisRule {
   AvoidConditionalHooks()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Do not call hooks inside conditional branches or after early returns '
+            'within a HookWidget build method. Hooks must be invoked unconditionally '
+            'in the same order on every build to preserve hook state.',
+      );
 
   static const code = LintCode(
     'avoid_conditional_hooks',
-    "Don't use hooks conditionally",
+    'This hook is called conditionally.',
+    correctionMessage:
+        'Ensure that hooks are called unconditionally in the same order on every build.',
     severity: .WARNING,
   );
 

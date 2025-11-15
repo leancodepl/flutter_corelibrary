@@ -10,7 +10,14 @@ import 'package:analyzer/error/error.dart';
 /// - if it's a typed catch, the stacktrace has to be named `st`
 class CatchParameterNames extends AnalysisRule {
   CatchParameterNames()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Use consistent naming for catch clause bindings. '
+            'Use `err` for the exception and `st` for the StackTrace. '
+            'For typed catches, the stack trace should still be named st. '
+            'You may use _ to intentionally ignore a binding.',
+      );
 
   static const code = LintCode(
     'catch_parameter_names',

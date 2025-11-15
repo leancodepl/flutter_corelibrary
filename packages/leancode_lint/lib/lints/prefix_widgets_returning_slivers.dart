@@ -12,11 +12,17 @@ import 'package:leancode_lint/helpers.dart';
 /// `AppPrefix` is specified in the config) prefix in their name.
 class PrefixWidgetsReturningSlivers extends AnalysisRule {
   PrefixWidgetsReturningSlivers()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Require widgets that return Sliver widgets from their build method '
+            'to be prefixed with Sliver (or with the configured application prefix, e.g. AppSliver). '
+            'This naming convention makes sliver-producing widgets easy to recognize.',
+      );
 
   static const code = LintCode(
     'prefix_widgets_returning_slivers',
-    'Prefix widget names of widgets which return slivers in the build method.',
+    'This widget returns a Sliver but does not start with `Sliver`',
     correctionMessage: 'Rename to {0}',
     severity: .WARNING,
   );

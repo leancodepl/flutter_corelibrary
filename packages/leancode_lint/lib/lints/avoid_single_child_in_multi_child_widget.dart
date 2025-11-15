@@ -10,11 +10,18 @@ import 'package:leancode_lint/utils.dart';
 /// Enforces that some widgets that accept multiple children do not have a single child.
 class AvoidSingleChildInMultiChildWidgets extends AnalysisRule {
   AvoidSingleChildInMultiChildWidgets()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Do not use multi-child layout widgets (e.g. Column, Row, Wrap, Flex, SliverList, etc.) '
+            'when they contain only a single child. In such cases, '
+            'prefer placing the child directly or using a more appropriate '
+            'single-child widget to simplify the widget tree.',
+      );
 
   static const code = LintCode(
     'avoid_single_child_in_multi_child_widgets',
-    'Avoid using {0} with a single child.',
+    'This {0} contains only one child.',
     correctionMessage:
         'Remove the {0} and achieve the same result using dedicated widgets.',
     severity: .WARNING,

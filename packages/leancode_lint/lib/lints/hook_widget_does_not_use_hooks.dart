@@ -13,7 +13,13 @@ import 'package:leancode_lint/helpers.dart';
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
 class HookWidgetDoesNotUseHooks extends AnalysisRule {
   HookWidgetDoesNotUseHooks()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Do not use HookWidget classes whose build method does not call any hooks. '
+            'If a widget does not need hooks, prefer using a StatelessWidget '
+            'for clarity and to avoid implying hook-based state.',
+      );
 
   static const code = LintCode(
     'hook_widget_does_not_use_hooks',

@@ -37,7 +37,13 @@ const _supportedGetters = {
 
 class UseDedicatedMediaQueryMethods extends AnalysisRule {
   UseDedicatedMediaQueryMethods()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Use dedicated MediaQuery aspect helpers (e.g. MediaQuery.sizeOf, MediaQuery.orientationOf) '
+            'instead of calling MediaQuery.of(context) to access a single property. '
+            'Aspect helpers reduce unnecessary rebuilds and improve performance.',
+      );
 
   static const code = LintCode(
     'use_dedicated_media_query_methods',

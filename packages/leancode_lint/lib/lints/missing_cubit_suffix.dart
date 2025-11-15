@@ -8,14 +8,21 @@ import 'package:leancode_lint/type_checker.dart';
 
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
 /// class name.
-class AddCubitSuffixForYourCubits extends AnalysisRule {
-  AddCubitSuffixForYourCubits()
-    : super(name: code.name, description: code.problemMessage);
+class MissingCubitSuffix extends AnalysisRule {
+  MissingCubitSuffix()
+    : super(
+        name: code.name,
+        description:
+            'Enforce a naming convention for bloc Cubit classes. '
+            'Any class that extends Cubit should end with the Cubit suffix '
+            '(for example: LoginCubit) to improve discoverability and consistency.',
+      );
 
   static const code = LintCode(
-    'add_cubit_suffix_for_your_cubits',
-    'Add Cubit suffix for your cubits.',
-    correctionMessage: 'Ex. {0}Cubit',
+    'missing_cubit_suffix',
+    'Cubit class names should end with `Cubit`',
+    correctionMessage:
+        'Add the `Cubit` suffix to the class name, e.g. {0}Cubit.',
     severity: .WARNING,
   );
 

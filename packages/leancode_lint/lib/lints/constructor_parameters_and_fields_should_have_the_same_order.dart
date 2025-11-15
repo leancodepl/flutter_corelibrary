@@ -10,11 +10,20 @@ import 'package:analyzer/error/error.dart';
 class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     extends AnalysisRule {
   ConstructorParametersAndFieldsShouldHaveTheSameOrder()
-    : super(name: code.name, description: code.problemMessage);
+    : super(
+        name: code.name,
+        description:
+            'Keep the API predictable by keeping the order of constructor parameters '
+            'aligned with the declaration order of class fields. '
+            'This applies to both named and positional parameters, '
+            'making code easier to read and initialize correctly.',
+      );
 
   static const code = LintCode(
     'constructor_parameters_and_fields_should_have_the_same_order',
-    'Class parameters and fields should have the same order.',
+    'The order of constructor parameters does not match the order of class fields',
+    correctionMessage:
+        'Reorder the constructor parameters to match the order of the class fields.',
     severity: .WARNING,
   );
 
