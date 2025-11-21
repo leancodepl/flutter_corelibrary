@@ -40,4 +40,16 @@ class LeancodeLintConfig {
     {'application_prefix': final String prefix} => prefix,
     _ => null,
   };
+
+  late final designSystemItemReplacements = {
+    if (configMap['use_design_system_item'] case final YamlMap map)
+      for (final entry in map.entries)
+        entry.key as String: [
+          for (final (forbidden as YamlMap) in entry.value as List)
+            (
+              name: forbidden['instead_of'] as String,
+              packageName: forbidden['from_package'] as String,
+            ),
+        ],
+  };
 }

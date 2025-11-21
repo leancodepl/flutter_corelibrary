@@ -1,52 +1,53 @@
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/lints/use_instead_type.dart';
-
-final class UseDesignSystemItemConfig {
-  const UseDesignSystemItemConfig(this.replacements);
-
-  factory UseDesignSystemItemConfig.fromConfig(Map<String, Object?> json) {
-    final replacements = json.entries.map(
-      (entry) => MapEntry(entry.key, [
-        for (final forbidden in entry.value! as List)
-          (
-            name: (forbidden as Map)['instead_of'] as String,
-            packageName: forbidden['from_package'] as String,
-          ),
-      ]),
-    );
-
-    return UseDesignSystemItemConfig(Map.fromEntries(replacements));
-  }
-
-  final Map<String, List<ForbiddenItem>> replacements;
-}
+import 'package:leancode_lint/type_checker.dart';
 
 final class UseDesignSystemItem extends UseInsteadType {
-  UseDesignSystemItem({
-    required String preferredItemName,
-    required Iterable<ForbiddenItem> replacements,
-  }) : super(
-         lintCodeName: '${ruleName}_$preferredItemName',
-         problemMessage: '{0} is forbidden within this design system.',
-         correctionMessage:
-             'Use the alternative defined in the design system: {1}.',
-         replacements: {preferredItemName: replacements.toList()},
-       );
+  UseDesignSystemItem()
+    : super(
+        name: code.name,
+        description:
+            'Define a project-specific allow/deny list for UI elements. '
+            'Forbid using certain platform or package widgets/types directly '
+            'and guide developers to the approved design-system alternatives '
+            'configured in analysis options.',
+        correctionMessage: code.correctionMessage!,
+        severity: code.severity,
+      );
 
-  static const ruleName = 'use_design_system_item';
+  static const code = LintCode(
+    // TODO: use MultiAnalysisRule and specify lint code per item when we can
+    // read config before the rule is created.
+    // https://github.com/dart-lang/sdk/issues/61755
+    'use_design_system_item',
+    '{0} is forbidden within this design system.',
+    correctionMessage: 'Use the alternative defined in the design system: {1}.',
+    severity: .WARNING,
+  );
 
-  static Iterable<UseDesignSystemItem> getRulesListFromConfigs(
-    CustomLintConfigs configs,
-  ) {
-    final config = UseDesignSystemItemConfig.fromConfig(
-      configs.rules[ruleName]?.json ?? {},
-    );
+  @override
+  LintCode get diagnosticCode => code;
 
-    return config.replacements.entries.map(
-      (entry) => UseDesignSystemItem(
-        preferredItemName: entry.key,
-        replacements: entry.value,
-      ),
-    );
+  @override
+  Map<String, TypeChecker> getCheckers(RuleContext context) {
+    final replacements = LeancodeLintConfig.fromRuleContext(
+      context,
+    )?.designSystemItemReplacements;
+
+    return replacements?.map(
+          (preferredItemName, forbidden) => .new(
+            preferredItemName,
+            TypeChecker.any([
+              for (final (:name, :packageName) in forbidden)
+                if (packageName.startsWith('dart:'))
+                  TypeChecker.fromUrl('$packageName#$name')
+                else
+                  TypeChecker.fromName(name, packageName: packageName),
+            ]),
+          ),
+        ) ??
+        {};
   }
 }
