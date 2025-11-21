@@ -46,3 +46,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 }
+
+class UseAlignFix extends ChangeWidgetNameFix {
+  UseAlignFix({required super.context}) : super(widgetName: 'Align');
+}

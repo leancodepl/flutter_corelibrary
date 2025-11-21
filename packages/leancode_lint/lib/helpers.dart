@@ -320,14 +320,8 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
 /// ```dart
 /// Align(alignment: null, child: const SizedBox());
 /// ```
-class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
-  ChangeWidgetNameFix(this.widgetName, {required super.context});
-
-  static ChangeWidgetNameFix Function({
-    required CorrectionProducerContext context,
-  })
-  producerGeneratorFor(String widgetName) =>
-      ({required context}) => .new(widgetName, context: context);
+abstract class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
+  ChangeWidgetNameFix({required this.widgetName, required super.context});
 
   final String widgetName;
 
