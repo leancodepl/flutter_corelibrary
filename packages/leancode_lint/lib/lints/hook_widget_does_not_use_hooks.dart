@@ -1,33 +1,36 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/diagnostic/diagnostic.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:analyzer/source/source_range.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
-class HookWidgetDoesNotUseHooks extends DartLintRule {
-  const HookWidgetDoesNotUseHooks()
-    : super(
-        code: const LintCode(
-          name: 'hook_widget_does_not_use_hooks',
-          problemMessage: 'This HookWidget does not use hooks.',
-          correctionMessage: 'Convert it to a StatelessWidget',
-          errorSeverity: DiagnosticSeverity.WARNING,
-        ),
-      );
+class HookWidgetDoesNotUseHooks extends AnalysisRule {
+  HookWidgetDoesNotUseHooks()
+    : super(name: code.name, description: code.problemMessage);
+
+  static const code = LintCode(
+    'hook_widget_does_not_use_hooks',
+    'This HookWidget does not use hooks.',
+    correctionMessage: 'Convert it to a StatelessWidget.',
+    severity: .WARNING,
+  );
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addHookWidgetBody(isExactly: true, (
-      node,
-      diagnosticTarget,
-    ) {
+    registry.addHookWidgetBody(this, isExactly: true, (node, diagnosticTarget) {
       // get all hook expressions from build method
       final hookExpressions = switch (node) {
         ExpressionFunctionBody(expression: final AstNode node) ||
@@ -41,33 +44,32 @@ class HookWidgetDoesNotUseHooks extends DartLintRule {
         return;
       }
 
-      reporter.atNode(diagnosticTarget, code);
+      reportAtNode(diagnosticTarget);
     });
   }
-
-  @override
-  List<Fix> getFixes() => [_ConvertHookWidgetToStatelessWidget()];
 }
 
-class _ConvertHookWidgetToStatelessWidget extends DartFix {
+class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {
+  ConvertHookWidgetToStatelessWidget({required super.context});
+
   @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    Diagnostic analysisError,
-    List<Diagnostic> others,
-  ) {
-    reporter
-        .createChangeBuilder(
-          message: 'Convert HookWidget to StatelessWidget',
-          priority: 1,
-        )
-        .addDartFileEdit(
-          (builder) => builder.addSimpleReplacement(
-            SourceRange(analysisError.offset, analysisError.length),
-            'StatelessWidget',
-          ),
-        );
+  FixKind? get fixKind => const FixKind(
+    'leancode_lint.fix.convertHookWidgetToStatelessWidget',
+    DartFixKindPriority.standard,
+    'Convert HookWidget to StatelessWidget',
+  );
+
+  @override
+  CorrectionApplicability get applicability => .automatically;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    await builder.addDartFileEdit(
+      file,
+      (builder) => builder.addSimpleReplacement(
+        range.diagnostic(diagnostic!),
+        'StatelessWidget',
+      ),
+    );
   }
 }
