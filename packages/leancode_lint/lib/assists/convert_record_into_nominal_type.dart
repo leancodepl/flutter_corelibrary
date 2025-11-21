@@ -1,8 +1,10 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/source/source_range.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer_plugin/utilities/assist/assist.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Converts type aliases of records into classes. This preserves
@@ -33,50 +35,51 @@ import 'package:leancode_lint/helpers.dart';
 ///   final T named2;
 /// }
 /// ```
-class ConvertRecordIntoNominalType extends DartAssist {
-  @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    SourceRange target,
-  ) {
-    context.registry.addGenericTypeAlias((node) {
-      if (!target.intersects(node.sourceRange)) {
-        return;
-      }
+class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
+  ConvertRecordIntoNominalType({required super.context});
 
-      if (node.type case final RecordTypeAnnotation record) {
-        final klass = _classFromRecord(node, record);
-        reporter
-            .createChangeBuilder(
-              message: 'Convert to nominal type',
-              priority: 1,
-            )
-            .addDartFileEdit((builder) {
-              builder
-                ..importLibraryElement(Uri.parse('package:meta/meta.dart'))
-                ..addSimpleReplacement(node.sourceRange, klass)
-                ..format(node.sourceRange);
-            });
-      }
-    });
+  @override
+  AssistKind? get assistKind => const .new(
+    'leancode_lint.assist.convertRecordIntoNominalType',
+    DartFixKindPriority.standard,
+    'Convert to nominal type',
+  );
+
+  @override
+  CorrectionApplicability get applicability => .automatically;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    if (node case GenericTypeAlias(
+      :final name,
+      :final typeParameters,
+      type: final RecordTypeAnnotation record,
+    )) {
+      final sourceRange = range.node(node);
+      final klass = _classFromRecord(name, typeParameters, record);
+      await builder.addDartFileEdit(file, (builder) {
+        builder
+          ..importLibraryElement(.parse('package:meta/meta.dart'))
+          ..addSimpleReplacement(sourceRange, klass)
+          ..format(sourceRange);
+      });
+    }
   }
 
   static String _classFromRecord(
-    GenericTypeAlias typeAlias,
+    Token name,
+    TypeParameterList? typeParametersList,
     RecordTypeAnnotation record,
   ) {
     final typeParameters = typeParametersString(
-      typeAlias.typeParameters?.typeParameters ?? const Iterable.empty(),
+      typeParametersList?.typeParameters ?? const Iterable.empty(),
       withBounds: true,
     );
     var unnamedCounter = 0;
-    final positionals =
-        record.positionalFields.map((positional) {
-          final name = positional.name?.lexeme ?? 'pos${unnamedCounter++}';
-          return (name, positional.type);
-        }).toList();
+    final positionals = record.positionalFields.map((positional) {
+      final name = positional.name?.lexeme ?? 'pos${unnamedCounter++}';
+      return (name, positional.type);
+    }).toList();
 
     final named =
         record.namedFields?.fields.map((named) {
@@ -85,12 +88,13 @@ class ConvertRecordIntoNominalType extends DartAssist {
         }) ??
         const Iterable.empty();
 
-    final klass = '''
+    final klass =
+        '''
 @immutable
-${Keyword.CLASS.lexeme} ${typeAlias.name}$typeParameters {
-  ${Keyword.CONST.lexeme} ${typeAlias.name}(
+${Keyword.CLASS.lexeme} $name$typeParameters {
+  ${Keyword.CONST.lexeme} $name(
 ${positionals.map((e) => '    ${Keyword.THIS.lexeme}.${e.$1},\n').join()}
-${named.isEmpty ? ');' : '{\n${named.map((e) => '    ${e.$2.type?.nullabilitySuffix == NullabilitySuffix.question ? '' : '${Keyword.REQUIRED.lexeme} '}${Keyword.THIS.lexeme}.${e.$1},\n').join()}});'}
+${named.isEmpty ? ');' : '{\n${named.map((e) => '    ${e.$2.type?.nullabilitySuffix == .question ? '' : '${Keyword.REQUIRED.lexeme} '}${Keyword.THIS.lexeme}.${e.$1},\n').join()}});'}
 
 ${positionals.followedBy(named).map((e) => '  ${Keyword.FINAL.lexeme} ${e.$2.toSource()} ${e.$1};\n').join()}
 }
