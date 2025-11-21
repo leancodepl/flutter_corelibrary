@@ -1,40 +1,53 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:leancode_lint/type_checker.dart';
 
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
 /// class name.
-class AddCubitSuffixForYourCubits extends DartLintRule {
-  const AddCubitSuffixForYourCubits()
-    : super(
-        code: const LintCode(
-          name: 'add_cubit_suffix_for_your_cubits',
-          problemMessage: 'Add Cubit suffix for your cubits.',
-          correctionMessage: 'Ex. {0}Cubit',
-          errorSeverity: DiagnosticSeverity.WARNING,
-        ),
-      );
+class AddCubitSuffixForYourCubits extends AnalysisRule {
+  AddCubitSuffixForYourCubits()
+    : super(name: code.name, description: code.problemMessage);
+
+  static const code = LintCode(
+    'add_cubit_suffix_for_your_cubits',
+    'Add Cubit suffix for your cubits.',
+    correctionMessage: 'Ex. {0}Cubit',
+    severity: .WARNING,
+  );
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addClassDeclaration((node) {
-      final isCubitClass = _isCubitClass(node);
-      if (!isCubitClass) {
-        return;
-      }
+    registry.addClassDeclaration(this, _Visitor(this, context));
+  }
+}
 
-      final nameEndsWithCubit = _hasCubitSuffix(node.name.lexeme);
-      if (nameEndsWithCubit) {
-        return;
-      }
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
 
-      reporter.atToken(node.name, code, arguments: [node.name.lexeme]);
-    });
+  final AnalysisRule rule;
+  final RuleContext context;
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    if (!_isCubitClass(node)) {
+      return;
+    }
+
+    if (_hasCubitSuffix(node.name.lexeme)) {
+      return;
+    }
+
+    rule.reportAtToken(node.name, arguments: [node.name.lexeme]);
   }
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
