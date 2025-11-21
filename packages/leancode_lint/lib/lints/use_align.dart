@@ -1,38 +1,48 @@
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/helpers.dart';
 
-class UseAlign extends DartLintRule {
-  const UseAlign()
-    : super(
-        code: const LintCode(
-          name: ruleName,
-          problemMessage:
-              'Use Align widget instead of the Container widget with only the alignment parameter',
-        ),
-      );
+class UseAlign extends AnalysisRule {
+  UseAlign() : super(name: code.name, description: code.problemMessage);
 
-  static const ruleName = 'use_align';
+  static const code = LintCode(
+    'use_align',
+    'Use Align widget instead of the Container widget with only the alignment parameter.',
+    severity: .WARNING,
+  );
 
   @override
-  List<Fix> getFixes() => [ChangeWidgetNameFix('Align')];
+  LintCode get diagnosticCode => code;
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addInstanceCreationExpression((node) {
-      if (isExpressionExactlyType(node, 'Container', 'flutter') &&
-          isInstanceCreationExpressionOnlyUsingParameter(
-            node,
-            parameter: 'alignment',
-            // Ignores key and child parameters because both Container and Align have them
-            ignoredParameters: const {'key', 'child'},
-          )) {
-        reporter.atNode(node.constructorName, code);
-      }
-    });
+    registry.addInstanceCreationExpression(this, _Visitor(this, context));
+  }
+}
+
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
+
+  final AnalysisRule rule;
+  final RuleContext context;
+
+  @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (isExpressionExactlyType(node, 'Container', 'flutter') &&
+        isInstanceCreationExpressionOnlyUsingParameter(
+          node,
+          parameter: 'alignment',
+          // Ignores key and child parameters because both Container and Align have them
+          ignoredParameters: const {'key', 'child'},
+        )) {
+      rule.reportAtNode(node.constructorName);
+    }
   }
 }
