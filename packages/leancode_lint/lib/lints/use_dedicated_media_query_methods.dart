@@ -154,7 +154,7 @@ class ReplaceMediaQueryOfWithDedicatedMethodFix
   );
 
   @override
-  CorrectionApplicability get applicability => .singleLocation;
+  CorrectionApplicability get applicability => .automatically;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
