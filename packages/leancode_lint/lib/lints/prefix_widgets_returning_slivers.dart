@@ -1,90 +1,81 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/helpers.dart';
-
-final class PrefixWidgetsReturningSliversConfig {
-  const PrefixWidgetsReturningSliversConfig(this.applicationPrefix);
-
-  factory PrefixWidgetsReturningSliversConfig.fromConfig(
-    Map<String, Object?> json,
-  ) {
-    return PrefixWidgetsReturningSliversConfig(
-      json['application_prefix'] as String?,
-    );
-  }
-
-  final String? applicationPrefix;
-}
 
 /// Displays warning for widgets which return slivers but do not have the
 /// `Sliver`/`_Sliver` (or `${AppPrefix}Sliver`/`_${AppPrefix}Sliver` if
 /// `AppPrefix` is specified in the config) prefix in their name.
-class PrefixWidgetsReturningSlivers extends DartLintRule {
-  PrefixWidgetsReturningSlivers({required this.config})
-    : super(
-        code: const LintCode(
-          name: ruleName,
-          problemMessage:
-              'Prefix widget names of widgets which return slivers in the build method.',
-          correctionMessage: 'Consider renaming to {0}',
-          errorSeverity: DiagnosticSeverity.WARNING,
-        ),
-      );
+class PrefixWidgetsReturningSlivers extends AnalysisRule {
+  PrefixWidgetsReturningSlivers()
+    : super(name: code.name, description: code.problemMessage);
 
-  PrefixWidgetsReturningSlivers.fromConfigs(CustomLintConfigs configs)
-    : this(
-        config: PrefixWidgetsReturningSliversConfig.fromConfig(
-          configs.rules[ruleName]?.json ?? {},
-        ),
-      );
-
-  final PrefixWidgetsReturningSliversConfig config;
-
-  static const ruleName = 'prefix_widgets_returning_slivers';
+  static const code = LintCode(
+    'prefix_widgets_returning_slivers',
+    'Prefix widget names of widgets which return slivers in the build method.',
+    correctionMessage: 'Consider renaming to {0}.',
+    severity: .WARNING,
+  );
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addClassDeclaration((node) {
-      final isThisWidgetClass = isWidgetClass(node);
-      if (!isThisWidgetClass) {
-        return;
-      }
+    final config = LeancodeLintConfig.fromRuleContext(context);
 
-      final startsWithSliver = _hasSliverPrefix(node.name.lexeme);
-      if (startsWithSliver) {
-        return;
-      }
+    registry.addClassDeclaration(this, _Visitor(this, context, config));
+  }
+}
 
-      final buildMethod = getBuildMethod(node);
-      if (buildMethod == null) {
-        return;
-      }
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context, this.config);
 
-      // Get all return expressions from build method
-      final returnExpressions = getAllReturnExpressions(buildMethod.body);
+  final AnalysisRule rule;
+  final RuleContext context;
+  final LeancodeLintConfig? config;
 
-      final isSliver = _anyIsSliver(returnExpressions.nonNulls);
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    final isThisWidgetClass = isWidgetClass(node);
+    if (!isThisWidgetClass) {
+      return;
+    }
 
-      if (isSliver) {
-        reporter.atToken(
-          node.name,
-          code,
-          arguments: [_getSuggestedClassName(config, node.name.lexeme)],
-        );
-      }
-    });
+    final startsWithSliver = _hasSliverPrefix(node.name.lexeme);
+    if (startsWithSliver) {
+      return;
+    }
+
+    final buildMethod = getBuildMethod(node);
+    if (buildMethod == null) {
+      return;
+    }
+
+    // Get all return expressions from build method
+    final returnExpressions = getAllReturnExpressions(buildMethod.body);
+
+    final isSliver = _anyIsSliver(returnExpressions.nonNulls);
+
+    if (isSliver) {
+      rule.reportAtToken(
+        node.name,
+        arguments: [_getSuggestedClassName(config, node.name.lexeme)],
+      );
+    }
   }
 
   late final possiblePrefixes = [
     'Sliver',
     '_Sliver',
-    if (config.applicationPrefix case final applicationPrefix?) ...[
+    if (config?.applicationPrefix case final applicationPrefix?) ...[
       '${applicationPrefix}Sliver',
       '_${applicationPrefix}Sliver',
     ],
@@ -100,7 +91,7 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
   );
 
   static String _getSuggestedClassName(
-    PrefixWidgetsReturningSliversConfig config,
+    LeancodeLintConfig? config,
     String className,
   ) {
     var name = className;
@@ -110,7 +101,7 @@ class PrefixWidgetsReturningSlivers extends DartLintRule {
       suggested.write('_');
       name = name.substring(1);
     }
-    if (config.applicationPrefix case final applicationPrefix?
+    if (config?.applicationPrefix case final applicationPrefix?
         when name.startsWith(applicationPrefix)) {
       suggested.write(applicationPrefix);
       name = name.substring(applicationPrefix.length);
