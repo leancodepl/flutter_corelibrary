@@ -40,7 +40,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final AnalysisRule rule;
   final RuleContext context;
-  final LeancodeLintConfig? config;
+  final LeancodeLintConfig config;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -75,7 +75,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   late final possiblePrefixes = [
     'Sliver',
     '_Sliver',
-    if (config?.applicationPrefix case final applicationPrefix?) ...[
+    if (config.applicationPrefix case final applicationPrefix?) ...[
       '${applicationPrefix}Sliver',
       '_${applicationPrefix}Sliver',
     ],
@@ -91,7 +91,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   );
 
   static String _getSuggestedClassName(
-    LeancodeLintConfig? config,
+    LeancodeLintConfig config,
     String className,
   ) {
     var name = className;
@@ -101,7 +101,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       suggested.write('_');
       name = name.substring(1);
     }
-    if (config?.applicationPrefix case final applicationPrefix?
+    if (config.applicationPrefix case final applicationPrefix?
         when name.startsWith(applicationPrefix)) {
       suggested.write(applicationPrefix);
       name = name.substring(applicationPrefix.length);

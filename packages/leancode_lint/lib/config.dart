@@ -7,10 +7,10 @@ import 'package:yaml/yaml.dart';
 class LeancodeLintConfig {
   LeancodeLintConfig._(this.configMap);
 
-  static LeancodeLintConfig? fromRuleContext(RuleContext context) {
+  factory LeancodeLintConfig.fromRuleContext(RuleContext context) {
     final package = context.package;
     if (package is! PubPackage) {
-      return null;
+      return _empty;
     }
 
     final analysisOptionsFile = package
@@ -21,18 +21,20 @@ class LeancodeLintConfig {
         .getChildAssumingFile('analysis_options.yaml');
 
     if (!analysisOptionsFile.exists) {
-      return null;
+      return _empty;
     }
     final analysisOptions =
         loadYaml(analysisOptionsFile.readAsStringSync()) as YamlMap;
 
     final configMap = analysisOptions['leancode_lint'];
     if (configMap is! YamlMap) {
-      return null;
+      return _empty;
     }
 
     return ._(configMap);
   }
+
+  static final _empty = LeancodeLintConfig._(.new());
 
   final YamlMap configMap;
 

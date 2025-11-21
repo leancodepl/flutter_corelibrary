@@ -34,20 +34,19 @@ final class UseDesignSystemItem extends UseInsteadType {
   Map<String, TypeChecker> getCheckers(RuleContext context) {
     final replacements = LeancodeLintConfig.fromRuleContext(
       context,
-    )?.designSystemItemReplacements;
+    ).designSystemItemReplacements;
 
-    return replacements?.map(
-          (preferredItemName, forbidden) => .new(
-            preferredItemName,
-            TypeChecker.any([
-              for (final (:name, :packageName) in forbidden)
-                if (packageName.startsWith('dart:'))
-                  TypeChecker.fromUrl('$packageName#$name')
-                else
-                  TypeChecker.fromName(name, packageName: packageName),
-            ]),
-          ),
-        ) ??
-        {};
+    return replacements.map(
+      (preferredItemName, forbidden) => .new(
+        preferredItemName,
+        TypeChecker.any([
+          for (final (:name, :packageName) in forbidden)
+            if (packageName.startsWith('dart:'))
+              TypeChecker.fromUrl('$packageName#$name')
+            else
+              TypeChecker.fromName(name, packageName: packageName),
+        ]),
+      ),
+    );
   }
 }
