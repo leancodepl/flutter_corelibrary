@@ -1,3 +1,5 @@
+// TODO: decide what to do with this lint in light of https://github.com/dart-lang/sdk/issues/61517
+
 // import 'package:analyzer/dart/analysis/results.dart';
 // import 'package:analyzer/dart/ast/ast.dart';
 // import 'package:analyzer/dart/constant/value.dart';
