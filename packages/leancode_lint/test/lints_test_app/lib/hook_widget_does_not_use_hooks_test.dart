@@ -93,12 +93,12 @@ class WidgetTransitivelyBeingAHookWidget extends SampleHookWidgetUsingHooks {
 }
 
 final a =
-// expect_lint: hook_widget_does_not_use_hooks
-HookBuilder(
-  builder: (context) {
-    return const SizedBox();
-  },
-);
+    // expect_lint: hook_widget_does_not_use_hooks
+    HookBuilder(
+      builder: (context) {
+        return const SizedBox();
+      },
+    );
 
 final b = HookBuilder(
   builder: (context) {
@@ -108,12 +108,12 @@ final b = HookBuilder(
 );
 
 final c =
-// expect_lint: hook_widget_does_not_use_hooks
-HookConsumer(
-  builder: (context, ref, child) {
-    return const SizedBox();
-  },
-);
+    // expect_lint: hook_widget_does_not_use_hooks
+    HookConsumer(
+      builder: (context, ref, child) {
+        return const SizedBox();
+      },
+    );
 
 // expect_lint: hook_widget_does_not_use_hooks
 class HookBuilderIsASeparateHookContext extends HookWidget {
@@ -123,13 +123,12 @@ class HookBuilderIsASeparateHookContext extends HookWidget {
   Widget build(BuildContext context) {
     // expect_lint: hook_widget_does_not_use_hooks
     return HookBuilder(
-      builder:
-          (context) => HookBuilder(
-            builder: (context) {
-              useState(1);
-              return const SizedBox();
-            },
-          ),
+      builder: (context) => HookBuilder(
+        builder: (context) {
+          useState(1);
+          return const SizedBox();
+        },
+      ),
     );
   }
 }
