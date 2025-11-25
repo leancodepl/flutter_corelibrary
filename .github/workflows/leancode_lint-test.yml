@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 3.35.x
+          - version: 3.38.x
 
     defaults:
       run:
@@ -41,10 +41,7 @@ jobs:
         run: flutter --version
 
       - name: Run lint rules tests
-        run: |
-          cd test/lints_test_app/
-          flutter pub get
-          dart run custom_lint
+        run: dart test
 
       - uses: codecov/codecov-action@v1
         with:
