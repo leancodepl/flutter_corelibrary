@@ -6,42 +6,42 @@ An opinionated set of high-quality, robust, and up-to-date lint rules used at Le
 
 ## Installation
 
-1. Add `leancode_lint` and `custom_lint` as a dev dependency in your project's `pubspec.yaml`.
+1. Add `leancode_lint` as a dev dependency in your project's `pubspec.yaml`.
 
    ```sh
-   dart pub add leancode_lint custom_lint --dev
+   dart pub add leancode_lint --dev
    ```
 
 2. In your `analysis_options.yaml` add `include: package:leancode_lint/analysis_options.yaml`. You might want to exclude some files
    (e.g generated json serializable) from analysis.
 
-3. Enable the `custom_lint` analyzer plugin in `analysis_options.yaml`. You can customize lint rules by adding a `custom_lint` config
-   with a `rules` section.
+3. Enable the `leancode_lint` analyzer plugin in `analysis_options.yaml`. You can customize lint rules by adding a `leancode_lint` config.
 
-4. Run `flutter pub get` in your project main directory and restart your IDE. You're ready to go!
+4. Run `flutter pub get` in your project main directory and restart the analysis server in your IDE.
+   You're ready to go!
 
 Example `analysis_options.yaml`:
 
 ```yaml
 include: package:leancode_lint/analysis_options.yaml
 
+plugins:
+  leancode_lint: ^20.0.0
+
 # Optional lint rules configuration
-custom_lint:
-  rules:
-    - use_design_system_item:
-      AppText:
-        - instead_of: Text
-          from_package: flutter
-        - instead_of: RichText
-          from_package: flutter
-      AppScaffold:
-        - instead_of: Scaffold
-          from_package: flutter
+leancode_lint:
+  application_prefix: Lncd
+  use_design_system_item:
+    AppText:
+      - instead_of: Text
+        from_package: flutter
+      - instead_of: RichText
+        from_package: flutter
+    AppScaffold:
+      - instead_of: Scaffold
+        from_package: flutter
 
 analyzer:
-  plugins:
-    # Required for our custom lints support
-    - custom_lint
   exclude:
     - '**/*.g.dart'
 ```
@@ -59,12 +59,14 @@ include: package:leancode_lint/analysis_options_package.yaml
 To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
 
 ```yaml
-custom_lint:
-  rules:
-    - prefix_widgets_returning_slivers: false
+plugins:
+  leancode_lint:
+    version: ^20.0.0
+    diagnostics:
+      prefix_widgets_returning_slivers: false
 ```
 
-### `add_cubit_suffix_for_your_cubits`
+### `missing_cubit_suffix`
 
 **DO** add a 'Cubit' suffix to your cubit names.
 
@@ -263,10 +265,8 @@ class SliverMyWidget extends StatelessWidget {
 - `application_prefix`: A string. Specifies the application prefix to accept sliver prefixes. For example if set to "Lncd" then "LncdSliverMyWidget" is a valid sliver name.
 
 ```yaml
-custom_lint:
-  rules:
-    - prefix_widgets_returning_slivers:
-      application_prefix: Lncd
+leancode_lint:
+  application_prefix: Lncd
 ```
 
 ### `start_comments_with_space`
@@ -304,17 +304,16 @@ This rule has to be configured to do anything. The rule will highlight forbidden
   - `from_package`: A required string. Name of the package from which that forbidden item is from.
 
 ```yaml
-custom_lint:
-  rules:
-    - use_design_system_item:
-      LncdText:
-        - instead_of: Text
-          from_package: flutter
-        - instead_of: RichText
-          from_package: flutter
-      LncdScaffold:
-        - instead_of: Scaffold
-          from_package: flutter
+leancode_lint:
+  use_design_system_item:
+    LncdText:
+      - instead_of: Text
+        from_package: flutter
+      - instead_of: RichText
+        from_package: flutter
+    LncdScaffold:
+      - instead_of: Scaffold
+        from_package: flutter
 ```
 
 ### `avoid_single_child_in_multi_child_widgets`
