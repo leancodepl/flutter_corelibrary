@@ -1,0 +1,380 @@
+import 'package:analyzer/utilities/package_config_file_builder.dart';
+import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+
+enum MockLibrary {
+  flutter('flutter', 'material.dart', _flutterMock),
+  bloc('bloc', 'bloc.dart', _blocMock),
+  flutterBloc('flutter_bloc', 'flutter_bloc.dart', _flutterBlocMock),
+  sliverTools('sliver_tools', 'sliver_tools.dart', _sliverToolsMock),
+  flutterHooks('flutter_hooks', 'flutter_hooks.dart', _flutterHooksMock),
+  hooksRiverpod('hooks_riverpod', 'hooks_riverpod.dart', _hooksRiverpodMock);
+
+  const MockLibrary(this.name, this.importFile, this.content);
+
+  final String name;
+  final String importFile;
+  final String content;
+
+  String get rootPath => '/packages/$name';
+  String get mockFilePath => '$rootPath/lib/$importFile';
+}
+
+extension AddMockLibraryX on AnalysisRuleTest {
+  void addMocks(List<MockLibrary> libraries) {
+    for (final lib in libraries) {
+      newFile(lib.mockFilePath, lib.content);
+    }
+
+    final builder = PackageConfigFileBuilder();
+    for (final lib in libraries) {
+      builder.add(name: lib.name, rootPath: convertPath(lib.rootPath));
+    }
+    writeTestPackageConfig(builder);
+  }
+
+  void addAnalysisOptions({String applicationPrefix = 'Lncd'}) {
+    final existingAnalysisOptions = resourceProvider
+        .getFile(join(testPackageRootPath, 'analysis_options.yaml'))
+        .readAsStringSync();
+    newAnalysisOptionsYamlFile(testPackageRootPath, '''
+$existingAnalysisOptions
+
+leancode_lint:
+  application_prefix: $applicationPrefix
+  use_design_system_item:
+    LftText:
+      - instead_of: Text
+        from_package: flutter
+      - instead_of: RichText
+        from_package: flutter
+    LftScaffold:
+      - instead_of: Scaffold
+        from_package: flutter
+    LftPlaceholder:
+      - instead_of: Placeholder
+        from_package: flutter
+''');
+  }
+}
+
+const _flutterMock = '''
+class Key {
+  const Key(String _);
+}
+
+class BuildContext {
+  bool get mounted;
+}
+
+class Widget {
+  const Widget({Key? key});
+}
+
+abstract class StatelessWidget extends Widget {
+  const StatelessWidget({super.key});
+
+  Widget build(BuildContext context);
+}
+
+abstract class StatefulWidget extends Widget {
+  const StatefulWidget({super.key});
+
+  State createState();
+}
+
+abstract class State<T extends StatefulWidget> extends StatelessWidget {}
+
+class Container extends Widget {
+  Container({
+    Key? key,
+    EdgeInsets? margin,
+    EdgeInsets? padding,
+    AlignmentGeometry? alignment,
+    Color? color,
+    double? width,
+    double? height,
+    Widget? child,
+  });
+}
+
+class SizedBox extends Widget {
+  const SizedBox();
+}
+
+class Padding extends Widget {
+  const Padding({
+    EdgeInsets? padding,
+    Widget? child,
+  });
+}
+
+class SliverToBoxAdapter extends Widget {
+  const SliverToBoxAdapter();
+}
+
+class Builder extends StatelessWidget {
+  const Builder({super.key, required this.builder});
+
+  final Widget Function(BuildContext context) builder;
+}
+
+enum Axis { horizontal, vertical }
+
+class Flex extends StatelessWidget {
+  const Flex({
+    required Axis direction,
+    required List<Widget> children,
+  });
+}
+
+class Column extends Flex {
+  const Column({required super.children}) : super(direction: Axis.vertical);
+}
+
+class Row extends Flex {
+  const Row({required super.children}) : super(direction: Axis.horizontal);
+}
+
+class Wrap extends StatelessWidget {
+  const Wrap({List<Widget> children = const []});
+}
+
+class SliverChildListDelegate {
+  SliverChildListDelegate(List<Widget> children);
+}
+
+class SliverList extends StatelessWidget {
+  SliverList.list({required List<Widget> children});
+}
+
+class SliverMainAxisGroup extends StatelessWidget {
+  const SliverMainAxisGroup({required List<Widget> slivers});
+}
+
+class SliverCrossAxisGroup extends StatelessWidget {
+  const SliverCrossAxisGroup({required List<Widget> slivers});
+}
+
+class SliverToBoxAdapter extends StatelessWidget {
+  const SliverToBoxAdapter({Widget? child});
+}
+
+class EdgeInsets {
+  const EdgeInsets.all(double _);
+  
+  double get bottom => throw UnimplementedError();
+}
+
+class Colors {
+  static const red = Color(0xFFFF0000);
+}
+
+class ValueNotifier<T> {
+  T get value => throw UnimplementedError();
+}
+
+class TextEditingController {}
+
+class PageController {}
+
+class PageView extends StatelessWidget {
+  PageView({PageController? controller});
+}
+
+abstract class AlignmentGeometry {
+  const AlignmentGeometry();
+}
+
+class Alignment extends AlignmentGeometry {
+  const Alignment(double x, double y);
+
+  static const center = Alignment(0, 0);
+  static const centerLeft = Alignment(-1, 0);
+  static const topCenter = Alignment(0, -1);
+  static const bottomCenter = Alignment(0, 1);
+}
+
+class Align extends StatelessWidget {
+  const Align({
+    AlignmentGeometry alignment = Alignment.center,
+    Widget? child,
+  });
+}
+
+class MediaQuery extends Widget {
+  static MediaQueryData of(BuildContext context) {}
+  static MediaQueryData? maybeOf(BuildContext context) {}
+}
+
+class MediaQueryData {
+  final Size size;
+  final Orientation orientation;
+  final double devicePixelRatio;
+  final double textScaleFactor;
+  final TextScaler textScaler;
+  final Brightness platformBrightness;
+  final EdgeInsets viewInsets;
+  final EdgeInsets padding;
+  final EdgeInsets viewPadding;
+  final EdgeInsets systemGestureInsets;
+  final bool alwaysUse24HourFormat;
+  final bool accessibleNavigation;
+  final bool invertColors;
+  final bool highContrast;
+  final bool onOffSwitchLabels;
+  final bool disableAnimations;
+  final bool boldText;
+  final bool supportsAnnounce;
+  final NavigationMode navigationMode;
+  final DeviceGestureSettings gestureSettings;
+  final List<ui.DisplayFeature> displayFeatures;
+  final bool supportsShowingSystemContextMenu;
+}
+
+class TextField extends StatelessWidget {
+  TextField({TextEditingController? controller});
+}
+
+class Text extends StatelessWidget {
+  const Text(String this.data, {super.key});
+  final String data;
+}
+
+class RichText extends StatelessWidget {
+  const RichText({required this.text, super.key});
+  final TextSpan text;
+}
+
+class TextSpan {
+  const TextSpan({this.text});
+  final String? text;
+}
+
+class Scaffold extends StatelessWidget {
+  const Scaffold({this.appBar, this.body, super.key});
+  final PreferredSizeWidget? appBar;
+  final Widget? body;
+}
+
+class AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const AppBar({this.title, this.backgroundColor, super.key});
+  final Widget? title;
+  final Color? backgroundColor;
+  
+  @override
+  Size get preferredSize => throw UnimplementedError();
+}
+
+class Center extends StatelessWidget {
+  const Center({this.child, super.key});
+  final Widget? child;
+}
+
+enum MainAxisAlignment {
+  center,
+  start,
+  end,
+  spaceBetween,
+  spaceAround,
+  spaceEvenly,
+}
+
+class Theme {
+  static ThemeData of(BuildContext context) => throw UnimplementedError();
+}
+
+class ThemeData {
+  ColorScheme get colorScheme => throw UnimplementedError();
+}
+
+class ColorScheme {
+  Color get inversePrimary => throw UnimplementedError();
+}
+
+class Color {
+  const Color(int value);
+}
+
+abstract class PreferredSizeWidget extends Widget {
+  Size get preferredSize;
+}
+
+class Size {
+  const Size(this.width, this.height);
+  final double width;
+  final double height;
+}
+
+class Placeholder extends StatelessWidget {
+  const Placeholder({super.key});
+}
+''';
+
+const _blocMock = '''
+abstract class Cubit<State> extends BlocBase<State> {
+  Cubit(State initialState) : super(initialState);
+}
+''';
+
+const _flutterBlocMock = '''
+export 'package:bloc/bloc.dart';
+''';
+
+const _sliverToolsMock = '''
+import 'package:flutter/material.dart';
+
+class MultiSliver extends StatelessWidget {
+  MultiSliver({required List<Widget> children});
+}
+''';
+
+const _flutterHooksMock = '''
+import 'package:flutter/material.dart';
+
+void useAutomaticKeepAlive() {}
+
+ValueNotifier<T> useState<T>(T initialData) {}
+
+TextEditingController useTextEditingController() {}
+
+PageController usePageController() {}
+
+class HookWidget extends StatelessWidget {
+  const HookWidget({super.key});
+}
+
+class HookBuilder extends HookWidget {
+  const HookBuilder({required Widget Function(BuildContext context) builder});
+}
+
+BuildContext useContext() {}
+
+T useMemoized<T>(
+  T Function() valueBuilder, [
+  List<Object?> keys = const <Object>[],
+]) {}
+''';
+
+const _hooksRiverpodMock = '''
+import 'package:flutter/material.dart';
+
+class WidgetRef {}
+
+abstract class ConsumerWidget extends StatefulWidget {
+  Widget build(BuildContext context, WidgetRef ref);
+
+  @override
+  State<ConsumerWidget> createState() => throw UnimplementedError();
+}
+
+abstract class HookConsumerWidget extends ConsumerWidget {
+  const HookConsumerWidget({super.key});
+}
+
+typedef ConsumerBuilder =
+    Widget Function(BuildContext context, WidgetRef ref, Widget? child);
+
+class HookConsumer extends HookConsumerWidget {
+  const HookConsumer({required ConsumerBuilder builder});
+}
+''';
