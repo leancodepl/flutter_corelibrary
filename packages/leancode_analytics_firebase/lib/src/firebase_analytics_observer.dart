@@ -2,6 +2,18 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:leancode_analytics_base/leancode_analytics_base.dart';
 
+/// The type of navigation action that triggered a screen view.
+enum ScreenViewType {
+  /// A new route was pushed onto the navigator.
+  push,
+
+  /// A route was popped from the navigator.
+  pop,
+}
+
+/// A [NavigatorObserver] that logs screen views to Firebase Analytics.
+///
+/// Automatically tracks screen views for routes implementing [LeanAnalyticsRoute].
 class FirebaseAnalyticsNavigationObserver extends NavigatorObserver {
   static final FirebaseAnalytics _instance = FirebaseAnalytics.instance;
 
@@ -10,7 +22,9 @@ class FirebaseAnalyticsNavigationObserver extends NavigatorObserver {
     if (route case final LeanAnalyticsRoute route) {
       _instance.logScreenView(
         screenName: route.id,
-        parameters: route.analyticsParams,
+        parameters: {
+          'action_type': ScreenViewType.push.name,
+        },
       );
     }
   }
@@ -20,7 +34,9 @@ class FirebaseAnalyticsNavigationObserver extends NavigatorObserver {
     if (previousRoute case final LeanAnalyticsRoute previousRoute?) {
       _instance.logScreenView(
         screenName: previousRoute.id,
-        parameters: previousRoute.analyticsParams,
+        parameters: {
+          'action_type': ScreenViewType.pop.name,
+        },
       );
     }
   }
@@ -30,7 +46,9 @@ class FirebaseAnalyticsNavigationObserver extends NavigatorObserver {
     if (previousRoute case final LeanAnalyticsRoute previousRoute?) {
       _instance.logScreenView(
         screenName: previousRoute.id,
-        parameters: previousRoute.analyticsParams,
+        parameters: {
+          'action_type': ScreenViewType.pop.name,
+        },
       );
     }
   }
@@ -40,7 +58,9 @@ class FirebaseAnalyticsNavigationObserver extends NavigatorObserver {
     if (newRoute case final LeanAnalyticsRoute newRoute?) {
       _instance.logScreenView(
         screenName: newRoute.id,
-        parameters: newRoute.analyticsParams,
+        parameters: {
+          'action_type': ScreenViewType.push.name,
+        },
       );
     }
   }

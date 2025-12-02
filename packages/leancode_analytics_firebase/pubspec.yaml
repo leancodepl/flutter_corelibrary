@@ -13,8 +13,7 @@ dependencies:
   firebase_core: ^3.13.0
   flutter:
     sdk: flutter
-  leancode_analytics_base:
-    path: ../leancode_analytics_base
+  leancode_analytics_base: 0.1.0
 
 dev_dependencies:
   flutter_test:
