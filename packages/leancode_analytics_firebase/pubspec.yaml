@@ -1,0 +1,23 @@
+name: leancode_analytics_firebase
+description: Firebase Analytics implementation for LeanCode analytics.
+version: 0.1.0
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics_firebase
+repository: https://github.com/leancodepl/flutter_corelibrary
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  firebase_analytics: ^11.4.5
+  firebase_core: ^3.13.0
+  flutter:
+    sdk: flutter
+  leancode_analytics_base:
+    path: ../leancode_analytics_base
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_lint: ^14.0.0
+

@@ -1,3 +1,10 @@
+## 0.3.0
+
+- **DISCONTINUED**: This package is discontinued and will receive no further updates. Use the following packages instead:
+  - `leancode_analytics_base` - core abstractions
+  - `leancode_analytics_firebase` - Firebase implementation
+  - `leancode_analytics_posthog` - PostHog implementation
+
 ## 0.2.0
 
 - Bump `firebase_analytics` version to `11.4`.

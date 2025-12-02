@@ -1,0 +1,6 @@
+include: package:leancode_lint/analysis_options_package.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+

@@ -1,0 +1,22 @@
+name: leancode_analytics_posthog
+description: PostHog Analytics implementation for LeanCode analytics.
+version: 0.1.0
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics_posthog
+repository: https://github.com/leancodepl/flutter_corelibrary
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  leancode_analytics_base:
+    path: ../leancode_analytics_base
+  posthog_flutter: ^5.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_lint: ^14.0.0
+
