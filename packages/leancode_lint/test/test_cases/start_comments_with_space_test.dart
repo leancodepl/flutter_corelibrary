@@ -2,6 +2,8 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/start_comments_with_space.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
+
 void main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(StartCommentsWithSpaceTest);
@@ -17,21 +19,18 @@ class StartCommentsWithSpaceTest extends AnalysisRuleTest {
   }
 
   Future<void> test_main() async {
-    await assertDiagnostics(
-      '''
-///Invalid docs comment
+    await assertDiagnosticsInRanges('''
+////*0*/Invalid docs comment
 const a = 'abc';
 
 /// Valid docs comment
 const b = 'def';
 
-//Invalid comment
+///*1*/Invalid comment
 const c = 'ghi';
 
 // Valid comment
 const d = 'jkl';
-''',
-      [lint(3, 0), lint(85, 0)],
-    );
+''');
   }
 }

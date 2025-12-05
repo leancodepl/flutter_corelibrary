@@ -2,6 +2,7 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
 import '../mock_libraries.dart';
 
 void main() {
@@ -22,13 +23,12 @@ class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest {
   }
 
   Future<void> test_return_from_internal_blocks() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class WidgetReturningSliverFromInternalBlocks extends StatelessWidget {
+class [!WidgetReturningSliverFromInternalBlocks!] extends StatelessWidget {
   const WidgetReturningSliverFromInternalBlocks({super.key});
 
   @override
@@ -40,14 +40,11 @@ class WidgetReturningSliverFromInternalBlocks extends StatelessWidget {
     }
   }
 }
-''',
-      [lint(68, 39)],
-    );
+''');
   }
 
   Future<void> test_stateful() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 class Stateful extends StatefulWidget {
@@ -57,15 +54,13 @@ class Stateful extends StatefulWidget {
   State<Stateful> createState() => _StatefulState();
 }
 
-class _StatefulState extends State<Stateful> {
+class [!_StatefulState!] extends State<Stateful> {
   @override
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter();
   }
 }
-''',
-      [lint(187, 14)],
-    );
+''');
   }
 
   Future<void> test_impostor() async {
@@ -88,11 +83,10 @@ class WidgetImpostor extends WidgetImpostorInterface {
   }
 
   Future<void> test_not_prefixed() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
-class NotPrefixedWidgetReturningSliver extends StatelessWidget {
+class [!NotPrefixedWidgetReturningSliver!] extends StatelessWidget {
   const NotPrefixedWidgetReturningSliver({super.key});
 
   @override
@@ -100,9 +94,7 @@ class NotPrefixedWidgetReturningSliver extends StatelessWidget {
     return const SliverToBoxAdapter();
   }
 }
-''',
-      [lint(47, 32)],
-    );
+''');
   }
 
   Future<void> test_prefixed_public() async {
@@ -150,8 +142,7 @@ class _LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
   }
 
   Future<void> test_returning_app_prefixed_sliver() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 class LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
@@ -163,7 +154,7 @@ class LncdSliverPrefixedWidgetReturningSliver extends StatelessWidget {
   }
 }
 
-class LncdReturningAppPrefixedSliver extends StatelessWidget {
+class [!LncdReturningAppPrefixedSliver!] extends StatelessWidget {
   const LncdReturningAppPrefixedSliver({super.key});
 
   @override
@@ -171,9 +162,7 @@ class LncdReturningAppPrefixedSliver extends StatelessWidget {
     return const LncdSliverPrefixedWidgetReturningSliver();
   }
 }
-''',
-      [lint(279, 30)],
-    );
+''');
   }
 
   Future<void> test_not_prefix_not_returning_sliver() async {

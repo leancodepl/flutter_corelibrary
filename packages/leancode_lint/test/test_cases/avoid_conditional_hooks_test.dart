@@ -2,6 +2,7 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/avoid_conditional_hooks.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
 import '../mock_libraries.dart';
 
 void main() {
@@ -36,8 +37,7 @@ void someOtherFunction() {
   }
 
   Future<void> test_hookInsideIf() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -48,14 +48,12 @@ class SampleHookWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     if (Random().nextBool()) {
-      useState('c');
+      [!useState('c')!];
     }
     return Container();
   }
 }
-''',
-      [lint(284, 13)],
-    );
+''');
   }
 
   Future<void> test_similarPrefix() async {
@@ -81,8 +79,7 @@ class SampleHookWidget extends HookWidget {
   }
 
   Future<void> test_hookInsideIf_assignedToVariable() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -93,19 +90,16 @@ class SampleHookWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     if (Random().nextBool()) {
-      final a = useState('b');
+      final a = [!useState('b')!];
     }
     return Container();
   }
 }
-''',
-      [lint(294, 13)],
-    );
+''');
   }
 
   Future<void> test_hookInsideConditional_trueBranch() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -115,18 +109,15 @@ class SampleHookWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final b = Random().nextBool() ? useState('c') : null;
+    final b = Random().nextBool() ? [!useState('c')!] : null;
     return Container();
   }
 }
-''',
-      [lint(283, 13)],
-    );
+''');
   }
 
   Future<void> test_hookInsideConditional_falseBranch() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -136,13 +127,11 @@ class SampleHookWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = Random().nextBool() ? null : useState('c');
+    final c = Random().nextBool() ? null : [!useState('c')!];
     return Container();
   }
 }
-''',
-      [lint(290, 13)],
-    );
+''');
   }
 
   Future<void> test_unconditionalHook() async {
@@ -163,8 +152,7 @@ class SampleHookWidget extends HookWidget {
   }
 
   Future<void> test_hookInConditionalExpression_inArgument() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -175,18 +163,15 @@ class SampleConditionalExpressionHookWidget extends HookWidget {
   @override
   Widget build(BuildContext context) => TextField(
     controller: Random().nextBool()
-        ? useTextEditingController()
+        ? [!useTextEditingController()!]
         : TextEditingController(),
   );
 }
-''',
-      [lint(347, 26)],
-    );
+''');
   }
 
   Future<void> test_hookInConditionalExpression_inWidget() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -196,17 +181,14 @@ class SampleConditionalExpressionHookWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) => Random().nextBool()
-      ? TextField(controller: useTextEditingController())
+      ? TextField(controller: [!useTextEditingController()!])
       : Container();
 }
-''',
-      [lint(340, 26)],
-    );
+''');
   }
 
   Future<void> test_hookInConsumerWidget() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -217,12 +199,10 @@ class HookConsumerWidgetIsSeenAsAHookWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Random().nextBool()
-      ? TextField(controller: useTextEditingController())
+      ? TextField(controller: [!useTextEditingController()!])
       : Container();
 }
-''',
-      [lint(416, 26)],
-    );
+''');
   }
 
   Future<void> test_unconditionalHookInExpression() async {
@@ -257,8 +237,7 @@ class SampleSwitchExpressionHookWidget extends HookWidget {
   }
 
   Future<void> test_hookInSwitchStatement_case() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -270,20 +249,17 @@ class SampleSwitchHookWidget extends HookWidget {
   Widget build(BuildContext context) {
     switch (Random().nextInt(10)) {
       case 5:
-        final state = useState(false);
+        final state = [!useState(false)!];
         return Container(key: Key(state.value.toString()));
     }
     return const SizedBox();
   }
 }
-''',
-      [lint(331, 15)],
-    );
+''');
   }
 
   Future<void> test_hookInSwitchExpression_case() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -294,19 +270,16 @@ class SampleSwitchHookWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return switch (Random().nextInt(10)) {
-      5 => TextField(controller: useTextEditingController()),
+      5 => TextField(controller: [!useTextEditingController()!]),
       _ => const SizedBox(),
     };
   }
 }
-''',
-      [lint(335, 26)],
-    );
+''');
   }
 
   Future<void> test_hookInShortCircuit_ifOr() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -317,18 +290,15 @@ class ShortCircuits extends HookWidget {
   @override
   Widget build(BuildContext context) {
     if (useContext().mounted || Random().nextBool()) {}
-    if (Random().nextBool() || useContext().mounted) {}
+    if (Random().nextBool() || [!useContext()!].mounted) {}
     return const SizedBox();
   }
 }
-''',
-      [lint(328, 12)],
-    );
+''');
   }
 
   Future<void> test_hookInShortCircuit_ifAnd() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -339,18 +309,15 @@ class ShortCircuits extends HookWidget {
   @override
   Widget build(BuildContext context) {
     if (useContext().mounted && Random().nextBool()) {}
-    if (Random().nextBool() && useContext().mounted) {}
+    if (Random().nextBool() && [!useContext()!].mounted) {}
     return const SizedBox();
   }
 }
-''',
-      [lint(328, 12)],
-    );
+''');
   }
 
   Future<void> test_hookInShortCircuit_assignment() async {
-    await assertDiagnostics(
-      r'''
+    await assertDiagnosticsInRanges(r'''
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -362,19 +329,17 @@ class ShortCircuits extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final a1 = useMemoized(() => null) ?? 123;
-    final a2 = notifier ?? useState(1);
+    final a2 = notifier ?? [!useState(1)!];
     
     throw Exception('$a1 $a2');
   }
 }
-''',
-      [lint(349, 11)],
-    );
+''');
   }
 
   Future<void> test_compoundAssignment_shortCircuit() async {
-    await assertDiagnostics(
-      r'''
+    // TODO: logical compound operators don't seem to short-circuit, so the lint should not report
+    await assertDiagnosticsInRanges(positionShorthand: false, r'''
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -386,25 +351,21 @@ class ShortCircuits extends HookWidget {
   @override
   Widget build(BuildContext context) {
     ValueNotifier<int>? b;
-    b ??= useState(1);
+    b ??= /*[0*/useState(1)/*0]*/;
 
     var c = true;
-    c |= useContext().mounted;
-    c &= useContext().mounted;
-    c ^= useContext().mounted;
+    c |= /*[1*/useContext()/*1]*/.mounted;
+    c &= /*[2*/useContext()/*2]*/.mounted;
+    c ^= /*[3*/useContext()/*3]*/.mounted;
 
     throw Exception('$b $c');
   }
 }
-''',
-      // TODO: logical compound operators don't seem to short-circuit???
-      [lint(312, 11), lint(353, 12), lint(384, 12), lint(415, 12)],
-    );
+''');
   }
 
   Future<void> test_hookAfterReturn() async {
-    await assertDiagnostics(
-      r'''
+    await assertDiagnosticsInRanges(r'''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -420,19 +381,16 @@ class HookAfterReturn extends HookWidget {
       return const SizedBox();
     }
 
-    final b = useState(1);
+    final b = [!useState(1)!];
 
     throw Exception('$a $b');
   }
 }
-''',
-      [lint(356, 11)],
-    );
+''');
   }
 
   Future<void> test_hookInCollectionIf() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -442,19 +400,16 @@ class CollectionIf extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final a = [if (Random().nextBool()) useState(1)];
+    final a = [if (Random().nextBool()) [!useState(1)!]];
 
     throw Exception(a);
   }
 }
-''',
-      [lint(279, 11)],
-    );
+''');
   }
 
   Future<void> test_hookInHookBuilder() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -462,20 +417,17 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 final a = HookBuilder(
   builder: (context) {
     if (Random().nextBool()) {
-      useState(1);
+      [!useState(1)!];
     }
     useState(2);
     return const SizedBox();
   },
 );
-''',
-      [lint(195, 11)],
-    );
+''');
   }
 
   Future<void> test_hookInHookConsumer() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -484,15 +436,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final b = HookConsumer(
   builder: (context, ref, child) {
     if (Random().nextBool()) {
-      useState(1);
+      [!useState(1)!];
     }
     useState(2);
     return const SizedBox();
   },
 );
-''',
-      [lint(261, 11)],
-    );
+''');
   }
 
   Future<void> test_hookBuilderInIfIsOk() async {
@@ -522,8 +472,7 @@ class HookBuilderInIfIsOk extends StatelessWidget {
   }
 
   Future<void> test_immediatelyInvokedFunctionExpressionIsDetected() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -535,7 +484,7 @@ class ImmediatelyInvokedFunctionExpressionIsDetected extends HookWidget {
   Widget build(BuildContext context) {
     if (Random().nextBool()) {
       return () {
-        useState(1);
+        [!useState(1)!];
         return const SizedBox();
       }();
     }
@@ -543,9 +492,7 @@ class ImmediatelyInvokedFunctionExpressionIsDetected extends HookWidget {
     return const SizedBox();
   }
 }
-''',
-      [lint(364, 11)],
-    );
+''');
   }
 
   Future<void> test_hookBuilderInHookWidgetShouldBeOk() async {

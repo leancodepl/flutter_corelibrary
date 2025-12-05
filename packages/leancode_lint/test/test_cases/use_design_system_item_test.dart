@@ -2,6 +2,7 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/use_design_system_item.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
 import '../mock_libraries.dart';
 
 void main() {
@@ -22,61 +23,49 @@ class UseDesignSystemItemTest extends AnalysisRuleTest {
   }
 
   Future<void> test_text_variable_declaration_flagged() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 void test() {
-  Text? text;
+  [!Text?!] text;
 }
-''',
-      [lint(57, 5)],
-    );
+''');
   }
 
   Future<void> test_scaffold_flagged() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 void test() {
-  Scaffold(
+  [!Scaffold!](
     body: SizedBox(),
   );
 }
-''',
-      [lint(57, 8)],
-    );
+''');
   }
 
   Future<void> test_text_in_appbar_title_flagged() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 void test() {
-  Scaffold(
+  /*[0*/Scaffold/*0]*/(
     appBar: AppBar(
-      title: const Text('abc'),
+      title: const /*[1*/Text/*1]*/('abc'),
     ),
   );
 }
-''',
-      [lint(57, 8), lint(106, 4)],
-    );
+''');
   }
 
   Future<void> test_richtext_with_textspan_flagged() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 void test() {
-  RichText(text: const TextSpan(text: 'abc'));
+  [!RichText!](text: const TextSpan(text: 'abc'));
 }
-''',
-      [lint(57, 8)],
-    );
+''');
   }
 
   Future<void> test_hide_combinator_ignored() async {

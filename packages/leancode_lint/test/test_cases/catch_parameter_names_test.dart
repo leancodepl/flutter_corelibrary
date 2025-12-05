@@ -2,6 +2,8 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/catch_parameter_names.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
+
 void main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(CatchParameterNamesTest);
@@ -17,18 +19,17 @@ class CatchParameterNamesTest extends AnalysisRuleTest {
   }
 
   Future<void> test_main() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 Object? someFunction() {
-  try {} catch (exception) {
+  try {} catch (/*[0*/exception/*0]*/) {
     return exception;
   }
 
-  try {} catch (err, stackTrace) {
+  try {} catch (err, /*[1*/stackTrace/*1]*/) {
     return stackTrace;
   }
 
-  try {} on Exception catch (err, stackTrace) {
+  try {} on Exception catch (err, /*[2*/stackTrace/*2]*/) {
     return stackTrace;
   }
 
@@ -42,8 +43,6 @@ Object? someFunction() {
 
   return null;
 }
-''',
-      [lint(41, 9), lint(102, 10), lint(178, 10)],
-    );
+''');
   }
 }

@@ -2,6 +2,7 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
 import '../mock_libraries.dart';
 
 void main() {
@@ -21,12 +22,11 @@ class HookWidgetDoesNotUseHooksTest extends AnalysisRuleTest {
   }
 
   Future<void> test_sample_hook_widget_not_using_hooks() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SampleHookWidgetNotUsingHooks extends HookWidget {
+class SampleHookWidgetNotUsingHooks extends [!HookWidget!] {
   const SampleHookWidgetNotUsingHooks({super.key});
 
   @override
@@ -34,18 +34,15 @@ class SampleHookWidgetNotUsingHooks extends HookWidget {
     return Container();
   }
 }
-''',
-      [lint(136, 10)],
-    );
+''');
   }
 
   Future<void> test_hook_consumer_widget_is_seem_as_a_hook_widget() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class HookConsumerWidgetIsSeenAsAHookWidget extends HookConsumerWidget {
+class HookConsumerWidgetIsSeenAsAHookWidget extends [!HookConsumerWidget!] {
   const HookConsumerWidgetIsSeenAsAHookWidget({super.key});
 
   @override
@@ -53,9 +50,7 @@ class HookConsumerWidgetIsSeenAsAHookWidget extends HookConsumerWidget {
     return Container();
   }
 }
-''',
-      [lint(146, 18)],
-    );
+''');
   }
 
   Future<void> test_sample_hook_widget_using_hooks() async {
@@ -174,19 +169,16 @@ class WidgetTransitivelyBeingAHookWidget extends SampleHookWidgetUsingHooks {
   }
 
   Future<void> test_hook_builder_no_hooks() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-final a = HookBuilder(
+final a = [!HookBuilder!](
   builder: (context) {
     return const SizedBox();
   },
 );
-''',
-      [lint(102, 11)],
-    );
+''');
   }
 
   Future<void> test_hook_builder_using_hooks() async {
@@ -204,33 +196,29 @@ final b = HookBuilder(
   }
 
   Future<void> test_hook_consumer() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final c = HookConsumer(
+final c = [!HookConsumer!](
   builder: (context, ref, child) {
     return const SizedBox();
   },
 );
-''',
-      [lint(104, 12)],
-    );
+''');
   }
 
   Future<void> test_hook_builder_is_a_separate_hook_context() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class HookBuilderIsASeparateHookContext extends HookWidget {
+class HookBuilderIsASeparateHookContext extends /*[0*/HookWidget/*0]*/ {
   const HookBuilderIsASeparateHookContext({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return HookBuilder(
+    return /*[1*/HookBuilder/*1]*/(
       builder: (context) => HookBuilder(
         builder: (context) {
           useState(1);
@@ -240,8 +228,6 @@ class HookBuilderIsASeparateHookContext extends HookWidget {
     );
   }
 }
-''',
-      [lint(140, 10), lint(272, 11)],
-    );
+''');
   }
 }

@@ -2,6 +2,7 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
 import '../mock_libraries.dart';
 
 void main() {
@@ -21,142 +22,115 @@ class AvoidSingleChildInMultiChildWidgetsTest extends AnalysisRuleTest {
   }
 
   Future<void> test_column_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return Column(
+  return [!Column!](
     children: [Container()],
   );
 }
-''',
-      [lint(66, 6)],
-    );
+''');
   }
 
   Future<void> test_row_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return Row(
+  return [!Row!](
     children: [Container()],
   );
 }
-''',
-      [lint(66, 3)],
-    );
+''');
   }
 
   Future<void> test_flex_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return Flex(
+  return [!Flex!](
     direction: Axis.horizontal,
     children: [Container()],
   );
 }
-''',
-      [lint(66, 4)],
-    );
+''');
   }
 
   Future<void> test_wrap_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return Wrap(
+  return [!Wrap!](
     children: [Container()],
   );
 }
-''',
-      [lint(66, 4)],
-    );
+''');
   }
 
   Future<void> test_sliver_child_list_delegate_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  final _ = SliverChildListDelegate(
+  final _ = [!SliverChildListDelegate!](
     [Container()],
   );
 
   return const SizedBox();
 }
-''',
-      [lint(69, 23)],
-    );
+''');
   }
 
   Future<void> test_sliver_list_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return SliverList.list(
+  return [!SliverList!].list(
     children: [Container()],
   );
 }
-''',
-      [lint(66, 10)],
-    );
+''');
   }
 
   Future<void> test_sliver_main_axis_group_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return const SliverMainAxisGroup(
+  return const [!SliverMainAxisGroup!](
     slivers: [SliverToBoxAdapter()],
   );
 }
-''',
-      [lint(72, 19)],
-    );
+''');
   }
 
   Future<void> test_sliver_cross_axis_group_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return const SliverCrossAxisGroup(
+  return const [!SliverCrossAxisGroup!](
     slivers: [SliverToBoxAdapter()],
   );
 }
-''',
-      [lint(72, 20)],
-    );
+''');
   }
 
   Future<void> test_multi_sliver_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 Widget test() {
-  return MultiSliver(
+  return [!MultiSliver!](
     children: [Container()],
   );
 }
-''',
-      [lint(115, 11)],
-    );
+''');
   }
 
   Future<void> test_zero_children_is_not_marked() async {
@@ -216,13 +190,12 @@ Widget test() {
   }
 
   Future<void> test_collection_if_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return Wrap(
+  return [!Wrap!](
     children: [
       if (Random().nextBool())
         if (Random().nextBool())
@@ -230,28 +203,23 @@ Widget test() {
     ],
   );
 }
-''',
-      [lint(86, 4)],
-    );
+''');
   }
 
   Future<void> test_collection_if_else_is_marked() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'dart:math';
 import 'package:flutter/material.dart';
 
 Widget test() {
-  return Wrap(
+  return [!Wrap!](
     children: [
       if (Random().nextBool())
         if (Random().nextBool()) Container() else Container(),
     ],
   );
 }
-''',
-      [lint(86, 4)],
-    );
+''');
   }
 
   Future<void> test_collection_if_is_not_marked_when_producing_many() async {

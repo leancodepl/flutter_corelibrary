@@ -2,6 +2,7 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/use_align.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
 import '../mock_libraries.dart';
 
 void main() {
@@ -21,34 +22,31 @@ class UseAlignTest extends AnalysisRuleTest {
   }
 
   Future<void> test_container_with_only_align() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 void test () {
-  Container(
+  /*[0*/Container/*0]*/(
     alignment: Alignment.center,
     child: const SizedBox(),
   );
 
-  Container(
+  /*[1*/Container/*1]*/(
     alignment: Alignment.centerLeft,
     child: const SizedBox(),
   );
 
-  Container(
+  /*[2*/Container/*2]*/(
     key: const Key('key'),
     alignment: Alignment.topCenter,
     child: const SizedBox(),
   );
 
-  Container(
+  /*[3*/Container/*3]*/(
     alignment: Alignment.center,
   );
 }
-''',
-      [lint(58, 9), lint(139, 9), lint(224, 9), lint(335, 9)],
-    );
+''');
   }
 
   Future<void> test_container_with_other_properties() async {

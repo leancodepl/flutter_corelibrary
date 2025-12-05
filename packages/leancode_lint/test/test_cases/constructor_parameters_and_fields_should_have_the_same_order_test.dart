@@ -2,6 +2,8 @@ import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 import 'package:leancode_lint/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
+
 void main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(
@@ -20,24 +22,23 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrderTest
   }
 
   Future<void> test_invalid_unnamed_parameters_order() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 class ClassWithInvalidUnnamedParametersOrder {
-  const ClassWithInvalidUnnamedParametersOrder(
+  /*[0*/const ClassWithInvalidUnnamedParametersOrder(
     this.third,
     this.second,
     this.first,
     this.fourth,
     this.fifth,
-  );
+  );/*0]*/
 
-  const ClassWithInvalidUnnamedParametersOrder.anotherConstructor(
+  /*[1*/const ClassWithInvalidUnnamedParametersOrder.anotherConstructor(
     this.third,
     this.second,
     this.first,
     this.fourth,
     this.fifth,
-  );
+  );/*1]*/
 
   final int first;
   final int second;
@@ -45,22 +46,19 @@ class ClassWithInvalidUnnamedParametersOrder {
   final int fourth;
   final int fifth;
 }
-''',
-      [lint(49, 132), lint(185, 151)],
-    );
+''');
   }
 
   Future<void> test_invalid_named_parameters_order() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 class ClassWithInvalidNamedParametersOrder {
-  const ClassWithInvalidNamedParametersOrder({
+  [!const ClassWithInvalidNamedParametersOrder({
     required this.third,
     required this.first,
     required this.fourth,
     required this.fifth,
     required this.second,
-  });
+  });!]
 
   final int first;
   final int second;
@@ -68,9 +66,7 @@ class ClassWithInvalidNamedParametersOrder {
   final int fourth;
   final int fifth;
 }
-''',
-      [lint(47, 177)],
-    );
+''');
   }
 
   Future<void> test_valid_unnamed_parameters_order() async {
@@ -131,17 +127,16 @@ class ClassWithValidNamedParametersOrder {
 
   Future<void>
   test_invalid_named_parameters_order_and_with_non_this_parameter() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 class ClassWithInvalidNamedParametersOrderAndWithNonThisParameter {
-  const ClassWithInvalidNamedParametersOrderAndWithNonThisParameter({
+  [!const ClassWithInvalidNamedParametersOrderAndWithNonThisParameter({
     required this.first,
     required this.second,
     required String otherParameter,
     required this.third,
     required this.fourth,
     required this.fifth,
-  }) : _otherParameter = otherParameter;
+  }) : _otherParameter = otherParameter;!]
 
   final int first;
   final int second;
@@ -151,9 +146,7 @@ class ClassWithInvalidNamedParametersOrderAndWithNonThisParameter {
 
   final String _otherParameter;
 }
-''',
-      [lint(70, 271)],
-    );
+''');
   }
 
   Future<void>
@@ -182,17 +175,16 @@ class ClassWithValidNamedParametersOrderAndWithNonThisParameter {
 
   Future<void>
   test_invalid_unnamed_parameters_order_and_with_non_this_parameter() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 class ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter {
-  const ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter(
+  [!const ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter(
     this.third,
     this.second,
     String otherParameter,
     this.first,
     this.fourth,
     this.fifth,
-  ) : _otherParameter = otherParameter;
+  ) : _otherParameter = otherParameter;!]
 
   final int first;
   final int second;
@@ -202,9 +194,7 @@ class ClassWithInvalidUnnamedParametersOrderAndWithNonThisParameter {
 
   final String _otherParameter;
 }
-''',
-      [lint(72, 217)],
-    );
+''');
   }
 
   Future<void>
@@ -291,10 +281,9 @@ abstract class _AbstractClassWithField {
   }
 
   Future<void> test_mixed_parameters_with_invalid_order() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnosticsInRanges('''
 class ClassWithMixedParametersWithInvalidOrder extends _AbstractClassWithField {
-  const ClassWithMixedParametersWithInvalidOrder(
+  [!const ClassWithMixedParametersWithInvalidOrder(
     super.a,
     this.second,
     this.first, {
@@ -302,7 +291,7 @@ class ClassWithMixedParametersWithInvalidOrder extends _AbstractClassWithField {
     required this.fourth,
     required String test,
     required this.fifth,
-  }) : _test = test;
+  }) : _test = test;!]
 
   final int first;
   final int second;
@@ -318,9 +307,7 @@ abstract class _AbstractClassWithField {
 
   final int a;
 }
-''',
-      [lint(83, 218)],
-    );
+''');
   }
 
   Future<void> test_valid_order_but_one_field_set_in_constructor_body() async {
