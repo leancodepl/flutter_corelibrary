@@ -53,11 +53,11 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
   );
 
   @override
-  CorrectionApplicability get applicability => .automatically;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
-    if (node case final FormalParameterList node) {
+    if (node.thisOrAncestorOfType<FormalParameterList>() case final node?) {
       // parameter list has positional optional parameters, named params cannot be added
       if (node.leftDelimiter?.type == .OPEN_SQUARE_BRACKET) {
         return;

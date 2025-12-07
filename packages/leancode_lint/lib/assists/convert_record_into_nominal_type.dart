@@ -46,7 +46,7 @@ class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
   );
 
   @override
-  CorrectionApplicability get applicability => .automatically;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {

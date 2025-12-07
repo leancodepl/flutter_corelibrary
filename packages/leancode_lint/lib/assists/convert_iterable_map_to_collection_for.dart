@@ -36,16 +36,19 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
   );
 
   @override
-  CorrectionApplicability get applicability => .automatically;
+  CorrectionApplicability get applicability => .singleLocation;
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
-    if (node case final MethodInvocation node) {
-      _handleIterable(node, builder);
+    if (node.thisOrAncestorOfType<MethodInvocation>() case final node?) {
+      await _handleIterable(node, builder);
     }
   }
 
-  void _handleIterable(MethodInvocation node, ChangeBuilder builder) {
+  Future<void> _handleIterable(
+    MethodInvocation node,
+    ChangeBuilder builder,
+  ) async {
     const iterableChecker = TypeChecker.fromUrl('dart:core#Iterable');
 
     if (node case MethodInvocation(
@@ -70,7 +73,7 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
       final collectKind = parentCollectKind?.$1 ?? .list;
       final nodeWithCollect = parentCollectKind?.$2 ?? node;
 
-      builder.addDartFileEdit(file, (builder) {
+      await builder.addDartFileEdit(file, (builder) {
         builder
           ..addSimpleReplacement(
             range.startStart(nodeWithCollect, target),
