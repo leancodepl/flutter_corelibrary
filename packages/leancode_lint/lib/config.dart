@@ -1,6 +1,8 @@
-import 'package:analyzer/analysis_rule/rule_context.dart';
 // TODO: use a canonical way to access analysis options (https://github.com/dart-lang/sdk/issues/61755)
-// ignore: implementation_imports
+// ignore_for_file: implementation_imports
+
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/src/analysis_options/analysis_options_provider.dart';
 import 'package:analyzer/src/workspace/pub.dart';
 import 'package:yaml/yaml.dart';
 
@@ -13,18 +15,13 @@ class LeancodeLintConfig {
       return _empty;
     }
 
-    final analysisOptionsFile = package
-        .workspace
-        .packageConfigFile
-        .parent
-        .parent
-        .getChildAssumingFile('analysis_options.yaml');
+    final provider = AnalysisOptionsProvider(
+      .new([package.workspace.packageUriResolver]),
+    );
 
-    if (!analysisOptionsFile.exists) {
-      return _empty;
-    }
-    final analysisOptions =
-        loadYaml(analysisOptionsFile.readAsStringSync()) as YamlMap;
+    final analysisOptions = provider.getOptions(
+      context.definingUnit.file.parent,
+    );
 
     final configMap = analysisOptions['leancode_lint'];
     if (configMap is! YamlMap) {
