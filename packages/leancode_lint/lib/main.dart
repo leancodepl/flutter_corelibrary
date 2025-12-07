@@ -52,6 +52,7 @@ class _Linter extends Plugin {
         UseDedicatedMediaQueryMethods.code,
         ReplaceMediaQueryOfWithDedicatedMethodFix.new,
       )
+      // TODO: uncomment when `prefer_center_over_align` is migrated
       // ..registerAssist(PreferCenterOverAlign())
       ..registerAssist(ConvertRecordIntoNominalType.new)
       ..registerAssist(ConvertPositionalToNamedFormal.new)
