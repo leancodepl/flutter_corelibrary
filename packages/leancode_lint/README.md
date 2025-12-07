@@ -66,7 +66,7 @@ plugins:
       prefix_widgets_returning_slivers: false
 ```
 
-### `missing_cubit_suffix`
+### `add_cubit_suffix_for_your_cubits`
 
 **DO** add a 'Cubit' suffix to your cubit names.
 
