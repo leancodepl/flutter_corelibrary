@@ -19,15 +19,9 @@ class LeancodeLintConfig {
       .new([package.workspace.packageUriResolver]),
     );
 
-    final analysisOptionsFile = provider.getOptionsFile(
+    final analysisOptions = provider.getOptions(
       context.definingUnit.file.parent,
     );
-
-    if (analysisOptionsFile == null) {
-      return _empty;
-    }
-    final analysisOptions =
-        loadYaml(analysisOptionsFile.readAsStringSync()) as YamlMap;
 
     final configMap = analysisOptions['leancode_lint'];
     if (configMap is! YamlMap) {

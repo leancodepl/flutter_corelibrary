@@ -1,5 +1,6 @@
 import 'package:analyzer/utilities/package_config_file_builder.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+import 'package:analyzer_testing/utilities/utilities.dart';
 
 enum MockLibrary {
   flutter('flutter', 'material.dart', _flutterMock),
@@ -33,12 +34,8 @@ extension AddMockLibraryX on AnalysisRuleTest {
   }
 
   void addAnalysisOptions({String applicationPrefix = 'Lncd'}) {
-    final existingAnalysisOptions = resourceProvider
-        .getFile(join(testPackageRootPath, 'analysis_options.yaml'))
-        .readAsStringSync();
     newAnalysisOptionsYamlFile(testPackageRootPath, '''
-$existingAnalysisOptions
-
+${analysisOptionsContent(experiments: experiments, rules: [rule.name])}
 leancode_lint:
   application_prefix: $applicationPrefix
   use_design_system_item:
