@@ -19,7 +19,10 @@ class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest {
     super.setUp();
 
     addMocks([.flutter]);
-    addAnalysisOptions();
+    addAnalysisOptions('''
+leancode_lint:
+  application_prefix: Lncd
+''');
   }
 
   Future<void> test_return_from_internal_blocks() async {

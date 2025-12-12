@@ -19,7 +19,21 @@ class UseDesignSystemItemTest extends AnalysisRuleTest {
     super.setUp();
 
     addMocks([.flutter]);
-    addAnalysisOptions();
+    addAnalysisOptions('''
+leancode_lint:
+  use_design_system_item:
+    LftText:
+      - instead_of: Text
+        from_package: flutter
+      - instead_of: RichText
+        from_package: flutter
+    LftScaffold:
+      - instead_of: Scaffold
+        from_package: flutter
+    LftPlaceholder:
+      - instead_of: Placeholder
+        from_package: flutter
+''');
   }
 
   Future<void> test_text_variable_declaration_flagged() async {

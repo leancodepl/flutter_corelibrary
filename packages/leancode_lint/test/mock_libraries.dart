@@ -33,23 +33,10 @@ extension AddMockLibraryX on AnalysisRuleTest {
     writeTestPackageConfig(builder);
   }
 
-  void addAnalysisOptions({String applicationPrefix = 'Lncd'}) {
+  void addAnalysisOptions(String additionalContent) {
     newAnalysisOptionsYamlFile(testPackageRootPath, '''
 ${analysisOptionsContent(experiments: experiments, rules: [rule.name])}
-leancode_lint:
-  application_prefix: $applicationPrefix
-  use_design_system_item:
-    LftText:
-      - instead_of: Text
-        from_package: flutter
-      - instead_of: RichText
-        from_package: flutter
-    LftScaffold:
-      - instead_of: Scaffold
-        from_package: flutter
-    LftPlaceholder:
-      - instead_of: Placeholder
-        from_package: flutter
+$additionalContent
 ''');
   }
 }
