@@ -62,3 +62,25 @@ enum _CatchClauseParameter {
     stackTrace => 'st',
   };
 }
+
+final class CatchParameterNamesConfig {
+  const CatchParameterNamesConfig({
+    required this.exceptionName,
+    required this.stackTraceName,
+  });
+
+  factory CatchParameterNamesConfig.fromConfig(Map<String, Object?> json) {
+    return CatchParameterNamesConfig(
+      exceptionName: json['exception'] as String? ?? 'err',
+      stackTraceName: json['stackTrace'] as String? ?? 'st',
+    );
+  }
+
+  final String exceptionName;
+  final String stackTraceName;
+
+  String preferredName(_CatchClauseParameter param) => switch (param) {
+    _CatchClauseParameter.exception => exceptionName,
+    _CatchClauseParameter.stackTrace => stackTraceName,
+  };
+}
