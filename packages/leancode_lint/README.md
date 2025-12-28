@@ -178,9 +178,27 @@ try {} catch (err, st) {}
 try {} on SocketException catch (e, st) {}
 ```
 
+**GOOD:**
+
+With custom config: exception: error, stackTrace: stack
+
+```dart
+try {} catch (error, stack) {}
+try {} on SocketException catch (error, stack) {}
+```
+
 #### Configuration
 
-None.
+- `exception`: A string. Specifies the required name for the exception parameter. Defaults to `err`.
+- `stackTrace`: A string. Specifies the required name for the stack trace parameter. Defaults to `st`.
+
+```yaml
+custom_lint:
+  rules:
+    - catch_parameter_names:
+      exception: error    # Optional
+      stackTrace: stack   # Optional
+```
 
 ### `hook_widget_does_not_use_hooks`
 

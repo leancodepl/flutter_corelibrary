@@ -32,7 +32,7 @@ class CatchParameterNames extends DartLintRule {
   const CatchParameterNames({required this.config})
     : super(
         code: const LintCode(
-          name: 'catch_parameter_names',
+          name: ruleName,
           problemMessage: 'Parameter name for the {0} is non-standard.',
           correctionMessage: 'Rename the parameter to {1}`.',
           errorSeverity: DiagnosticSeverity.WARNING,
