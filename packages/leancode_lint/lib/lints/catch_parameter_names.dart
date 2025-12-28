@@ -12,7 +12,7 @@ final class CatchParameterNamesConfig {
   factory CatchParameterNamesConfig.fromConfig(Map<String, Object?> json) {
     return CatchParameterNamesConfig(
       exceptionName: json['exception'] as String? ?? 'err',
-      stackTraceName: json['stackTrace'] as String? ?? 'st',
+      stackTraceName: json['stack_trace'] as String? ?? 'st',
     );
   }
 
@@ -34,7 +34,7 @@ class CatchParameterNames extends DartLintRule {
         code: const LintCode(
           name: ruleName,
           problemMessage: 'Parameter name for the {0} is non-standard.',
-          correctionMessage: 'Rename the parameter to {1}`.',
+          correctionMessage: 'Rename the parameter to `{1}`.',
           errorSeverity: DiagnosticSeverity.WARNING,
         ),
       );
@@ -79,19 +79,23 @@ class CatchParameterNames extends DartLintRule {
     _CatchClauseParameter param,
     DiagnosticReporter reporter,
   ) {
-    if (node != null &&
-        !{'_', param.preferredName}.contains(node.name.lexeme)) {
-      reporter.atNode(node, code, arguments: [param.name, config.preferredName(param)]);
+    if (node == null) {
+      return;
     }
+
+    final actualName = node.name.lexeme;
+    final preferred = config.preferredName(param);
+
+    // accept underscore or the preferred name
+    if (actualName == '_' || actualName == preferred) {
+      return;
+    }
+
+    reporter.atNode(node, code, arguments: [param.name, preferred]);
   }
 }
 
 enum _CatchClauseParameter {
   exception,
-  stackTrace;
-
-  String get preferredName => switch (this) {
-    exception => 'err',
-    stackTrace => 'st',
-  };
+  stackTrace,
 }

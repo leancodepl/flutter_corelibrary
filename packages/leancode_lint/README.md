@@ -180,24 +180,24 @@ try {} on SocketException catch (e, st) {}
 
 **GOOD:**
 
-With custom config: exception: error, stackTrace: stack
+With custom config: exception: error, stack_trace: stackTrace
 
 ```dart
-try {} catch (error, stack) {}
-try {} on SocketException catch (error, stack) {}
+try {} catch (error, stackTrace) {}
+try {} on SocketException catch (error, stackTrace) {}
 ```
 
 #### Configuration
 
 - `exception`: A string. Specifies the required name for the exception parameter. Defaults to `err`.
-- `stackTrace`: A string. Specifies the required name for the stack trace parameter. Defaults to `st`.
+- `stack_trace`: A string. Specifies the required name for the stack trace parameter. Defaults to `st`.
 
 ```yaml
 custom_lint:
   rules:
     - catch_parameter_names:
-      exception: error    # Optional
-      stackTrace: stack   # Optional
+      exception: error          # Optional
+      stack_trace: stackTrace   # Optional
 ```
 
 ### `hook_widget_does_not_use_hooks`
