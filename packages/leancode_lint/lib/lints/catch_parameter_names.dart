@@ -25,9 +25,21 @@ final class CatchParameterNamesConfig {
   };
 }
 
-/// Enforces that a catch clause has correctly named variable bindings:
-/// - if it's a catch-all, the exception should be named `err` and the stacktrace `st`
-/// - if it's a typed catch, the stacktrace has to be named `st`
+/// Enforces consistent names for `catch` clause parameters.
+///
+/// By default:
+/// - exception parameter → `err`
+/// - stack trace parameter → `st`
+///
+/// These names can be customized via rule configuration:
+/// ```yaml
+/// - catch_parameter_names:
+///   exception: error
+///   stack_trace: stackTrace
+/// ```
+///
+/// Untyped `catch` clauses check both parameters, while typed `on T catch`
+/// clauses only enforce the stack trace name.
 class CatchParameterNames extends DartLintRule {
   const CatchParameterNames({required this.config})
     : super(
