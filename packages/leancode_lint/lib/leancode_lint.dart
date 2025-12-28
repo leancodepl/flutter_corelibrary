@@ -25,7 +25,7 @@ class _Linter extends PluginBase {
     ...UseDesignSystemItem.getRulesListFromConfigs(configs),
     PrefixWidgetsReturningSlivers.fromConfigs(configs),
     const AddCubitSuffixForYourCubits(),
-    const CatchParameterNames(),
+    CatchParameterNames.fromConfigs(configs),
     const AvoidConditionalHooks(),
     const HookWidgetDoesNotUseHooks(),
     const ConstructorParametersAndFieldsShouldHaveTheSameOrder(),
