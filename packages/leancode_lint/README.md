@@ -200,6 +200,10 @@ custom_lint:
       stack_trace: stackTrace   # Optional
 ```
 
+#### Quick Fix 
+
+This rule provides an automatic fix that renames the parameters and updates all references within the catch block scope.
+
 ### `hook_widget_does_not_use_hooks`
 
 **AVOID** extending `HookWidget` if no hooks are used.
