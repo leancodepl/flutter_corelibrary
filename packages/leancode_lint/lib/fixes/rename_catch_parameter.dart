@@ -13,12 +13,12 @@ class RenameCatchParameter extends DartFix {
 
   @override
   Future<void> run(
-      CustomLintResolver resolver,
-      ChangeReporter reporter,
-      CustomLintContext context,
-      Diagnostic analysisError,
-      List<Diagnostic> others,
-      ) async {
+    CustomLintResolver resolver,
+    ChangeReporter reporter,
+    CustomLintContext context,
+    Diagnostic analysisError,
+    List<Diagnostic> others,
+  ) async {
     // Get the resolved unit directly
     final result = await resolver.getResolvedUnitResult();
     final unit = result.unit;
@@ -56,11 +56,11 @@ class RenameCatchParameter extends DartFix {
     reporter
         .createChangeBuilder(message: 'Rename `$oldName` to `$newName`', priority: 80)
         .addDartFileEdit((builder) {
-      // Apply replacements in reverse order to maintain offsets
-      for (final range in occurrences.reversed) {
-        builder.addSimpleReplacement(range, newName);
-      }
-    });
+          // Apply replacements in reverse order to maintain offsets
+          for (final range in occurrences.reversed) {
+            builder.addSimpleReplacement(range, newName);
+          }
+        });
   }
 
   /// Identifies which parameter (exception or stack trace) is being flagged.
@@ -86,10 +86,10 @@ class RenameCatchParameter extends DartFix {
 
   /// Collects all occurrences of the parameter that need to be renamed.
   List<SourceRange> _collectOccurrences(
-      CatchClause catchClause,
-      CatchClauseParameter targetParam,
-      String oldName,
-      ) {
+    CatchClause catchClause,
+    CatchClauseParameter targetParam,
+    String oldName,
+  ) {
     final occurrences = <SourceRange>[];
     final targetElement = targetParam.declaredFragment?.element;
 
