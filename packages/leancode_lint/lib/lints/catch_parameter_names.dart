@@ -98,7 +98,6 @@ class CatchParameterNames extends DartLintRule {
     final actualName = node.name.lexeme;
     final preferred = config.preferredName(param);
 
-    // accept underscore or the preferred name
     if (actualName == '_' || actualName == preferred) {
       return;
     }
