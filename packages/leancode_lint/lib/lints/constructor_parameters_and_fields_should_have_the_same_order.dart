@@ -10,7 +10,7 @@ import 'package:analyzer/error/error.dart';
 class ConstructorParametersAndFieldsShouldHaveTheSameOrder
     extends AnalysisRule {
   ConstructorParametersAndFieldsShouldHaveTheSameOrder()
-    : super(name: code.name, description: code.problemMessage);
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'constructor_parameters_and_fields_should_have_the_same_order',
@@ -38,13 +38,18 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    final fields = node.members.whereType<FieldDeclaration>().toList();
+    final members = switch (node.body) {
+      BlockClassBody(:final members) => members,
+      _ => <ClassMember>[],
+    };
+
+    final fields = members.whereType<FieldDeclaration>().toList();
 
     if (fields.isEmpty) {
       return;
     }
 
-    final constructors = node.members.whereType<ConstructorDeclaration>();
+    final constructors = members.whereType<ConstructorDeclaration>();
     for (final constructor in constructors) {
       if (!_hasValidOrder(constructor, fields)) {
         rule.reportAtNode(constructor);

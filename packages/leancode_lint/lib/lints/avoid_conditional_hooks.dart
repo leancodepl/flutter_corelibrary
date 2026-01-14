@@ -10,7 +10,7 @@ import 'package:leancode_lint/helpers.dart';
 /// Displays warning for conditional hooks usage.
 class AvoidConditionalHooks extends AnalysisRule {
   AvoidConditionalHooks()
-    : super(name: code.name, description: code.problemMessage);
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'avoid_conditional_hooks',

@@ -13,7 +13,8 @@ import 'package:leancode_lint/helpers.dart';
 import 'package:leancode_lint/utils.dart';
 
 class UsePadding extends AnalysisRule {
-  UsePadding() : super(name: code.name, description: code.problemMessage);
+  UsePadding()
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'use_padding',

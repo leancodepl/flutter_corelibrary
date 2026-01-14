@@ -10,7 +10,7 @@ import 'package:analyzer/error/error.dart';
 /// - if it's a typed catch, the stacktrace has to be named `st`
 class CatchParameterNames extends AnalysisRule {
   CatchParameterNames()
-    : super(name: code.name, description: code.problemMessage);
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'catch_parameter_names',

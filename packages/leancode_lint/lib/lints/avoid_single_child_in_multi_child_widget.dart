@@ -10,7 +10,7 @@ import 'package:leancode_lint/utils.dart';
 /// Enforces that some widgets that accept multiple children do not have a single child.
 class AvoidSingleChildInMultiChildWidgets extends AnalysisRule {
   AvoidSingleChildInMultiChildWidgets()
-    : super(name: code.name, description: code.problemMessage);
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'avoid_single_child_in_multi_child_widgets',

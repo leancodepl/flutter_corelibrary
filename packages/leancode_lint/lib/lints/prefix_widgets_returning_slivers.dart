@@ -12,7 +12,7 @@ import 'package:leancode_lint/helpers.dart';
 /// `AppPrefix` is specified in the config) prefix in their name.
 class PrefixWidgetsReturningSlivers extends AnalysisRule {
   PrefixWidgetsReturningSlivers()
-    : super(name: code.name, description: code.problemMessage);
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'prefix_widgets_returning_slivers',
@@ -49,7 +49,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    final startsWithSliver = _hasSliverPrefix(node.name.lexeme);
+    final name = node.namePart.typeName;
+
+    final startsWithSliver = _hasSliverPrefix(name.lexeme);
     if (startsWithSliver) {
       return;
     }
@@ -66,8 +68,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     if (isSliver) {
       rule.reportAtToken(
-        node.name,
-        arguments: [_getSuggestedClassName(config, node.name.lexeme)],
+        name,
+        arguments: [_getSuggestedClassName(config, name.lexeme)],
       );
     }
   }

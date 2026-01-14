@@ -36,7 +36,7 @@ const _supportedGetters = {
 
 class UseDedicatedMediaQueryMethods extends AnalysisRule {
   UseDedicatedMediaQueryMethods()
-    : super(name: code.name, description: code.problemMessage);
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'use_dedicated_media_query_methods',

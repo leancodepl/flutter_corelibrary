@@ -7,7 +7,8 @@ import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/helpers.dart';
 
 class UseAlign extends AnalysisRule {
-  UseAlign() : super(name: code.name, description: code.problemMessage);
+  UseAlign()
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'use_align',

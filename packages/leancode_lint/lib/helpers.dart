@@ -140,9 +140,13 @@ bool isWidgetClass(ClassDeclaration node) =>
       _ => false,
     };
 
-MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
-    .whereType<MethodDeclaration>()
-    .firstWhereOrNull((member) => member.name.lexeme == 'build');
+MethodDeclaration? getBuildMethod(ClassDeclaration node) => switch (node.body) {
+  BlockClassBody(:final members) =>
+    members.whereType<MethodDeclaration>().firstWhereOrNull(
+      (member) => member.name.lexeme == 'build',
+    ),
+  _ => null,
+};
 
 extension NodeLintRegistryExtensions on RuleVisitorRegistry {
   void addRegularComment(

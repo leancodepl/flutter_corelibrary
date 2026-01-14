@@ -7,7 +7,7 @@ import 'package:leancode_lint/type_checker.dart';
 final class UseDesignSystemItem extends UseInsteadType {
   UseDesignSystemItem()
     : super(
-        name: code.name,
+        name: code.lowerCaseName,
         description:
             'Define a project-specific allow/deny list for UI elements. '
             'Forbid using certain platform or package widgets/types directly '

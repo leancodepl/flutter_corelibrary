@@ -10,7 +10,7 @@ import 'package:leancode_lint/type_checker.dart';
 /// class name.
 class AddCubitSuffixForYourCubits extends AnalysisRule {
   AddCubitSuffixForYourCubits()
-    : super(name: code.name, description: code.problemMessage);
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'add_cubit_suffix_for_your_cubits',
@@ -43,11 +43,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    if (_hasCubitSuffix(node.name.lexeme)) {
+    final name = node.namePart.typeName;
+
+    if (_hasCubitSuffix(name.lexeme)) {
       return;
     }
 
-    rule.reportAtToken(node.name, arguments: [node.name.lexeme]);
+    rule.reportAtToken(name, arguments: [name.lexeme]);
   }
 
   bool _hasCubitSuffix(String className) => className.endsWith('Cubit');
