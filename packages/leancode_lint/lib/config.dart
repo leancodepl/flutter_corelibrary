@@ -51,4 +51,12 @@ class LeancodeLintConfig {
             ),
         ],
   };
+
+  late final catchParameterNames = switch (configMap) {
+    {'catch_parameter_names': final YamlMap map} => (
+      exception: map['exception'] as String?,
+      stackTrace: map['stack_trace'] as String?,
+    ),
+    _ => (exception: null, stackTrace: null),
+  };
 }

@@ -4,10 +4,24 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:leancode_lint/config.dart';
 
-/// Enforces that a catch clause has correctly named variable bindings:
-/// - if it's a catch-all, the exception should be named `err` and the stacktrace `st`
-/// - if it's a typed catch, the stacktrace has to be named `st`
+/// Enforces consistent names for `catch` clause parameters.
+///
+/// By default:
+/// - exception parameter → `err`
+/// - stack trace parameter → `st`
+///
+/// These names can be customized via rule configuration:
+/// ```yaml
+/// leancode_lint:
+///   catch_parameter_names:
+///     exception: error
+///     stack_trace: stackTrace
+/// ```
+///
+/// Untyped `catch` clauses check both parameters, while typed `on T catch`
+/// clauses only enforce the stack trace name.
 class CatchParameterNames extends AnalysisRule {
   CatchParameterNames()
     : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -15,7 +29,7 @@ class CatchParameterNames extends AnalysisRule {
   static const code = LintCode(
     'catch_parameter_names',
     'Parameter name for the {0} is non-standard.',
-    correctionMessage: 'Rename the parameter to {1}`.',
+    correctionMessage: 'Rename the parameter to `{1}`.',
     severity: .WARNING,
   );
 
@@ -27,15 +41,18 @@ class CatchParameterNames extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    registry.addCatchClause(this, _Visitor(this, context));
+    final config = LeancodeLintConfig.fromRuleContext(context);
+
+    registry.addCatchClause(this, _Visitor(this, context, config));
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
+  _Visitor(this.rule, this.context, this.config);
 
   final AnalysisRule rule;
   final RuleContext context;
+  final LeancodeLintConfig config;
 
   @override
   void visitCatchClause(CatchClause node) {
@@ -51,10 +68,18 @@ class _Visitor extends SimpleAstVisitor<void> {
     CatchClauseParameter? node,
     _CatchClauseParameter param,
   ) {
-    if (node != null &&
-        !{'_', param.preferredName}.contains(node.name.lexeme)) {
-      rule.reportAtNode(node, arguments: [param.name, param.preferredName]);
+    if (node == null) {
+      return;
     }
+
+    final actualName = node.name.lexeme;
+    final preferred = param.preferredName(config);
+
+    if (actualName == '_' || actualName == preferred) {
+      return;
+    }
+
+    rule.reportAtNode(node, arguments: [param.name, preferred]);
   }
 }
 
@@ -62,8 +87,8 @@ enum _CatchClauseParameter {
   exception,
   stackTrace;
 
-  String get preferredName => switch (this) {
-    exception => 'err',
-    stackTrace => 'st',
+  String preferredName(LeancodeLintConfig config) => switch (this) {
+    exception => config.catchParameterNames.exception ?? 'err',
+    stackTrace => config.catchParameterNames.stackTrace ?? 'st',
   };
 }
