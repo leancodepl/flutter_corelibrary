@@ -93,4 +93,22 @@ void main() {
       expect(gradient.stops, expectedStops);
     },
   );
+
+  test('EnhancedLinearGradient.withOpacity works', () {
+    final gradient = EnhancedLinearGradient(
+      colors: const [
+        Color(0xFFFF0000),
+        Color(0xFF00FF00),
+        Color(0xFF0000FF),
+      ],
+    );
+
+    final withOpacity = gradient.withOpacity(0.5);
+
+    expect(withOpacity, isA<EnhancedLinearGradient>());
+    expect(
+      withOpacity.colors.every((color) => color.a == 0.5),
+      isTrue,
+    );
+  });
 }

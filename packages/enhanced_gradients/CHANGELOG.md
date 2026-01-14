@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Fix `withOpacity` method in `EnhancedLinearGradient`.
+
 ## 2.0.0
 
 - BREAKING CHANGE: Raise minimum Flutter version to 3.27.0, which supports wide gamut color spaces.

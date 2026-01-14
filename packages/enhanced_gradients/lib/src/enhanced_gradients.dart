@@ -38,6 +38,7 @@ class EnhancedLinearGradient extends LinearGradient {
       transform: transform,
     );
   }
+
   const EnhancedLinearGradient._({
     required super.begin,
     required super.end,
@@ -46,6 +47,20 @@ class EnhancedLinearGradient extends LinearGradient {
     required super.tileMode,
     required super.transform,
   });
+
+  @override
+  EnhancedLinearGradient withOpacity(double opacity) {
+    return EnhancedLinearGradient._(
+      begin: begin,
+      end: end,
+      colors: [
+        for (final Color color in colors) color.withValues(alpha: opacity),
+      ],
+      stops: stops,
+      tileMode: tileMode,
+      transform: transform,
+    );
+  }
 }
 
 /// A slightly modified [RadialGradient] that applies a smoother color
