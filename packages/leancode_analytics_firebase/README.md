@@ -1,6 +1,7 @@
 # leancode_analytics_firebase
 
 Firebase Analytics implementation for LeanCode analytics.
+Uses [`leancode_analytics_base`](https://pub.dev/packages/leancode_analytics_base) package for core abstractions.
 
 ## Features
 

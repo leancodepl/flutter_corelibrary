@@ -11,6 +11,6 @@ Base package providing core analytics abstractions for Flutter apps.
 ## Usage
 
 This package provides the foundation for analytics implementations. Use specific implementation packages:
-- `leancode_analytics_firebase` for Firebase Analytics
-- `leancode_analytics_posthog` for PostHog Analytics
+- [`leancode_analytics_firebase`](https://pub.dev/packages/leancode_analytics_firebase) for Firebase Analytics
+- [`leancode_analytics_posthog`](https://pub.dev/packages/leancode_analytics_posthog) for PostHog Analytics
 
