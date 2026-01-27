@@ -34,9 +34,11 @@ final class LeancodeLintPlugin extends Plugin {
 
   @override
   void register(PluginRegistry registry) {
+    UseDesignSystemItem.fromConfig(
+      config,
+    ).forEach(registry.registerWarningRule);
     registry
       ..registerWarningRule(StartCommentsWithSpace())
-      ..registerWarningRule(UseDesignSystemItem(config: config))
       ..registerWarningRule(PrefixWidgetsReturningSlivers(config: config))
       ..registerFixForRule(
         StartCommentsWithSpace.code,

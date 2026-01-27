@@ -7,26 +7,25 @@ import '../mock_libraries.dart';
 
 void main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(UseDesignSystemItemTest);
+    defineReflectiveTests(UseDesignSystemItemTextTest);
+    defineReflectiveTests(UseDesignSystemItemScaffoldTest);
   });
 }
 
 @reflectiveTest
-class UseDesignSystemItemTest extends AnalysisRuleTest {
+class UseDesignSystemItemTextTest extends AnalysisRuleTest {
   @override
   void setUp() {
-    rule = UseDesignSystemItem(
-      config: const .new(
+    rule = UseDesignSystemItem.fromConfig(
+      const .new(
         designSystemItemReplacements: {
           'LftText': [
             .new(name: 'Text', packageName: 'flutter'),
             .new(name: 'RichText', packageName: 'flutter'),
           ],
-          'LftScaffold': [.new(name: 'Scaffold', packageName: 'flutter')],
-          'LftPlaceholder': [.new(name: 'Placeholder', packageName: 'flutter')],
         },
       ),
-    );
+    ).single;
     super.setUp();
 
     addMocks([.flutter]);
@@ -42,27 +41,13 @@ void test() {
 ''');
   }
 
-  Future<void> test_scaffold_flagged() async {
-    await assertDiagnosticsInRanges('''
-import 'package:flutter/material.dart';
-
-void test() {
-  [!Scaffold!](
-    body: SizedBox(),
-  );
-}
-''');
-  }
-
   Future<void> test_text_in_appbar_title_flagged() async {
     await assertDiagnosticsInRanges('''
 import 'package:flutter/material.dart';
 
 void test() {
-  /*[0*/Scaffold/*0]*/(
-    appBar: AppBar(
-      title: const /*[1*/Text/*1]*/('abc'),
-    ),
+  AppBar(
+    title: const [!Text!]('abc'),
   );
 }
 ''');
@@ -85,6 +70,35 @@ import 'package:flutter/material.dart'
 
 void test() {
   const SizedBox();
+}
+''');
+  }
+}
+
+@reflectiveTest
+class UseDesignSystemItemScaffoldTest extends AnalysisRuleTest {
+  @override
+  void setUp() {
+    rule = UseDesignSystemItem.fromConfig(
+      const .new(
+        designSystemItemReplacements: {
+          'LftScaffold': [.new(name: 'Scaffold', packageName: 'flutter')],
+        },
+      ),
+    ).single;
+    super.setUp();
+
+    addMocks([.flutter]);
+  }
+
+  Future<void> test_scaffold_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+
+void test() {
+  [!Scaffold!](
+    body: SizedBox(),
+  );
 }
 ''');
   }

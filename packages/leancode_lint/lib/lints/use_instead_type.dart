@@ -7,7 +7,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/type_checker.dart';
 
-/// Enforces that items that have replacements defined are used.
+/// Enforces that items that have a replacement defined are used.
 abstract base class UseInsteadType extends AnalysisRule {
   UseInsteadType({
     required super.name,
@@ -27,7 +27,9 @@ abstract base class UseInsteadType extends AnalysisRule {
     severity: severity,
   );
 
-  Map<String, TypeChecker> getCheckers(RuleContext context);
+  String get preferredItem;
+
+  TypeChecker getChecker(RuleContext context);
 
   @override
   void registerNodeProcessors(
@@ -44,11 +46,11 @@ abstract base class UseInsteadType extends AnalysisRule {
 }
 
 class _Visitor extends GeneralizingAstVisitor<void> {
-  _Visitor(this.rule, this.context) : checkers = rule.getCheckers(context);
+  _Visitor(this.rule, this.context) : checker = rule.getChecker(context);
 
   final UseInsteadType rule;
   final RuleContext context;
-  final Map<String, TypeChecker> checkers;
+  final TypeChecker checker;
 
   @override
   void visitIdentifier(Identifier node) {
@@ -68,19 +70,15 @@ class _Visitor extends GeneralizingAstVisitor<void> {
     if (_isInHide(node)) {
       return;
     }
-
-    for (final MapEntry(key: preferredItemName, value: checker)
-        in checkers.entries) {
-      try {
-        if (checker.isExactly(element)) {
-          rule.reportAtNode(
-            node,
-            arguments: [element.displayName, preferredItemName],
-          );
-        }
-      } catch (err) {
-        // isExactly crashes sometimes
+    try {
+      if (checker.isExactly(element)) {
+        rule.reportAtNode(
+          node,
+          arguments: [element.displayName, rule.preferredItem],
+        );
       }
+    } catch (err) {
+      // isExactly crashes sometimes
     }
   }
 

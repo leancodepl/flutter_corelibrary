@@ -1,53 +1,35 @@
 import 'package:analyzer/analysis_rule/rule_context.dart';
-import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/lints/use_instead_type.dart';
 import 'package:leancode_lint/type_checker.dart';
 
 final class UseDesignSystemItem extends UseInsteadType {
-  UseDesignSystemItem({required this.config})
-    : super(
-        name: code.lowerCaseName,
-        description:
-            'Define a project-specific allow/deny list for UI elements. '
-            'Forbid using certain platform or package widgets/types directly '
-            'and guide developers to the approved design-system alternatives '
-            'configured in the plugin config.',
-        correctionMessage: code.correctionMessage!,
-        severity: code.severity,
+  UseDesignSystemItem._({
+    required this.preferredItem,
+    required this.forbiddenItems,
+  }) : super(
+         name: 'use_design_system_item_$preferredItem',
+         description: '{0} is forbidden within this design system.',
+         correctionMessage:
+             'Use the alternative defined in the design system: {1}.',
+         severity: .WARNING,
+       );
+
+  static Iterable<UseDesignSystemItem> fromConfig(LeancodeLintConfig config) =>
+      config.designSystemItemReplacements.entries.map(
+        (entry) => ._(preferredItem: entry.key, forbiddenItems: entry.value),
       );
 
-  final LeancodeLintConfig config;
-
-  static const code = LintCode(
-    // TODO: use MultiAnalysisRule and specify lint code per item when we can
-    // read config before the rule is created.
-    // https://github.com/dart-lang/sdk/issues/61755
-    'use_design_system_item',
-    '{0} is forbidden within this design system.',
-    correctionMessage: 'Use the alternative defined in the design system: {1}.',
-    severity: .WARNING,
-  );
+  @override
+  final String preferredItem;
+  final List<DesignSystemForbiddenItem> forbiddenItems;
 
   @override
-  LintCode get diagnosticCode => code;
-
-  @override
-  Map<String, TypeChecker> getCheckers(RuleContext context) {
-    return config.designSystemItemReplacements.map(
-      (preferredItemName, forbidden) => .new(
-        preferredItemName,
-        .any([
-          for (final forbiddenItem in forbidden)
-            if (forbiddenItem.packageName.startsWith('dart:'))
-              .fromUrl('${forbiddenItem.packageName}#${forbiddenItem.name}')
-            else
-              .fromName(
-                forbiddenItem.name,
-                packageName: forbiddenItem.packageName,
-              ),
-        ]),
-      ),
-    );
-  }
+  TypeChecker getChecker(RuleContext context) => .any([
+    for (final forbiddenItem in forbiddenItems)
+      if (forbiddenItem.packageName.startsWith('dart:'))
+        .fromUrl('${forbiddenItem.packageName}#${forbiddenItem.name}')
+      else
+        .fromName(forbiddenItem.name, packageName: forbiddenItem.packageName),
+  ]);
 }
