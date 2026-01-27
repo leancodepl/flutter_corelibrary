@@ -1,0 +1,52 @@
+name: leancode_analytics_posthog test
+
+on:
+  push:
+    branches: [master]
+    tags-ignore: ['leancode_analytics_posthog-v*']
+    paths:
+      - 'packages/leancode_analytics_posthog/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/leancode_analytics_posthog/**'
+
+jobs:
+  test:
+    name: Flutter ${{ matrix.channel }}${{ matrix.version }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: '3.24.x'
+          - channel: 'stable'
+
+    defaults:
+      run:
+        working-directory: packages/leancode_analytics_posthog
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
+          cache: true
+
+      - name: Download pub dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Dry run pub publish
+        # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
+        run: dart pub publish --dry-run || true
