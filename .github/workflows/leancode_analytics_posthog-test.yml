@@ -6,10 +6,12 @@ on:
     tags-ignore: ['leancode_analytics_posthog-v*']
     paths:
       - 'packages/leancode_analytics_posthog/**'
+      - 'packages/leancode_analytics_base/**'
   pull_request:
     branches: [master]
     paths:
       - 'packages/leancode_analytics_posthog/**'
+      - 'packages/leancode_analytics_base/**'
 
 jobs:
   test:
@@ -37,6 +39,12 @@ jobs:
           channel: ${{ matrix.channel }}
           flutter-version: ${{ matrix.version }}
           cache: true
+
+      - name: Override local dependencies
+        run: |
+          echo "dependency_overrides:" > pubspec_overrides.yaml
+          echo "  leancode_analytics_base:" >> pubspec_overrides.yaml
+          echo "    path: ../leancode_analytics_base" >> pubspec_overrides.yaml
 
       - name: Download pub dependencies
         run: flutter pub get
