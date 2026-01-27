@@ -15,25 +15,21 @@ void main() {
 class UseDesignSystemItemTest extends AnalysisRuleTest {
   @override
   void setUp() {
-    rule = UseDesignSystemItem();
+    rule = UseDesignSystemItem(
+      config: const .new(
+        designSystemItemReplacements: {
+          'LftText': [
+            .new(name: 'Text', packageName: 'flutter'),
+            .new(name: 'RichText', packageName: 'flutter'),
+          ],
+          'LftScaffold': [.new(name: 'Scaffold', packageName: 'flutter')],
+          'LftPlaceholder': [.new(name: 'Placeholder', packageName: 'flutter')],
+        },
+      ),
+    );
     super.setUp();
 
     addMocks([.flutter]);
-    addAnalysisOptions('''
-leancode_lint:
-  use_design_system_item:
-    LftText:
-      - instead_of: Text
-        from_package: flutter
-      - instead_of: RichText
-        from_package: flutter
-    LftScaffold:
-      - instead_of: Scaffold
-        from_package: flutter
-    LftPlaceholder:
-      - instead_of: Placeholder
-        from_package: flutter
-''');
   }
 
   Future<void> test_text_variable_declaration_flagged() async {

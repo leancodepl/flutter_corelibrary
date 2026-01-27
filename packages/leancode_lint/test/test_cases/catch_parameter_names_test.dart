@@ -14,7 +14,7 @@ void main() {
 class CatchParameterNamesTest extends AnalysisRuleTest {
   @override
   void setUp() {
-    rule = CatchParameterNames();
+    rule = CatchParameterNames(config: const .new());
     super.setUp();
   }
 

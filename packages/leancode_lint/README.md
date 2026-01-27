@@ -4,6 +4,19 @@
 
 An opinionated set of high-quality, robust, and up-to-date lint rules used at LeanCode.
 
+## Usage
+
+There are two supported ways to use this package:
+
+1. **As-is (default configuration)** – enable the built-in `leancode_lint`
+   analyzer plugin. This uses `const LeancodeLintConfig()` defaults.
+2. **With custom configuration** – create your own analyzer plugin package that
+   instantiates `LeancodeLintPlugin` with your `LeancodeLintConfig`, then enable
+   your plugin instead (see [“Configuration (custom plugin package)”](#configuration-custom-plugin-package) below).
+
+If you only want to toggle individual rules on/off, you can do that in
+`analysis_options.yaml` (see [“Custom lint rules”](#custom-lint-rules)).
+
 ## Installation
 
 1. Add `leancode_lint` as a dev dependency in your project's `pubspec.yaml`.
@@ -12,10 +25,14 @@ An opinionated set of high-quality, robust, and up-to-date lint rules used at Le
    dart pub add leancode_lint --dev
    ```
 
-2. In your `analysis_options.yaml` add `include: package:leancode_lint/analysis_options.yaml`. You might want to exclude some files
-   (e.g generated json serializable) from analysis.
+2. In your `analysis_options.yaml` add `include: package:leancode_lint/analysis_options.yaml`.
+   You might want to exclude some files (e.g generated json serializable) from analysis.
 
-3. Enable the `leancode_lint` analyzer plugin in `analysis_options.yaml`. You can customize lint rules by adding a `leancode_lint` config.
+3. Enable the analyzer plugin in `analysis_options.yaml`.
+
+   - For default behavior, enable `leancode_lint`.
+   - For custom configuration, enable your own plugin package instead
+     (see [“Configuration (custom plugin package)”](#configuration-custom-plugin-package) below).
 
 4. Run `flutter pub get` in your project main directory and restart the analysis server in your IDE.
    You're ready to go!
@@ -28,22 +45,54 @@ include: package:leancode_lint/analysis_options.yaml
 plugins:
   leancode_lint: ^20.0.0
 
-# Optional lint rules configuration
-leancode_lint:
-  application_prefix: Lncd
-  use_design_system_item:
-    AppText:
-      - instead_of: Text
-        from_package: flutter
-      - instead_of: RichText
-        from_package: flutter
-    AppScaffold:
-      - instead_of: Scaffold
-        from_package: flutter
-
 analyzer:
   exclude:
     - '**/*.g.dart'
+```
+
+## Configuration (custom plugin package)
+
+This section is optional. You only need it if you want to customize the
+behavior of configurable rules beyond the built-in defaults.
+
+To configure `leancode_lint` rules programmatically, create your own analyzer
+plugin package (e.g. `my_lints`) that depends on `leancode_lint` and exposes a
+top-level `plugin` variable.
+
+`my_lints/lib/main.dart`:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeancodeLintPlugin(
+  name: 'my_lints',
+  config: LeancodeLintConfig(
+    applicationPrefix: 'Lncd',
+    catchParameterNames: CatchParameterNamesConfig(
+      exception: 'error',
+      stackTrace: 'stackTrace',
+    ),
+    designSystemItemReplacements: {
+      'AppText': [
+        DesignSystemForbiddenItem(name: 'Text', packageName: 'flutter'),
+        DesignSystemForbiddenItem(name: 'RichText', packageName: 'flutter'),
+      ],
+      'AppScaffold': [
+        DesignSystemForbiddenItem(name: 'Scaffold', packageName: 'flutter'),
+      ],
+    },
+  ),
+);
+```
+
+Then enable your plugin in the consuming project’s `analysis_options.yaml`:
+
+```yaml
+include: package:leancode_lint/analysis_options.yaml
+
+plugins:
+  my_lints:
+    path: ./path/to/my_lints
 ```
 
 ## Usage in libraries
@@ -169,15 +218,19 @@ None.
 **BAD:**
 
 ```dart
-try {} catch (e, s) {}
-try {} on SocketException catch (e, s) {}
+void f() {
+  try {} catch (e, s) {}
+  try {} on SocketException catch (e, s) {}
+}
 ```
 
 **GOOD:**
 
 ```dart
-try {} catch (err, st) {}
-try {} on SocketException catch (e, st) {}
+void f() {
+  try {} catch (err, st) {}
+  try {} on SocketException catch (e, st) {}
+}
 ```
 
 **GOOD:**
@@ -185,20 +238,28 @@ try {} on SocketException catch (e, st) {}
 With custom config: exception: error, stack_trace: stackTrace
 
 ```dart
-try {} catch (error, stackTrace) {}
-try {} on SocketException catch (error, stackTrace) {}
+void f() {
+  try {} catch (error, stackTrace) {}
+  try {} on SocketException catch (error, stackTrace) {}
+}
 ```
 
 #### Configuration
 
-- `exception`: A string. Specifies the required name for the exception parameter. Defaults to `err`.
-- `stack_trace`: A string. Specifies the required name for the stack trace parameter. Defaults to `st`.
+Configured via `LeancodeLintConfig.catchParameterNames`:
 
-```yaml
-leancode_lint:
-  catch_parameter_names:
-    exception: error          # Optional
-    stack_trace: stackTrace   # Optional
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeancodeLintPlugin(
+  name: 'my_lints',
+  config: LeancodeLintConfig(
+    catchParameterNames: CatchParameterNamesConfig(
+      exception: 'error',
+      stackTrace: 'stackTrace',
+    ),
+  ),
+);
 ```
 
 ### `hook_widget_does_not_use_hooks`
@@ -219,11 +280,16 @@ class MyWidget extends HookWidget {
 **BAD:**
 
 ```dart
-HookBuilder(
-  builder: (context) {
-    return Placeholder();
-  },
-);
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return HookBuilder(
+      builder: (context) {
+        return Placeholder();
+      },
+    );
+  }
+}
 ```
 
 **GOOD:**
@@ -240,11 +306,13 @@ class MyWidget extends StatelessWidget {
 **GOOD:**
 
 ```dart
-Builder(
-  builder: (context) {
-    return Placeholder();
-  },
-);
+Widget build(BuildContext context) {
+  return Builder(
+    builder: (context) {
+      return Placeholder();
+    },
+  );
+}
 ```
 
 #### Configuration
@@ -279,11 +347,18 @@ class SliverMyWidget extends StatelessWidget {
 
 #### Configuration
 
-- `application_prefix`: A string. Specifies the application prefix to accept sliver prefixes. For example if set to "Lncd" then "LncdSliverMyWidget" is a valid sliver name.
+- `application_prefix`: A string. Specifies the application prefix to accept sliver prefixes.
+  For example if set to "Lncd" then "LncdSliverMyWidget" is a valid sliver name.
 
-```yaml
-leancode_lint:
-  application_prefix: Lncd
+Configured via `LeancodeLintConfig.applicationPrefix`:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeancodeLintPlugin(
+  name: 'my_lints',
+  config: LeancodeLintConfig(applicationPrefix: 'Lncd'),
+);
 ```
 
 ### `start_comments_with_space`
@@ -316,21 +391,26 @@ This rule has to be configured to do anything. The rule will highlight forbidden
 
 #### Configuration
 
-- `<preferredItem>`: The item to be preferred. A list of objects:
-  - `instead_of`: A required string. Name of the item that is forbidden.
-  - `from_package`: A required string. Name of the package from which that forbidden item is from.
+Configured via `LeancodeLintConfig.designSystemItemReplacements`:
 
-```yaml
-leancode_lint:
-  use_design_system_item:
-    LncdText:
-      - instead_of: Text
-        from_package: flutter
-      - instead_of: RichText
-        from_package: flutter
-    LncdScaffold:
-      - instead_of: Scaffold
-        from_package: flutter
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeancodeLintPlugin(
+  name: 'my_lints',
+  config: LeancodeLintConfig(
+    designSystemItemReplacements: {
+      'LncdText': [
+        DesignSystemForbiddenItem(name: 'Text', packageName: 'flutter'),
+        DesignSystemForbiddenItem(name: 'RichText', packageName: 'flutter'),
+      ],
+      'LncdScaffold': [
+        DesignSystemForbiddenItem(name: 'Scaffold', packageName: 'flutter'),
+      ],
+    },
+  ),
+);
+
 ```
 
 ### `avoid_single_child_in_multi_child_widgets`
@@ -340,17 +420,21 @@ leancode_lint:
 **BAD:**
 
 ```dart
-Column(
-  children: [
-    Container(),
-  ]
-)
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      Container(),
+    ],
+  );
+}
 ```
 
 **GOOD:**
 
 ```dart
-Container(),
+Widget build(BuildContext context) {
+  return Container();
+}
 ```
 
 #### Configuration
@@ -366,13 +450,19 @@ Dedicated methods offer better performance by minimizing unnecessary widget rebu
 **BAD:**
 
 ```dart
-MediaQuery.of(context).size
+Widget build(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+  return const SizedBox();
+}
 ```
 
 **GOOD:**
 
 ```dart
-MediaQuery.sizeOf(context)
+Widget build(BuildContext context) {
+  final size = MediaQuery.sizeOf(context);
+  return const SizedBox();
+}
 ```
 
 #### Configuration

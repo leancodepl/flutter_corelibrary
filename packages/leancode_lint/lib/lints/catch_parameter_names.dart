@@ -12,19 +12,15 @@ import 'package:leancode_lint/config.dart';
 /// - exception parameter → `err`
 /// - stack trace parameter → `st`
 ///
-/// These names can be customized via rule configuration:
-/// ```yaml
-/// leancode_lint:
-///   catch_parameter_names:
-///     exception: error
-///     stack_trace: stackTrace
-/// ```
+/// These names can be customized via `LeancodeLintConfig.catchParameterNames`.
 ///
 /// Untyped `catch` clauses check both parameters, while typed `on T catch`
 /// clauses only enforce the stack trace name.
 class CatchParameterNames extends AnalysisRule {
-  CatchParameterNames()
+  CatchParameterNames({required this.config})
     : super(name: code.lowerCaseName, description: code.problemMessage);
+
+  final LeancodeLintConfig config;
 
   static const code = LintCode(
     'catch_parameter_names',
@@ -41,8 +37,6 @@ class CatchParameterNames extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    final config = LeancodeLintConfig.fromRuleContext(context);
-
     registry.addCatchClause(this, _Visitor(this, context, config));
   }
 }
@@ -88,7 +82,7 @@ enum _CatchClauseParameter {
   stackTrace;
 
   String preferredName(LeancodeLintConfig config) => switch (this) {
-    exception => config.catchParameterNames.exception ?? 'err',
-    stackTrace => config.catchParameterNames.stackTrace ?? 'st',
+    exception => config.catchParameterNames.exception,
+    stackTrace => config.catchParameterNames.stackTrace,
   };
 }

@@ -5,17 +5,19 @@ import 'package:leancode_lint/lints/use_instead_type.dart';
 import 'package:leancode_lint/type_checker.dart';
 
 final class UseDesignSystemItem extends UseInsteadType {
-  UseDesignSystemItem()
+  UseDesignSystemItem({required this.config})
     : super(
         name: code.lowerCaseName,
         description:
             'Define a project-specific allow/deny list for UI elements. '
             'Forbid using certain platform or package widgets/types directly '
             'and guide developers to the approved design-system alternatives '
-            'configured in analysis options.',
+            'configured in the plugin config.',
         correctionMessage: code.correctionMessage!,
         severity: code.severity,
       );
+
+  final LeancodeLintConfig config;
 
   static const code = LintCode(
     // TODO: use MultiAnalysisRule and specify lint code per item when we can
@@ -32,19 +34,18 @@ final class UseDesignSystemItem extends UseInsteadType {
 
   @override
   Map<String, TypeChecker> getCheckers(RuleContext context) {
-    final replacements = LeancodeLintConfig.fromRuleContext(
-      context,
-    ).designSystemItemReplacements;
-
-    return replacements.map(
+    return config.designSystemItemReplacements.map(
       (preferredItemName, forbidden) => .new(
         preferredItemName,
-        TypeChecker.any([
-          for (final (:name, :packageName) in forbidden)
-            if (packageName.startsWith('dart:'))
-              TypeChecker.fromUrl('$packageName#$name')
+        .any([
+          for (final forbiddenItem in forbidden)
+            if (forbiddenItem.packageName.startsWith('dart:'))
+              .fromUrl('${forbiddenItem.packageName}#${forbiddenItem.name}')
             else
-              TypeChecker.fromName(name, packageName: packageName),
+              .fromName(
+                forbiddenItem.name,
+                packageName: forbiddenItem.packageName,
+              ),
         ]),
       ),
     );

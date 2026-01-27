@@ -11,8 +11,10 @@ import 'package:leancode_lint/helpers.dart';
 /// `Sliver`/`_Sliver` (or `${AppPrefix}Sliver`/`_${AppPrefix}Sliver` if
 /// `AppPrefix` is specified in the config) prefix in their name.
 class PrefixWidgetsReturningSlivers extends AnalysisRule {
-  PrefixWidgetsReturningSlivers()
+  PrefixWidgetsReturningSlivers({required this.config})
     : super(name: code.lowerCaseName, description: code.problemMessage);
+
+  final LeancodeLintConfig config;
 
   static const code = LintCode(
     'prefix_widgets_returning_slivers',
@@ -29,8 +31,6 @@ class PrefixWidgetsReturningSlivers extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    final config = LeancodeLintConfig.fromRuleContext(context);
-
     registry.addClassDeclaration(this, _Visitor(this, context, config));
   }
 }

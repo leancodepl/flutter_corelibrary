@@ -1,62 +1,42 @@
-// TODO: use a canonical way to access analysis options (https://github.com/dart-lang/sdk/issues/61755)
-// ignore_for_file: implementation_imports
+final class LeancodeLintConfig {
+  const LeancodeLintConfig({
+    this.applicationPrefix,
+    this.designSystemItemReplacements = const {},
+    this.catchParameterNames = const .new(),
+  });
 
-import 'package:analyzer/analysis_rule/rule_context.dart';
-import 'package:analyzer/src/analysis_options/analysis_options_provider.dart';
-import 'package:analyzer/src/workspace/pub.dart';
-import 'package:yaml/yaml.dart';
+  /// Used by some rules (e.g. `prefix_widgets_returning_slivers`) to match
+  /// project-specific prefixes.
+  final String? applicationPrefix;
 
-class LeancodeLintConfig {
-  LeancodeLintConfig._(this.configMap);
+  /// Configuration for the `use_design_system_item` rule.
+  /// Defines which types are forbidden and what to use instead.
+  ///
+  /// Map key is the preferred item name (e.g. `LftText`) and map value is the
+  /// list of forbidden items (e.g. `Text` from `flutter`).
+  final Map<String, List<DesignSystemForbiddenItem>>
+  designSystemItemReplacements;
 
-  factory LeancodeLintConfig.fromRuleContext(RuleContext context) {
-    final package = context.package;
-    if (package is! PubPackage) {
-      return _empty;
-    }
+  /// Configuration for the `catch_parameter_names` rule.
+  final CatchParameterNamesConfig catchParameterNames;
+}
 
-    final provider = AnalysisOptionsProvider(
-      .new([package.workspace.packageUriResolver]),
-    );
+class CatchParameterNamesConfig {
+  const CatchParameterNamesConfig({
+    this.exception = 'err',
+    this.stackTrace = 'st',
+  });
 
-    final analysisOptions = provider.getOptions(
-      context.definingUnit.file.parent,
-    );
+  final String exception;
+  final String stackTrace;
+}
 
-    final configMap = analysisOptions['leancode_lint'];
-    if (configMap is! YamlMap) {
-      return _empty;
-    }
+class DesignSystemForbiddenItem {
+  const DesignSystemForbiddenItem({
+    required this.name,
+    required this.packageName,
+  });
 
-    return ._(configMap);
-  }
-
-  static final _empty = LeancodeLintConfig._(.new());
-
-  final YamlMap configMap;
-
-  late final applicationPrefix = switch (configMap) {
-    {'application_prefix': final String prefix} => prefix,
-    _ => null,
-  };
-
-  late final designSystemItemReplacements = {
-    if (configMap['use_design_system_item'] case final YamlMap map)
-      for (final entry in map.entries)
-        entry.key as String: [
-          for (final (forbidden as YamlMap) in entry.value as List)
-            (
-              name: forbidden['instead_of'] as String,
-              packageName: forbidden['from_package'] as String,
-            ),
-        ],
-  };
-
-  late final catchParameterNames = switch (configMap) {
-    {'catch_parameter_names': final YamlMap map} => (
-      exception: map['exception'] as String?,
-      stackTrace: map['stack_trace'] as String?,
-    ),
-    _ => (exception: null, stackTrace: null),
-  };
+  final String name;
+  final String packageName;
 }

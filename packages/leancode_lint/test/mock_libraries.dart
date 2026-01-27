@@ -1,6 +1,5 @@
 import 'package:analyzer/utilities/package_config_file_builder.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
-import 'package:analyzer_testing/utilities/utilities.dart';
 
 enum MockLibrary {
   flutter('flutter', 'material.dart', _flutterMock),
@@ -31,13 +30,6 @@ extension AddMockLibraryX on AnalysisRuleTest {
       builder.add(name: lib.name, rootPath: convertPath(lib.rootPath));
     }
     writeTestPackageConfig(builder);
-  }
-
-  void addAnalysisOptions(String additionalContent) {
-    newAnalysisOptionsYamlFile(testPackageRootPath, '''
-${analysisOptionsContent(experiments: experiments, rules: [rule.name])}
-$additionalContent
-''');
   }
 }
 

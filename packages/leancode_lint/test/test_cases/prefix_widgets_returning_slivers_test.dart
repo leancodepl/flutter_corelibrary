@@ -15,14 +15,12 @@ void main() {
 class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest {
   @override
   void setUp() {
-    rule = PrefixWidgetsReturningSlivers();
+    rule = PrefixWidgetsReturningSlivers(
+      config: const .new(applicationPrefix: 'Lncd'),
+    );
     super.setUp();
 
     addMocks([.flutter]);
-    addAnalysisOptions('''
-leancode_lint:
-  application_prefix: Lncd
-''');
   }
 
   Future<void> test_return_from_internal_blocks() async {
