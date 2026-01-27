@@ -1,14 +1,23 @@
 name: leancode_analytics
-description: DEPRECATED - Use leancode_analytics_base, leancode_analytics_firebase, or leancode_analytics_posthog instead.
+description: Package provides wrapper for base analytics functionality for Flutter apps.
 version: 0.3.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics
 repository: https://github.com/leancodepl/flutter_corelibrary
+
+topics:
+  - analytics
+  - firebase
+  - flutter
+
+discontinued: true
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
   flutter: ">=3.24.0"
 
 dependencies:
+  firebase_analytics: ^11.4.5
+  firebase_core: ^3.13.0
   flutter:
     sdk: flutter
 
