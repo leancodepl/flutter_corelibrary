@@ -9,9 +9,9 @@ An opinionated set of high-quality, robust, and up-to-date lint rules used at Le
 There are two supported ways to use this package:
 
 1. **As-is (default configuration)** – enable the built-in `leancode_lint`
-   analyzer plugin. This uses `const LeancodeLintConfig()` defaults.
+   analyzer plugin. This uses `const LeanCodeLintConfig()` defaults.
 2. **With custom configuration** – create your own analyzer plugin package that
-   instantiates `LeancodeLintPlugin` with your `LeancodeLintConfig`, then enable
+   instantiates `LeanCodeLintPlugin` with your `LeanCodeLintConfig`, then enable
    your plugin instead (see [“Configuration (custom plugin package)”](#configuration-custom-plugin-package) below).
 
 If you only want to toggle individual rules on/off, you can do that in
@@ -64,9 +64,9 @@ top-level `plugin` variable.
 ```dart
 import 'package:leancode_lint/plugin.dart';
 
-final plugin = LeancodeLintPlugin(
+final plugin = LeanCodeLintPlugin(
   name: 'my_lints',
-  config: LeancodeLintConfig(
+  config: LeanCodeLintConfig(
     applicationPrefix: 'Lncd',
     catchParameterNames: CatchParameterNamesConfig(
       exception: 'error',
@@ -246,14 +246,14 @@ void f() {
 
 #### Configuration
 
-Configured via `LeancodeLintConfig.catchParameterNames`:
+Configured via `LeanCodeLintConfig.catchParameterNames`:
 
 ```dart
 import 'package:leancode_lint/plugin.dart';
 
-final plugin = LeancodeLintPlugin(
+final plugin = LeanCodeLintPlugin(
   name: 'my_lints',
-  config: LeancodeLintConfig(
+  config: LeanCodeLintConfig(
     catchParameterNames: CatchParameterNamesConfig(
       exception: 'error',
       stackTrace: 'stackTrace',
@@ -350,14 +350,14 @@ class SliverMyWidget extends StatelessWidget {
 - `application_prefix`: A string. Specifies the application prefix to accept sliver prefixes.
   For example if set to "Lncd" then "LncdSliverMyWidget" is a valid sliver name.
 
-Configured via `LeancodeLintConfig.applicationPrefix`:
+Configured via `LeanCodeLintConfig.applicationPrefix`:
 
 ```dart
 import 'package:leancode_lint/plugin.dart';
 
-final plugin = LeancodeLintPlugin(
+final plugin = LeanCodeLintPlugin(
   name: 'my_lints',
-  config: LeancodeLintConfig(applicationPrefix: 'Lncd'),
+  config: LeanCodeLintConfig(applicationPrefix: 'Lncd'),
 );
 ```
 
@@ -391,14 +391,14 @@ This rule has to be configured to do anything. The rule will highlight forbidden
 
 #### Configuration
 
-Configured via `LeancodeLintConfig.designSystemItemReplacements`:
+Configured via `LeanCodeLintConfig.designSystemItemReplacements`:
 
 ```dart
 import 'package:leancode_lint/plugin.dart';
 
-final plugin = LeancodeLintPlugin(
+final plugin = LeanCodeLintPlugin(
   name: 'my_lints',
-  config: LeancodeLintConfig(
+  config: LeanCodeLintConfig(
     designSystemItemReplacements: {
       'LncdText': [
         DesignSystemForbiddenItem(name: 'Text', packageName: 'flutter'),

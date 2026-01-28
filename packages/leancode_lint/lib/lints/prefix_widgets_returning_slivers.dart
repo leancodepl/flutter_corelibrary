@@ -14,7 +14,7 @@ class PrefixWidgetsReturningSlivers extends AnalysisRule {
   PrefixWidgetsReturningSlivers({required this.config})
     : super(name: code.lowerCaseName, description: code.problemMessage);
 
-  final LeancodeLintConfig config;
+  final LeanCodeLintConfig config;
 
   static const code = LintCode(
     'prefix_widgets_returning_slivers',
@@ -40,7 +40,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final AnalysisRule rule;
   final RuleContext context;
-  final LeancodeLintConfig config;
+  final LeanCodeLintConfig config;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -93,7 +93,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   );
 
   static String _getSuggestedClassName(
-    LeancodeLintConfig config,
+    LeanCodeLintConfig config,
     String className,
   ) {
     var name = className;

@@ -15,7 +15,7 @@ final class UseDesignSystemItem extends UseInsteadType {
          severity: .WARNING,
        );
 
-  static Iterable<UseDesignSystemItem> fromConfig(LeancodeLintConfig config) =>
+  static Iterable<UseDesignSystemItem> fromConfig(LeanCodeLintConfig config) =>
       config.designSystemItemReplacements.entries.map(
         (entry) => ._(preferredItem: entry.key, forbiddenItems: entry.value),
       );

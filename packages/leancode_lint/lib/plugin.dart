@@ -22,15 +22,15 @@ export 'package:leancode_lint/config.dart';
 /// Analyzer plugin implementation for `leancode_lint`.
 ///
 /// Consumers that want to configure the lints programmatically should import
-/// `package:leancode_lint/plugin.dart` and instantiate [LeancodeLintPlugin]
+/// `package:leancode_lint/plugin.dart` and instantiate [LeanCodeLintPlugin]
 /// from their own plugin package.
-final class LeancodeLintPlugin extends Plugin {
-  LeancodeLintPlugin({this.name = 'leancode_lint', this.config = const .new()});
+final class LeanCodeLintPlugin extends Plugin {
+  LeanCodeLintPlugin({this.name = 'leancode_lint', this.config = const .new()});
 
   @override
   final String name;
 
-  final LeancodeLintConfig config;
+  final LeanCodeLintConfig config;
 
   @override
   void register(PluginRegistry registry) {

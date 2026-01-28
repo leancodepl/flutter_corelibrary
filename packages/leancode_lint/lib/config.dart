@@ -1,5 +1,5 @@
-final class LeancodeLintConfig {
-  const LeancodeLintConfig({
+final class LeanCodeLintConfig {
+  const LeanCodeLintConfig({
     this.applicationPrefix,
     this.designSystemItemReplacements = const {},
     this.catchParameterNames = const .new(),
