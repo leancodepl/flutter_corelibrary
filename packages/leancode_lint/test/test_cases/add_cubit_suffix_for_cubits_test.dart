@@ -16,9 +16,9 @@ class AddCubitSuffixForYourCubitsTest extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = AddCubitSuffixForYourCubits();
-    super.setUp();
-
     addMocks([.bloc, .flutterBloc]);
+
+    super.setUp();
   }
 
   Future<void> test_main() async {

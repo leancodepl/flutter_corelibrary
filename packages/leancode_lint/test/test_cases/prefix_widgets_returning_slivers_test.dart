@@ -18,9 +18,9 @@ class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest {
     rule = PrefixWidgetsReturningSlivers(
       config: const .new(applicationPrefix: 'Lncd'),
     );
-    super.setUp();
-
     addMocks([.flutter]);
+
+    super.setUp();
   }
 
   Future<void> test_return_from_internal_blocks() async {

@@ -1,35 +1,29 @@
-import 'package:analyzer/utilities/package_config_file_builder.dart';
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 
 enum MockLibrary {
-  flutter('flutter', 'material.dart', _flutterMock),
-  bloc('bloc', 'bloc.dart', _blocMock),
-  flutterBloc('flutter_bloc', 'flutter_bloc.dart', _flutterBlocMock),
-  sliverTools('sliver_tools', 'sliver_tools.dart', _sliverToolsMock),
-  flutterHooks('flutter_hooks', 'flutter_hooks.dart', _flutterHooksMock),
-  hooksRiverpod('hooks_riverpod', 'hooks_riverpod.dart', _hooksRiverpodMock);
+  flutter('flutter', {'lib/material.dart': _flutterMock}),
+  bloc('bloc', {'lib/bloc.dart': _blocMock}),
+  flutterBloc('flutter_bloc', {'lib/flutter_bloc.dart': _flutterBlocMock}),
+  sliverTools('sliver_tools', {'lib/sliver_tools.dart': _sliverToolsMock}),
+  flutterHooks('flutter_hooks', {'lib/flutter_hooks.dart': _flutterHooksMock}),
+  hooksRiverpod('hooks_riverpod', {
+    'lib/hooks_riverpod.dart': _hooksRiverpodMock,
+  });
 
-  const MockLibrary(this.name, this.importFile, this.content);
+  const MockLibrary(this.name, this.files);
 
   final String name;
-  final String importFile;
-  final String content;
-
-  String get rootPath => '/packages/$name';
-  String get mockFilePath => '$rootPath/lib/$importFile';
+  final Map<String, String> files;
 }
 
 extension AddMockLibraryX on AnalysisRuleTest {
-  void addMocks(List<MockLibrary> libraries) {
-    for (final lib in libraries) {
-      newFile(lib.mockFilePath, lib.content);
+  void addMocks(Iterable<MockLibrary> mocks) {
+    for (final mock in mocks) {
+      final package = newPackage(mock.name);
+      for (final MapEntry(key: path, value: content) in mock.files.entries) {
+        package.addFile(path, content);
+      }
     }
-
-    final builder = PackageConfigFileBuilder();
-    for (final lib in libraries) {
-      builder.add(name: lib.name, rootPath: convertPath(lib.rootPath));
-    }
-    writeTestPackageConfig(builder);
   }
 }
 

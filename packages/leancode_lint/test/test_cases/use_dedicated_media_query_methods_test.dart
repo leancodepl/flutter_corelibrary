@@ -16,9 +16,9 @@ class UseDedicatedMediaQueryMethodsTest extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = UseDedicatedMediaQueryMethods();
-    super.setUp();
-
     addMocks([.flutter]);
+
+    super.setUp();
   }
 
   Future<void> test_media_query_of_context() async {

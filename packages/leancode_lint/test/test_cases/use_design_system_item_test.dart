@@ -26,9 +26,9 @@ class UseDesignSystemItemTextTest extends AnalysisRuleTest {
         },
       ),
     ).single;
-    super.setUp();
-
     addMocks([.flutter]);
+
+    super.setUp();
   }
 
   Future<void> test_text_variable_declaration_flagged() async {
@@ -86,9 +86,9 @@ class UseDesignSystemItemScaffoldTest extends AnalysisRuleTest {
         },
       ),
     ).single;
-    super.setUp();
-
     addMocks([.flutter]);
+
+    super.setUp();
   }
 
   Future<void> test_scaffold_flagged() async {

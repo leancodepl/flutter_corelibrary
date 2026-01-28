@@ -16,9 +16,9 @@ class UsePaddingTest extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = UsePadding();
-    super.setUp();
-
     addMocks([.flutter]);
+
+    super.setUp();
   }
 
   Future<void> test_container_with_margin_flagged() async {
