@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:leancode_analytics_base/leancode_analytics_base.dart';
+import 'package:leancode_analytics_posthog/src/posthog_analytics_observer.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 /// PostHog implementation of [LeanAnalytics].
@@ -16,5 +17,7 @@ class PostHogLeanAnalytics implements LeanAnalytics {
   }
 
   @override
-  List<NavigatorObserver> get navigatorObservers => [PosthogObserver()];
+  List<NavigatorObserver> get navigatorObservers => [
+        LeanAnalyticsPostHogObserver(),
+      ];
 }

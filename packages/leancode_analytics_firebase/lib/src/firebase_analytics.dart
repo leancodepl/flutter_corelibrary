@@ -9,6 +9,7 @@ import 'firebase_analytics_observer.dart';
 /// Uses Firebase Analytics to track events and screen views.
 /// Requires Firebase to be initialized before use.
 class FirebaseLeanAnalytics implements LeanAnalytics {
+  /// Instance of [FirebaseAnalytics]
   static final FirebaseAnalytics _instance = FirebaseAnalytics.instance;
 
   @override
