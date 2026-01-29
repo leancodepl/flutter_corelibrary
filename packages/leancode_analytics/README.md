@@ -1,5 +1,14 @@
 # leancode_analytics
 
+## ⚠️ Discontinued
+
+This package is discontinued and will receive no further updates. Use the following packages instead:
+- [`leancode_analytics_base`](https://pub.dev/packages/leancode_analytics_base) - core abstractions
+- [`leancode_analytics_firebase`](https://pub.dev/packages/leancode_analytics_firebase) - Firebase implementation
+- [`leancode_analytics_posthog`](https://pub.dev/packages/leancode_analytics_posthog) - PostHog implementation
+
+---
+
 This is LeanCode package to add base analytics in flutter app. 
 
 ## Features

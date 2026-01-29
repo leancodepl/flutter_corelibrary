@@ -2,7 +2,10 @@
 |-------------------------------------------------------| :--------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 | [`cqrs`][cqrs-link]                                   |         [Documentation][cqrs-documentation]          |                          [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link]                           |                  [![][cqrs-build-badge]][cqrs-build-badge-link]                  |
 | [`enhanced_gradients`][enhanced_gradients-link]       |  [Documentation][enhanced_gradients-documentation]   |     [![enhanced_gradients pub.dev badge][enhanced_gradients-pub-badge]][enhanced_gradients-pub-badge-link]      |    [![][enhanced_gradients-build-badge]][enhanced_gradients-build-badge-link]    |
-| [`leancode_analytics`][leancode_analytics-link]         |  [Documentation][leancode_analytics-documentation]   |     [![leancode_analytics pub.dev badge][leancode_analytics-pub-badge]][leancode_analytics-pub-badge-link]      |    [![][leancode_analytics-build-badge]][leancode_analytics-build-badge-link]    |
+| [~~`leancode_analytics`~~][leancode_analytics-link]         |  [Documentation][leancode_analytics-documentation]   |     [![leancode_analytics pub.dev badge][leancode_analytics-pub-badge]][leancode_analytics-pub-badge-link]      |    [![][leancode_analytics-build-badge]][leancode_analytics-build-badge-link]    |
+| [`leancode_analytics_base`][leancode_analytics_base-link]         |  [Documentation][leancode_analytics_base-documentation]   |     [![leancode_analytics_base pub.dev badge][leancode_analytics_base-pub-badge]][leancode_analytics_base-pub-badge-link]      |    [![][leancode_analytics_base-build-badge]][leancode_analytics_base-build-badge-link]    |
+| [`leancode_analytics_firebase`][leancode_analytics_firebase-link]         |  [Documentation][leancode_analytics_firebase-documentation]   |     [![leancode_analytics_firebase pub.dev badge][leancode_analytics_firebase-pub-badge]][leancode_analytics_firebase-pub-badge-link]      |    [![][leancode_analytics_firebase-build-badge]][leancode_analytics_firebase-build-badge-link]    |
+| [`leancode_analytics_posthog`][leancode_analytics_posthog-link]         |  [Documentation][leancode_analytics_posthog-documentation]   |     [![leancode_analytics_posthog pub.dev badge][leancode_analytics_posthog-pub-badge]][leancode_analytics_posthog-pub-badge-link]      |    [![][leancode_analytics_posthog-build-badge]][leancode_analytics_posthog-build-badge-link]    |
 | [`leancode_debug_page`][leancode_debug_page-link]         |  [Documentation][leancode_debug_page-documentation]   |     [![leancode_debug_page pub.dev badge][leancode_debug_page-pub-badge]][leancode_debug_page-pub-badge-link]      |    [![][leancode_debug_page-build-badge]][leancode_debug_page-build-badge-link]    |
 | [`leancode_flutter_svg_adaptive_loader`][leancode_flutter_svg_adaptive_loader-link]               |    [Documentation][leancode_flutter_svg_adaptive_loader-documentation]     |           [![leancode_flutter_svg_adaptive_loader pub.dev badge][leancode_flutter_svg_adaptive_loader-pub-badge]][leancode_flutter_svg_adaptive_loader-pub-badge-link]            |        [![][leancode_flutter_svg_adaptive_loader-build-badge]][leancode_flutter_svg_adaptive_loader-build-badge-link]        |
 | [`leancode_force_update`][leancode_force_update-link]                                   |         [Documentation][leancode_force_update-documentation]          |                          [![leancode_force_update pub.dev badge][leancode_force_update-pub-badge]][leancode_force_update-pub-badge-link]                           |                  [![][leancode_force_update-build-badge]][leancode_force_update-build-badge-link]                  |
@@ -43,6 +46,27 @@
 [leancode_analytics-pub-badge-link]: https://pub.dev/packages/leancode_analytics
 [leancode_analytics-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_analytics-test.yml?branch=master
 [leancode_analytics-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_analytics-test.yml
+
+[leancode_analytics_base-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics_base
+[leancode_analytics_base-documentation]: https://pub.dev/documentation/leancode_analytics_base/latest/
+[leancode_analytics_base-pub-badge]: https://img.shields.io/pub/v/leancode_analytics_base
+[leancode_analytics_base-pub-badge-link]: https://pub.dev/packages/leancode_analytics_base
+[leancode_analytics_base-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_analytics_base-test.yml?branch=master
+[leancode_analytics_base-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_analytics_base-test.yml
+
+[leancode_analytics_firebase-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics_firebase
+[leancode_analytics_firebase-documentation]: https://pub.dev/documentation/leancode_analytics_firebase/latest/
+[leancode_analytics_firebase-pub-badge]: https://img.shields.io/pub/v/leancode_analytics_firebase
+[leancode_analytics_firebase-pub-badge-link]: https://pub.dev/packages/leancode_analytics_firebase
+[leancode_analytics_firebase-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_analytics_firebase-test.yml?branch=master
+[leancode_analytics_firebase-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_analytics_firebase-test.yml
+
+[leancode_analytics_posthog-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics_posthog
+[leancode_analytics_posthog-documentation]: https://pub.dev/documentation/leancode_analytics_posthog/latest/
+[leancode_analytics_posthog-pub-badge]: https://img.shields.io/pub/v/leancode_analytics_posthog
+[leancode_analytics_posthog-pub-badge-link]: https://pub.dev/packages/leancode_analytics_posthog
+[leancode_analytics_posthog-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_analytics_posthog-test.yml?branch=master
+[leancode_analytics_posthog-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_analytics_posthog-test.yml
 
 [leancode_debug_page-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_debug_page
 [leancode_debug_page-documentation]: https://pub.dev/documentation/leancode_debug_page/latest/
