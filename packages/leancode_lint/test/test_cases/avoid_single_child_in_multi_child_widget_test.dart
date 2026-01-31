@@ -4,7 +4,6 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
 import '../mock_libraries.dart';
-import '../mock_libraries/flutter.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -14,11 +13,10 @@ void main() {
 
 @reflectiveTest
 class AvoidSingleChildInMultiChildWidgetsTest extends AnalysisRuleTest
-    with MockFlutter {
+    with MockFlutter, MockSliverTools {
   @override
   void setUp() {
     rule = AvoidSingleChildInMultiChildWidgets();
-    addMocks([.sliverTools]);
 
     super.setUp();
   }

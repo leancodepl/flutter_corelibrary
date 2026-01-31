@@ -4,7 +4,6 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
 import '../mock_libraries.dart';
-import '../mock_libraries/flutter.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -13,11 +12,11 @@ void main() {
 }
 
 @reflectiveTest
-class HookWidgetDoesNotUseHooksTest extends AnalysisRuleTest with MockFlutter {
+class HookWidgetDoesNotUseHooksTest extends AnalysisRuleTest
+    with MockFlutter, MockFlutterHooks, MockHooksRiverpod {
   @override
   void setUp() {
     rule = HookWidgetDoesNotUseHooks();
-    addMocks([.flutterHooks, .hooksRiverpod]);
 
     super.setUp();
   }

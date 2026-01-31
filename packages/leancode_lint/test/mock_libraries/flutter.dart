@@ -1,6 +1,4 @@
-import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
-
-import '../mock_utils.dart';
+part of '../mock_libraries.dart';
 
 mixin MockFlutter on AnalysisRuleTest {
   @override

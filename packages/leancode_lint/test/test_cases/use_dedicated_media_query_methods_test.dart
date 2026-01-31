@@ -3,7 +3,7 @@ import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
-import '../mock_libraries/flutter.dart';
+import '../mock_libraries.dart';
 
 void main() {
   defineReflectiveSuite(() {
