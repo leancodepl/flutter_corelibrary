@@ -1,74 +1,81 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/diagnostic/diagnostic.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Forces comments/docs to start with a space.
-class StartCommentsWithSpace extends DartLintRule {
-  const StartCommentsWithSpace()
-    : super(
-        code: const LintCode(
-          name: 'start_comments_with_space',
-          problemMessage: 'Start {0} with a space.',
-          errorSeverity: DiagnosticSeverity.WARNING,
-        ),
-      );
+class StartCommentsWithSpace extends AnalysisRule {
+  StartCommentsWithSpace()
+    : super(name: code.lowerCaseName, description: code.problemMessage);
+
+  static const code = LintCode(
+    'start_comments_with_space',
+    'Start {0} with a space.',
+    severity: .WARNING,
+  );
 
   @override
-  List<Fix> getFixes() {
-    return [_AddStartingSpaceToComment()];
-  }
+  LintCode get diagnosticCode => code;
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addRegularComment((token) {
-      if (_commentErrorOffset(token) case final contentStart?) {
-        reporter.atOffset(
-          offset: token.offset + contentStart,
-          length: 0,
-          diagnosticCode: code,
-          arguments: [_CommentType.comment.pluralName],
-        );
-      }
-    });
-
-    context.registry.addComment((node) {
-      for (final token in node.tokens) {
-        if (_commentErrorOffset(token) case final contentStart?) {
-          reporter.atOffset(
-            offset: token.offset + contentStart,
-            length: 0,
-            diagnosticCode: code,
-            arguments: [_CommentType.doc.pluralName],
-          );
-        }
-      }
-    });
+    registry
+      ..addRegularComment(this, (token) => _visitCommentToken(token, .comment))
+      ..addComment(this, _Visitor(this, context));
   }
 
-  int? _commentErrorOffset(Token comment) {
-    final lexeme = comment.lexeme;
-
-    // find index of first char after `/`
-    var contentStart = 0;
-    while (lexeme.length > contentStart && lexeme[contentStart] == '/') {
-      contentStart += 1;
+  void _visitCommentToken(Token token, _CommentType type) {
+    if (_commentErrorOffset(token) case final contentStart?) {
+      reportAtOffset(
+        token.offset + contentStart,
+        0,
+        arguments: [type.pluralName],
+      );
     }
-
-    final needsSpace =
-        lexeme.length != contentStart && lexeme[contentStart] != ' ';
-
-    if (needsSpace) {
-      return contentStart;
-    }
-    return null;
   }
+}
+
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
+
+  final StartCommentsWithSpace rule;
+  final RuleContext context;
+
+  @override
+  void visitComment(Comment node) {
+    for (final token in node.tokens) {
+      rule._visitCommentToken(token, .doc);
+    }
+  }
+}
+
+int? _commentErrorOffset(Token comment) {
+  final lexeme = comment.lexeme;
+
+  // find index of first char after `/`
+  var contentStart = 0;
+  while (lexeme.length > contentStart && lexeme[contentStart] == '/') {
+    contentStart += 1;
+  }
+
+  final needsSpace =
+      lexeme.length != contentStart && lexeme[contentStart] != ' ';
+
+  if (needsSpace) {
+    return contentStart;
+  }
+  return null;
 }
 
 enum _CommentType {
@@ -80,22 +87,24 @@ enum _CommentType {
   final String pluralName;
 }
 
-class _AddStartingSpaceToComment extends DartFix {
+class AddStartingSpaceToComment extends ResolvedCorrectionProducer {
+  AddStartingSpaceToComment({required super.context});
+
   @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    Diagnostic analysisError,
-    List<Diagnostic> others,
-  ) {
-    reporter
-        .createChangeBuilder(
-          message: 'Add leading space to comment',
-          priority: 1,
-        )
-        .addDartFileEdit(
-          (builder) => builder.addSimpleInsertion(analysisError.offset, ' '),
-        );
+  FixKind? get fixKind => const .new(
+    'leancode_lint.fix.addStartingSpaceToComment',
+    DartFixKindPriority.standard,
+    'Add leading space to comment',
+  );
+
+  @override
+  CorrectionApplicability get applicability => .automatically;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    await builder.addDartFileEdit(
+      file,
+      (builder) => builder.addSimpleInsertion(diagnosticOffset!, ' '),
+    );
   }
 }

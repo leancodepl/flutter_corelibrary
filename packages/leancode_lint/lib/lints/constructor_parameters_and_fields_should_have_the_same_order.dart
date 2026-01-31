@@ -1,46 +1,60 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 
 /// Displays warning when constructor's parameters' order vary from class
 /// declared fields order. Works for the both named and unnamed parameters.
 class ConstructorParametersAndFieldsShouldHaveTheSameOrder
-    extends DartLintRule {
-  const ConstructorParametersAndFieldsShouldHaveTheSameOrder()
-    : super(
-        code: const LintCode(
-          name: 'constructor_parameters_and_fields_should_have_the_same_order',
-          problemMessage:
-              'Class parameters and fields should have the same order.',
-          errorSeverity: DiagnosticSeverity.WARNING,
-        ),
-      );
+    extends AnalysisRule {
+  ConstructorParametersAndFieldsShouldHaveTheSameOrder()
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
-  // TODO: disabled until stabilized. Add documentation.
-  @override
-  bool get enabledByDefault => false;
+  static const code = LintCode(
+    'constructor_parameters_and_fields_should_have_the_same_order',
+    'Class parameters and fields should have the same order.',
+    severity: .WARNING,
+  );
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addClassDeclaration((node) {
-      final fields = node.members.whereType<FieldDeclaration>().toList();
+    registry.addClassDeclaration(this, _Visitor(this, context));
+  }
+}
 
-      if (fields.isEmpty) {
-        return;
-      }
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
 
-      final constructors = node.members.whereType<ConstructorDeclaration>();
-      for (final constructor in constructors) {
-        if (!_hasValidOrder(constructor, fields)) {
-          reporter.atNode(constructor, code);
-        }
+  final AnalysisRule rule;
+  final RuleContext context;
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    final members = switch (node.body) {
+      BlockClassBody(:final members) => members,
+      _ => <ClassMember>[],
+    };
+
+    final fields = members.whereType<FieldDeclaration>().toList();
+
+    if (fields.isEmpty) {
+      return;
+    }
+
+    final constructors = members.whereType<ConstructorDeclaration>();
+    for (final constructor in constructors) {
+      if (!_hasValidOrder(constructor, fields)) {
+        rule.reportAtNode(constructor);
       }
-    });
+    }
   }
 
   bool _hasValidOrder(
