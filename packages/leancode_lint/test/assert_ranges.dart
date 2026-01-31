@@ -16,11 +16,10 @@ extension AssertDiagnosticsInRangesX on AnalysisRuleTest {
       rangeShorthand: rangeShorthand,
       zeroWidthMarker: zeroWidthMarker,
     );
-    final expectedDiagnostics = [
+    return assertDiagnostics(code.code, [
       for (final range in code.ranges)
         lint(range.sourceRange.offset, range.sourceRange.length),
       for (final position in code.positions) lint(position.offset, 0),
-    ];
-    return assertDiagnostics(code.code, expectedDiagnostics);
+    ]);
   }
 }
