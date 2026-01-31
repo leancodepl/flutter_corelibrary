@@ -4,6 +4,7 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
 import '../mock_libraries.dart';
+import '../mock_libraries/flutter.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -12,11 +13,11 @@ void main() {
 }
 
 @reflectiveTest
-class AvoidConditionalHooksTest extends AnalysisRuleTest {
+class AvoidConditionalHooksTest extends AnalysisRuleTest with MockFlutter {
   @override
   void setUp() {
     rule = AvoidConditionalHooks();
-    addMocks([.flutter, .flutterHooks, .hooksRiverpod]);
+    addMocks([.flutterHooks, .hooksRiverpod]);
 
     super.setUp();
   }
@@ -161,10 +162,10 @@ class SampleConditionalExpressionHookWidget extends HookWidget {
   const SampleConditionalExpressionHookWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => TextField(
-    controller: Random().nextBool()
-        ? [!useTextEditingController()!]
-        : TextEditingController(),
+  Widget build(BuildContext context) => Text(
+    Random().nextBool()
+        ? [!useMemoized(() => '123')!]
+        : '456',
   );
 }
 ''');
@@ -181,7 +182,7 @@ class SampleConditionalExpressionHookWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) => Random().nextBool()
-      ? TextField(controller: [!useTextEditingController()!])
+      ? Text([!useMemoized(() => '123')!])
       : Container();
 }
 ''');
@@ -199,7 +200,7 @@ class HookConsumerWidgetIsSeenAsAHookWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Random().nextBool()
-      ? TextField(controller: [!useTextEditingController()!])
+      ? Text([!useMemoized(() => '123')!])
       : Container();
 }
 ''');
@@ -214,8 +215,7 @@ class SampleNotConditionalExpressionHookWidget extends HookWidget {
   const SampleNotConditionalExpressionHookWidget({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      TextField(controller: useTextEditingController());
+  Widget build(BuildContext context) => Text(useMemoized(() => '123'));
 }
 ''');
   }
@@ -229,8 +229,8 @@ class SampleSwitchExpressionHookWidget extends HookWidget {
   const SampleSwitchExpressionHookWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => switch (useTextEditingController()) {
-    TextEditingController() => Container(),
+  Widget build(BuildContext context) => switch (useMemoized(() => '123')) {
+    String() => Container(),
   };
 }
 ''');
@@ -270,7 +270,7 @@ class SampleSwitchHookWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return switch (Random().nextInt(10)) {
-      5 => TextField(controller: [!useTextEditingController()!]),
+      5 => Text([!useMemoized(() => '123')!]),
       _ => const SizedBox(),
     };
   }
@@ -344,9 +344,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class ShortCircuits extends HookWidget {
-  const ShortCircuits({super.key, this.notifier});
-
-  final ValueNotifier<int>? notifier;
+  const ShortCircuits({super.key});
 
   @override
   Widget build(BuildContext context) {

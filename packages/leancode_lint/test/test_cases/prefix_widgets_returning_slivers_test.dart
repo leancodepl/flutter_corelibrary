@@ -3,7 +3,7 @@ import 'package:leancode_lint/lints/prefix_widgets_returning_slivers.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
-import '../mock_libraries.dart';
+import '../mock_libraries/flutter.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -12,13 +12,13 @@ void main() {
 }
 
 @reflectiveTest
-class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest {
+class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest
+    with MockFlutter {
   @override
   void setUp() {
     rule = PrefixWidgetsReturningSlivers(
       config: const .new(applicationPrefix: 'Lncd'),
     );
-    addMocks([.flutter]);
 
     super.setUp();
   }

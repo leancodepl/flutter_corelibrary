@@ -3,7 +3,7 @@ import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
-import '../mock_libraries.dart';
+import '../mock_libraries/flutter.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -12,11 +12,11 @@ void main() {
 }
 
 @reflectiveTest
-class UseDedicatedMediaQueryMethodsTest extends AnalysisRuleTest {
+class UseDedicatedMediaQueryMethodsTest extends AnalysisRuleTest
+    with MockFlutter {
   @override
   void setUp() {
     rule = UseDedicatedMediaQueryMethods();
-    addMocks([.flutter]);
 
     super.setUp();
   }

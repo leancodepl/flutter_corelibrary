@@ -3,7 +3,7 @@ import 'package:leancode_lint/lints/use_align.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
-import '../mock_libraries.dart';
+import '../mock_libraries/flutter.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -12,11 +12,10 @@ void main() {
 }
 
 @reflectiveTest
-class UseAlignTest extends AnalysisRuleTest {
+class UseAlignTest extends AnalysisRuleTest with MockFlutter {
   @override
   void setUp() {
     rule = UseAlign();
-    addMocks([.flutter]);
 
     super.setUp();
   }

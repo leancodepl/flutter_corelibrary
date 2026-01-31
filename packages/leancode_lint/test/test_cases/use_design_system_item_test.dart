@@ -3,7 +3,7 @@ import 'package:leancode_lint/lints/use_design_system_item.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
-import '../mock_libraries.dart';
+import '../mock_libraries/flutter.dart';
 
 void main() {
   defineReflectiveSuite(() {
@@ -13,7 +13,7 @@ void main() {
 }
 
 @reflectiveTest
-class UseDesignSystemItemTextTest extends AnalysisRuleTest {
+class UseDesignSystemItemTextTest extends AnalysisRuleTest with MockFlutter {
   @override
   void setUp() {
     rule = UseDesignSystemItem.fromConfig(
@@ -26,7 +26,6 @@ class UseDesignSystemItemTextTest extends AnalysisRuleTest {
         },
       ),
     ).single;
-    addMocks([.flutter]);
 
     super.setUp();
   }
@@ -76,7 +75,8 @@ void test() {
 }
 
 @reflectiveTest
-class UseDesignSystemItemScaffoldTest extends AnalysisRuleTest {
+class UseDesignSystemItemScaffoldTest extends AnalysisRuleTest
+    with MockFlutter {
   @override
   void setUp() {
     rule = UseDesignSystemItem.fromConfig(
@@ -86,7 +86,6 @@ class UseDesignSystemItemScaffoldTest extends AnalysisRuleTest {
         },
       ),
     ).single;
-    addMocks([.flutter]);
 
     super.setUp();
   }
