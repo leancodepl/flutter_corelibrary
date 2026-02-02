@@ -2,6 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:leancode_lint/fixes/rename_catch_parameter.dart';
 
 final class CatchParameterNamesConfig {
   const CatchParameterNamesConfig({
@@ -85,6 +86,9 @@ class CatchParameterNames extends DartLintRule {
       );
     });
   }
+
+  @override
+  List<Fix> getFixes() => [RenameCatchParameter(config)];
 
   void _checkParameter(
     CatchClauseParameter? node,
