@@ -1,28 +1,32 @@
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
 
 /// Displays warning for conditional hooks usage.
-class AvoidConditionalHooks extends DartLintRule {
-  const AvoidConditionalHooks()
-    : super(
-        code: const LintCode(
-          name: 'avoid_conditional_hooks',
-          problemMessage: "Don't use hooks conditionally",
-          errorSeverity: DiagnosticSeverity.WARNING,
-        ),
-      );
+class AvoidConditionalHooks extends AnalysisRule {
+  AvoidConditionalHooks()
+    : super(name: code.lowerCaseName, description: code.problemMessage);
+
+  static const code = LintCode(
+    'avoid_conditional_hooks',
+    "Don't use hooks conditionally",
+    severity: .WARNING,
+  );
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addHookWidgetBody((node, diagnosticNode) {
+    registry.addHookWidgetBody(this, (node, diagnosticNode) {
       // get all hook expressions from build method
       final hookExpressions = switch (node) {
         ExpressionFunctionBody(expression: final AstNode node) ||
@@ -40,12 +44,10 @@ class AvoidConditionalHooks extends DartLintRule {
               (acc, curr) => acc.offset < curr.offset ? acc : curr,
             );
 
-      final hooksCalledConditionally = hookExpressions.where(
-        (e) => _isConditional(firstReturn, e, node),
-      );
-
-      for (final hookExpression in hooksCalledConditionally) {
-        reporter.atNode(hookExpression, code);
+      for (final hookExpression in hookExpressions) {
+        if (_isConditional(firstReturn, hookExpression, node)) {
+          reportAtNode(hookExpression);
+        }
       }
     });
   }
@@ -67,9 +69,7 @@ class AvoidConditionalHooks extends DartLintRule {
         ) when condition != child => true,
         BinaryExpression(
           operator: Token(
-            type: TokenType.QUESTION_QUESTION ||
-                TokenType.AMPERSAND_AMPERSAND ||
-                TokenType.BAR_BAR,
+            type: .QUESTION_QUESTION || .AMPERSAND_AMPERSAND || .BAR_BAR,
           ),
           :final rightOperand,
         )
@@ -77,10 +77,10 @@ class AvoidConditionalHooks extends DartLintRule {
           true,
         AssignmentExpression(
           operator: Token(
-            type: TokenType.QUESTION_QUESTION_EQ ||
-                TokenType.AMPERSAND_EQ ||
-                TokenType.BAR_EQ ||
-                TokenType.CARET_EQ,
+            type: .QUESTION_QUESTION_EQ ||
+                .AMPERSAND_EQ ||
+                .BAR_EQ ||
+                .CARET_EQ,
           ),
           :final rightHandSide,
         )
@@ -98,7 +98,7 @@ class AvoidConditionalHooks extends DartLintRule {
     bool isBefore(Expression firstReturn, InvocationExpression node) {
       return firstReturn.offset < node.offset &&
           // make sure the hook isn't inside of the return
-          !firstReturn.sourceRange.covers(node.sourceRange);
+          !range.node(firstReturn).covers(range.node(node));
     }
 
     return isConditional(node, child: node) ||

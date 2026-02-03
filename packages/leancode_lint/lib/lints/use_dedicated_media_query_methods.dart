@@ -1,157 +1,173 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/diagnostic/diagnostic.dart';
-import 'package:analyzer/error/error.dart' as error;
-import 'package:analyzer/error/listener.dart';
-import 'package:collection/collection.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 
-class UseDedicatedMediaQueryMethods extends DartLintRule {
-  const UseDedicatedMediaQueryMethods()
-    : super(
-        code: const LintCode(
-          name: 'use_dedicated_media_query_methods',
-          errorSeverity: error.DiagnosticSeverity.WARNING,
-          problemMessage:
-              'Avoid using {0} to access only one property of MediaQueryData. '
-              'Using aspects of the `MediaQuery` avoids unnecessary rebuilds.',
-          correctionMessage: 'Use the dedicated `{1}` method instead.',
-        ),
-      );
+const _supportedGetters = {
+  'size',
+  'orientation',
+  'devicePixelRatio',
+  'textScaleFactor',
+  'textScaler',
+  'platformBrightness',
+  'padding',
+  'viewInsets',
+  'systemGestureInsets',
+  'viewPadding',
+  'alwaysUse24HourFormat',
+  'accessibleNavigation',
+  'invertColors',
+  'highContrast',
+  'onOffSwitchLabels',
+  'disableAnimations',
+  'boldText',
+  'navigationMode',
+  'gestureSettings',
+  'displayFeatures',
+  'supportsShowingSystemContextMenu',
+};
 
-  static const _supportedGetters = {
-    'size',
-    'orientation',
-    'devicePixelRatio',
-    'textScaleFactor',
-    'textScaler',
-    'platformBrightness',
-    'padding',
-    'viewInsets',
-    'systemGestureInsets',
-    'viewPadding',
-    'alwaysUse24HourFormat',
-    'accessibleNavigation',
-    'invertColors',
-    'highContrast',
-    'onOffSwitchLabels',
-    'disableAnimations',
-    'boldText',
-    'navigationMode',
-    'gestureSettings',
-    'displayFeatures',
-    'supportsShowingSystemContextMenu',
-  };
+class UseDedicatedMediaQueryMethods extends AnalysisRule {
+  UseDedicatedMediaQueryMethods()
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
-  @override
-  List<Fix> getFixes() => [_ReplaceMediaQueryOfWithDedicatedMethodFix()];
+  static const code = LintCode(
+    'use_dedicated_media_query_methods',
+    'Avoid using {0} to access only one property of MediaQueryData. '
+        'Using aspects of the `MediaQuery` avoids unnecessary rebuilds.',
+    correctionMessage: 'Use the dedicated `{1}` method instead.',
+    severity: .WARNING,
+  );
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addMethodInvocation((node) {
-      if (_isValidMediaQueryUsage(node)) {
-        return;
-      }
-
-      final replacementSuggestion = _getReplacementSuggestion(node);
-      final parent = node.parent;
-
-      if (replacementSuggestion == null || parent == null) {
-        return;
-      }
-
-      reporter.atNode(
-        parent,
-        code,
-        arguments: [node.toSource(), replacementSuggestion],
-        data: replacementSuggestion,
-      );
-    });
+    registry.addMethodInvocation(this, _Visitor(this, context));
   }
+}
 
-  String? _getReplacementSuggestion(MethodInvocation node) {
-    final methodReplacement = _getReplacementMethodName(node);
-    if (methodReplacement == null) {
-      return null;
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
+
+  final AnalysisRule rule;
+  final RuleContext context;
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (_isValidMediaQueryUsage(node)) {
+      return;
     }
 
-    final contextVariableName = _getContextVariableName(node);
-    if (contextVariableName == null) {
-      return null;
+    final replacementSuggestion = _getReplacementSuggestion(node);
+    final parent = node.parent;
+
+    if (replacementSuggestion == null || parent == null) {
+      return;
     }
 
-    final usedMaybe = methodReplacement.startsWith('maybe');
-    final usedGetter = _getUsedGetter(node);
-    final shouldAddQuestionMark =
-        usedMaybe && usedGetter != null && _isGrandParentPropertyAccess(node);
+    rule.reportAtNode(
+      parent,
+      arguments: [node.toSource(), replacementSuggestion],
+    );
+  }
+}
 
-    return 'MediaQuery.$methodReplacement($contextVariableName)${shouldAddQuestionMark ? '?' : ''}';
+String? _getReplacementSuggestion(MethodInvocation node) {
+  final methodReplacement = _getReplacementMethodName(node);
+  if (methodReplacement == null) {
+    return null;
   }
 
-  bool _isGrandParentPropertyAccess(MethodInvocation node) =>
-      node.parent?.parent is PropertyAccess;
-
-  String? _getContextVariableName(MethodInvocation node) =>
-      node.argumentList.arguments.firstOrNull?.toString();
-
-  String? _getReplacementMethodName(MethodInvocation node) {
-    final usedGetter = _getUsedGetter(node);
-
-    if (usedGetter == null || !_supportedGetters.contains(usedGetter)) {
-      return null;
-    }
-
-    return switch (node.methodName.name) {
-      'of' => '${usedGetter}Of',
-      'maybeOf' =>
-        'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1)}Of',
-      _ => null,
-    };
+  final contextVariableName = _getContextVariableName(node);
+  if (contextVariableName == null) {
+    return null;
   }
 
-  bool _isValidMediaQueryUsage(MethodInvocation node) => switch (node) {
-    MethodInvocation(
-      target: SimpleIdentifier(name: 'MediaQuery'),
-      methodName: SimpleIdentifier(name: 'of' || 'maybeOf'),
-    ) =>
-      false,
-    _ => true,
-  };
+  final usedMaybe = methodReplacement.startsWith('maybe');
+  final usedGetter = _getUsedGetter(node);
+  final shouldAddQuestionMark =
+      usedMaybe && usedGetter != null && _isGrandParentPropertyAccess(node);
 
-  String? _getUsedGetter(MethodInvocation node) => switch (node.parent) {
-    PropertyAccess(
-      target: MethodInvocation(target: SimpleIdentifier(name: 'MediaQuery')),
-      propertyName: SimpleIdentifier(name: final propertyName),
-    ) =>
-      propertyName,
+  return 'MediaQuery.$methodReplacement($contextVariableName)${shouldAddQuestionMark ? '?' : ''}';
+}
+
+bool _isGrandParentPropertyAccess(MethodInvocation node) =>
+    node.parent?.parent is PropertyAccess;
+
+String? _getContextVariableName(MethodInvocation node) =>
+    node.argumentList.arguments.firstOrNull?.toString();
+
+String? _getReplacementMethodName(MethodInvocation node) {
+  final usedGetter = _getUsedGetter(node);
+
+  if (usedGetter == null || !_supportedGetters.contains(usedGetter)) {
+    return null;
+  }
+
+  return switch (node.methodName.name) {
+    'of' => '${usedGetter}Of',
+    'maybeOf' =>
+      'maybe${usedGetter[0].toUpperCase()}${usedGetter.substring(1)}Of',
     _ => null,
   };
 }
 
-class _ReplaceMediaQueryOfWithDedicatedMethodFix extends DartFix {
+bool _isValidMediaQueryUsage(MethodInvocation node) => switch (node) {
+  MethodInvocation(
+    target: SimpleIdentifier(name: 'MediaQuery'),
+    methodName: SimpleIdentifier(name: 'of' || 'maybeOf'),
+  ) =>
+    false,
+  _ => true,
+};
+
+String? _getUsedGetter(MethodInvocation node) => switch (node.parent) {
+  PropertyAccess(
+    target: MethodInvocation(target: SimpleIdentifier(name: 'MediaQuery')),
+    propertyName: SimpleIdentifier(name: final propertyName),
+  ) =>
+    propertyName,
+  _ => null,
+};
+
+class ReplaceMediaQueryOfWithDedicatedMethodFix
+    extends ResolvedCorrectionProducer {
+  ReplaceMediaQueryOfWithDedicatedMethodFix({required super.context});
+
   @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    Diagnostic analysisError,
-    List<Diagnostic> others,
-  ) {
-    if (analysisError.data case final String suggestedReplacement) {
-      reporter
-          .createChangeBuilder(
-            message: 'Replace with `$suggestedReplacement`',
-            priority: 100,
-          )
-          .addDartFileEdit(
-            (builder) => builder.addSimpleReplacement(
-              analysisError.sourceRange,
-              suggestedReplacement,
-            ),
-          );
-    }
+  FixKind? get fixKind => const .new(
+    'leancode_lint.fix.replaceMediaQueryOfWithDedicatedMethod',
+    DartFixKindPriority.standard,
+    'Replace with the dedicated MediaQuery method',
+  );
+
+  @override
+  CorrectionApplicability get applicability => .automatically;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    final suggestedReplacement = _getReplacementSuggestion(
+      node.childEntities.whereType<MethodInvocation>().first,
+    )!;
+
+    await builder.addDartFileEdit(
+      file,
+      (builder) => builder.addSimpleReplacement(
+        range.diagnostic(diagnostic!),
+        suggestedReplacement,
+      ),
+    );
   }
 }

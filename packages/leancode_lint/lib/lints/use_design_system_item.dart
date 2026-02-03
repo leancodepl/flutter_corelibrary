@@ -1,52 +1,35 @@
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/lints/use_instead_type.dart';
-
-final class UseDesignSystemItemConfig {
-  const UseDesignSystemItemConfig(this.replacements);
-
-  factory UseDesignSystemItemConfig.fromConfig(Map<String, Object?> json) {
-    final replacements = json.entries.map(
-      (entry) => MapEntry(entry.key, [
-        for (final forbidden in entry.value! as List)
-          (
-            name: (forbidden as Map)['instead_of'] as String,
-            packageName: forbidden['from_package'] as String,
-          ),
-      ]),
-    );
-
-    return UseDesignSystemItemConfig(Map.fromEntries(replacements));
-  }
-
-  final Map<String, List<ForbiddenItem>> replacements;
-}
+import 'package:leancode_lint/type_checker.dart';
 
 final class UseDesignSystemItem extends UseInsteadType {
-  UseDesignSystemItem({
-    required String preferredItemName,
-    required Iterable<ForbiddenItem> replacements,
+  UseDesignSystemItem._({
+    required this.preferredItem,
+    required this.forbiddenItems,
   }) : super(
-         lintCodeName: '${ruleName}_$preferredItemName',
-         problemMessage: '{0} is forbidden within this design system.',
+         name: 'use_design_system_item_$preferredItem',
+         description: '{0} is forbidden within this design system.',
          correctionMessage:
              'Use the alternative defined in the design system: {1}.',
-         replacements: {preferredItemName: replacements.toList()},
+         severity: .WARNING,
        );
 
-  static const ruleName = 'use_design_system_item';
+  static Iterable<UseDesignSystemItem> fromConfig(LeanCodeLintConfig config) =>
+      config.designSystemItemReplacements.entries.map(
+        (entry) => ._(preferredItem: entry.key, forbiddenItems: entry.value),
+      );
 
-  static Iterable<UseDesignSystemItem> getRulesListFromConfigs(
-    CustomLintConfigs configs,
-  ) {
-    final config = UseDesignSystemItemConfig.fromConfig(
-      configs.rules[ruleName]?.json ?? {},
-    );
+  @override
+  final String preferredItem;
+  final List<DesignSystemForbiddenItem> forbiddenItems;
 
-    return config.replacements.entries.map(
-      (entry) => UseDesignSystemItem(
-        preferredItemName: entry.key,
-        replacements: entry.value,
-      ),
-    );
-  }
+  @override
+  TypeChecker getChecker(RuleContext context) => .any([
+    for (final forbiddenItem in forbiddenItems)
+      if (forbiddenItem.packageName.startsWith('dart:'))
+        .fromUrl('${forbiddenItem.packageName}#${forbiddenItem.name}')
+      else
+        .fromName(forbiddenItem.name, packageName: forbiddenItem.packageName),
+  ]);
 }

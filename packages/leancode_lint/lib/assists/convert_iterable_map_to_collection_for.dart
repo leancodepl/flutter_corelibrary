@@ -1,7 +1,11 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/source/source_range.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer_plugin/utilities/assist/assist.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/helpers.dart';
+import 'package:leancode_lint/type_checker.dart';
 
 /// Converts an iterable call to [Iterable.map] with an optional
 /// collect [Iterable.toList]/[Iterable.toSet] to a collection-for idiom.
@@ -21,32 +25,34 @@ import 'package:leancode_lint/helpers.dart';
 /// final someList = [for(final e in iterable) e * 2];
 /// final someSet = {for(final e in iterable) e / 2};
 /// ```
-class ConvertIterableMapToCollectionFor extends DartAssist {
-  @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    SourceRange target,
-  ) {
-    context.registry.addMethodInvocation((node) {
-      if (!target.intersects(node.sourceRange)) {
-        return;
-      }
+class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
+  ConvertIterableMapToCollectionFor({required super.context});
 
-      _handleIterable(node, reporter);
-    });
+  @override
+  AssistKind? get assistKind => const .new(
+    'leancode_lint.assist.convertIterableMapToCollectionFor',
+    DartFixKindPriority.standard,
+    'Turn into collection-for',
+  );
+
+  @override
+  CorrectionApplicability get applicability => .singleLocation;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    if (node.thisOrAncestorOfType<MethodInvocation>() case final node?) {
+      await _handleIterable(node, builder);
+    }
   }
 
-  void _handleIterable(MethodInvocation node, ChangeReporter reporter) {
+  Future<void> _handleIterable(
+    MethodInvocation node,
+    ChangeBuilder builder,
+  ) async {
     const iterableChecker = TypeChecker.fromUrl('dart:core#Iterable');
 
     if (node case MethodInvocation(
-      target: Expression(
-        staticType: final targetType?,
-        offset: final targetOffset,
-        end: final targetEnd,
-      ),
+      target: Expression(staticType: final targetType?) && final target,
       methodName: SimpleIdentifier(name: 'map'),
       :final parent,
       argumentList: ArgumentList(
@@ -64,26 +70,21 @@ class ConvertIterableMapToCollectionFor extends DartAssist {
       }
 
       final parentCollectKind = _checkCollectKind(parent);
-      final collectKind = parentCollectKind?.$1 ?? _IterableCollect.list;
+      final collectKind = parentCollectKind?.$1 ?? .list;
       final nodeWithCollect = parentCollectKind?.$2 ?? node;
 
-      reporter
-          .createChangeBuilder(message: 'Turn into collection-for', priority: 1)
-          .addDartFileEdit((builder) {
-            builder
-              ..addSimpleReplacement(
-                SourceRange(
-                  nodeWithCollect.offset,
-                  targetOffset - nodeWithCollect.offset,
-                ),
-                '${collectKind.startDelimiter}for(final $parameter in ',
-              )
-              ..addSimpleReplacement(
-                SourceRange(targetEnd, nodeWithCollect.end - targetEnd),
-                ') $expression${collectKind.endDelimiter}',
-              )
-              ..format(nodeWithCollect.sourceRange);
-          });
+      await builder.addDartFileEdit(file, (builder) {
+        builder
+          ..addSimpleReplacement(
+            range.startStart(nodeWithCollect, target),
+            '${collectKind.startDelimiter}for(final $parameter in ',
+          )
+          ..addSimpleReplacement(
+            range.endEnd(target, nodeWithCollect),
+            ') $expression${collectKind.endDelimiter}',
+          )
+          ..format(range.node(nodeWithCollect));
+      });
     }
   }
 

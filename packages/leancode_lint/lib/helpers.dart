@@ -1,9 +1,14 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/diagnostic/diagnostic.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
+import 'package:analyzer_plugin/utilities/range_factory.dart';
+import 'package:leancode_lint/type_checker.dart';
 import 'package:leancode_lint/utils.dart';
 
 String typeParametersString(
@@ -77,8 +82,8 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   }
 
   final isHookBuilder = const TypeChecker.any([
-    TypeChecker.fromName('HookBuilder', packageName: 'flutter_hooks'),
-    TypeChecker.fromName('HookConsumer', packageName: 'hooks_riverpod'),
+    .fromName('HookBuilder', packageName: 'flutter_hooks'),
+    .fromName('HookConsumer', packageName: 'hooks_riverpod'),
   ]).isExactly(classElement);
   if (!isHookBuilder) {
     return null;
@@ -128,96 +133,124 @@ List<Expression?> getAllReturnExpressions(FunctionBody body) {
 bool isWidgetClass(ClassDeclaration node) =>
     switch (node.declaredFragment?.element) {
       final element? => const TypeChecker.any([
-        TypeChecker.fromName('StatelessWidget', packageName: 'flutter'),
-        TypeChecker.fromName('State', packageName: 'flutter'),
-        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
+        .fromName('StatelessWidget', packageName: 'flutter'),
+        .fromName('State', packageName: 'flutter'),
+        .fromName('HookWidget', packageName: 'flutter_hooks'),
       ]).isSuperOf(element),
       _ => false,
     };
 
-MethodDeclaration? getBuildMethod(ClassDeclaration node) => node.members
-    .whereType<MethodDeclaration>()
-    .firstWhereOrNull((member) => member.name.lexeme == 'build');
+MethodDeclaration? getBuildMethod(ClassDeclaration node) => switch (node.body) {
+  BlockClassBody(:final members) =>
+    members.whereType<MethodDeclaration>().firstWhereOrNull(
+      (member) => member.name.lexeme == 'build',
+    ),
+  _ => null,
+};
 
-extension LintRuleNodeRegistryExtensions on LintRuleNodeRegistry {
-  void addRegularComment(void Function(Token comment) listener) {
-    addCompilationUnit((node) {
-      bool isRegularComment(Token commentToken) {
-        final token = commentToken.toString();
-
-        return !token.startsWith('///') && token.startsWith('//');
-      }
-
-      Token? token = node.root.beginToken;
-      while (token != null) {
-        Token? commentToken = token.precedingComments;
-        while (commentToken != null) {
-          if (isRegularComment(commentToken)) {
-            listener(commentToken);
-          }
-          commentToken = commentToken.next;
-        }
-
-        if (token == token.next) {
-          break;
-        }
-
-        token = token.next;
-      }
-    });
+extension NodeLintRegistryExtensions on RuleVisitorRegistry {
+  void addRegularComment(
+    AnalysisRule rule,
+    void Function(Token comment) listener,
+  ) {
+    addCompilationUnit(rule, _RegularCommentVisitor(listener));
   }
 
   void addHookWidgetBody(
+    AnalysisRule rule,
     void Function(FunctionBody node, AstNode diagnosticNode) listener, {
     bool isExactly = false,
   }) {
-    addInstanceCreationExpression((node) {
-      if (maybeHookBuilderBody(node) case final body?) {
-        listener(body, node.constructorName);
+    final visitor = _HookWidgetBodyVisitor(listener, isExactly);
+    addInstanceCreationExpression(rule, visitor);
+    addClassDeclaration(rule, visitor);
+  }
+}
+
+class _RegularCommentVisitor extends SimpleAstVisitor<void> {
+  _RegularCommentVisitor(this.listener);
+
+  final void Function(Token comment) listener;
+
+  @override
+  void visitCompilationUnit(CompilationUnit node) {
+    bool isRegularComment(Token commentToken) {
+      final token = commentToken.toString();
+
+      return !token.startsWith('///') && token.startsWith('//');
+    }
+
+    Token? token = node.root.beginToken;
+    while (token != null) {
+      Token? commentToken = token.precedingComments;
+      while (commentToken != null) {
+        if (isRegularComment(commentToken)) {
+          listener(commentToken);
+        }
+        commentToken = commentToken.next;
       }
-    });
-    addClassDeclaration((node) {
-      final element = node.declaredFragment?.element;
-      if (element == null) {
+
+      if (token == token.next) {
+        break;
+      }
+
+      token = token.next;
+    }
+  }
+}
+
+class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
+  _HookWidgetBodyVisitor(this.listener, this.isExactly);
+
+  final void Function(FunctionBody node, AstNode diagnosticNode) listener;
+  final bool isExactly;
+
+  @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (maybeHookBuilderBody(node) case final body?) {
+      listener(body, node.constructorName);
+    }
+  }
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    final element = node.declaredFragment?.element;
+    if (element == null) {
+      return;
+    }
+
+    const checker = TypeChecker.any([
+      .fromName('HookWidget', packageName: 'flutter_hooks'),
+      .fromName('HookConsumerWidget', packageName: 'hooks_riverpod'),
+    ]);
+
+    final AstNode diagnosticNode;
+    if (isExactly) {
+      final superclass = node.extendsClause?.superclass;
+      final superclassElement = superclass?.element;
+      if (superclass == null || superclassElement == null) {
         return;
       }
 
-      const checker = TypeChecker.any([
-        TypeChecker.fromName('HookWidget', packageName: 'flutter_hooks'),
-        TypeChecker.fromName(
-          'HookConsumerWidget',
-          packageName: 'hooks_riverpod',
-        ),
-      ]);
-
-      final AstNode diagnosticNode;
-      if (isExactly) {
-        final superclass = node.extendsClause?.superclass;
-        final superclassElement = superclass?.element;
-        if (superclass == null || superclassElement == null) {
-          return;
-        }
-
-        final isDirectHookWidget = checker.isExactly(superclassElement);
-        if (!isDirectHookWidget) {
-          return;
-        }
-        diagnosticNode = superclass;
-      } else {
-        final isHookWidget = checker.isSuperOf(element);
-        if (!isHookWidget) {
-          return;
-        }
-        diagnosticNode = node;
-      }
-
-      final buildMethod = getBuildMethod(node);
-      if (buildMethod == null) {
+      final isDirectHookWidget = checker.isExactly(superclassElement);
+      if (!isDirectHookWidget) {
         return;
       }
+      diagnosticNode = superclass;
+    } else {
+      final isHookWidget = checker.isSuperOf(element);
+      if (!isHookWidget) {
+        return;
+      }
+      diagnosticNode = node;
+    }
 
-      listener(buildMethod.body, diagnosticNode);
-    });
+    final buildMethod = getBuildMethod(node);
+    if (buildMethod == null) {
+      return;
+    }
+
+    listener(buildMethod.body, diagnosticNode);
   }
 }
 
@@ -262,7 +295,7 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
         continue;
       } else if (argumentName == parameter &&
           expression is! NullLiteral &&
-          staticType?.nullabilitySuffix != NullabilitySuffix.question) {
+          staticType?.nullabilitySuffix != .question) {
         hasParameter = true;
       } else {
         // Other named arguments are not allowed
@@ -291,24 +324,29 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
 /// ```dart
 /// Align(alignment: null, child: const SizedBox());
 /// ```
-class ChangeWidgetNameFix extends DartFix {
-  ChangeWidgetNameFix(this.widgetName);
+abstract class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
+  ChangeWidgetNameFix({required this.widgetName, required super.context});
 
   final String widgetName;
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    Diagnostic diagnostic,
-    List<Diagnostic> diagnostics,
-  ) {
-    reporter
-        .createChangeBuilder(message: 'Replace with $widgetName', priority: 1)
-        .addDartFileEdit(
-          (builder) =>
-              builder.addSimpleReplacement(diagnostic.sourceRange, widgetName),
-        );
+  FixKind? get fixKind => .new(
+    'leancode_lint.fix.replaceWith$widgetName',
+    DartFixKindPriority.standard,
+    'Replace with $widgetName',
+  );
+
+  @override
+  CorrectionApplicability get applicability => .automatically;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    await builder.addDartFileEdit(
+      file,
+      (builder) => builder.addSimpleReplacement(
+        range.diagnostic(diagnostic!),
+        widgetName,
+      ),
+    );
   }
 }

@@ -1,75 +1,87 @@
+import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
+import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/diagnostic/diagnostic.dart';
-import 'package:analyzer/error/listener.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
+import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:leancode_lint/helpers.dart';
 import 'package:leancode_lint/utils.dart';
 
-class UsePadding extends DartLintRule {
-  const UsePadding()
-    : super(
-        code: const LintCode(
-          name: ruleName,
-          problemMessage:
-              'Use Padding widget instead of the Container widget with only the margin parameter',
-        ),
-      );
+class UsePadding extends AnalysisRule {
+  UsePadding()
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
-  static const ruleName = 'use_padding';
+  static const code = LintCode(
+    'use_padding',
+    'Use Padding widget instead of the Container widget with only the margin parameter.',
+    severity: .WARNING,
+  );
 
   @override
-  List<Fix> getFixes() => [_UsePaddingFix()];
+  LintCode get diagnosticCode => code;
 
   @override
-  void run(
-    CustomLintResolver resolver,
-    DiagnosticReporter reporter,
-    CustomLintContext context,
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addInstanceCreationExpression((node) {
-      if (isExpressionExactlyType(node, 'Container', 'flutter') &&
-          isInstanceCreationExpressionOnlyUsingParameter(
-            node,
-            parameter: 'margin',
-            // Ignores key and child parameters because both Container and Padding have them
-            ignoredParameters: const {'key', 'child'},
-          )) {
-        reporter.atNode(
-          node.constructorName,
-          code,
-          data: _findMarginParameterLabel(node),
-        );
-      }
-    });
+    registry.addInstanceCreationExpression(this, _Visitor(this, context));
   }
-
-  SimpleIdentifier? _findMarginParameterLabel(
-    InstanceCreationExpression node,
-  ) => node.argumentList.arguments
-      .whereType<NamedExpression>()
-      .firstWhereOrNull((e) => e.name.label.name == 'margin')
-      ?.name
-      .label;
 }
 
-class _UsePaddingFix extends DartFix {
+class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
+
+  final AnalysisRule rule;
+  final RuleContext context;
+
   @override
-  void run(
-    CustomLintResolver resolver,
-    ChangeReporter reporter,
-    CustomLintContext context,
-    Diagnostic diagnostic,
-    List<Diagnostic> diagnostics,
-  ) {
-    if (diagnostic.data case final SimpleIdentifier margin?) {
-      reporter
-          .createChangeBuilder(message: 'Replace with Padding', priority: 1)
-          .addDartFileEdit((builder) {
-            builder
-              ..addSimpleReplacement(diagnostic.sourceRange, 'Padding')
-              ..addSimpleReplacement(range.node(margin), 'padding');
-          });
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (isExpressionExactlyType(node, 'Container', 'flutter') &&
+        isInstanceCreationExpressionOnlyUsingParameter(
+          node,
+          parameter: 'margin',
+          // Ignores key and child parameters because both Container and Padding have them
+          ignoredParameters: const {'key', 'child'},
+        )) {
+      rule.reportAtNode(node.constructorName);
     }
+  }
+}
+
+SimpleIdentifier? _findMarginParameterLabel(InstanceCreationExpression node) =>
+    node.argumentList.arguments
+        .whereType<NamedExpression>()
+        .firstWhereOrNull((e) => e.name.label.name == 'margin')
+        ?.name
+        .label;
+
+class UsePaddingFix extends ResolvedCorrectionProducer {
+  UsePaddingFix({required super.context});
+
+  @override
+  FixKind? get fixKind => const .new(
+    'leancode_lint.fix.usePadding',
+    DartFixKindPriority.standard,
+    'Replace with Padding',
+  );
+
+  @override
+  CorrectionApplicability get applicability => .automatically;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    final expr = node.thisOrAncestorOfType<InstanceCreationExpression>()!;
+    final margin = _findMarginParameterLabel(expr)!;
+    await builder.addDartFileEdit(file, (builder) {
+      builder
+        ..addSimpleReplacement(range.diagnostic(diagnostic!), 'Padding')
+        ..addSimpleReplacement(range.node(margin), 'padding');
+    });
   }
 }
