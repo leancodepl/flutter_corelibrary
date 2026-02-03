@@ -5,7 +5,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:leancode_lint/helpers.dart';
+import 'package:leancode_lint/src/helpers.dart';
 
 /// Displays warning for conditional hooks usage.
 class AvoidConditionalHooks extends AnalysisRule {

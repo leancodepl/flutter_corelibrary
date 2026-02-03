@@ -1,7 +1,7 @@
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:leancode_lint/config.dart';
-import 'package:leancode_lint/lints/use_instead_type.dart';
-import 'package:leancode_lint/type_checker.dart';
+import 'package:leancode_lint/src/lints/use_instead_type.dart';
+import 'package:leancode_lint/src/type_checker.dart';
 
 final class UseDesignSystemItem extends UseInsteadType {
   UseDesignSystemItem._({

@@ -4,7 +4,7 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:leancode_lint/type_checker.dart';
+import 'package:leancode_lint/src/type_checker.dart';
 
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
 /// class name.

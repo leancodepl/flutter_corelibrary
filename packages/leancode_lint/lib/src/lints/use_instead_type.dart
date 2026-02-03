@@ -5,7 +5,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:leancode_lint/type_checker.dart';
+import 'package:leancode_lint/src/type_checker.dart';
 
 /// Enforces that items that have a replacement defined are used.
 abstract base class UseInsteadType extends AnalysisRule {

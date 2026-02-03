@@ -1,5 +1,5 @@
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
-import 'package:leancode_lint/lints/start_comments_with_space.dart';
+import 'package:leancode_lint/src/lints/start_comments_with_space.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';

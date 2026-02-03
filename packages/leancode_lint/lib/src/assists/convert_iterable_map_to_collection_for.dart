@@ -4,8 +4,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:leancode_lint/helpers.dart';
-import 'package:leancode_lint/type_checker.dart';
+import 'package:leancode_lint/src/helpers.dart';
+import 'package:leancode_lint/src/type_checker.dart';
 
 /// Converts an iterable call to [Iterable.map] with an optional
 /// collect [Iterable.toList]/[Iterable.toSet] to a collection-for idiom.

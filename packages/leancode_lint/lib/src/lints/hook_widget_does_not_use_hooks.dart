@@ -8,7 +8,7 @@ import 'package:analyzer/error/error.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:leancode_lint/helpers.dart';
+import 'package:leancode_lint/src/helpers.dart';
 
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
 class HookWidgetDoesNotUseHooks extends AnalysisRule {

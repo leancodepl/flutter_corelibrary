@@ -7,7 +7,7 @@ import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:leancode_lint/utils.dart';
+import 'package:leancode_lint/src/utils.dart';
 
 /// Converts required positional parameters to named ones.
 ///

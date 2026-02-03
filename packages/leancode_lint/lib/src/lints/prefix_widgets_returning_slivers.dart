@@ -5,7 +5,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/config.dart';
-import 'package:leancode_lint/helpers.dart';
+import 'package:leancode_lint/src/helpers.dart';
 
 /// Displays warning for widgets which return slivers but do not have the
 /// `Sliver`/`_Sliver` (or `${AppPrefix}Sliver`/`_${AppPrefix}Sliver` if
