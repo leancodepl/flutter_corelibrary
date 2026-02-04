@@ -1,3 +1,12 @@
+# 20.0.0
+
+- **Breaking:** Migrate from custom_lint to the analysis server plugin.
+  See the [README](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint) for instructions on how to use the plugin.
+- **Breaking:** Require `analyzer` ^10.0.0.
+- **Breaking:** Require Dart 3.10.
+- Add configurable names for the `catch_parameter_names` rule. Defaults remain `err` and `st`.
+- Move implementation files into the `src` directory.
+
 # 19.0.1
 
 - fix: Make `prefer_center_over_align` not crash in non-Flutter packages.
