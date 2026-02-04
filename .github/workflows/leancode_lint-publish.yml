@@ -25,7 +25,7 @@ jobs:
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: 3.10
+          sdk: '3.10'
 
       - name: Publish and release
         uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
