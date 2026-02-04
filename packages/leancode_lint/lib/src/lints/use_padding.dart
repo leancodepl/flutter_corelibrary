@@ -9,8 +9,8 @@ import 'package:analyzer/error/error.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:leancode_lint/helpers.dart';
-import 'package:leancode_lint/utils.dart';
+import 'package:leancode_lint/src/helpers.dart';
+import 'package:leancode_lint/src/utils.dart';
 
 class UsePadding extends AnalysisRule {
   UsePadding()

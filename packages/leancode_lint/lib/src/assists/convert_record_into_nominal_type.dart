@@ -5,7 +5,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:leancode_lint/helpers.dart';
+import 'package:leancode_lint/src/helpers.dart';
 
 /// Converts type aliases of records into classes. This preserves
 /// the order and split of positional/named parameters. This results

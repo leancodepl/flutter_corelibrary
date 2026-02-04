@@ -9,7 +9,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
-import 'package:leancode_lint/helpers.dart';
+import 'package:leancode_lint/src/helpers.dart';
 
 /// Forces comments/docs to start with a space.
 class StartCommentsWithSpace extends AnalysisRule {

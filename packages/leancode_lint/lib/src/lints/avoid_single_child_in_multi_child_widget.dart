@@ -4,8 +4,8 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:leancode_lint/type_checker.dart';
-import 'package:leancode_lint/utils.dart';
+import 'package:leancode_lint/src/type_checker.dart';
+import 'package:leancode_lint/src/utils.dart';
 
 /// Enforces that some widgets that accept multiple children do not have a single child.
 class AvoidSingleChildInMultiChildWidgets extends AnalysisRule {

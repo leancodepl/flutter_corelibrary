@@ -1,5 +1,5 @@
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
-import 'package:leancode_lint/lints/use_dedicated_media_query_methods.dart';
+import 'package:leancode_lint/src/lints/use_dedicated_media_query_methods.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../assert_ranges.dart';
