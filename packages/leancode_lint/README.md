@@ -575,15 +575,53 @@ class MyWidget extends StatelessWidget {
 
 None
 
+### `prefer_equatable_mixin`
+
+**DO** mix in `EquatableMixin` instead of extending `Equatable`.
+
+**BAD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar extends Equatable {
+  const Foobar(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar with EquatableMixin {
+  const Foobar(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+```
+
+#### Configuration
+
+None.
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.
 
 See linked source code containing explanation in dart doc.
 
-- [Convert positional to named formal](./lib/assists/convert_positional_to_named_formal.dart)
-- [Convert record into nominal type](./lib/assists/convert_record_into_nominal_type.dart)
-- [Convert iterable map to collection-for](./lib/assists/convert_iterable_map_to_collection_for.dart)
+- [Convert positional to named formal](./lib/src/assists/convert_positional_to_named_formal.dart)
+- [Convert record into nominal type](./lib/src/assists/convert_record_into_nominal_type.dart)
+- [Convert iterable map to collection-for](./lib/src/assists/convert_iterable_map_to_collection_for.dart)
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint
