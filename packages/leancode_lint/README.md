@@ -135,6 +135,37 @@ class MyClassCubit extends Cubit<int> {}
 
 None.
 
+### `bloc_related_class_naming`
+
+**DO** follow the naming convention for Bloc/Cubit related classes.
+
+For `ExampleBloc`:
+- Event class: `ExampleEvent`
+- State class: `ExampleState`
+- Presentation Event class: `ExamplePresentationEvent`
+
+For `ExampleCubit`:
+- State class: `ExampleState`
+- Presentation Event class: `ExampleEvent`
+
+**NOTE**: This lint only checks classes defined in the same library as the Bloc/Cubit.
+
+**BAD:**
+
+```dart
+class MyBloc extends Bloc<WrongEvent, WrongState> {}
+```
+
+**GOOD:**
+
+```dart
+class MyBloc extends Bloc<MyEvent, MyState> {}
+```
+
+#### Configuration
+
+None.
+
 ### `avoid_conditional_hooks`
 
 **AVOID** using hooks conditionally
