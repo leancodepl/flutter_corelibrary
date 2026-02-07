@@ -46,4 +46,27 @@ class MyState3 with EquatableMixin {
 }
 ''');
   }
+
+  Future<void> test_with_other_mixins() async {
+    await assertDiagnosticsInRanges('''
+import 'package:equatable/equatable.dart';
+
+mixin SomethingElse {}
+
+class MyState extends [!Equatable!] with SomethingElse {
+  @override
+  List<Object?> get props => [];
+}
+
+class MyState2 extends MyState with SomethingElse {
+  @override
+  List<Object?> get props => [];
+}
+
+class MyState3 with SomethingElse, EquatableMixin {
+  @override
+  List<Object?> get props => [];
+}
+''');
+  }
 }
