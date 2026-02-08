@@ -1,6 +1,7 @@
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
 
 part 'mock_libraries/bloc.dart';
+part 'mock_libraries/bloc_presentation.dart';
 part 'mock_libraries/flutter.dart';
 part 'mock_libraries/flutter_bloc.dart';
 part 'mock_libraries/flutter_hooks.dart';
