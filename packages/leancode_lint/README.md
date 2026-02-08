@@ -148,7 +148,9 @@ For `ExampleCubit`:
 - State class: `ExampleState`
 - Presentation Event class: `ExampleEvent`
 
-**NOTE**: This lint only checks classes defined in the same library as the Bloc/Cubit.
+> [!NOTE]
+> This lint only checks classes defined in the same library (including parts) as the Bloc/Cubit.
+> Presentation events are only checked if the `bloc_presentation` package is used.
 
 **BAD:**
 
