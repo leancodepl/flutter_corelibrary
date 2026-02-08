@@ -84,4 +84,28 @@ class MyBloc extends Bloc<ExternalWrongEvent, ExternalWrongState> {
 }
 ''');
   }
+
+  Future<void> test_part_file_definition() async {
+    newFile('$testPackageLibPath/part.dart', '''
+part of 'test.dart';
+
+class WrongState {}
+
+class GoodState {}
+''');
+
+    await assertDiagnosticsInRanges('''
+import 'package:bloc/bloc.dart';
+
+part 'part.dart';
+
+class MyCubit extends Cubit</*[0*/WrongState/*0]*/> {
+  MyCubit() : super(WrongState());
+}
+
+class GoodCubit extends Cubit<GoodState> {
+  GoodCubit() : super(GoodState());
+}
+''');
+  }
 }
