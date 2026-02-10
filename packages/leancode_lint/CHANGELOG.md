@@ -1,3 +1,7 @@
+# 20.0.1
+
+- Add the `example/` directory with default and custom configuration examples.
+
 # 20.0.0
 
 - **Breaking:** Migrate from custom_lint to the analysis server plugin.
