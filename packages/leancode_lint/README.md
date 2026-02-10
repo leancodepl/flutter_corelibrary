@@ -50,6 +50,10 @@ analyzer:
     - '**/*.g.dart'
 ```
 
+> [!TIP]
+> See the [example/](./example) directory for complete, runnable examples
+> with both default and custom configuration.
+
 ## Configuration (custom plugin package)
 
 This section is optional. You only need it if you want to customize the
@@ -581,9 +585,9 @@ Assists are IDE refactorings not related to a particular issue. They can be trig
 
 See linked source code containing explanation in dart doc.
 
-- [Convert positional to named formal](./lib/assists/convert_positional_to_named_formal.dart)
-- [Convert record into nominal type](./lib/assists/convert_record_into_nominal_type.dart)
-- [Convert iterable map to collection-for](./lib/assists/convert_iterable_map_to_collection_for.dart)
+- [Convert positional to named formal](./lib/src/assists/convert_positional_to_named_formal.dart)
+- [Convert record into nominal type](./lib/src/assists/convert_record_into_nominal_type.dart)
+- [Convert iterable map to collection-for](./lib/src/assists/convert_iterable_map_to_collection_for.dart)
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint
