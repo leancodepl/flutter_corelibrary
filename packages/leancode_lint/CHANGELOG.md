@@ -1,3 +1,7 @@
+# 20.0.2
+
+- Fix: Support entries with spaces in `use_design_system_item`.
+
 # 20.0.1
 
 - Add the `example/` directory with default and custom configuration examples.

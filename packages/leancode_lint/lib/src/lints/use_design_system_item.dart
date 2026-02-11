@@ -8,7 +8,7 @@ final class UseDesignSystemItem extends UseInsteadType {
     required this.preferredItem,
     required this.forbiddenItems,
   }) : super(
-         name: 'use_design_system_item_$preferredItem',
+         name: 'use_design_system_item_${preferredItem.replaceAll(' ', '_')}',
          description: '{0} is forbidden within this design system.',
          correctionMessage:
              'Use the alternative defined in the design system: {1}.',
