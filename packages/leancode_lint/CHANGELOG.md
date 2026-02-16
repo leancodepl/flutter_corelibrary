@@ -1,3 +1,14 @@
+# 21.0.0
+
+- Support Flutter 3.41 and Dart 3.11
+- Enable the following lints:
+  - [`simplify_variable_pattern`](https://dart.dev/tools/linter-rules/simplify_variable_pattern)
+  - [`no_literal_bool_comparisons`](https://dart.dev/tools/linter-rules/no_literal_bool_comparisons)
+- Remove deprecated lints:
+  - [`avoid_null_checks_in_equality_operators`](https://dart.dev/tools/linter-rules/avoid_null_checks_in_equality_operators)
+  - [`prefer_final_parameters`](https://dart.dev/tools/linter-rules/prefer_final_parameters)
+  - [`use_if_null_to_convert_nulls_to_bools`](https://dart.dev/tools/linter-rules/use_if_null_to_convert_nulls_to_bools)
+
 # 20.0.2
 
 - Fix: Support entries with spaces in `use_design_system_item`.

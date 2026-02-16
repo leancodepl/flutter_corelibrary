@@ -1,5 +1,5 @@
 name: leancode_lint
-version: 20.0.2
+version: 21.0.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: Robust and high-quality lint rules used at LeanCode.
@@ -12,7 +12,7 @@ topics:
   - lints
 
 environment:
-  sdk: '>=3.10.0 <4.0.0'
+  sdk: '>=3.11.0 <4.0.0'
 
 dependencies:
   analysis_server_plugin: ^0.3.8

@@ -21,7 +21,6 @@ analyzer:
     avoid_implementing_value_types: warning
     avoid_init_to_null: warning
     avoid_js_rounded_ints: warning
-    avoid_null_checks_in_equality_operators: warning
     avoid_print: warning
     avoid_redundant_argument_values: warning
     avoid_relative_lib_imports: warning
@@ -80,6 +79,7 @@ analyzer:
     no_duplicate_case_values: warning
     no_leading_underscores_for_library_prefixes: warning
     no_leading_underscores_for_local_identifiers: warning
+    no_literal_bool_comparisons: warning
     no_logic_in_create_state: warning
     no_runtimeType_toString: warning
     no_self_assignments: warning
@@ -130,6 +130,7 @@ analyzer:
     provide_deprecation_message: warning
     recursive_getters: warning
     secure_pubspec_urls: warning
+    simplify_variable_pattern: warning
     sized_box_for_whitespace: warning
     sized_box_shrink_expand: warning
     slash_for_doc_comments: warning
@@ -181,7 +182,6 @@ analyzer:
     use_enums: warning
     use_full_hex_values_for_flutter_colors: warning
     use_function_type_syntax_for_parameters: warning
-    use_if_null_to_convert_nulls_to_bools: warning
     use_is_even_rather_than_modulo: warning
     use_key_in_widget_constructors: warning
     use_named_constants: warning
@@ -239,7 +239,6 @@ linter:
     avoid_init_to_null: true
     avoid_js_rounded_ints: true
     avoid_multiple_declarations_per_line: false
-    avoid_null_checks_in_equality_operators: true
     avoid_positional_boolean_parameters: false
     avoid_print: true
     avoid_private_typedef_functions: false
@@ -312,7 +311,7 @@ linter:
     no_duplicate_case_values: true
     no_leading_underscores_for_library_prefixes: true
     no_leading_underscores_for_local_identifiers: true
-    no_literal_bool_comparisons: false
+    no_literal_bool_comparisons: true
     no_logic_in_create_state: true
     no_runtimeType_toString: true
     no_self_assignments: true
@@ -345,7 +344,6 @@ linter:
     prefer_final_fields: true
     prefer_final_in_for_each: true
     prefer_final_locals: true
-    prefer_final_parameters: false
     prefer_for_elements_to_map_fromIterable: true
     prefer_foreach: true
     prefer_function_declarations_over_variables: true
@@ -373,6 +371,7 @@ linter:
     recursive_getters: true
     require_trailing_commas: false
     secure_pubspec_urls: true
+    simplify_variable_pattern: true
     sized_box_for_whitespace: true
     sized_box_shrink_expand: true
     slash_for_doc_comments: true
@@ -428,7 +427,6 @@ linter:
     use_enums: true
     use_full_hex_values_for_flutter_colors: true
     use_function_type_syntax_for_parameters: true
-    use_if_null_to_convert_nulls_to_bools: true
     use_is_even_rather_than_modulo: true
     use_key_in_widget_constructors: true
     use_late_for_private_fields_and_variables: false
