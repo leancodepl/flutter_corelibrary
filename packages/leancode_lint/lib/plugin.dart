@@ -10,6 +10,7 @@ import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget
 import 'package:leancode_lint/src/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
+import 'package:leancode_lint/src/lints/prefer_equatable_mixin.dart';
 import 'package:leancode_lint/src/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/src/lints/start_comments_with_space.dart';
 import 'package:leancode_lint/src/lints/use_align.dart';
@@ -64,8 +65,13 @@ final class LeanCodeLintPlugin extends Plugin {
         UseDedicatedMediaQueryMethods.code,
         ReplaceMediaQueryOfWithDedicatedMethodFix.new,
       )
+      ..registerWarningRule(PreferEquatableMixin())
+      ..registerFixForRule(
+        PreferEquatableMixin.code,
+        ConvertToEquatableMixin.new,
+      )
       // TODO: uncomment when `prefer_center_over_align` is migrated
-      // ..registerAssist(PreferCenterOverAlign())
+      // ..registerWarningRule(PreferCenterOverAlign())
       ..registerAssist(ConvertRecordIntoNominalType.new)
       ..registerAssist(ConvertPositionalToNamedFormal.new)
       ..registerAssist(ConvertIterableMapToCollectionFor.new);
