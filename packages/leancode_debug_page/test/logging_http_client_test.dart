@@ -3,6 +3,8 @@
 // clearly show all parameters being tested.
 // ignore_for_file: avoid_redundant_argument_values
 
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:leancode_debug_page/src/core/logging_http_client.dart';
@@ -94,6 +96,43 @@ void main() {
             loggingHttpClient.logStream,
             emits(isEmpty),
           );
+        },
+      );
+
+      test(
+        'properly decodes UTF-8 characters including Polish letters',
+        () async {
+          const polishText = 'Autoryzacja nie została wykonana. Łódź, Gdańsk, Kraków.';
+          final polishBytes = utf8.encode(polishText);
+          final streamWithPolishText = Stream.fromIterable([polishBytes]);
+
+          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
+              .thenAnswer(
+            (invocation) async => StreamedResponse(
+              streamWithPolishText,
+              statusCode,
+              contentLength: polishBytes.length,
+              request: request,
+              headers: headers,
+              isRedirect: isRedirect,
+              persistentConnection: persistentConnection,
+              reasonPhrase: reasonPhrase,
+            ),
+          );
+
+          await loggingHttpClient.send(request);
+
+          // Wait for the response body to be completed
+          await Future.delayed(const Duration(milliseconds: 100));
+
+          expect(loggingHttpClient.logs, hasLength(1));
+          final log = loggingHttpClient.logs.first;
+          final responseBody = await log.responseBodyCompleter.future;
+
+          expect(responseBody, contains('Autoryzacja'));
+          expect(responseBody, contains('Łódź'));
+          expect(responseBody, contains('Gdańsk'));
+          expect(responseBody, contains('Kraków'));
         },
       );
     },
