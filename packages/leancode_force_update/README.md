@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-force-update" align="center">
+  <img alt="leancode_force_update" src="https://github.com/user-attachments/assets/2618e162-d980-4d2f-9258-3e4b38c1c01a" />
+</a>
+
 # leancode_force_update
 
 This is an internal LeanCode package for quickly implementing Force Update. To use it, just wrap your `MaterialApp` in a `ForceUpdateGuard` widget and pass an instance of CQRS.

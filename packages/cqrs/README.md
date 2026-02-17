@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=cqrs" align="center">
+  <img alt="cqrs" src="https://github.com/user-attachments/assets/c2095a43-b276-4f8e-a740-84606b275318" />
+</a>
+
 # cqrs
 
 [![cqrs pub.dev badge][pub-badge]][pub-badge-link]

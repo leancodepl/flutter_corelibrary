@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-analytics-firebase" align="center">
+  <img alt="leancode_analytics_firebase" src="https://github.com/user-attachments/assets/87f93726-fbdc-46b0-beac-e11a42b0b8a7" />
+</a>
+
 # leancode_analytics_firebase
 
 Firebase Analytics implementation for LeanCode analytics.

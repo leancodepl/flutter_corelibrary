@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint" align="center">
+  <img alt="leancode_lint" src="https://github.com/user-attachments/assets/587e70a3-d7bb-44fc-aad6-9744917b91ab" />
+</a>
+
 # leancode_lint
 
 [![leancode_lint pub.dev badge][pub-badge]][pub-badge-link]

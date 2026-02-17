@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=enhanced-gradients" align="center">
+  <img alt="enhanced_gradients" src="https://github.com/user-attachments/assets/66aba78c-d7b6-4803-905c-58ba262bd2ce" />
+</a>
+
 # enhanced_gradients
 
 [![enhanced_gradients pub.dev badge][pub-badge]][pub-badge-link]

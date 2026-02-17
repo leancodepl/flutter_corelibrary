@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-debug-page" align="center">
+  <img alt="leancode_debug_page" src="https://github.com/user-attachments/assets/708277fe-a75e-430f-8c03-4288ffdb1678" />
+</a>
+
 # leancode_debug_page
 
 [![leancode_debug_page pub.dev badge][pub-badge]][pub-badge-link]
