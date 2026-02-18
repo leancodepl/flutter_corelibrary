@@ -1,6 +1,8 @@
-<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=enhanced-gradients" align="center">
-  <img alt="enhanced_gradients" src="https://github.com/user-attachments/assets/66aba78c-d7b6-4803-905c-58ba262bd2ce" />
-</a>
+<div align="center">
+
+[![Banner][banner-img]][leancode-landing]
+
+</div>
 
 # enhanced_gradients
 
@@ -55,11 +57,6 @@ EnhancedSweepGradient(
 There is also a `HctColorTween` that can be used instead of the regular `ColorTween` to interpolate
 colors in the HCT color system in Flutter animations.
 
-[pub-badge]: https://img.shields.io/pub/v/enhanced_gradients
-[pub-badge-link]: https://pub.dev/packages/enhanced_gradients
-[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/enhanced_gradients-test.yml?branch=master
-[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/enhanced_gradients-test.yml
-
 ## Examples
 
 The following examples are screenshots taken in the example app of randomly generated gradients. Note that the HCT gradients might not always look better than the regular ones, as it is all subjective and depends on the desired effect.
@@ -69,3 +66,43 @@ The following examples are screenshots taken in the example app of randomly gene
 ![Second screenshot with gradient comparison](art/example-2.png)
 
 ![Third screenshot with gradient comparison](art/example-3.png)
+
+---
+
+## 🛠️ Maintained by LeanCode
+<div align="center">
+
+  [<img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />][leancode-landing]
+
+</div>
+
+This package is built with 💙 by **[LeanCode][leancode-landing]**.
+We are **top-tier experts** focused on Flutter Enterprise solutions.
+
+### Why LeanCode?
+
+- **Creators of [Patrol][patrol-landing]** – the next-gen testing framework for Flutter.
+
+- **Production-Ready** – We use this package in apps with millions of users.
+- **Full-Cycle Product Development** – We take your product from scratch to long-term maintenance.
+
+<div align="center">
+  <br />
+
+  **Need help with your Flutter project?**
+
+  [**👉 Hire our team**][leancode-estimate]
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  [Check our other packages][leancode-packages]
+
+</div>
+
+[pub-badge]: https://img.shields.io/pub/v/enhanced_gradients
+[pub-badge-link]: https://pub.dev/packages/enhanced_gradients
+[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/enhanced_gradients-test.yml?branch=master
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/enhanced_gradients-test.yml
+[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/enhanced_gradients/art/banner.png
+[leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=enhanced-gradients
+[leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=enhanced-gradients
+[leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads
+[patrol-landing]: https://patrol.leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=enhanced-gradients
