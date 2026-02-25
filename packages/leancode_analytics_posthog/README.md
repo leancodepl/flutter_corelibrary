@@ -1,5 +1,5 @@
 <a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-analytics-posthog" align="center">
-  <img alt="leancode_analytics_posthog" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_analytics_posthog/docs/imgs/banner.png" />
+  <img alt="leancode_analytics_posthog" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_analytics_posthog/doc/imgs/banner.png" />
 </a>
 
 # leancode_analytics_posthog

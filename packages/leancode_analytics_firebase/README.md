@@ -1,5 +1,5 @@
 <a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-analytics-firebase" align="center">
-  <img alt="leancode_analytics_firebase" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_analytics_firebase/docs/imgs/banner.png" />
+  <img alt="leancode_analytics_firebase" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_analytics_firebase/doc/imgs/banner.png" />
 </a>
 
 # leancode_analytics_firebase

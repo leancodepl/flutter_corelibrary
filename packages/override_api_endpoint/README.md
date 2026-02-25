@@ -71,7 +71,7 @@ We are **top-tier experts** focused on Flutter Enterprise solutions.
 [build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/override_api_endpoint-test.yml?branch=master
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/override_api_endpoint-test.yml
 [override_api_endpoint_flutter]: https://pub.dev/packages/override_api_endpoint_flutter
-[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/override_api_endpoint/docs/imgs/banner.png
+[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/override_api_endpoint/doc/imgs/banner.png
 [leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=override-api-endpoint
 [leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=override-api-endpoint
 [leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads

@@ -115,7 +115,7 @@ We are **top-tier experts** focused on Flutter Enterprise solutions.
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/cqrs-test.yml
 [codecov-badge]: https://img.shields.io/codecov/c/gh/leancodepl/flutter_corelibrary?flag=cqrs
 [codecov-badge-link]: https://codecov.io/gh/leancodepl/flutter_corelibrary
-[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/cqrs/docs/imgs/banner.png
+[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/cqrs/doc/imgs/banner.png
 [leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=cqrs
 [leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=cqrs
 [leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads

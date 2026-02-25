@@ -627,7 +627,7 @@ We are **top-tier experts** focused on Flutter Enterprise solutions.
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint
-[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_lint/docs/imgs/banner.png
+[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_lint/doc/imgs/banner.png
 [leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint
 [leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint
 [leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads
