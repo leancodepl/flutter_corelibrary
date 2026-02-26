@@ -18,7 +18,7 @@ class PreferEquatableMixin extends AnalysisRule {
   static const code = LintCode(
     'prefer_equatable_mixin',
     'The class {0} should mix in EquatableMixin instead of extending Equatable.',
-    correctionMessage: 'Replace with a mixin application.',
+    correctionMessage: 'Replace with a mixin.',
     severity: .WARNING,
   );
 
