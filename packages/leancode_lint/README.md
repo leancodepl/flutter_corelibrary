@@ -1,3 +1,9 @@
+<div align="center">
+
+[![Banner][banner-img]][leancode-landing]
+
+</div>
+
 # leancode_lint
 
 [![leancode_lint pub.dev badge][pub-badge]][pub-badge-link]
@@ -49,6 +55,10 @@ analyzer:
   exclude:
     - '**/*.g.dart'
 ```
+
+> [!TIP]
+> See the [example/](./example) directory for complete, runnable examples
+> with both default and custom configuration.
 
 ## Configuration (custom plugin package)
 
@@ -105,15 +115,8 @@ include: package:leancode_lint/analysis_options_package.yaml
 
 ## Custom lint rules
 
-To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
-
-```yaml
-plugins:
-  leancode_lint:
-    version: ^20.0.0
-    diagnostics:
-      prefix_widgets_returning_slivers: false
-```
+<details>
+<summary><code>add_cubit_suffix_for_your_cubits</code></summary>
 
 ### `add_cubit_suffix_for_your_cubits`
 
@@ -135,38 +138,10 @@ class MyClassCubit extends Cubit<int> {}
 
 None.
 
-### `bloc_related_class_naming`
+</details>
 
-**DO** follow the naming convention for Bloc/Cubit related classes.
-
-For `ExampleBloc`:
-- Event class: `ExampleEvent`
-- State class: `ExampleState`
-- Presentation Event class: `ExamplePresentationEvent`
-
-For `ExampleCubit`:
-- State class: `ExampleState`
-- Presentation Event class: `ExampleEvent`
-
-> [!NOTE]
-> This lint only checks classes defined in the same library (including parts) as the Bloc/Cubit.
-> Presentation events are only checked if the `bloc_presentation` package is used.
-
-**BAD:**
-
-```dart
-class MyBloc extends Bloc<WrongEvent, WrongState> {}
-```
-
-**GOOD:**
-
-```dart
-class MyBloc extends Bloc<MyEvent, MyState> {}
-```
-
-#### Configuration
-
-None.
+<details>
+<summary><code>avoid_conditional_hooks</code></summary>
 
 ### `avoid_conditional_hooks`
 
@@ -241,6 +216,49 @@ Widget build(BuildContext context) {
 
 None.
 
+</details>
+
+<details>
+<summary>`bloc_related_class_naming`</summary>
+
+### `bloc_related_class_naming`
+
+**DO** follow the naming convention for Bloc/Cubit related classes.
+
+For `ExampleBloc`:
+- Event class: `ExampleEvent`
+- State class: `ExampleState`
+- Presentation Event class: `ExamplePresentationEvent`
+
+For `ExampleCubit`:
+- State class: `ExampleState`
+- Presentation Event class: `ExampleEvent`
+
+> [!NOTE]
+> This lint only checks classes defined in the same library (including parts) as the Bloc/Cubit.
+> Presentation events are only checked if the `bloc_presentation` package is used.
+
+**BAD:**
+
+```dart
+class MyBloc extends Bloc<WrongEvent, WrongState> {}
+```
+
+**GOOD:**
+
+```dart
+class MyBloc extends Bloc<MyEvent, MyState> {}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
+<summary><code>catch_parameter_names</code></summary>
+
 ### `catch_parameter_names`
 
 **DO** name catch clause parameters consistently
@@ -294,6 +312,11 @@ final plugin = LeanCodeLintPlugin(
   ),
 );
 ```
+
+</details>
+
+<details>
+<summary><code>hook_widget_does_not_use_hooks</code></summary>
 
 ### `hook_widget_does_not_use_hooks`
 
@@ -352,6 +375,11 @@ Widget build(BuildContext context) {
 
 None.
 
+</details>
+
+<details>
+<summary><code>prefix_widgets_returning_slivers</code></summary>
+
 ### `prefix_widgets_returning_slivers`
 
 **DO** prefix widget names with 'Sliver' if the widget returns slivers.
@@ -394,6 +422,11 @@ final plugin = LeanCodeLintPlugin(
 );
 ```
 
+</details>
+
+<details>
+<summary><code>start_comments_with_space</code></summary>
+
 ### `start_comments_with_space`
 
 **DO** start comments/docs with an empty space.
@@ -415,6 +448,11 @@ final plugin = LeanCodeLintPlugin(
 #### Configuration
 
 None.
+
+</details>
+
+<details>
+<summary><code>use_design_system_item</code></summary>
 
 ### `use_design_system_item`
 
@@ -446,6 +484,11 @@ final plugin = LeanCodeLintPlugin(
 
 ```
 
+</details>
+
+<details>
+<summary><code>avoid_single_child_in_multi_child_widgets</code></summary>
+
 ### `avoid_single_child_in_multi_child_widgets`
 
 **AVOID** using `Column`, `Row`, `Flex`, `Wrap`, `SliverList`, `MultiSliver`, `SliverChildListDelegate`, `SliverMainAxisGroup`, and `SliverCrossAxisGroup` with a single child.
@@ -474,6 +517,11 @@ Widget build(BuildContext context) {
 
 None.
 
+</details>
+
+<details>
+<summary><code>use_dedicated_media_query_methods</code></summary>
+
 ### `use_dedicated_media_query_methods`
 
 **AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf` to access only one property. Instead, prefer dedicated methods, for example `MediaQuery.paddingOf(context)`.
@@ -501,6 +549,11 @@ Widget build(BuildContext context) {
 #### Configuration
 
 None.
+
+</details>
+
+<details>
+<summary><code>use_align</code></summary>
 
 ### `use_align`
 
@@ -538,6 +591,11 @@ class MyWidget extends StatelessWidget {
 
 None
 
+</details>
+
+<details>
+<summary><code>use_padding</code></summary>
+
 ### `use_padding`
 
 **DO** Use Padding widget instead of the Container widget with only the margin parameter
@@ -574,6 +632,11 @@ class MyWidget extends StatelessWidget {
 
 None
 
+</details>
+
+<details>
+<summary><code>prefer_center_over_align</code></summary>
+
 ### `prefer_center_over_align`
 
 **DO** Use the Center widget instead of the Align widget with the alignment parameter set to Alignment.center
@@ -608,15 +671,107 @@ class MyWidget extends StatelessWidget {
 
 None
 
+</details>
+
+<details>
+<summary><code>prefer_equatable_mixin</code></summary>
+
+### `prefer_equatable_mixin`
+
+**DO** mix in `EquatableMixin` instead of extending `Equatable`.
+
+**BAD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar extends Equatable {
+  const Foobar(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar with EquatableMixin {
+  const Foobar(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+## Disabling custom lint rules
+
+To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^20.0.0
+    diagnostics:
+      prefix_widgets_returning_slivers: false
+```
+
 ## Assists
 
 Assists are IDE refactorings not related to a particular issue. They can be triggered by placing your cursor over a relevant piece of code and opening the code actions dialog. For instance, in VSCode this is done with <kbd>ctrl</kbd>+<kbd>.</kbd> or <kbd>⌘</kbd>+<kbd>.</kbd>.
 
 See linked source code containing explanation in dart doc.
 
-- [Convert positional to named formal](./lib/assists/convert_positional_to_named_formal.dart)
-- [Convert record into nominal type](./lib/assists/convert_record_into_nominal_type.dart)
-- [Convert iterable map to collection-for](./lib/assists/convert_iterable_map_to_collection_for.dart)
+- [Convert positional to named formal](./lib/src/assists/convert_positional_to_named_formal.dart)
+- [Convert record into nominal type](./lib/src/assists/convert_record_into_nominal_type.dart)
+- [Convert iterable map to collection-for](./lib/src/assists/convert_iterable_map_to_collection_for.dart)
+
+---
+
+## 🛠️ Maintained by LeanCode
+<div align="center">
+
+  [<img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />][leancode-landing]
+
+</div>
+
+This package is built with 💙 by **[LeanCode][leancode-landing]**.
+We are **top-tier experts** focused on Flutter Enterprise solutions.
+
+### Why LeanCode?
+
+- **Creators of [Patrol][patrol-landing]** – the next-gen testing framework for Flutter.
+
+- **Production-Ready** – We use this package in apps with millions of users.
+- **Full-Cycle Product Development** – We take your product from scratch to long-term maintenance.
+
+<div align="center">
+  <br />
+
+  **Need help with your Flutter project?**
+
+  [**👉 Hire our team**][leancode-estimate]
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  [Check our other packages][leancode-packages]
+
+</div>
 
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint
+[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_lint/doc/imgs/banner.png
+[leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint
+[leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint
+[leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads
+[patrol-landing]: https://patrol.leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint

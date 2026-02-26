@@ -1,0 +1,5 @@
+include: package:leancode_lint/analysis_options.yaml
+
+plugins:
+  my_lints:
+    path: ../my_lints
