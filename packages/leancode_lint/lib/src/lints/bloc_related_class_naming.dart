@@ -7,6 +7,14 @@ import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/src/bloc_utils.dart';
 import 'package:leancode_lint/src/utils.dart';
 
+/// Enforces consistent naming of state, event, and presentation event classes
+/// related to a BLoC or Cubit.
+///
+/// Given a BLoC or Cubit named `FooBloc` or `FooCubit`, the associated classes
+/// should be named:
+/// - state → `FooState`
+/// - event → `FooEvent`
+/// - presentation event → `FooPresentationEvent` (BLoC) or `FooEvent` (Cubit)
 class BlocRelatedClassNaming extends AnalysisRule {
   BlocRelatedClassNaming()
     : super(name: code.lowerCaseName, description: code.problemMessage);
