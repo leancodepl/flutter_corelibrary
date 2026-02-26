@@ -1,0 +1,20 @@
+name: default_example
+description: Example of using leancode_lint with the default configuration.
+publish_to: none
+
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+
+dependency_overrides:
+  # Flutter pins meta to 1.17.0, but the plugin packages require 1.18.0
+  meta: ^1.18.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_lint:
+    path: ../..

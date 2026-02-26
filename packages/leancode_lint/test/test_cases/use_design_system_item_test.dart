@@ -9,6 +9,7 @@ void main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(UseDesignSystemItemTextTest);
     defineReflectiveTests(UseDesignSystemItemScaffoldTest);
+    defineReflectiveTests(UseDesignSystemItemWithSpacesTest);
   });
 }
 
@@ -100,5 +101,35 @@ void test() {
   );
 }
 ''');
+  }
+}
+
+@reflectiveTest
+class UseDesignSystemItemWithSpacesTest extends AnalysisRuleTest
+    with MockFlutter {
+  @override
+  void setUp() {
+    rule = UseDesignSystemItem.fromConfig(
+      const .new(
+        designSystemItemReplacements: {
+          'This or That': [.new(name: 'Container', packageName: 'flutter')],
+        },
+      ),
+    ).single;
+
+    super.setUp();
+  }
+
+  Future<void> test_rule_with_spaces() async {
+    await assertDiagnostics(
+      '''
+import 'package:flutter/material.dart';
+
+void test() {
+  Container();
+} 
+  ''',
+      [lint(57, 9, name: 'use_design_system_item_this_or_that')],
+    );
   }
 }

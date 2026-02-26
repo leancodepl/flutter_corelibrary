@@ -1,3 +1,9 @@
+<div align="center">
+
+[![Banner][banner-img]][leancode-landing]
+
+</div>
+
 # leancode_lint
 
 [![leancode_lint pub.dev badge][pub-badge]][pub-badge-link]
@@ -49,6 +55,10 @@ analyzer:
   exclude:
     - '**/*.g.dart'
 ```
+
+> [!TIP]
+> See the [example/](./example) directory for complete, runnable examples
+> with both default and custom configuration.
 
 ## Configuration (custom plugin package)
 
@@ -623,5 +633,40 @@ See linked source code containing explanation in dart doc.
 - [Convert record into nominal type](./lib/src/assists/convert_record_into_nominal_type.dart)
 - [Convert iterable map to collection-for](./lib/src/assists/convert_iterable_map_to_collection_for.dart)
 
+---
+
+## 🛠️ Maintained by LeanCode
+<div align="center">
+
+  [<img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />][leancode-landing]
+
+</div>
+
+This package is built with 💙 by **[LeanCode][leancode-landing]**.
+We are **top-tier experts** focused on Flutter Enterprise solutions.
+
+### Why LeanCode?
+
+- **Creators of [Patrol][patrol-landing]** – the next-gen testing framework for Flutter.
+
+- **Production-Ready** – We use this package in apps with millions of users.
+- **Full-Cycle Product Development** – We take your product from scratch to long-term maintenance.
+
+<div align="center">
+  <br />
+
+  **Need help with your Flutter project?**
+
+  [**👉 Hire our team**][leancode-estimate]
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  [Check our other packages][leancode-packages]
+
+</div>
+
 [pub-badge]: https://img.shields.io/pub/v/leancode_lint
 [pub-badge-link]: https://pub.dev/packages/leancode_lint
+[banner-img]: https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_lint/doc/imgs/banner.png
+[leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint
+[leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint
+[leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads
+[patrol-landing]: https://patrol.leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-lint
