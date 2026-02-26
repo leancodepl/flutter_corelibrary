@@ -115,15 +115,8 @@ include: package:leancode_lint/analysis_options_package.yaml
 
 ## Custom lint rules
 
-To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
-
-```yaml
-plugins:
-  leancode_lint:
-    version: ^20.0.0
-    diagnostics:
-      prefix_widgets_returning_slivers: false
-```
+<details>
+<summary><code>add_cubit_suffix_for_your_cubits</code></summary>
 
 ### `add_cubit_suffix_for_your_cubits`
 
@@ -144,6 +137,11 @@ class MyClassCubit extends Cubit<int> {}
 #### Configuration
 
 None.
+
+</details>
+
+<details>
+<summary><code>avoid_conditional_hooks</code></summary>
 
 ### `avoid_conditional_hooks`
 
@@ -218,6 +216,11 @@ Widget build(BuildContext context) {
 
 None.
 
+</details>
+
+<details>
+<summary><code>catch_parameter_names</code></summary>
+
 ### `catch_parameter_names`
 
 **DO** name catch clause parameters consistently
@@ -271,6 +274,11 @@ final plugin = LeanCodeLintPlugin(
   ),
 );
 ```
+
+</details>
+
+<details>
+<summary><code>hook_widget_does_not_use_hooks</code></summary>
 
 ### `hook_widget_does_not_use_hooks`
 
@@ -329,6 +337,11 @@ Widget build(BuildContext context) {
 
 None.
 
+</details>
+
+<details>
+<summary><code>prefix_widgets_returning_slivers</code></summary>
+
 ### `prefix_widgets_returning_slivers`
 
 **DO** prefix widget names with 'Sliver' if the widget returns slivers.
@@ -371,6 +384,11 @@ final plugin = LeanCodeLintPlugin(
 );
 ```
 
+</details>
+
+<details>
+<summary><code>start_comments_with_space</code></summary>
+
 ### `start_comments_with_space`
 
 **DO** start comments/docs with an empty space.
@@ -392,6 +410,11 @@ final plugin = LeanCodeLintPlugin(
 #### Configuration
 
 None.
+
+</details>
+
+<details>
+<summary><code>use_design_system_item</code></summary>
 
 ### `use_design_system_item`
 
@@ -423,6 +446,11 @@ final plugin = LeanCodeLintPlugin(
 
 ```
 
+</details>
+
+<details>
+<summary><code>avoid_single_child_in_multi_child_widgets</code></summary>
+
 ### `avoid_single_child_in_multi_child_widgets`
 
 **AVOID** using `Column`, `Row`, `Flex`, `Wrap`, `SliverList`, `MultiSliver`, `SliverChildListDelegate`, `SliverMainAxisGroup`, and `SliverCrossAxisGroup` with a single child.
@@ -451,6 +479,11 @@ Widget build(BuildContext context) {
 
 None.
 
+</details>
+
+<details>
+<summary><code>use_dedicated_media_query_methods</code></summary>
+
 ### `use_dedicated_media_query_methods`
 
 **AVOID** using `MediaQuery.of` or `MediaQuery.maybeOf` to access only one property. Instead, prefer dedicated methods, for example `MediaQuery.paddingOf(context)`.
@@ -478,6 +511,11 @@ Widget build(BuildContext context) {
 #### Configuration
 
 None.
+
+</details>
+
+<details>
+<summary><code>use_align</code></summary>
 
 ### `use_align`
 
@@ -515,6 +553,11 @@ class MyWidget extends StatelessWidget {
 
 None
 
+</details>
+
+<details>
+<summary><code>use_padding</code></summary>
+
 ### `use_padding`
 
 **DO** Use Padding widget instead of the Container widget with only the margin parameter
@@ -551,6 +594,11 @@ class MyWidget extends StatelessWidget {
 
 None
 
+</details>
+
+<details>
+<summary><code>prefer_center_over_align</code></summary>
+
 ### `prefer_center_over_align`
 
 **DO** Use the Center widget instead of the Align widget with the alignment parameter set to Alignment.center
@@ -584,6 +632,11 @@ class MyWidget extends StatelessWidget {
 #### Configuration
 
 None
+
+</details>
+
+<details>
+<summary><code>prefer_equatable_mixin</code></summary>
 
 ### `prefer_equatable_mixin`
 
@@ -622,6 +675,20 @@ class Foobar with EquatableMixin {
 #### Configuration
 
 None.
+
+</details>
+
+## Disabling custom lint rules
+
+To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^20.0.0
+    diagnostics:
+      prefix_widgets_returning_slivers: false
+```
 
 ## Assists
 
