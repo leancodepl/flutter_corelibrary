@@ -219,7 +219,7 @@ None.
 </details>
 
 <details>
-<summary>`bloc_related_class_naming`</summary>
+<summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
 
@@ -382,6 +382,58 @@ Widget build(BuildContext context) {
     builder: (context) {
       return Placeholder();
     },
+  );
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
+<summary><code>never_discard_build_context</code></summary>
+
+### `never_discard_build_context`
+
+**AVOID** discarding `BuildContext` parameters by naming them `_`.
+
+Discarding a `BuildContext` causes the body to use an ancestor context instead,
+risking incorrect theme lookups, navigation, or inherited widget reads.
+
+**BAD:**
+
+```dart
+Widget myBuilder(BuildContext _) {
+  return const SizedBox();
+}
+```
+
+**BAD:**
+
+```dart
+Widget build(BuildContext context) {
+  return Builder(
+    builder: (_) => const SizedBox(),
+  );
+}
+```
+
+**GOOD:**
+
+```dart
+Widget myBuilder(BuildContext context) {
+  return const SizedBox();
+}
+```
+
+**GOOD:**
+
+```dart
+Widget build(BuildContext context) {
+  return Builder(
+    builder: (context) => const SizedBox(),
   );
 }
 ```

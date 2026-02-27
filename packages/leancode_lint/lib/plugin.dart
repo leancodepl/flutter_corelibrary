@@ -11,6 +11,7 @@ import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
 import 'package:leancode_lint/src/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
+import 'package:leancode_lint/src/lints/never_discard_build_context.dart';
 import 'package:leancode_lint/src/lints/prefer_equatable_mixin.dart';
 import 'package:leancode_lint/src/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/src/lints/start_comments_with_space.dart';
@@ -62,6 +63,11 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerFixForRule(
         HookWidgetDoesNotUseHooks.code,
         ConvertHookWidgetToStatelessWidget.new,
+      )
+      ..registerWarningRule(NeverDiscardBuildContext())
+      ..registerFixForRule(
+        NeverDiscardBuildContext.code,
+        RenameDiscardedBuildContextFix.new,
       )
       // TODO: disabled by default until stabilized. Add documentation.
       ..registerLintRule(ConstructorParametersAndFieldsShouldHaveTheSameOrder())

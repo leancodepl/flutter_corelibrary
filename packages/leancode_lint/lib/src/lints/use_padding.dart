@@ -65,7 +65,7 @@ class UsePaddingFix extends ResolvedCorrectionProducer {
   UsePaddingFix({required super.context});
 
   @override
-  FixKind? get fixKind => const .new(
+  FixKind get fixKind => const .new(
     'leancode_lint.fix.usePadding',
     DartFixKindPriority.standard,
     'Replace with Padding',

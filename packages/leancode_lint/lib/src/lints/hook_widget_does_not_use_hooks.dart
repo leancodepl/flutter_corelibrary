@@ -53,7 +53,7 @@ class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {
   ConvertHookWidgetToStatelessWidget({required super.context});
 
   @override
-  FixKind? get fixKind => const FixKind(
+  FixKind get fixKind => const .new(
     'leancode_lint.fix.convertHookWidgetToStatelessWidget',
     DartFixKindPriority.standard,
     'Convert HookWidget to StatelessWidget',
