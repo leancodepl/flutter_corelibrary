@@ -20,7 +20,7 @@ class CatchParameterNames extends AnalysisRule {
   CatchParameterNames({required this.config})
     : super(name: code.lowerCaseName, description: code.problemMessage);
 
-  final LeanCodeLintConfig config;
+  final CatchParameterNamesConfig config;
 
   static const code = LintCode(
     'catch_parameter_names',
@@ -46,7 +46,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final AnalysisRule rule;
   final RuleContext context;
-  final LeanCodeLintConfig config;
+  final CatchParameterNamesConfig config;
 
   @override
   void visitCatchClause(CatchClause node) {
@@ -81,8 +81,8 @@ enum _CatchClauseParameter {
   exception,
   stackTrace;
 
-  String preferredName(LeanCodeLintConfig config) => switch (this) {
-    exception => config.catchParameterNames.exception,
-    stackTrace => config.catchParameterNames.stackTrace,
+  String preferredName(CatchParameterNamesConfig config) => switch (this) {
+    exception => config.exception,
+    stackTrace => config.stackTrace,
   };
 }

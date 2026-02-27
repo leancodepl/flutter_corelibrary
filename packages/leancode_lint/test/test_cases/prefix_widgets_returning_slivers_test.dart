@@ -16,9 +16,7 @@ class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest
     with MockFlutter {
   @override
   void setUp() {
-    rule = PrefixWidgetsReturningSlivers(
-      config: const .new(applicationPrefix: 'Lncd'),
-    );
+    rule = PrefixWidgetsReturningSlivers(applicationPrefix: 'Lncd');
 
     super.setUp();
   }

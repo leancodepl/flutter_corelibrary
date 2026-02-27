@@ -22,7 +22,7 @@ class BlocRelatedClassNaming extends AnalysisRule {
   BlocRelatedClassNaming({this.config = const .new()})
     : super(name: code.lowerCaseName, description: code.problemMessage);
 
-  final LeanCodeLintConfig config;
+  final BlocRelatedClassNamingConfig config;
 
   static const code = LintCode(
     'bloc_related_class_naming',
@@ -47,7 +47,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final AnalysisRule rule;
   final RuleContext context;
-  final LeanCodeLintConfig config;
+  final BlocRelatedClassNamingConfig config;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -88,18 +88,18 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     if (blocInfo.stateType case final stateType?) {
-      checkName(stateType, 'state', config.blocRelatedClassNaming.stateSuffix);
+      checkName(stateType, 'state', config.stateSuffix);
     }
 
     if (blocInfo.eventType case final eventType?) {
-      checkName(eventType, 'event', config.blocRelatedClassNaming.eventSuffix);
+      checkName(eventType, 'event', config.eventSuffix);
     }
 
     if (blocInfo.presentationEventType case final presentationEventType?) {
       checkName(
         presentationEventType,
         'presentation event',
-        config.blocRelatedClassNaming.presentationEventSuffix,
+        config.presentationEventSuffix,
       );
     }
   }

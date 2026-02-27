@@ -118,12 +118,10 @@ class BlocRelatedClassNamingCustomSuffixesTest extends AnalysisRuleTest
   @override
   void setUp() {
     rule = BlocRelatedClassNaming(
-      config: const LeanCodeLintConfig(
-        blocRelatedClassNaming: BlocRelatedClassNamingConfig(
-          stateSuffix: 'Foobar',
-          eventSuffix: 'Cmd',
-          presentationEventSuffix: 'Output',
-        ),
+      config: const BlocRelatedClassNamingConfig(
+        stateSuffix: 'Foobar',
+        eventSuffix: 'Cmd',
+        presentationEventSuffix: 'Output',
       ),
     );
     super.setUp();

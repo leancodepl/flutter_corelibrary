@@ -41,14 +41,22 @@ final class LeanCodeLintPlugin extends Plugin {
     ).forEach(registry.registerWarningRule);
     registry
       ..registerWarningRule(StartCommentsWithSpace())
-      ..registerWarningRule(PrefixWidgetsReturningSlivers(config: config))
+      ..registerWarningRule(
+        PrefixWidgetsReturningSlivers(
+          applicationPrefix: config.applicationPrefix,
+        ),
+      )
       ..registerFixForRule(
         StartCommentsWithSpace.code,
         AddStartingSpaceToComment.new,
       )
       ..registerWarningRule(AddCubitSuffixForYourCubits())
-      ..registerWarningRule(BlocRelatedClassNaming(config: config))
-      ..registerWarningRule(CatchParameterNames(config: config))
+      ..registerWarningRule(
+        BlocRelatedClassNaming(config: config.blocRelatedClassNaming),
+      )
+      ..registerWarningRule(
+        CatchParameterNames(config: config.catchParameterNames),
+      )
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(HookWidgetDoesNotUseHooks())
       ..registerFixForRule(
