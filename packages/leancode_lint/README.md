@@ -219,6 +219,59 @@ None.
 </details>
 
 <details>
+<summary>`bloc_related_class_naming`</summary>
+
+### `bloc_related_class_naming`
+
+**DO** follow the naming convention for Bloc/Cubit related classes.
+
+For `ExampleBloc`:
+- Event class: `ExampleEvent`
+- State class: `ExampleState`
+- Presentation Event class: `ExamplePresentationEvent`
+
+For `ExampleCubit`:
+- State class: `ExampleState`
+- Presentation Event class: `ExamplePresentationEvent`
+
+> [!NOTE]
+> This lint only checks classes defined in the same library (including parts) as the Bloc/Cubit.
+> Presentation events are only checked if the `bloc_presentation` package is used.
+
+**BAD:**
+
+```dart
+class MyBloc extends Bloc<WrongEvent, WrongState> {}
+```
+
+**GOOD:**
+
+```dart
+class MyBloc extends Bloc<MyEvent, MyState> {}
+```
+
+#### Configuration
+
+Configured via `LeanCodeLintConfig.blocRelatedClassNaming`:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeanCodeLintPlugin(
+  name: 'my_lints',
+  config: LeanCodeLintConfig(
+    blocRelatedClassNaming: BlocRelatedClassNamingConfig(
+      stateSuffix: 'State',
+      eventSuffix: 'Event',
+      presentationEventSuffix: 'PresentationEvent',
+    ),
+  ),
+);
+```
+
+</details>
+
+<details>
 <summary><code>catch_parameter_names</code></summary>
 
 ### `catch_parameter_names`

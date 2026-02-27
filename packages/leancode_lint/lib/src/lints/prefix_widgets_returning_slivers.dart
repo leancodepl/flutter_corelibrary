@@ -4,17 +4,16 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/src/helpers.dart';
 
 /// Displays warning for widgets which return slivers but do not have the
 /// `Sliver`/`_Sliver` (or `${AppPrefix}Sliver`/`_${AppPrefix}Sliver` if
 /// `AppPrefix` is specified in the config) prefix in their name.
 class PrefixWidgetsReturningSlivers extends AnalysisRule {
-  PrefixWidgetsReturningSlivers({required this.config})
+  PrefixWidgetsReturningSlivers({required this.applicationPrefix})
     : super(name: code.lowerCaseName, description: code.problemMessage);
 
-  final LeanCodeLintConfig config;
+  final String? applicationPrefix;
 
   static const code = LintCode(
     'prefix_widgets_returning_slivers',
@@ -31,16 +30,19 @@ class PrefixWidgetsReturningSlivers extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    registry.addClassDeclaration(this, _Visitor(this, context, config));
+    registry.addClassDeclaration(
+      this,
+      _Visitor(this, context, applicationPrefix),
+    );
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context, this.config);
+  _Visitor(this.rule, this.context, this.applicationPrefix);
 
   final AnalysisRule rule;
   final RuleContext context;
-  final LeanCodeLintConfig config;
+  final String? applicationPrefix;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -69,7 +71,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (isSliver) {
       rule.reportAtToken(
         name,
-        arguments: [_getSuggestedClassName(config, name.lexeme)],
+        arguments: [_getSuggestedClassName(applicationPrefix, name.lexeme)],
       );
     }
   }
@@ -77,7 +79,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   late final possiblePrefixes = [
     'Sliver',
     '_Sliver',
-    if (config.applicationPrefix case final applicationPrefix?) ...[
+    if (applicationPrefix != null) ...[
       '${applicationPrefix}Sliver',
       '_${applicationPrefix}Sliver',
     ],
@@ -93,7 +95,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   );
 
   static String _getSuggestedClassName(
-    LeanCodeLintConfig config,
+    String? applicationPrefix,
     String className,
   ) {
     var name = className;
@@ -103,8 +105,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       suggested.write('_');
       name = name.substring(1);
     }
-    if (config.applicationPrefix case final applicationPrefix?
-        when name.startsWith(applicationPrefix)) {
+    if (applicationPrefix != null && name.startsWith(applicationPrefix)) {
       suggested.write(applicationPrefix);
       name = name.substring(applicationPrefix.length);
     }
