@@ -8,6 +8,7 @@ import 'package:leancode_lint/src/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/src/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
+import 'package:leancode_lint/src/lints/bloc_subclasses_naming.dart';
 import 'package:leancode_lint/src/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
@@ -54,6 +55,7 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerWarningRule(
         BlocRelatedClassNaming(config: config.blocRelatedClassNaming),
       )
+      ..registerWarningRule(BlocSubclassesNaming())
       ..registerWarningRule(
         CatchParameterNames(config: config.catchParameterNames),
       )
