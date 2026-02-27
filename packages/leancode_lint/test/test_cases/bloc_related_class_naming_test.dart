@@ -1,4 +1,5 @@
 import 'package:analyzer_testing/analysis_rule/analysis_rule.dart';
+import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
@@ -8,6 +9,7 @@ import '../mock_libraries.dart';
 void main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(BlocRelatedClassNamingTest);
+    defineReflectiveTests(BlocRelatedClassNamingCustomSuffixesTest);
   });
 }
 
@@ -57,10 +59,10 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 
 class GoodState {}
-class GoodEvent {}
+class GoodPresentationEvent {}
 
 class GoodCubit extends Cubit<GoodState>
-    with BlocPresentationMixin<GoodState, GoodEvent> {
+    with BlocPresentationMixin<GoodState, GoodPresentationEvent> {
   GoodCubit() : super(GoodState());
 }
 
@@ -105,6 +107,72 @@ class MyCubit extends Cubit</*[0*/WrongState/*0]*/> {
 
 class GoodCubit extends Cubit<GoodState> {
   GoodCubit() : super(GoodState());
+}
+''');
+  }
+}
+
+@reflectiveTest
+class BlocRelatedClassNamingCustomSuffixesTest extends AnalysisRuleTest
+    with MockBloc, MockBlocPresentation, MockFlutterBloc {
+  @override
+  void setUp() {
+    rule = BlocRelatedClassNaming(
+      config: const LeanCodeLintConfig(
+        blocRelatedClassNaming: BlocRelatedClassNamingConfig(
+          stateSuffix: 'Foobar',
+          eventSuffix: 'Cmd',
+          presentationEventSuffix: 'Output',
+        ),
+      ),
+    );
+    super.setUp();
+  }
+
+  Future<void> test_bloc_custom_suffixes() async {
+    await assertDiagnosticsInRanges('''
+import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
+
+class GoodCmd {}
+class GoodFoobar {}
+class GoodOutput {}
+
+class GoodBloc extends Bloc<GoodCmd, GoodFoobar>
+    with BlocPresentationMixin<GoodFoobar, GoodOutput> {
+  GoodBloc() : super(GoodFoobar());
+}
+
+class /*[0*/WrongCmd/*0]*/ {}
+class /*[1*/WrongFoobar/*1]*/ {}
+class /*[2*/WrongOutput/*2]*/ {}
+
+class MyBloc extends Bloc<WrongCmd, WrongFoobar>
+    with BlocPresentationMixin<WrongFoobar, WrongOutput> {
+  MyBloc() : super(WrongFoobar());
+}
+''');
+  }
+
+  Future<void> test_cubit_custom_suffixes() async {
+    await assertDiagnosticsInRanges('''
+import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
+
+class GoodFoobar {}
+class GoodOutput {}
+
+class GoodCubit extends Cubit<GoodFoobar>
+    with BlocPresentationMixin<GoodFoobar, GoodOutput> {
+  GoodCubit() : super(GoodFoobar());
+}
+
+class /*[0*/WrongFoobar/*0]*/ {}
+class /*[1*/WrongOutput/*1]*/ {}
+
+class MyCubit extends Cubit<WrongFoobar>
+    with BlocPresentationMixin<WrongFoobar, WrongOutput> {
+  MyCubit() : super(WrongFoobar());
 }
 ''');
   }

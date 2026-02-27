@@ -47,7 +47,7 @@ final class LeanCodeLintPlugin extends Plugin {
         AddStartingSpaceToComment.new,
       )
       ..registerWarningRule(AddCubitSuffixForYourCubits())
-      ..registerWarningRule(BlocRelatedClassNaming())
+      ..registerWarningRule(BlocRelatedClassNaming(config: config))
       ..registerWarningRule(CatchParameterNames(config: config))
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(HookWidgetDoesNotUseHooks())

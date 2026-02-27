@@ -232,7 +232,7 @@ For `ExampleBloc`:
 
 For `ExampleCubit`:
 - State class: `ExampleState`
-- Presentation Event class: `ExampleEvent`
+- Presentation Event class: `ExamplePresentationEvent`
 
 > [!NOTE]
 > This lint only checks classes defined in the same library (including parts) as the Bloc/Cubit.
@@ -252,7 +252,22 @@ class MyBloc extends Bloc<MyEvent, MyState> {}
 
 #### Configuration
 
-None.
+Configured via `LeanCodeLintConfig.blocRelatedClassNaming`:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeanCodeLintPlugin(
+  name: 'my_lints',
+  config: LeanCodeLintConfig(
+    blocRelatedClassNaming: BlocRelatedClassNamingConfig(
+      stateSuffix: 'State',
+      eventSuffix: 'Event',
+      presentationEventSuffix: 'PresentationEvent',
+    ),
+  ),
+);
+```
 
 </details>
 

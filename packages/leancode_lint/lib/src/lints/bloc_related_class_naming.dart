@@ -4,6 +4,7 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/src/bloc_utils.dart';
 import 'package:leancode_lint/src/utils.dart';
 
@@ -14,10 +15,14 @@ import 'package:leancode_lint/src/utils.dart';
 /// should be named:
 /// - state → `FooState`
 /// - event → `FooEvent`
-/// - presentation event → `FooPresentationEvent` (BLoC) or `FooEvent` (Cubit)
+/// - presentation event → `FooPresentationEvent`
+///
+/// The suffixes are configurable via [BlocRelatedClassNamingConfig].
 class BlocRelatedClassNaming extends AnalysisRule {
-  BlocRelatedClassNaming()
+  BlocRelatedClassNaming({this.config = const .new()})
     : super(name: code.lowerCaseName, description: code.problemMessage);
+
+  final LeanCodeLintConfig config;
 
   static const code = LintCode(
     'bloc_related_class_naming',
@@ -33,15 +38,16 @@ class BlocRelatedClassNaming extends AnalysisRule {
     RuleVisitorRegistry registry,
     RuleContext context,
   ) {
-    registry.addClassDeclaration(this, _Visitor(this, context));
+    registry.addClassDeclaration(this, _Visitor(this, context, config));
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
+  _Visitor(this.rule, this.context, this.config);
 
   final AnalysisRule rule;
   final RuleContext context;
+  final LeanCodeLintConfig config;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -58,7 +64,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    void checkName(TypeAnnotation type, String classType, String expectedName) {
+    void checkName(TypeAnnotation type, String classType, String suffix) {
+      final expectedName = '$subject$suffix';
+
       if (type case NamedType(
         :final name,
         :final element?,
@@ -80,21 +88,18 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     if (blocInfo.stateType case final stateType?) {
-      checkName(stateType, 'state', '${subject}State');
+      checkName(stateType, 'state', config.blocRelatedClassNaming.stateSuffix);
     }
 
     if (blocInfo.eventType case final eventType?) {
-      checkName(eventType, 'event', '${subject}Event');
+      checkName(eventType, 'event', config.blocRelatedClassNaming.eventSuffix);
     }
 
     if (blocInfo.presentationEventType case final presentationEventType?) {
-      final expectedPresentationEventName = blocInfo.type == .cubit
-          ? '${subject}Event'
-          : '${subject}PresentationEvent';
       checkName(
         presentationEventType,
         'presentation event',
-        expectedPresentationEventName,
+        config.blocRelatedClassNaming.presentationEventSuffix,
       );
     }
   }

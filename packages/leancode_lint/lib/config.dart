@@ -3,6 +3,7 @@ final class LeanCodeLintConfig {
     this.applicationPrefix,
     this.designSystemItemReplacements = const {},
     this.catchParameterNames = const .new(),
+    this.blocRelatedClassNaming = const .new(),
   });
 
   /// Used by some rules (e.g. `prefix_widgets_returning_slivers`) to match
@@ -19,6 +20,30 @@ final class LeanCodeLintConfig {
 
   /// Configuration for the `catch_parameter_names` rule.
   final CatchParameterNamesConfig catchParameterNames;
+
+  /// Configuration for the `bloc_related_class_naming` rule.
+  final BlocRelatedClassNamingConfig blocRelatedClassNaming;
+}
+
+/// Configuration for the `bloc_related_class_naming` rule.
+///
+/// Each suffix is appended to the BLoC/Cubit subject name (the part before
+/// `Bloc` or `Cubit`) to form the expected class name.
+///
+/// For example, for `FooBloc` the default expected names are:
+/// - state → `FooState`
+/// - event → `FooEvent`
+/// - presentation event → `FooPresentationEvent`
+class BlocRelatedClassNamingConfig {
+  const BlocRelatedClassNamingConfig({
+    this.stateSuffix = 'State',
+    this.eventSuffix = 'Event',
+    this.presentationEventSuffix = 'PresentationEvent',
+  });
+
+  final String stateSuffix;
+  final String eventSuffix;
+  final String presentationEventSuffix;
 }
 
 class CatchParameterNamesConfig {
