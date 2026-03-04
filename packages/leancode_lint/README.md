@@ -219,7 +219,7 @@ None.
 </details>
 
 <details>
-<summary>`bloc_related_class_naming`</summary>
+<summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
 
@@ -272,7 +272,7 @@ final plugin = LeanCodeLintPlugin(
 </details>
 
 <details>
-<summary>`bloc_subclasses_naming`</summary>
+<summary><code>bloc_subclasses_naming</code></summary>
 
 ### `bloc_subclasses_naming`
 
