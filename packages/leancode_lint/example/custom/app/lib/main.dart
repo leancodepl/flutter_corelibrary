@@ -1,6 +1,5 @@
+import 'package:custom_example_app/design_system.dart';
 import 'package:flutter/material.dart';
-
-import 'design_system.dart';
 
 void main() {
   runApp(const CustomExampleApp());
