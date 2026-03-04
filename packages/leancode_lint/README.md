@@ -272,6 +272,49 @@ final plugin = LeanCodeLintPlugin(
 </details>
 
 <details>
+<summary>`bloc_subclasses_naming`</summary>
+
+### `bloc_subclasses_naming`
+
+**DO** prefix subclasses of bloc state, event, and presentation event classes with the name of the base class.
+
+**BAD:**
+
+```dart
+class MyState {}
+class Initial extends MyState {}
+class Loaded extends MyState {}
+
+class MyEvent {}
+class Load extends MyEvent {}
+
+class MyCubit extends Cubit<MyState> {}
+```
+
+**GOOD:**
+
+```dart
+class MyState {}
+class MyStateInitial extends MyState {}
+class MyStateLoaded extends MyState {}
+
+class MyEvent {}
+class MyEventLoad extends MyEvent {}
+
+class MyCubit extends Cubit<MyState> {}
+```
+
+> [!NOTE]
+> This lint only triggers when a corresponding Bloc/Cubit exists in the same library.
+> The required prefix is always the exact name of the base class, regardless of how it is named.
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>catch_parameter_names</code></summary>
 
 ### `catch_parameter_names`
