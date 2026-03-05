@@ -1,3 +1,12 @@
+# 22.0.0
+
+- Add new custom lints:
+  - [`prefer_equatable_mixin`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_equatable_mixin)
+  - [`bloc_related_class_naming`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#bloc_related_class_naming)
+  - [`bloc_subclasses_naming`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#bloc_subclasses_naming)
+- Enable the following lints:
+  - [`always_use_package_imports`](https://dart.dev/tools/linter-rules/always_use_package_imports)
+
 # 21.0.0
 
 - Support Flutter 3.41 and Dart 3.11
