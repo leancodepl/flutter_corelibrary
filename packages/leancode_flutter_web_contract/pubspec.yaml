@@ -1,0 +1,21 @@
+name: leancode_flutter_web_contract
+description: Flutter web contract package by LeanCode.
+version: 0.0.1
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_flutter_web_contract
+repository: https://github.com/leancodepl/flutter_corelibrary
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: '>=3.24.0'
+
+dependencies:
+  bloc: ^8.1.4
+  flutter:
+    sdk: flutter
+  pub_semver: ^2.1.4
+  web: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_lint: ^14.0.0
