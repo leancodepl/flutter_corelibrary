@@ -7,6 +7,27 @@ sealed class RawConnectToHostResult<TJSHostMethods extends JSObject> {
 
   /// Tears down the connection and releases resources.
   final JSFunction destroy;
+
+  /// Converts this raw result into a typed [ConnectToHostResult] by applying
+  /// [wrapHost] to the underlying JS host proxy.
+  ConnectToHostResult<THostMethods> toTyped<THostMethods>(
+    THostMethods Function(TJSHostMethods) wrapHost,
+  ) {
+    return switch (this) {
+      RawConnectToHostResultConnected(:final host, :final destroy) =>
+        ConnectToHostResultConnected(
+          wrapHost(host),
+          // ignore: unnecessary_lambdas Tear-offs of external extension interop member 'callAsFunction' are disallowed.
+          () => destroy.callAsFunction(),
+        ),
+      RawConnectToHostResultError(:final error, :final destroy) =>
+        ConnectToHostResultError<THostMethods>(
+          error,
+          // ignore: unnecessary_lambdas Tear-offs of external extension interop member 'callAsFunction' are disallowed.
+          () => destroy.callAsFunction(),
+        ),
+    };
+  }
 }
 
 /// A successful raw connection carrying the JS [host] proxy.
