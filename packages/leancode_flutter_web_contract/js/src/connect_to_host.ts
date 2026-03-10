@@ -1,9 +1,19 @@
-import {
-  WindowMessenger,
-  connect,
-} from "https://unpkg.com/penpal@7/dist/penpal.mjs";
+import { WindowMessenger, connect, Methods } from "penpal";
 
-globalThis.__contract__connectToHost = async (methods, allowedOrigins) => {
+declare global {
+  var __contract__connectToHost: (
+    methods: Methods,
+    allowedOrigins?: string[],
+  ) => Promise<
+    | { status: "connected"; destroy: () => void; host: object }
+    | { status: "error"; destroy: () => void; error: Error }
+  >;
+}
+
+globalThis.__contract__connectToHost = async (
+  methods: Methods,
+  allowedOrigins?: string[],
+) => {
   const parentOrigin =
     document.referrer && document.referrer !== ""
       ? new URL(document.referrer).origin
@@ -23,13 +33,13 @@ globalThis.__contract__connectToHost = async (methods, allowedOrigins) => {
     const proxy = await promise;
 
     return {
-      status: "connected",
+      status: "connected" as const,
       destroy,
       host: proxy,
     };
   } catch (error) {
     return {
-      status: "error",
+      status: "error" as const,
       destroy,
       error: error instanceof Error ? error : new Error(String(error)),
     };

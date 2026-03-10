@@ -19,3 +19,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   leancode_lint: ^14.0.0
+
+flutter:
+  assets:
+    - assets/connect_to_host.js
