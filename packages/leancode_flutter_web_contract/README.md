@@ -34,6 +34,8 @@ The host page must use Penpal's `connectToChild` (or the equivalent `WindowMesse
 https://your-flutter-app.com/?contractVersion=1.0.0
 ```
 
+For the host (parent) side, the [`@leancodepl/iframe-contract`](https://github.com/leancodepl/js_corelibrary/tree/main/packages/iframe-contract) package provides type-safe contracts with React hooks, contract version negotiation, and URL parameter handling out of the box. See the [example](https://github.com/leancodepl/js_corelibrary/tree/main/packages/iframe-contract/example) for a complete host + remote setup.
+
 ## Usage
 
 ### Define the JS interop types
