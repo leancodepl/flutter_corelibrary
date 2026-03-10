@@ -8,6 +8,7 @@
 | [`leancode_analytics_posthog`][leancode_analytics_posthog-link]         |  [Documentation][leancode_analytics_posthog-documentation]   |     [![leancode_analytics_posthog pub.dev badge][leancode_analytics_posthog-pub-badge]][leancode_analytics_posthog-pub-badge-link]      |    [![][leancode_analytics_posthog-build-badge]][leancode_analytics_posthog-build-badge-link]    |
 | [`leancode_debug_page`][leancode_debug_page-link]         |  [Documentation][leancode_debug_page-documentation]   |     [![leancode_debug_page pub.dev badge][leancode_debug_page-pub-badge]][leancode_debug_page-pub-badge-link]      |    [![][leancode_debug_page-build-badge]][leancode_debug_page-build-badge-link]    |
 | [`leancode_flutter_svg_adaptive_loader`][leancode_flutter_svg_adaptive_loader-link]               |    [Documentation][leancode_flutter_svg_adaptive_loader-documentation]     |           [![leancode_flutter_svg_adaptive_loader pub.dev badge][leancode_flutter_svg_adaptive_loader-pub-badge]][leancode_flutter_svg_adaptive_loader-pub-badge-link]            |        [![][leancode_flutter_svg_adaptive_loader-build-badge]][leancode_flutter_svg_adaptive_loader-build-badge-link]        |
+| [`leancode_flutter_web_contract`][leancode_flutter_web_contract-link]               |    [Documentation][leancode_flutter_web_contract-documentation]     |           [![leancode_flutter_web_contract pub.dev badge][leancode_flutter_web_contract-pub-badge]][leancode_flutter_web_contract-pub-badge-link]            |        [![][leancode_flutter_web_contract-build-badge]][leancode_flutter_web_contract-build-badge-link]        |
 | [`leancode_force_update`][leancode_force_update-link]                                   |         [Documentation][leancode_force_update-documentation]          |                          [![leancode_force_update pub.dev badge][leancode_force_update-pub-badge]][leancode_force_update-pub-badge-link]                           |                  [![][leancode_force_update-build-badge]][leancode_force_update-build-badge-link]                  |
 | [`leancode_hooks`][leancode_hooks-link]               |    [Documentation][leancode_hooks-documentation]     |           [![leancode_hooks pub.dev badge][leancode_hooks-pub-badge]][leancode_hooks-pub-badge-link]            |        [![][leancode_hooks-build-badge]][leancode_hooks-build-badge-link]        |
 | [`leancode_lint`][leancode_lint-link]                 |     [Documentation][leancode_lint-documentation]     |             [![leancode_lint pub.dev badge][leancode_lint-pub-badge]][leancode_lint-pub-badge-link]             |         [![][leancode_lint-build-badge]][leancode_lint-build-badge-link]         |
@@ -81,6 +82,13 @@
 [leancode_flutter_svg_adaptive_loader-pub-badge-link]: https://pub.dev/packages/leancode_flutter_svg_adaptive_loader
 [leancode_flutter_svg_adaptive_loader-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_flutter_svg_adaptive_loader-test.yml?branch=master
 [leancode_flutter_svg_adaptive_loader-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_flutter_svg_adaptive_loader-test.yml
+
+[leancode_flutter_web_contract-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_flutter_web_contract
+[leancode_flutter_web_contract-documentation]: https://pub.dev/documentation/leancode_flutter_web_contract/latest/
+[leancode_flutter_web_contract-pub-badge]: https://img.shields.io/pub/v/leancode_flutter_web_contract
+[leancode_flutter_web_contract-pub-badge-link]: https://pub.dev/packages/leancode_flutter_web_contract
+[leancode_flutter_web_contract-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_flutter_web_contract-test.yml?branch=master
+[leancode_flutter_web_contract-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_flutter_web_contract-test.yml
 
 [leancode_force_update-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_force_update
 [leancode_force_update-documentation]: https://pub.dev/documentation/leancode_force_update/latest/

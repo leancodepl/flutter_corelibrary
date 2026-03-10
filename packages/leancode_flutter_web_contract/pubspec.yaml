@@ -16,6 +16,7 @@ dependencies:
   web: ^1.1.0
 
 dev_dependencies:
+  custom_lint: ^0.7.0
   flutter_test:
     sdk: flutter
   leancode_lint: ^14.0.0
