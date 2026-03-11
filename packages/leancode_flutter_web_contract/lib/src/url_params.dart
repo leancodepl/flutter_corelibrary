@@ -2,10 +2,10 @@
 const String contractVersionQueryKey = 'contractVersion';
 
 /// Base class for accessing URL query parameters from [Uri.base].
-class UrlParamsBase {
+abstract class UrlParamsBase {
   /// The contract version extracted from the URL query parameters, if present.
-  String? get contractVersion => params[contractVersionQueryKey];
+  static String? get contractVersion => params[contractVersionQueryKey];
 
   /// All query parameters from the current URL.
-  Map<String, String> get params => Uri.base.queryParameters;
+  static Map<String, String> get params => Uri.base.queryParameters;
 }

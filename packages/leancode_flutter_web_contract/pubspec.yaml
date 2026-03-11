@@ -9,7 +9,8 @@ environment:
   flutter: '>=3.24.0'
 
 dependencies:
-  bloc: ^8.1.4
+  bloc: ^9.0.0
+  equatable: ^2.0.7
   flutter:
     sdk: flutter
   pub_semver: ^2.1.4
@@ -19,7 +20,7 @@ dev_dependencies:
   custom_lint: ^0.7.0
   flutter_test:
     sdk: flutter
-  leancode_lint: ^14.0.0
+  leancode_lint: ^18.0.0
 
 flutter:
   assets:

@@ -33,14 +33,17 @@ RawConnectToHostResult<TJSHostMethods>
   JSConnectToHostResult result,
 ) {
   final status = result.status.toDart;
+
   if (status == 'connected') {
     final host = result.host! as TJSHostMethods;
     final destroy = result.destroy!;
+
     return RawConnectToHostResultConnected<TJSHostMethods>(
       host,
       destroy,
     );
   }
+
   return RawConnectToHostResultError<TJSHostMethods>(
     result.error ?? 'Unknown error',
     result.destroy!,
@@ -53,8 +56,7 @@ RawConnectToHostResultConnected<JSObject>? _cachedConnection;
 /// binding. Must only be called once; subsequent calls throw a [StateError].
 Future<RawConnectToHostResult<TJSHostMethods>>
     connectToHostRaw<TJSHostMethods extends JSObject>(JSObject methods) async {
-  final cached = _cachedConnection;
-  if (cached != null) {
+  if (_cachedConnection != null) {
     throw StateError(
       'connectToHostRaw was called multiple times. '
       'Connect to the host only once (e.g. in main or a single initialization point).',
@@ -71,6 +73,7 @@ Future<RawConnectToHostResult<TJSHostMethods>>
     );
 
     _cachedConnection = connection;
+
     return connection;
   }
   return result;
@@ -78,8 +81,7 @@ Future<RawConnectToHostResult<TJSHostMethods>>
 
 /// Tears down the active host connection, if any.
 void disconnectHost() {
-  final cached = _cachedConnection;
-  if (cached != null) {
+  if (_cachedConnection case final cached?) {
     _cachedConnection = null;
     cached.destroy.callAsFunction();
   }

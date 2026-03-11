@@ -1,5 +1,7 @@
+import 'package:equatable/equatable.dart';
+
 /// Base state for the host connection lifecycle.
-sealed class ConnectToHostState<THostMethods> {
+sealed class ConnectToHostState<THostMethods> extends Equatable {
   const ConnectToHostState();
 }
 
@@ -7,6 +9,9 @@ sealed class ConnectToHostState<THostMethods> {
 class ConnectToHostIdle<THostMethods> extends ConnectToHostState<THostMethods> {
   /// Creates an idle state.
   const ConnectToHostIdle();
+
+  @override
+  List<Object?> get props => [];
 }
 
 /// Successfully connected to the host.
@@ -17,6 +22,9 @@ class ConnectToHostConnected<THostMethods>
 
   /// The host methods available after a successful connection.
   final THostMethods host;
+
+  @override
+  List<Object?> get props => [host];
 }
 
 /// The host and remote contract versions are incompatible.
@@ -30,6 +38,9 @@ class ConnectToHostIncompatible<THostMethods>
 
   /// The version expected by the remote.
   final String remoteVersion;
+
+  @override
+  List<Object?> get props => [hostVersion, remoteVersion];
 }
 
 /// An error occurred while connecting to the host.
@@ -40,4 +51,7 @@ class ConnectToHostError<THostMethods>
 
   /// The error that occurred during the connection attempt.
   final Object error;
+
+  @override
+  List<Object?> get props => [error];
 }

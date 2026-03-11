@@ -7,6 +7,7 @@ A Flutter web package for bidirectional RPC between a Flutter app running in an 
 - Bidirectional method calls between iframe (Flutter) and host page
 - Semver-based contract version negotiation
 - Ready-to-use `ConnectToHostCubit` for managing the connection lifecycle
+- Equatable states for reliable `BlocBuilder` rebuilds
 - Type-safe Dart wrappers over the JS interop layer
 
 ## Setup
@@ -77,12 +78,13 @@ class HostMethods {
   void navigateTo(String route) => _js.navigateTo(route.toJS);
 }
 
+final methods = JSRemoteMethods(
+  // provide the methods the host can call
+);
+
 final cubit = ConnectToHostCubit(
   ConnectToHostCubitOptions(
-    methods: JSRemoteMethods(
-      // provide the methods the host can call
-    ),
-    connect: (methods) async {
+    connect: () async {
       final raw = await connectToHostRaw<JSHostMethods>(methods);
       return raw.toTyped(HostMethods.new);
     },
@@ -144,7 +146,7 @@ The host page passes a `contractVersion` query parameter in the iframe URL. `Con
 | `ConnectToHostCubit` | Cubit managing the full connection lifecycle |
 | `ConnectToHostCubitOptions` | Configuration for `ConnectToHostCubit` |
 | `ConnectToHostState` | Sealed class with `Idle`, `Connected`, `Incompatible`, `Error` states |
-| `UrlParamsBase` | Reads URL query parameters (e.g. `contractVersion`) |
+| `UrlParamsBase` | Abstract class with static accessors for URL query parameters (e.g. `contractVersion`) |
 
 ## Building the JS asset
 

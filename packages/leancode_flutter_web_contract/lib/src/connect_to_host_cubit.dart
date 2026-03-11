@@ -10,19 +10,13 @@ import 'url_params.dart';
 class ConnectToHostCubitOptions<TRemoteMethods, THostMethods> {
   /// Creates options for [ConnectToHostCubit].
   const ConnectToHostCubitOptions({
-    required this.methods,
     required this.connect,
     required this.contractVersion,
     required this.contractVersionRange,
   });
 
-  /// The methods exposed by the remote (Flutter) side to the host.
-  final TRemoteMethods methods;
-
   /// A function that establishes the connection and returns the host methods.
-  final Future<ConnectToHostResult<THostMethods>> Function(
-    TRemoteMethods methods,
-  ) connect;
+  final Future<ConnectToHostResult<THostMethods>> Function() connect;
 
   /// The contract version implemented by remote.
   final String contractVersion;
@@ -51,7 +45,7 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
       return;
     }
 
-    final hostVersion = UrlParamsBase().contractVersion;
+    final hostVersion = UrlParamsBase.contractVersion;
     if (hostVersion == null || hostVersion.isEmpty) {
       return;
     }
@@ -80,7 +74,7 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
     }
 
     try {
-      final result = await _options.connect(_options.methods);
+      final result = await _options.connect();
 
       if (!isClosed) {
         _destroy = result.destroy;
@@ -92,9 +86,9 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
             emit(ConnectToHostError<THostMethods>(error));
         }
       }
-    } catch (e, _) {
+    } catch (err, _) {
       if (!isClosed) {
-        emit(ConnectToHostError<THostMethods>(e));
+        emit(ConnectToHostError<THostMethods>(err));
       }
     }
   }
