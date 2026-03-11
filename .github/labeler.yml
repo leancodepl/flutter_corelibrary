@@ -46,3 +46,7 @@
   - changed-files:
     - any-glob-to-any-file:
       - packages/override_api_endpoint/**
+'p: leancode_flutter_web_contract':
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_flutter_web_contract/**

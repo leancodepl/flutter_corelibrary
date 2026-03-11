@@ -1,0 +1,58 @@
+name: leancode_flutter_web_contract test
+
+on:
+  push:
+    branches: [master]
+    tags-ignore: ['leancode_flutter_web_contract-v*']
+    paths:
+      - 'packages/leancode_flutter_web_contract/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/leancode_flutter_web_contract/**'
+
+jobs:
+  test:
+    name: Flutter ${{ matrix.flutter_version }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        flutter_version: ['3.41']
+
+    defaults:
+      run:
+        working-directory: packages/leancode_flutter_web_contract
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.flutter_version }}
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Download pub dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: |
+          flutter analyze
+          dart run custom_lint
+
+      - name: Dry run pub publish
+        # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
+        run: dart pub publish --dry-run || true
