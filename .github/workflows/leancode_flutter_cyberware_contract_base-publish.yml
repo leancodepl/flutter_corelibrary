@@ -1,8 +1,8 @@
-name: leancode_flutter_web_contract publish
+name: leancode_flutter_cyberware_contract_base publish
 
 on:
   push:
-    tags: ['leancode_flutter_web_contract-v*']
+    tags: ['leancode_flutter_cyberware_contract_base-v*']
 
 jobs:
   publish:
@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: packages/leancode_flutter_web_contract
+        working-directory: packages/leancode_flutter_cyberware_contract_base
 
     steps:
       - name: Checkout
@@ -36,4 +36,4 @@ jobs:
       - name: Publish and release
         uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
         with:
-          path: packages/leancode_flutter_web_contract
+          path: packages/leancode_flutter_cyberware_contract_base

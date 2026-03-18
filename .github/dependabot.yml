@@ -111,7 +111,7 @@ updates:
     versioning-strategy: widen
 
   - package-ecosystem: "pub"
-    directory: "/packages/leancode_flutter_web_contract/"
+    directory: "/packages/leancode_flutter_cyberware_contract_base/"
     groups:
       all_dependencies:
         patterns:

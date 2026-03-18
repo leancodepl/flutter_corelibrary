@@ -1,4 +1,4 @@
-# leancode_flutter_web_contract
+# leancode_flutter_cyberware_contract_base
 
 A Flutter web package for bidirectional RPC between a Flutter app running in an iframe and its parent host page. It uses [Penpal](https://github.com/nicknisi/penpal) under the hood to exchange method calls over `postMessage`, with built-in semver-based contract versioning.
 
@@ -16,7 +16,7 @@ A Flutter web package for bidirectional RPC between a Flutter app running in an 
 
 ```yaml
 dependencies:
-  leancode_flutter_web_contract: ^0.0.1
+  leancode_flutter_cyberware_contract_base: ^0.0.1
 ```
 
 ### 2. Load the JS asset
@@ -24,7 +24,7 @@ dependencies:
 Add the bundled script to your Flutter web app's `web/index.html` **before** the Flutter bootstrap script:
 
 ```html
-<script src="assets/packages/leancode_flutter_web_contract/assets/connect_to_host.js"></script>
+<script src="assets/packages/leancode_flutter_cyberware_contract_base/assets/connect_to_host.js"></script>
 ```
 
 ### 3. Host page setup
@@ -63,7 +63,7 @@ extension type JSRemoteMethods._(JSObject _) implements JSObject {
 The easiest way to manage the connection lifecycle is via `ConnectToHostCubit`:
 
 ```dart
-import 'package:leancode_flutter_web_contract/leancode_flutter_web_contract.dart';
+import 'package:leancode_flutter_cyberware_contract_base/leancode_flutter_cyberware_contract_base.dart';
 
 class HostMethods {
   HostMethods(this._js);
