@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'connect_to_host.dart';
-import 'connect_to_host_state.dart';
 import 'result.dart';
 import 'url_params.dart';
 
@@ -33,14 +33,16 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
   ConnectToHostCubit(
     ConnectToHostCubitOptions<TRemoteMethods, THostMethods> options,
   )   : _options = options,
-        super(ConnectToHostIdle<THostMethods>()) {
-    _connect();
-  }
+        super(ConnectToHostIdle<THostMethods>());
 
   final ConnectToHostCubitOptions<TRemoteMethods, THostMethods> _options;
   void Function()? _destroy;
 
-  Future<void> _connect() async {
+  /// Attempts to connect to the host application.
+  ///
+  /// Does nothing if the app is not running inside an iframe or if the host
+  /// contract version is missing or incompatible.
+  Future<void> connect() async {
     if (!isInIframe()) {
       return;
     }
@@ -98,4 +100,60 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
     _destroy?.call();
     return super.close();
   }
+}
+
+/// Base state for the host connection lifecycle.
+sealed class ConnectToHostState<THostMethods> with EquatableMixin {
+  ConnectToHostState();
+}
+
+/// Initial idle state before any connection attempt.
+class ConnectToHostIdle<THostMethods> extends ConnectToHostState<THostMethods> {
+  /// Creates an idle state.
+  ConnectToHostIdle();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// Successfully connected to the host.
+class ConnectToHostConnected<THostMethods>
+    extends ConnectToHostState<THostMethods> {
+  /// Creates a connected state with the given [host] methods.
+  ConnectToHostConnected(this.host);
+
+  /// The host methods available after a successful connection.
+  final THostMethods host;
+
+  @override
+  List<Object?> get props => [host];
+}
+
+/// The host and remote contract versions are incompatible.
+class ConnectToHostIncompatible<THostMethods>
+    extends ConnectToHostState<THostMethods> {
+  /// Creates an incompatible state with the mismatched versions.
+  ConnectToHostIncompatible(this.hostVersion, this.remoteVersion);
+
+  /// The version reported by the host.
+  final String hostVersion;
+
+  /// The version expected by the remote.
+  final String remoteVersion;
+
+  @override
+  List<Object?> get props => [hostVersion, remoteVersion];
+}
+
+/// An error occurred while connecting to the host.
+class ConnectToHostError<THostMethods>
+    extends ConnectToHostState<THostMethods> {
+  /// Creates an error state with the given [error].
+  ConnectToHostError(this.error);
+
+  /// The error that occurred during the connection attempt.
+  final Object error;
+
+  @override
+  List<Object?> get props => [error];
 }
