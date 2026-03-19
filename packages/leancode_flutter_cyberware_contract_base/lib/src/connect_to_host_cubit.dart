@@ -1,10 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:leancode_flutter_cyberware_contract_base/src/connect_to_host.dart';
+import 'package:leancode_flutter_cyberware_contract_base/src/result.dart';
+import 'package:leancode_flutter_cyberware_contract_base/src/url_params.dart';
 import 'package:pub_semver/pub_semver.dart';
-
-import 'connect_to_host.dart';
-import 'result.dart';
-import 'url_params.dart';
 
 /// Configuration options for [ConnectToHostCubit].
 class ConnectToHostCubitOptions<TRemoteMethods, THostMethods> {
@@ -32,8 +31,8 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
   /// Creates a [ConnectToHostCubit] and immediately attempts to connect.
   ConnectToHostCubit(
     ConnectToHostCubitOptions<TRemoteMethods, THostMethods> options,
-  )   : _options = options,
-        super(ConnectToHostIdle<THostMethods>());
+  ) : _options = options,
+      super(ConnectToHostIdle<THostMethods>());
 
   final ConnectToHostCubitOptions<TRemoteMethods, THostMethods> _options;
   void Function()? _destroy;

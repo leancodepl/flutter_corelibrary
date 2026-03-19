@@ -1,7 +1,7 @@
 import 'dart:js_interop';
-import 'package:web/web.dart' as web;
 
-import 'result.dart';
+import 'package:leancode_flutter_cyberware_contract_base/src/result.dart';
+import 'package:web/web.dart' as web;
 
 /// Whether the current window is running inside an iframe.
 bool isInIframe() => !identical(web.window.parent, web.window);

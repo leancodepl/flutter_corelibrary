@@ -1,8 +1,5 @@
-include: package:leancode_lint/analysis_options.yaml
-
-plugins:
-  leancode_lint: ^22.0.0
+include: package:leancode_lint/analysis_options_package.yaml
 
 analyzer:
-  exclude:
-    - '**/*.g.dart'
+  language:
+    strict-casts: true
