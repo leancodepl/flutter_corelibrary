@@ -8,6 +8,10 @@ environment:
   sdk: '>=3.11.0 <4.0.0'
   flutter: '>=3.41.0'
 
+dependency_overrides:
+  # Flutter pins meta to 1.17.0, but the plugin packages require 1.18.0
+  meta: ^1.18.0
+
 dependencies:
   bloc: ^9.0.0
   equatable: ^2.0.7
@@ -17,10 +21,9 @@ dependencies:
   web: ^1.1.0
 
 dev_dependencies:
-  custom_lint: ^0.7.0
   flutter_test:
     sdk: flutter
-  leancode_lint: ^18.0.0
+  leancode_lint: ^22.0.0
 
 flutter:
   assets:
