@@ -107,7 +107,8 @@ sealed class ConnectToHostState<THostMethods> with EquatableMixin {
 }
 
 /// Initial idle state before any connection attempt.
-class ConnectToHostStateIdle<THostMethods> extends ConnectToHostState<THostMethods> {
+class ConnectToHostStateIdle<THostMethods>
+    extends ConnectToHostState<THostMethods> {
   /// Creates an idle state.
   ConnectToHostStateIdle();
 

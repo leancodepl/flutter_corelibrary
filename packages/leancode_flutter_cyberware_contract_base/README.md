@@ -99,10 +99,8 @@ if (isInIframe()) {
   switch (result) {
     case RawConnectToHostResultConnected(:final host):
       // use host methods
-      break;
     case RawConnectToHostResultError(:final error):
       // handle error
-      break;
   }
 }
 ```
