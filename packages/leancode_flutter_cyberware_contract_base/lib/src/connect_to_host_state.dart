@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 /// Base state for the host connection lifecycle.
-sealed class ConnectToHostState<THostMethods> extends Equatable {
-  const ConnectToHostState();
+sealed class ConnectToHostState<THostMethods> with EquatableMixin {
+  ConnectToHostState();
 }
 
 /// Initial idle state before any connection attempt.
 class ConnectToHostIdle<THostMethods> extends ConnectToHostState<THostMethods> {
   /// Creates an idle state.
-  const ConnectToHostIdle();
+  ConnectToHostIdle();
 
   @override
   List<Object?> get props => [];
@@ -18,7 +18,7 @@ class ConnectToHostIdle<THostMethods> extends ConnectToHostState<THostMethods> {
 class ConnectToHostConnected<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates a connected state with the given [host] methods.
-  const ConnectToHostConnected(this.host);
+  ConnectToHostConnected(this.host);
 
   /// The host methods available after a successful connection.
   final THostMethods host;
@@ -31,7 +31,7 @@ class ConnectToHostConnected<THostMethods>
 class ConnectToHostIncompatible<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates an incompatible state with the mismatched versions.
-  const ConnectToHostIncompatible(this.hostVersion, this.remoteVersion);
+  ConnectToHostIncompatible(this.hostVersion, this.remoteVersion);
 
   /// The version reported by the host.
   final String hostVersion;
@@ -47,7 +47,7 @@ class ConnectToHostIncompatible<THostMethods>
 class ConnectToHostError<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates an error state with the given [error].
-  const ConnectToHostError(this.error);
+  ConnectToHostError(this.error);
 
   /// The error that occurred during the connection attempt.
   final Object error;
