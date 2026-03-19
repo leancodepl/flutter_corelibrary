@@ -21,9 +21,8 @@ A shared contract package contains a [Zod](https://zod.dev/) schema — the sing
 
 ### 1. Install the package
 
-```yaml
-dependencies:
-  leancode_flutter_cyberware_contract_base: ^0.0.1
+```shell
+flutter pub add leancode_flutter_cyberware_contract_base
 ```
 
 ### 2. Load the JS asset
@@ -116,27 +115,29 @@ The host page passes a `contractVersion` query parameter in the iframe URL. `Con
 
 ## API overview
 
-| Symbol | Description |
-|--------|-------------|
-| `isInIframe()` | Whether the current window is inside an iframe |
-| `connectToHostRaw()` | Establishes a raw JS-level connection to the host |
-| `disconnectHost()` | Tears down the active connection |
-| `parseConnectToHostResult()` | Parses the raw JS result into a typed result |
-| `ConnectToHostCubit` | Cubit managing the full connection lifecycle |
-| `ConnectToHostCubitOptions` | Configuration for `ConnectToHostCubit` |
-| `ConnectToHostState` | Sealed class with `Idle`, `Connected`, `Incompatible`, `Error` states |
-| `UrlParamsBase` | Abstract class with static accessors for URL query parameters (e.g. `contractVersion`) |
+| Symbol                       | Description                                                                            |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
+| `isInIframe()`               | Whether the current window is inside an iframe                                         |
+| `connectToHostRaw()`         | Establishes a raw JS-level connection to the host                                      |
+| `disconnectHost()`           | Tears down the active connection                                                       |
+| `parseConnectToHostResult()` | Parses the raw JS result into a typed result                                           |
+| `ConnectToHostCubit`         | Cubit managing the full connection lifecycle                                           |
+| `ConnectToHostCubitOptions`  | Configuration for `ConnectToHostCubit`                                                 |
+| `ConnectToHostState`         | Sealed class with `Idle`, `Connected`, `Incompatible`, `Error` states                  |
+| `UrlParamsBase`              | Abstract class with static accessors for URL query parameters (e.g. `contractVersion`) |
 
 ## Related packages
 
-| Package | Description |
-|---------|-------------|
-| [`@leancodepl/cyberware-contract`](https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract) | TypeScript contract definition, React hooks, and Penpal connection management. See its [README](https://github.com/leancodepl/js_corelibrary/blob/main/packages/cyberware/cyberware-contract/README.md) for the full end-to-end setup guide. |
-| [`@leancodepl/cyberware-contract-generator-dart`](https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract-generator-dart) | Generates Dart extension types from the Zod contract schema |
+| Package                                                                                                                                                        | Description                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`@leancodepl/cyberware-contract`](https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract)                               | TypeScript contract definition, React hooks, and Penpal connection management. See its [README](https://github.com/leancodepl/js_corelibrary/blob/main/packages/cyberware/cyberware-contract/README.md) for the full end-to-end setup guide. |
+| [`@leancodepl/cyberware-contract-generator-dart`](https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract-generator-dart) | Generates Dart extension types from the Zod contract schema                                                                                                                                                                                  |
 
 ## Building the JS asset
 
 The TypeScript source lives in `js/`. To rebuild the bundled JS asset:
+
+> **Note:** Node.js >= 22.0.0 is required.
 
 ```bash
 cd js

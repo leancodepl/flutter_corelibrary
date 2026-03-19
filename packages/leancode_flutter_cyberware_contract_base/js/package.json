@@ -6,6 +6,9 @@
     "dev": "vite",
     "build": "vite build"
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "dependencies": {
     "penpal": "^7.0.0"
   },

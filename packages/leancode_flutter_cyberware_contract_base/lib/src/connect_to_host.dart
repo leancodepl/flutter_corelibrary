@@ -28,20 +28,16 @@ extension type JSConnectToHostResult._(JSObject _) implements JSObject {
 
 /// Parses a raw [JSConnectToHostResult] into a typed
 /// [RawConnectToHostResult].
-RawConnectToHostResult<TJSHostMethods>
-    parseConnectToHostResult<TJSHostMethods extends JSObject>(
-  JSConnectToHostResult result,
-) {
+RawConnectToHostResult<TJSHostMethods> parseConnectToHostResult<
+  TJSHostMethods extends JSObject
+>(JSConnectToHostResult result) {
   final status = result.status.toDart;
 
   if (status == 'connected') {
     final host = result.host! as TJSHostMethods;
     final destroy = result.destroy!;
 
-    return RawConnectToHostResultConnected<TJSHostMethods>(
-      host,
-      destroy,
-    );
+    return RawConnectToHostResultConnected<TJSHostMethods>(host, destroy);
   }
 
   return RawConnectToHostResultError<TJSHostMethods>(
@@ -55,7 +51,7 @@ RawConnectToHostResultConnected<JSObject>? _cachedConnection;
 /// Connects to the host page by calling the JS `__contract__connectToHost`
 /// binding. Must only be called once; subsequent calls throw a [StateError].
 Future<RawConnectToHostResult<TJSHostMethods>>
-    connectToHostRaw<TJSHostMethods extends JSObject>(JSObject methods) async {
+connectToHostRaw<TJSHostMethods extends JSObject>(JSObject methods) async {
   if (_cachedConnection != null) {
     throw StateError(
       'connectToHostRaw was called multiple times. '
@@ -67,15 +63,9 @@ Future<RawConnectToHostResult<TJSHostMethods>>
   final result = parseConnectToHostResult<TJSHostMethods>(raw);
 
   if (result is RawConnectToHostResultConnected<TJSHostMethods>) {
-    final connection = RawConnectToHostResultConnected<TJSHostMethods>(
-      result.host,
-      result.destroy,
-    );
-
-    _cachedConnection = connection;
-
-    return connection;
+    _cachedConnection = result;
   }
+
   return result;
 }
 
