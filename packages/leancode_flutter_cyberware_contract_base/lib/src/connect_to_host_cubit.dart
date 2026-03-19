@@ -32,7 +32,7 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
   ConnectToHostCubit(
     ConnectToHostCubitOptions<TRemoteMethods, THostMethods> options,
   ) : _options = options,
-      super(ConnectToHostIdle<THostMethods>());
+      super(ConnectToHostStateIdle<THostMethods>());
 
   final ConnectToHostCubitOptions<TRemoteMethods, THostMethods> _options;
   void Function()? _destroy;
@@ -57,7 +57,7 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
       hostVer = Version.parse(hostVersion);
     } catch (_) {
       emit(
-        ConnectToHostIncompatible<THostMethods>(
+        ConnectToHostStateIncompatible<THostMethods>(
           hostVersion,
           _options.contractVersion,
         ),
@@ -66,7 +66,7 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
     }
     if (!range.allows(hostVer)) {
       emit(
-        ConnectToHostIncompatible<THostMethods>(
+        ConnectToHostStateIncompatible<THostMethods>(
           hostVersion,
           _options.contractVersion,
         ),
@@ -82,14 +82,14 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
 
         switch (result) {
           case ConnectToHostResultConnected(:final host):
-            emit(ConnectToHostConnected<THostMethods>(host));
+            emit(ConnectToHostStateConnected<THostMethods>(host));
           case ConnectToHostResultError(:final error):
-            emit(ConnectToHostError<THostMethods>(error));
+            emit(ConnectToHostStateError<THostMethods>(error));
         }
       }
     } catch (err, _) {
       if (!isClosed) {
-        emit(ConnectToHostError<THostMethods>(err));
+        emit(ConnectToHostStateError<THostMethods>(err));
       }
     }
   }
@@ -107,19 +107,19 @@ sealed class ConnectToHostState<THostMethods> with EquatableMixin {
 }
 
 /// Initial idle state before any connection attempt.
-class ConnectToHostIdle<THostMethods> extends ConnectToHostState<THostMethods> {
+class ConnectToHostStateIdle<THostMethods> extends ConnectToHostState<THostMethods> {
   /// Creates an idle state.
-  ConnectToHostIdle();
+  ConnectToHostStateIdle();
 
   @override
   List<Object?> get props => [];
 }
 
 /// Successfully connected to the host.
-class ConnectToHostConnected<THostMethods>
+class ConnectToHostStateConnected<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates a connected state with the given [host] methods.
-  ConnectToHostConnected(this.host);
+  ConnectToHostStateConnected(this.host);
 
   /// The host methods available after a successful connection.
   final THostMethods host;
@@ -129,10 +129,10 @@ class ConnectToHostConnected<THostMethods>
 }
 
 /// The host and remote contract versions are incompatible.
-class ConnectToHostIncompatible<THostMethods>
+class ConnectToHostStateIncompatible<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates an incompatible state with the mismatched versions.
-  ConnectToHostIncompatible(this.hostVersion, this.remoteVersion);
+  ConnectToHostStateIncompatible(this.hostVersion, this.remoteVersion);
 
   /// The version reported by the host.
   final String hostVersion;
@@ -145,10 +145,10 @@ class ConnectToHostIncompatible<THostMethods>
 }
 
 /// An error occurred while connecting to the host.
-class ConnectToHostError<THostMethods>
+class ConnectToHostStateError<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates an error state with the given [error].
-  ConnectToHostError(this.error);
+  ConnectToHostStateError(this.error);
 
   /// The error that occurred during the connection attempt.
   final Object error;

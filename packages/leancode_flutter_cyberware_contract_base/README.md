@@ -57,9 +57,9 @@ The generated code provides `HostMethods`, `RemoteMethodsBase`, `JSRemoteMethods
 BlocBuilder<ConnectToHostCubit, ConnectToHostState>(
   builder: (context, state) {
     return switch (state) {
-      ConnectToHostIdle() =>
+      ConnectToHostStateIdle() =>
         const Center(child: Text('Connecting...')),
-      ConnectToHostConnected(:final host) => Column(
+      ConnectToHostStateConnected(:final host) => Column(
           children: [
             Text('Connected!'),
             ElevatedButton(
@@ -72,9 +72,9 @@ BlocBuilder<ConnectToHostCubit, ConnectToHostState>(
             ),
           ],
         ),
-      ConnectToHostError(:final error) =>
+      ConnectToHostStateError(:final error) =>
         Center(child: Text('Error: $error')),
-      ConnectToHostIncompatible(
+      ConnectToHostStateIncompatible(
         :final hostVersion,
         :final remoteVersion,
       ) =>
@@ -111,7 +111,7 @@ if (isInIframe()) {
 
 ## Contract versioning
 
-The host page passes a `contractVersion` query parameter in the iframe URL. `ConnectToHostCubit` reads it and checks it against the `contractVersionRange` you provide (parsed as a semver `VersionConstraint`). If the versions are incompatible, the cubit emits `ConnectToHostIncompatible` instead of attempting to connect.
+The host page passes a `contractVersion` query parameter in the iframe URL. `ConnectToHostCubit` reads it and checks it against the `contractVersionRange` you provide (parsed as a semver `VersionConstraint`). If the versions are incompatible, the cubit emits `ConnectToHostStateIncompatible` instead of attempting to connect.
 
 ## API overview
 
