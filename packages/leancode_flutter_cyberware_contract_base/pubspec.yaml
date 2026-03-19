@@ -9,7 +9,7 @@ environment:
   flutter: '>=3.41.0'
 
 dependency_overrides:
-  # Flutter pins meta to 1.17.0, but the plugin packages require 1.18.0
+  # Flutter pins meta to 1.17.0, but the analysis plugin packages require 1.18.0
   meta: ^1.18.0
 
 dependencies:
