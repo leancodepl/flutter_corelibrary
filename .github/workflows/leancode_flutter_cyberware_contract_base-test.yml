@@ -19,8 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - version: 3.41.x
+        flutter_version: 3.24.x
 
     defaults:
       run:
