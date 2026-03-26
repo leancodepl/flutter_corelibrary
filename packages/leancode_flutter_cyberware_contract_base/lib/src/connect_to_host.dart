@@ -1,13 +1,10 @@
 import 'dart:js_interop';
 
 import 'package:leancode_flutter_cyberware_contract_base/src/result.dart';
-import 'package:web/web.dart' as web;
-
-/// Whether the current window is running inside an iframe.
-bool isInIframe() => !identical(web.window.parent, web.window);
 
 /// JS binding for the `__contract__connectToHost` function defined in
-/// `connect_to_host.mjs` and loaded in the Flutter iframe app.
+/// `assets/connect_to_host.js` (built from `js/src/connect_to_host.ts`) and
+/// loaded in the Flutter iframe app.
 @JS('__contract__connectToHost')
 external JSPromise<JSConnectToHostResult> jsConnectToHost(JSObject methods);
 

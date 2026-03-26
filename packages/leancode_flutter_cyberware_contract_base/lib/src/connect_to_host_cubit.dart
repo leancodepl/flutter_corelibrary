@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:leancode_flutter_cyberware_contract_base/src/connect_to_host.dart';
 import 'package:leancode_flutter_cyberware_contract_base/src/result.dart';
 import 'package:leancode_flutter_cyberware_contract_base/src/url_params.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:web/web.dart' as web;
 
 /// Configuration options for [ConnectToHostCubit].
 class ConnectToHostCubitOptions<TRemoteMethods, THostMethods> {
@@ -42,7 +42,7 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
   /// Does nothing if the app is not running inside an iframe or if the host
   /// contract version is missing or incompatible.
   Future<void> connect() async {
-    if (!isInIframe()) {
+    if (identical(web.window.parent, web.window)) {
       return;
     }
 
@@ -103,24 +103,24 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
 
 /// Base state for the host connection lifecycle.
 sealed class ConnectToHostState<THostMethods> with EquatableMixin {
-  ConnectToHostState();
+  const ConnectToHostState();
 }
 
 /// Initial idle state before any connection attempt.
-class ConnectToHostStateIdle<THostMethods>
+final class ConnectToHostStateIdle<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates an idle state.
-  ConnectToHostStateIdle();
+  const ConnectToHostStateIdle();
 
   @override
   List<Object?> get props => [];
 }
 
 /// Successfully connected to the host.
-class ConnectToHostStateConnected<THostMethods>
+final class ConnectToHostStateConnected<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates a connected state with the given [host] methods.
-  ConnectToHostStateConnected(this.host);
+  const ConnectToHostStateConnected(this.host);
 
   /// The host methods available after a successful connection.
   final THostMethods host;
@@ -130,10 +130,10 @@ class ConnectToHostStateConnected<THostMethods>
 }
 
 /// The host and remote contract versions are incompatible.
-class ConnectToHostStateIncompatible<THostMethods>
+final class ConnectToHostStateIncompatible<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates an incompatible state with the mismatched versions.
-  ConnectToHostStateIncompatible(this.hostVersion, this.remoteVersion);
+  const ConnectToHostStateIncompatible(this.hostVersion, this.remoteVersion);
 
   /// The version reported by the host.
   final String hostVersion;
@@ -146,10 +146,10 @@ class ConnectToHostStateIncompatible<THostMethods>
 }
 
 /// An error occurred while connecting to the host.
-class ConnectToHostStateError<THostMethods>
+final class ConnectToHostStateError<THostMethods>
     extends ConnectToHostState<THostMethods> {
   /// Creates an error state with the given [error].
-  ConnectToHostStateError(this.error);
+  const ConnectToHostStateError(this.error);
 
   /// The error that occurred during the connection attempt.
   final Object error;

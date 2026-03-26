@@ -2,7 +2,3 @@ include: package:leancode_lint/analysis_options.yaml
 
 plugins:
   leancode_lint: ^22.0.0
-
-analyzer:
-  exclude:
-    - '**/*.g.dart'
