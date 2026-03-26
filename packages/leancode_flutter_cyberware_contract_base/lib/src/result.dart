@@ -31,7 +31,7 @@ sealed class RawConnectToHostResult<TJSHostMethods extends JSObject> {
 }
 
 /// A successful raw connection carrying the JS [host] proxy.
-class RawConnectToHostResultConnected<TJSHostMethods extends JSObject>
+final class RawConnectToHostResultConnected<TJSHostMethods extends JSObject>
     extends RawConnectToHostResult<TJSHostMethods> {
   /// Creates a connected result with the JS [host] proxy and [destroy] callback.
   const RawConnectToHostResultConnected(this.host, super.destroy);
@@ -41,7 +41,7 @@ class RawConnectToHostResultConnected<TJSHostMethods extends JSObject>
 }
 
 /// A failed raw connection carrying the [error].
-class RawConnectToHostResultError<TJSHostMethods extends JSObject>
+final class RawConnectToHostResultError<TJSHostMethods extends JSObject>
     extends RawConnectToHostResult<TJSHostMethods> {
   /// Creates an error result with the given [error] and [destroy] callback.
   const RawConnectToHostResultError(this.error, super.destroy);
@@ -60,7 +60,7 @@ sealed class ConnectToHostResult<THostMethods> {
 }
 
 /// A successful typed connection carrying the [host] methods.
-class ConnectToHostResultConnected<THostMethods>
+final class ConnectToHostResultConnected<THostMethods>
     extends ConnectToHostResult<THostMethods> {
   /// Creates a connected result with the typed [host] and [destroy] callback.
   const ConnectToHostResultConnected(this.host, super.destroy);
@@ -70,7 +70,7 @@ class ConnectToHostResultConnected<THostMethods>
 }
 
 /// A failed typed connection carrying the [error].
-class ConnectToHostResultError<THostMethods>
+final class ConnectToHostResultError<THostMethods>
     extends ConnectToHostResult<THostMethods> {
   /// Creates an error result with the given [error] and [destroy] callback.
   const ConnectToHostResultError(this.error, super.destroy);
