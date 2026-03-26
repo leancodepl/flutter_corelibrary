@@ -42,6 +42,7 @@ class ConnectToHostCubit<TRemoteMethods, THostMethods>
   /// Does nothing if the app is not running inside an iframe or if the host
   /// contract version is missing or incompatible.
   Future<void> connect() async {
+    // `window.parent == window` means this page is top-level, not inside an iframe.
     if (identical(web.window.parent, web.window)) {
       return;
     }

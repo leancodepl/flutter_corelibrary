@@ -110,7 +110,8 @@ if (!identical(web.window.parent, web.window)) {
 }
 ```
 
-> **Note:** `connectToHostRaw` must only be called once. Subsequent calls throw a `StateError`. Call `disconnectHost()` to tear down the connection.
+> [!NOTE]
+> `connectToHostRaw` must only be called once. Subsequent calls throw a `StateError`. Call `disconnectHost()` to tear down the connection.
 
 ## Contract versioning
 

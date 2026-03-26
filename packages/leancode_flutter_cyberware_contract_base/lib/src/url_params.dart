@@ -1,4 +1,4 @@
-const String _contractVersionQueryKey = 'contractVersion';
+const _contractVersionQueryKey = 'contractVersion';
 
 /// Base class for accessing URL query parameters from [Uri.base].
 abstract class UrlParamsBase {
