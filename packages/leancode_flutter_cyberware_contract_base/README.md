@@ -1,5 +1,5 @@
 <a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-flutter-cyberware-contract-base" align="center">
-  <img alt="leancode_flutter_cyberware_contract_base" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_flutter_cyberware_contract_base/doc/imgs/banner.png" />
+  <img alt="leancode_flutter_cyberware_contract_base" src="./doc/imgs/banner.png" />
 </a>
 
 # leancode_flutter_cyberware_contract_base
