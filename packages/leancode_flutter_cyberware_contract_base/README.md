@@ -151,6 +151,37 @@ npx vite build
 
 The output is written to `assets/connect_to_host.js`.
 
+---
+
+## 🛠️ Maintained by LeanCode
+
+<div align="center">
+  <a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-analytics-firebase">
+    <img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />
+  </a>
+</div>
+
+This package is built with 💙 by **[LeanCode](https://leancode.co?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-analytics-firebase)**.
+We are **top-tier experts** focused on Flutter Enterprise solutions.
+
+### Why LeanCode?
+
+- **Creators of [Patrol](https://patrol.leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-analytics-firebase)** – the next-gen testing framework for Flutter.
+
+- **Production-Ready** – We use this package in apps with millions of users.
+- **Full-Cycle Product Development** – We take your product from scratch to long-term maintenance.
+
+<div align="center">
+  <br />
+
+**Need help with your Flutter project?**
+
+[**👉 Hire our team**](https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-analytics-firebase)
+&nbsp;&nbsp;•&nbsp;&nbsp;
+[Check our other packages](https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads)
+
+</div>
+
 [pub-badge]: https://img.shields.io/pub/v/leancode_flutter_cyberware_contract_base
 [pub-badge-link]: https://pub.dev/packages/leancode_flutter_cyberware_contract_base
 [build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_flutter_cyberware_contract_base-test.yml?branch=master
