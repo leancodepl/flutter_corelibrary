@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-flutter-cyberware-contract-base" align="center">
+  <img alt="leancode_flutter_cyberware_contract_base" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_flutter_cyberware_contract_base/doc/imgs/banner.png" />
+</a>
+
 # leancode_flutter_cyberware_contract_base
 
 [![leancode_flutter_cyberware_contract_base pub.dev badge][pub-badge]][pub-badge-link]
@@ -187,7 +191,7 @@ We are **top-tier experts** focused on Flutter Enterprise solutions.
 [build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_flutter_cyberware_contract_base-test.yml?branch=master
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_flutter_cyberware_contract_base-test.yml
 [Zod]: https://zod.dev/
-[Penpal]: https://github.com/nicknisi/penpal
+[Penpal]: https://github.com/Aaronius/penpal
 [@leancodepl/cyberware-contract]: https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract
 [README]: https://github.com/leancodepl/js_corelibrary/blob/main/packages/cyberware/cyberware-contract/README.md
 [@leancodepl/cyberware-contract-generator-dart]: https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract-generator-dart
