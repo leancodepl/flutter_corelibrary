@@ -46,3 +46,7 @@
   - changed-files:
     - any-glob-to-any-file:
       - packages/override_api_endpoint/**
+'p: leancode_cyberware_contract_base':
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/leancode_cyberware_contract_base/**

@@ -1,0 +1,30 @@
+name: leancode_cyberware_contract_base
+description: Flutter web contract package.
+version: 0.0.1
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_cyberware_contract_base
+repository: https://github.com/leancodepl/flutter_corelibrary
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+  flutter: '>=3.41.0'
+
+dependency_overrides:
+  # Flutter pins meta to 1.17.0, but the analysis plugin packages require 1.18.0
+  meta: ^1.18.0
+
+dependencies:
+  bloc: ^9.0.0
+  equatable: ^2.0.7
+  flutter:
+    sdk: flutter
+  pub_semver: ^2.1.4
+  web: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  leancode_lint: ^22.0.0
+
+flutter:
+  assets:
+    - assets/connect_to_host.js
