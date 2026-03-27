@@ -1,15 +1,15 @@
-name: leancode_flutter_cyberware_contract_base test
+name: leancode_cyberware_contract_base test
 
 on:
   push:
     branches: [master]
-    tags-ignore: ['leancode_flutter_cyberware_contract_base-v*']
+    tags-ignore: ['leancode_cyberware_contract_base-v*']
     paths:
-      - 'packages/leancode_flutter_cyberware_contract_base/**'
+      - 'packages/leancode_cyberware_contract_base/**'
   pull_request:
     branches: [master]
     paths:
-      - 'packages/leancode_flutter_cyberware_contract_base/**'
+      - 'packages/leancode_cyberware_contract_base/**'
 
 jobs:
   test:
@@ -24,7 +24,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: packages/leancode_flutter_cyberware_contract_base
+        working-directory: packages/leancode_cyberware_contract_base
 
     steps:
       - name: Checkout

@@ -1,6 +1,6 @@
 import 'dart:js_interop';
 
-import 'package:leancode_flutter_cyberware_contract_base/src/result.dart';
+import 'package:leancode_cyberware_contract_base/src/result.dart';
 
 /// JS binding for the `__contract__connectToHost` function defined in
 /// `assets/connect_to_host.js` (built from `js/src/connect_to_host.ts`) and

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:leancode_flutter_cyberware_contract_base/src/result.dart';
-import 'package:leancode_flutter_cyberware_contract_base/src/url_params.dart';
+import 'package:leancode_cyberware_contract_base/src/result.dart';
+import 'package:leancode_cyberware_contract_base/src/url_params.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:web/web.dart' as web;
 

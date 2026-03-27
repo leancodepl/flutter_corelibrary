@@ -1,15 +1,15 @@
 <a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-flutter-cyberware-contract-base" align="center">
-  <img alt="leancode_flutter_cyberware_contract_base" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_flutter_cyberware_contract_base/doc/imgs/banner.png" />
+  <img alt="leancode_cyberware_contract_base" src="https://raw.githubusercontent.com/leancodepl/flutter_corelibrary/refs/heads/master/packages/leancode_cyberware_contract_base/doc/imgs/banner.png" />
 </a>
 
-# leancode_flutter_cyberware_contract_base
+# leancode_cyberware_contract_base
 
-[![leancode_flutter_cyberware_contract_base pub.dev badge][pub-badge]][pub-badge-link]
-[![leancode_flutter_cyberware_contract_base continuous integration badge][build-badge]][build-badge-link]
+[![leancode_cyberware_contract_base pub.dev badge][pub-badge]][pub-badge-link]
+[![leancode_cyberware_contract_base continuous integration badge][build-badge]][build-badge-link]
 
 Base package for Flutter web apps running inside an iframe that need bidirectional RPC with a host page. Provides Cubit-based connection state management, semver contract versioning, and type-safe Dart wrappers over a [Penpal]-powered `postMessage` bridge.
 
-This package is the Flutter side of the [@leancodepl/cyberware-contract] ecosystem. For the full end-to-end setup guide (contract schema, Dart code generation, React host, and Flutter remote), see the [README].
+This package is the Flutter side of the [@leancodepl/cyberware-contract] ecosystem. For the full end-to-end setup guide (contract schema, Dart code generation, React host, and Flutter remote), see the [readme][@leancodepl/cyberware-contract_readme].
 
 ## How it fits together
 
@@ -29,7 +29,7 @@ A shared contract package contains a [Zod] schema — the single source of truth
 ### 1. Install the package
 
 ```shell
-flutter pub add leancode_flutter_cyberware_contract_base
+flutter pub add leancode_cyberware_contract_base
 ```
 
 ### 2. Load the JS asset
@@ -41,7 +41,7 @@ Add the bundled script to your Flutter web app's `web/index.html` **before** the
   <!-- ... -->
 </head>
 <body>
-  <script src="assets/packages/leancode_flutter_cyberware_contract_base/assets/connect_to_host.js"></script>
+  <script src="assets/packages/leancode_cyberware_contract_base/assets/connect_to_host.js"></script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 ```
@@ -135,10 +135,10 @@ The host page passes a `contractVersion` query parameter in the iframe URL. `Con
 
 ## Related packages
 
-| Package                                         | Description                                                                                                                          |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| [@leancodepl/cyberware-contract]                | TypeScript contract definition, React hooks, and Penpal connection management. See its [README] for the full end-to-end setup guide. |
-| [@leancodepl/cyberware-contract-generator-dart] | Generates Dart extension types from the Zod contract schema                                                                          |
+| Package                                         | Description                                                                                                                                                                 |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [@leancodepl/cyberware-contract]                | TypeScript contract definition, React hooks, and Penpal connection management. See its [readme][@leancodepl/cyberware-contract_readme] for the full end-to-end setup guide. |
+| [@leancodepl/cyberware-contract-generator-dart] | Generates Dart extension types from the Zod contract schema                                                                                                                 |
 
 ## Building the JS asset
 
@@ -186,12 +186,12 @@ We are **top-tier experts** focused on Flutter Enterprise solutions.
 
 </div>
 
-[pub-badge]: https://img.shields.io/pub/v/leancode_flutter_cyberware_contract_base
-[pub-badge-link]: https://pub.dev/packages/leancode_flutter_cyberware_contract_base
-[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_flutter_cyberware_contract_base-test.yml?branch=master
-[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_flutter_cyberware_contract_base-test.yml
+[pub-badge]: https://img.shields.io/pub/v/leancode_cyberware_contract_base
+[pub-badge-link]: https://pub.dev/packages/leancode_cyberware_contract_base
+[build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/leancode_cyberware_contract_base-test.yml?branch=master
+[build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/leancode_cyberware_contract_base-test.yml
 [Zod]: https://zod.dev/
 [Penpal]: https://github.com/Aaronius/penpal
 [@leancodepl/cyberware-contract]: https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract
-[README]: https://github.com/leancodepl/js_corelibrary/blob/main/packages/cyberware/cyberware-contract/README.md
+[@leancodepl/cyberware-contract_readme]: https://github.com/leancodepl/js_corelibrary/blob/main/packages/cyberware/cyberware-contract/README.md
 [@leancodepl/cyberware-contract-generator-dart]: https://github.com/leancodepl/js_corelibrary/tree/main/packages/cyberware/cyberware-contract-generator-dart
