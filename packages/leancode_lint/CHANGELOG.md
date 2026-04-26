@@ -1,3 +1,7 @@
+# 22.0.1
+
+- Fix false positive in `bloc_related_class_naming` when using generics.
+
 # 22.0.0
 
 - Add new custom lints:
