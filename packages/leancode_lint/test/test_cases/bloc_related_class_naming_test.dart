@@ -110,6 +110,50 @@ class GoodCubit extends Cubit<GoodState> {
 }
 ''');
   }
+
+  Future<void> test_generic() async {
+    await assertNoDiagnostics('''
+import 'package:bloc/bloc.dart';
+
+class MyCubit<T> extends Cubit<T> {
+  MyCubit(super.initialState);
+}
+
+class MyBloc<E, S> extends Bloc<E, S> {
+  MyBloc(super.initialState);
+}
+''');
+  }
+
+  Future<void> test_mixed_generic_bloc() async {
+    await assertDiagnosticsInRanges('''
+import 'package:bloc/bloc.dart';
+
+class MyEvent {}
+class /*[0*/WrongState/*0]*/ {}
+
+class MyBloc<E> extends Bloc<E, WrongState> {
+  MyBloc() : super(WrongState());
+}
+''');
+  }
+
+  Future<void> test_bounded_generic() async {
+    await assertNoDiagnostics('''
+import 'package:bloc/bloc.dart';
+
+abstract class WrongEvent {}
+abstract class WrongState {}
+
+class MyCubit<T extends WrongState> extends Cubit<T> {
+  MyCubit(super.initialState);
+}
+
+class MyBloc<E extends WrongEvent, S extends WrongState> extends Bloc<E, S> {
+  MyBloc(super.initialState);
+}
+''');
+  }
 }
 
 @reflectiveTest
