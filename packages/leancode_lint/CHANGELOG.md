@@ -1,3 +1,7 @@
+# 23.0.0
+
+- **Breaking:** Require `analyzer` ^13.0.0.
+
 # 22.0.1
 
 - Fix false positive in `bloc_related_class_naming` when using generics.
