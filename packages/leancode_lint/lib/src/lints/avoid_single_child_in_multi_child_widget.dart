@@ -80,11 +80,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       );
       if (children == null) {
         return;
-      } else if (children is NamedExpression) {
-        children = children.expression;
+      } else if (children is NamedArgument) {
+        children = children.argumentExpression;
       }
 
-      _checkInstanceCreation(constructorName, children);
+      _checkInstanceCreation(constructorName, children.argumentExpression);
     }
   }
 
@@ -113,6 +113,8 @@ class _Visitor extends SimpleAstVisitor<void> {
           checkExpression(thenElement) &&
               (elseElement == null || checkExpression(elseElement)),
         NullAwareElement(:final value) => checkExpression(value),
+        // Fallback for `CollectionElementImpl`, see https://github.com/dart-lang/sdk/issues/63313
+        _ => false,
       };
     }
 
