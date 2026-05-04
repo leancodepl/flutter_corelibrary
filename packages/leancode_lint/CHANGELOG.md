@@ -1,3 +1,7 @@
+# 23.0.0
+
+- **Breaking:** Require `analyzer` ^13.0.0.
+
 # 22.0.0
 
 - Add new custom lints:
