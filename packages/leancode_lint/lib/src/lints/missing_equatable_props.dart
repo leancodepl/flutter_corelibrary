@@ -16,16 +16,16 @@ import 'package:leancode_lint/src/utils.dart';
 /// Reports missing entries in a class's overridden Equatable `props` getter.
 ///
 /// Every non-static field declared in the class must be referenced in the
-/// `props` list literal. When the class extends another Equatable-like class,
-/// `...super.props` must also be present so that inherited fields participate
-/// in equality.
+/// `props` list literal. When the class extends another Equatable-shaped
+/// class, `super.props` must also be present so that inherited fields
+/// participate in equality.
 class MissingEquatableProps extends AnalysisRule {
   MissingEquatableProps()
     : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'missing_equatable_props',
-    "The following are missing from Equatable's props: {0}.",
+    'Class is missing the following Equatable props: {0}.',
     severity: .WARNING,
   );
 
@@ -42,8 +42,8 @@ class MissingEquatableProps extends AnalysisRule {
 }
 
 const _equatableTypeChecker = TypeChecker.any([
-  TypeChecker.fromName('Equatable', packageName: 'equatable'),
-  TypeChecker.fromName('EquatableMixin', packageName: 'equatable'),
+  .fromName('Equatable', packageName: 'equatable'),
+  .fromName('EquatableMixin', packageName: 'equatable'),
 ]);
 
 class _Visitor extends SimpleAstVisitor<void> {
@@ -90,7 +90,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
 /// Inserts every missing entry into the `props` list.
 ///
-/// `...super.props` is inserted at the start of the list; missing fields are
+/// `super.props` is inserted at the start of the list; missing fields are
 /// appended at the end, preserving declaration order.
 class AddToEquatablePropsFix extends ResolvedCorrectionProducer {
   AddToEquatablePropsFix({required super.context});
@@ -108,43 +108,21 @@ class AddToEquatablePropsFix extends ResolvedCorrectionProducer {
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
-    final classDecl = node.thisOrAncestorOfType<ClassDeclaration>();
-    if (classDecl == null) {
-      return;
-    }
-    final element = classDecl.declaredFragment?.element;
-    if (element == null) {
-      return;
-    }
-
+    final classDecl = node.thisOrAncestorOfType<ClassDeclaration>()!;
+    final element = classDecl.declaredFragment!.element;
     final members = _getMembers(classDecl);
-    final propsGetter = _findPropsGetter(members);
-    if (propsGetter == null) {
-      return;
-    }
-
-    final listLiteral = _getPropsListLiteral(propsGetter);
-    if (listLiteral == null) {
-      return;
-    }
-
+    final propsGetter = _findPropsGetter(members)!;
+    final listLiteral = _getPropsListLiteral(propsGetter)!;
     final contents = _collectExistingProps(listLiteral);
-    if (contents.hasUnrecognizedContent) {
-      return;
-    }
 
     final needsSuper =
-        _shouldHaveSuperProps(element) && !contents.hasSuperPropsSpread;
+        _shouldHaveSuperProps(element) && !contents.hasSuperPropsReference;
     final missingFields = _findMissingFieldNames(members, contents.names);
-
-    if (!needsSuper && missingFields.isEmpty) {
-      return;
-    }
 
     await builder.addDartFileEdit(file, (builder) {
       if (listLiteral.elements.isEmpty) {
         final text = [
-          if (needsSuper) '...super.props',
+          if (needsSuper) 'super.props',
           ...missingFields,
         ].join(', ');
         builder.addSimpleInsertion(listLiteral.leftBracket.end, text);
@@ -154,7 +132,7 @@ class AddToEquatablePropsFix extends ResolvedCorrectionProducer {
       if (needsSuper) {
         builder.addSimpleInsertion(
           listLiteral.elements.first.offset,
-          '...super.props, ',
+          'super.props, ',
         );
       }
       if (missingFields.isNotEmpty) {
@@ -185,15 +163,16 @@ ListLiteral? _getPropsListLiteral(MethodDeclaration propsGetter) {
 class _PropsListContents {
   const _PropsListContents({
     required this.names,
-    required this.hasSuperPropsSpread,
+    required this.hasSuperPropsReference,
     required this.hasUnrecognizedContent,
   });
 
   /// Names referenced in the list, including those written as `this.x`.
   final Set<String> names;
 
-  /// Whether the list contains a `...super.props` spread.
-  final bool hasSuperPropsSpread;
+  /// Whether the list contains a reference to `super.props`, either directly
+  /// or as a spread (`...super.props`).
+  final bool hasSuperPropsReference;
 
   /// `true` when the list contains expressions the rule cannot reason about
   /// (other spreads, if/for elements, method calls, …). In that case the
@@ -203,7 +182,7 @@ class _PropsListContents {
 
 _PropsListContents _collectExistingProps(ListLiteral listLiteral) {
   final names = <String>{};
-  var hasSuperPropsSpread = false;
+  var hasSuperPropsReference = false;
   var hasUnrecognizedContent = false;
 
   for (final element in listLiteral.elements) {
@@ -212,13 +191,17 @@ _PropsListContents _collectExistingProps(ListLiteral listLiteral) {
         names.add(name);
       case PropertyAccess(target: ThisExpression(), :final propertyName):
         names.add(propertyName.name);
-      case SpreadElement(
-        expression: PropertyAccess(
-          target: SuperExpression(),
-          propertyName: SimpleIdentifier(name: 'props'),
-        ),
-      ):
-        hasSuperPropsSpread = true;
+      case PropertyAccess(
+            target: SuperExpression(),
+            propertyName: SimpleIdentifier(name: 'props'),
+          ) ||
+          SpreadElement(
+            expression: PropertyAccess(
+              target: SuperExpression(),
+              propertyName: SimpleIdentifier(name: 'props'),
+            ),
+          ):
+        hasSuperPropsReference = true;
       default:
         hasUnrecognizedContent = true;
     }
@@ -226,7 +209,7 @@ _PropsListContents _collectExistingProps(ListLiteral listLiteral) {
 
   return _PropsListContents(
     names: names,
-    hasSuperPropsSpread: hasSuperPropsSpread,
+    hasSuperPropsReference: hasSuperPropsReference,
     hasUnrecognizedContent: hasUnrecognizedContent,
   );
 }
@@ -237,10 +220,10 @@ List<String> _findMissingPropEntries({
   required _PropsListContents contents,
 }) {
   final needsSuper =
-      _shouldHaveSuperProps(element) && !contents.hasSuperPropsSpread;
+      _shouldHaveSuperProps(element) && !contents.hasSuperPropsReference;
 
   return [
-    if (needsSuper) '...super.props',
+    if (needsSuper) 'super.props',
     ..._findMissingFieldNames(members, contents.names),
   ];
 }
@@ -261,8 +244,8 @@ List<String> _findMissingFieldNames(
 ///
 /// Returns `false` for classes that only mix in `EquatableMixin` (their
 /// supertype is [Object], which has no `props`) and for classes that extend
-/// `Equatable` directly (its default `props` is empty, so spreading it is a
-/// no-op).
+/// `Equatable` directly (there is no intermediate Equatable-shaped superclass
+/// whose own `props` getter would need to be included via `super.props`).
 bool _shouldHaveSuperProps(InterfaceElement element) {
   final supertype = element.supertype;
   if (supertype == null) {

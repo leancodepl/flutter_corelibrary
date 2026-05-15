@@ -202,7 +202,7 @@ class Sub extends Parent {
 ''');
   }
 
-  Future<void> test_super_props_recognized_when_present() async {
+  Future<void> test_super_props_recognized_when_present_as_spread() async {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
@@ -222,6 +222,30 @@ class Sub extends Parent {
 
   @override
   List<Object?> get props => [...super.props, b];
+}
+''');
+  }
+
+  Future<void> test_super_props_recognized_when_present_without_spread() async {
+    await assertNoDiagnostics('''
+import 'package:equatable/equatable.dart';
+
+class Parent with EquatableMixin {
+  Parent(this.a);
+
+  final int a;
+
+  @override
+  List<Object?> get props => [a];
+}
+
+class Sub extends Parent {
+  Sub(super.a, this.b);
+
+  final int b;
+
+  @override
+  List<Object?> get props => [super.props, b];
 }
 ''');
   }
