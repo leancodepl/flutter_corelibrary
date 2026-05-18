@@ -774,6 +774,73 @@ None.
 
 </details>
 
+<details>
+<summary><code>missing_equatable_props</code></summary>
+
+### `missing_equatable_props`
+
+**DO** include every non-static field of an `Equatable`/`EquatableMixin` class in its `props` getter. When the class extends another Equatable-shaped class whose `props` getter is concrete, `super.props` must also be referenced so inherited fields participate in equality.
+
+The lint only fires when `props` is defined as a list literal (e.g. `=> [a, b]` or `{ return [a, b]; }`) so it can safely reason about the contents. If the list contains expressions the rule cannot enumerate (other spreads, `if`/`for` elements, method calls, …) it silently skips the class to avoid false positives.
+
+The `Add all missing entries to props` quick fix inserts the missing entries — `super.props` at the start of the list, missing fields at the end, preserving declaration order.
+
+**BAD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar with EquatableMixin {
+  const Foobar(this.a, this.b);
+
+  final int a;
+  final int b;
+
+  @override
+  List<Object?> get props => [a];
+}
+
+class FoobarChild extends Foobar {
+  const FoobarChild(super.a, super.b, this.c);
+
+  final int c;
+
+  @override
+  List<Object?> get props => [c];
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:equatable/equatable.dart';
+
+class Foobar with EquatableMixin {
+  const Foobar(this.a, this.b);
+
+  final int a;
+  final int b;
+
+  @override
+  List<Object?> get props => [a, b];
+}
+
+class FoobarChild extends Foobar {
+  const FoobarChild(super.a, super.b, this.c);
+
+  final int c;
+
+  @override
+  List<Object?> get props => [super.props, c];
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
 ## Disabling custom lint rules
 
 To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
