@@ -108,9 +108,9 @@ class AddToEquatablePropsFix extends ResolvedCorrectionProducer {
 
   @override
   Future<void> compute(ChangeBuilder builder) async {
-    final classDecl = node.thisOrAncestorOfType<ClassDeclaration>()!;
-    final element = classDecl.declaredFragment!.element;
-    final members = _getMembers(classDecl);
+    final classDeclaration = node.thisOrAncestorOfType<ClassDeclaration>()!;
+    final element = classDeclaration.declaredFragment!.element;
+    final members = _getMembers(classDeclaration);
     final propsGetter = _findPropsGetter(members)!;
     final listLiteral = _getPropsListLiteral(propsGetter)!;
     final contents = _collectExistingProps(listLiteral);
@@ -150,10 +150,9 @@ List<ClassMember> _getMembers(ClassDeclaration node) => switch (node.body) {
   _ => const <ClassMember>[],
 };
 
-MethodDeclaration? _findPropsGetter(List<ClassMember> members) =>
-    members.whereType<MethodDeclaration>().firstWhereOrNull(
-      (m) => m.isGetter && m.name.lexeme == 'props',
-    );
+MethodDeclaration? _findPropsGetter(List<ClassMember> members) => members
+    .whereType<MethodDeclaration>()
+    .firstWhereOrNull((m) => m.isGetter && m.name.lexeme == 'props');
 
 ListLiteral? _getPropsListLiteral(MethodDeclaration propsGetter) {
   final expression = maybeGetSingleReturnExpression(propsGetter.body);
@@ -232,20 +231,23 @@ List<String> _findMissingFieldNames(
   List<ClassMember> members,
   Set<String> existingNames,
 ) => [
-  for (final fieldDecl in members.whereType<FieldDeclaration>())
-    if (!fieldDecl.isStatic)
-      for (final variable in fieldDecl.fields.variables)
-        if (!existingNames.contains(variable.name.lexeme))
-          variable.name.lexeme,
+  for (final fieldDeclaration in members.whereType<FieldDeclaration>())
+    if (!fieldDeclaration.isStatic)
+      for (final variable in fieldDeclaration.fields.variables)
+        if (!existingNames.contains(variable.name.lexeme)) variable.name.lexeme,
 ];
 
-/// Whether the class's superclass is itself Equatable-shaped and therefore
-/// likely contributes additional fields via its own `props` getter.
+/// Whether the class's superclass exposes a concrete `props` getter that
+/// should be propagated via `super.props`.
 ///
-/// Returns `false` for classes that only mix in `EquatableMixin` (their
-/// supertype is [Object], which has no `props`) and for classes that extend
-/// `Equatable` directly (there is no intermediate Equatable-shaped superclass
-/// whose own `props` getter would need to be included via `super.props`).
+/// Returns `false` when:
+/// - the superclass has no Equatable-shaped ancestor (e.g. a plain class that
+///   only mixes in `EquatableMixin` — its supertype is [Object]);
+/// - the superclass is `Equatable` or `EquatableMixin` itself (both declare
+///   `props` as abstract, so `super.props` would target the abstract member);
+/// - the superclass is an intermediate Equatable-shaped class that does not
+///   provide a concrete `props` implementation anywhere in its chain (also
+///   making `super.props` resolve to an abstract member).
 bool _shouldHaveSuperProps(InterfaceElement element) {
   final supertype = element.supertype;
   if (supertype == null) {
@@ -255,5 +257,14 @@ bool _shouldHaveSuperProps(InterfaceElement element) {
   if (_equatableTypeChecker.isExactly(supertypeElement)) {
     return false;
   }
-  return _equatableTypeChecker.isAssignableFrom(supertypeElement);
+  if (!_equatableTypeChecker.isAssignableFrom(supertypeElement)) {
+    return false;
+  }
+
+  final propsGetter = supertypeElement.lookUpGetter(
+    name: 'props',
+    library: element.library,
+  );
+
+  return propsGetter != null && !propsGetter.isAbstract;
 }

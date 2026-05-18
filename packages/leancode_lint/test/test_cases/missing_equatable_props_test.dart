@@ -266,6 +266,50 @@ class MyState extends Equatable {
 ''');
   }
 
+  Future<void> test_super_props_not_suggested_when_parent_has_no_concrete_props() async {
+    await assertDiagnosticsInRanges('''
+import 'package:equatable/equatable.dart';
+
+abstract class AbstractBase extends Equatable {
+  const AbstractBase();
+}
+
+class Sub extends AbstractBase {
+  const Sub(this.a, this.b);
+
+  final int a;
+  final int b;
+
+  @override
+  List<Object?> get props => /*[0*/[a]/*0]*/;
+}
+''');
+  }
+
+  Future<void> test_super_props_suggested_when_abstract_parent_has_concrete_props() async {
+    await assertDiagnosticsInRanges('''
+import 'package:equatable/equatable.dart';
+
+abstract class AbstractBase extends Equatable {
+  const AbstractBase(this.shared);
+
+  final int shared;
+
+  @override
+  List<Object?> get props => [shared];
+}
+
+class Sub extends AbstractBase {
+  const Sub(super.shared, this.b);
+
+  final int b;
+
+  @override
+  List<Object?> get props => /*[0*/[b]/*0]*/;
+}
+''');
+  }
+
   Future<void> test_unrecognized_spread_skips_lint() async {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
