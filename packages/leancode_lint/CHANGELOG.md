@@ -1,3 +1,8 @@
+# 24.0.0
+
+- Add new custom lint:
+  - [`missing_equatable_props`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#missing_equatable_props)
+
 # 23.0.0
 
 - **Breaking:** Require `analyzer` ^13.0.0.
