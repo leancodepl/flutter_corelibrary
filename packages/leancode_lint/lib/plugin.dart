@@ -7,6 +7,7 @@ import 'package:leancode_lint/src/assists/convert_record_into_nominal_type.dart'
 import 'package:leancode_lint/src/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/src/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget.dart';
+import 'package:leancode_lint/src/lints/bloc_class_modifiers.dart';
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
 import 'package:leancode_lint/src/lints/bloc_subclasses_naming.dart';
 import 'package:leancode_lint/src/lints/catch_parameter_names.dart';
@@ -56,6 +57,7 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerWarningRule(
         BlocRelatedClassNaming(config: config.blocRelatedClassNaming),
       )
+      ..registerWarningRule(BlocClassModifiers())
       ..registerWarningRule(BlocSubclassesNaming())
       ..registerWarningRule(
         CatchParameterNames(config: config.catchParameterNames),

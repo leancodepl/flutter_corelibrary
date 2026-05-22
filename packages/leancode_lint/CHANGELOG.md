@@ -1,3 +1,8 @@
+# NEXT
+
+- Add new custom lint:
+  - [`bloc_class_modifiers`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#bloc_class_modifiers)
+
 # 24.0.0
 
 - Add new custom lint:

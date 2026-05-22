@@ -219,6 +219,45 @@ None.
 </details>
 
 <details>
+<summary><code>bloc_class_modifiers</code></summary>
+
+### `bloc_class_modifiers`
+
+**DO** mark bloc state, event, and presentation event classes as `sealed` when they have subclasses, and `final` otherwise.
+
+**BAD:**
+
+```dart
+class MyState {}
+class MyStateInitial extends MyState {}
+
+class MyEvent {}
+
+class MyBloc extends Bloc<MyEvent, MyState> {}
+```
+
+**GOOD:**
+
+```dart
+sealed class MyState {}
+final class MyStateInitial extends MyState {}
+
+final class MyEvent {}
+
+class MyBloc extends Bloc<MyEvent, MyState> {}
+```
+
+> [!NOTE]
+> This lint only checks classes defined in the same library (including parts) as the Bloc/Cubit.
+> Presentation events are only checked if the `bloc_presentation` package is used.
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
