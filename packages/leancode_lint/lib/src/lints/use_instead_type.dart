@@ -40,7 +40,6 @@ abstract base class UseInsteadType extends AnalysisRule {
     registry
       ..addPrefixedIdentifier(this, visitor)
       ..addSimpleIdentifier(this, visitor)
-      ..addLibraryIdentifier(this, visitor)
       ..addNamedType(this, visitor);
   }
 }

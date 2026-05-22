@@ -89,12 +89,10 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
     return null;
   }
 
-  final builderParameter = node.argumentList.arguments
-      .whereType<NamedExpression>()
-      .firstWhereOrNull((e) => e.name.label.name == 'builder');
-  if (builderParameter case NamedExpression(
-    expression: FunctionExpression(:final body),
-  )) {
+  final builderArg = node.argumentList.arguments
+      .whereType<NamedArgument>()
+      .firstWhereOrNull((e) => e.name.lexeme == 'builder');
+  if (builderArg?.argumentExpression case FunctionExpression(:final body)) {
     return body;
   }
 
@@ -286,16 +284,15 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
   var hasParameter = false;
 
   for (final argument in node.argumentList.arguments) {
-    if (argument case NamedExpression(
-      name: Label(label: SimpleIdentifier(name: final argumentName)),
-      :final expression,
-      :final staticType,
+    if (argument case NamedArgument(
+      name: Token(lexeme: final argumentName),
+      :final argumentExpression,
     )) {
       if (ignoredParameters.contains(argumentName)) {
         continue;
       } else if (argumentName == parameter &&
-          expression is! NullLiteral &&
-          staticType?.nullabilitySuffix != .question) {
+          argumentExpression is! NullLiteral &&
+          argumentExpression.staticType?.nullabilitySuffix != .question) {
         hasParameter = true;
       } else {
         // Other named arguments are not allowed

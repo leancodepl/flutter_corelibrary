@@ -218,7 +218,7 @@ linter:
     always_put_control_body_on_new_line: true
     always_put_required_named_parameters_first: false
     always_specify_types: false
-    always_use_package_imports: false
+    always_use_package_imports: true
     annotate_overrides: true
     annotate_redeclares: true
     avoid_annotating_with_dynamic: false

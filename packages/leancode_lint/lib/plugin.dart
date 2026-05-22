@@ -8,9 +8,11 @@ import 'package:leancode_lint/src/lints/add_cubit_suffix_for_cubits.dart';
 import 'package:leancode_lint/src/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
+import 'package:leancode_lint/src/lints/bloc_subclasses_naming.dart';
 import 'package:leancode_lint/src/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
+import 'package:leancode_lint/src/lints/missing_equatable_props.dart';
 import 'package:leancode_lint/src/lints/never_discard_build_context.dart';
 import 'package:leancode_lint/src/lints/prefer_equatable_mixin.dart';
 import 'package:leancode_lint/src/lints/prefix_widgets_returning_slivers.dart';
@@ -55,6 +57,7 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerWarningRule(
         BlocRelatedClassNaming(config: config.blocRelatedClassNaming),
       )
+      ..registerWarningRule(BlocSubclassesNaming())
       ..registerWarningRule(
         CatchParameterNames(config: config.catchParameterNames),
       )
@@ -85,6 +88,11 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerFixForRule(
         PreferEquatableMixin.code,
         ConvertToEquatableMixin.new,
+      )
+      ..registerWarningRule(MissingEquatableProps())
+      ..registerFixForRule(
+        MissingEquatableProps.code,
+        AddToEquatablePropsFix.new,
       )
       // TODO: uncomment when `prefer_center_over_align` is migrated
       // ..registerWarningRule(PreferCenterOverAlign())
