@@ -29,13 +29,7 @@ class LoggingHttpClient extends http.BaseClient
     final response = await _httpClient.send(request);
     final endTime = DateTime.now();
 
-    final String? requestBody;
-
-    if (request is http.Request) {
-      requestBody = request.body;
-    } else {
-      requestBody = null;
-    }
+    final requestBody = _decodeRequestBodyForLogging(request);
 
     final responseBodyBytes = <int>[];
     final responseBodyCompleter = Completer<String>();
@@ -71,5 +65,17 @@ class LoggingHttpClient extends http.BaseClient
       persistentConnection: response.persistentConnection,
       reasonPhrase: response.reasonPhrase,
     );
+  }
+}
+
+String? _decodeRequestBodyForLogging(http.BaseRequest request) {
+  if (request is! http.Request) {
+    return null;
+  }
+
+  try {
+    return request.encoding.decode(request.bodyBytes);
+  } on FormatException {
+    return '[binary body, ${request.bodyBytes.length} bytes]';
   }
 }
