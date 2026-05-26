@@ -3,6 +3,8 @@
 // clearly show all parameters being tested.
 // ignore_for_file: avoid_redundant_argument_values
 
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:leancode_debug_page/src/core/logging_http_client.dart';
@@ -78,6 +80,92 @@ void main() {
           expect(response.isRedirect, isRedirect);
           expect(response.persistentConnection, persistentConnection);
           expect(response.reasonPhrase, reasonPhrase);
+        },
+      );
+
+      test(
+        'decodes request body using request encoding',
+        () async {
+          final request = Request('post', homeUrl)
+            ..encoding = latin1
+            ..bodyBytes = [0xE9];
+
+          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
+              .thenAnswer(
+            (invocation) async => StreamedResponse(
+              stream,
+              statusCode,
+              contentLength: contentLength,
+              request: request,
+              headers: headers,
+              isRedirect: isRedirect,
+              persistentConnection: persistentConnection,
+              reasonPhrase: reasonPhrase,
+            ),
+          );
+
+          await loggingHttpClient.send(request);
+
+          expect(loggingHttpClient.logs.single.requestBody, 'é');
+        },
+      );
+
+      test(
+        'logs binary request body when decoding fails',
+        () async {
+          final request = Request('post', homeUrl)
+            ..bodyBytes = [0xBE, 0xEF, 0x00];
+
+          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
+              .thenAnswer(
+            (invocation) async => StreamedResponse(
+              stream,
+              statusCode,
+              contentLength: contentLength,
+              request: request,
+              headers: headers,
+              isRedirect: isRedirect,
+              persistentConnection: persistentConnection,
+              reasonPhrase: reasonPhrase,
+            ),
+          );
+
+          await loggingHttpClient.send(request);
+
+          expect(
+            loggingHttpClient.logs.single.requestBody,
+            '[binary body, 3 bytes]',
+          );
+        },
+      );
+
+      test(
+        'logs binary request body when explicit encoding cannot decode body',
+        () async {
+          final request = Request('post', homeUrl)
+            ..encoding = utf8
+            ..bodyBytes = [0xBE, 0xEF];
+
+          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
+              .thenAnswer(
+            (invocation) async => StreamedResponse(
+              stream,
+              statusCode,
+              contentLength: contentLength,
+              request: request,
+              headers: headers,
+              isRedirect: isRedirect,
+              persistentConnection: persistentConnection,
+              reasonPhrase: reasonPhrase,
+            ),
+          );
+
+          await loggingHttpClient.send(request);
+
+          expect(
+            loggingHttpClient.logs.single.requestBody,
+            '[binary body, 2 bytes]',
+          );
         },
       );
 
