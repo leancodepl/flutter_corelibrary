@@ -140,6 +140,36 @@ void main() {
       );
 
       test(
+        'logs binary request body when explicit encoding cannot decode body',
+        () async {
+          final request = Request('post', homeUrl)
+            ..encoding = utf8
+            ..bodyBytes = [0xBE, 0xEF];
+
+          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
+              .thenAnswer(
+            (invocation) async => StreamedResponse(
+              stream,
+              statusCode,
+              contentLength: contentLength,
+              request: request,
+              headers: headers,
+              isRedirect: isRedirect,
+              persistentConnection: persistentConnection,
+              reasonPhrase: reasonPhrase,
+            ),
+          );
+
+          await loggingHttpClient.send(request);
+
+          expect(
+            loggingHttpClient.logs.single.requestBody,
+            '[binary body, 2 bytes]',
+          );
+        },
+      );
+
+      test(
         'clear logs',
         () async {
           await loggingHttpClient.get(homeUrl);
