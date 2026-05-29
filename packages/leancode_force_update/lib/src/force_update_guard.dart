@@ -82,7 +82,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
       _stopTimer();
     } else if (!wasInForeground && _isAppInForeground) {
       _startTimer();
-      _checkForUpdateIfIntervalElapsed();
+      _updateIfIntervalElapsed();
     }
   }
 
@@ -94,7 +94,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
     _checkForEnforcedUpdateTimer?.cancel();
     _checkForEnforcedUpdateTimer = Timer.periodic(
       ForceUpdateGuard.updateCheckingInterval,
-      (_) => unawaited(_updateAndMaybeApplyVersionsInfo()),
+      (_) => _tryForegroundUpdateCheck(),
     );
   }
 
@@ -103,14 +103,28 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
     _checkForEnforcedUpdateTimer = null;
   }
 
-  void _checkForUpdateIfIntervalElapsed() {
+  void _updateIfIntervalElapsed() {
+    if (!_isAppInForeground) {
+      return;
+    }
+
     if (_lastVersionCheckAt case final lastCheck?
         when DateTime.now().difference(lastCheck) <
             ForceUpdateGuard.updateCheckingInterval) {
       return;
     }
 
-    unawaited(_updateAndMaybeApplyVersionsInfo());
+    _tryForegroundUpdateCheck();
+  }
+
+  void _tryForegroundUpdateCheck() {
+    if (!_isAppInForeground) {
+      return;
+    }
+
+    _updateAndMaybeApplyVersionsInfo().catchError((dynamic err) {
+      _logger.warning('Failed to check for updates', err);
+    });
   }
 
   Future<void> _applyResult({required ForceUpdateResult? result}) async {
@@ -162,7 +176,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
     final recentResult = await _storage.readMostRecentResult();
     await _applyResult(result: recentResult);
 
-    unawaited(_updateAndMaybeApplyVersionsInfo());
+    _tryForegroundUpdateCheck();
   }
 
   Future<void> _updateVersionsInfo() async {
