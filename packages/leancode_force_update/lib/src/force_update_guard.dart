@@ -94,7 +94,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
     _checkForEnforcedUpdateTimer?.cancel();
     _checkForEnforcedUpdateTimer = Timer.periodic(
       ForceUpdateGuard.updateCheckingInterval,
-      (_) => _updateAndMaybeApplyVersionsInfo(),
+      (_) => unawaited(_updateAndMaybeApplyVersionsInfo()),
     );
   }
 
