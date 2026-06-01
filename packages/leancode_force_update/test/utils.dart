@@ -77,7 +77,8 @@ Future<void> pumpForceUpdateGuard({
     ),
   );
 
-  await tester.pump();
+  tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+  await tester.pumpAndSettle();
 }
 
 void expectForceUpdatePage({required bool value}) {
