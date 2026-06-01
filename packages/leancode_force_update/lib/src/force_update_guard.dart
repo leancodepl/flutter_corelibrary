@@ -54,9 +54,7 @@ class ForceUpdateGuard extends StatefulWidget {
 
 class _ForceUpdateGuardState extends State<ForceUpdateGuard>
     with WidgetsBindingObserver {
-  _ForceUpdateGuardState() : _storage = ForceUpdateStorage();
-
-  final ForceUpdateStorage _storage;
+  final _storage = ForceUpdateStorage();
   late PackageInfo _packageInfo;
   final force = ValueNotifier<bool?>(null);
   late Listenable listenable;
