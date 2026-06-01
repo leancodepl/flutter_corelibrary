@@ -156,8 +156,8 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
               widget.showSuggestUpdateDialogImmediately)) {
         return _applyResult(result: recentResult);
       }
-    } catch (e) {
-      _logger.warning('Failed to check for updates', e);
+    } catch (e, st) {
+      _logger.warning('Failed to check for updates', e, st);
     }
   }
 
