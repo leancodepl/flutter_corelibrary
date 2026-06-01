@@ -122,9 +122,7 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
       return;
     }
 
-    _updateAndMaybeApplyVersionsInfo().catchError((dynamic err) {
-      _logger.warning('Failed to check for updates', err);
-    });
+    unawaited(_updateAndMaybeApplyVersionsInfo());
   }
 
   Future<void> _applyResult({required ForceUpdateResult? result}) async {
@@ -148,15 +146,20 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard>
   }
 
   Future<void> _updateAndMaybeApplyVersionsInfo() async {
-    await _updateVersionsInfo();
+    try {
+      await _updateVersionsInfo();
 
-    final recentResult = await _storage.readMostRecentResult();
+      final recentResult = await _storage.readMostRecentResult();
 
-    if ((recentResult?.conclusion == VersionSupportResultDTO.updateRequired &&
-            widget.showForceUpdateScreenImmediately) ||
-        (recentResult?.conclusion == VersionSupportResultDTO.updateSuggested &&
-            widget.showSuggestUpdateDialogImmediately)) {
-      return _applyResult(result: recentResult);
+      if ((recentResult?.conclusion == VersionSupportResultDTO.updateRequired &&
+              widget.showForceUpdateScreenImmediately) ||
+          (recentResult?.conclusion ==
+                  VersionSupportResultDTO.updateSuggested &&
+              widget.showSuggestUpdateDialogImmediately)) {
+        return _applyResult(result: recentResult);
+      }
+    } catch (e) {
+      _logger.warning('Failed to check for updates', e);
     }
   }
 
