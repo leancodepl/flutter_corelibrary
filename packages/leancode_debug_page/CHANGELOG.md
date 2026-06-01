@@ -1,3 +1,7 @@
+## 3.1.1
+
+- Fix decoding non-UTF8 data in requests.
+
 ## 3.1.0
 
 - Add clear button to logs inspector for clearing requests and logs
