@@ -23,7 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  leancode_lint: ^22.0.0
+  leancode_lint: ">=22.0.0 <24.0.0"
 
 flutter:
   assets:
