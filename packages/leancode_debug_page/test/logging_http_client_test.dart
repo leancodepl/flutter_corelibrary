@@ -184,6 +184,43 @@ void main() {
           );
         },
       );
+
+      test(
+        'properly decodes UTF-8 characters including Polish letters',
+        () async {
+          const polishText = 'Autoryzacja nie została wykonana. Łódź, Gdańsk, Kraków.';
+          final polishBytes = utf8.encode(polishText);
+          final streamWithPolishText = Stream.fromIterable([polishBytes]);
+
+          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
+              .thenAnswer(
+            (invocation) async => StreamedResponse(
+              streamWithPolishText,
+              statusCode,
+              contentLength: polishBytes.length,
+              request: request,
+              headers: headers,
+              isRedirect: isRedirect,
+              persistentConnection: persistentConnection,
+              reasonPhrase: reasonPhrase,
+            ),
+          );
+
+          await loggingHttpClient.send(request);
+
+          // Wait for the response body to be completed
+          await Future.delayed(const Duration(milliseconds: 100));
+
+          expect(loggingHttpClient.logs, hasLength(1));
+          final log = loggingHttpClient.logs.first;
+          final responseBody = await log.responseBodyCompleter.future;
+
+          expect(responseBody, contains('Autoryzacja'));
+          expect(responseBody, contains('Łódź'));
+          expect(responseBody, contains('Gdańsk'));
+          expect(responseBody, contains('Kraków'));
+        },
+      );
     },
   );
 }
