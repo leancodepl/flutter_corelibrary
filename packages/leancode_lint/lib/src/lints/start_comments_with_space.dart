@@ -91,7 +91,7 @@ class AddStartingSpaceToComment extends ResolvedCorrectionProducer {
   AddStartingSpaceToComment({required super.context});
 
   @override
-  FixKind? get fixKind => const .new(
+  FixKind get fixKind => const .new(
     'leancode_lint.fix.addStartingSpaceToComment',
     DartFixKindPriority.standard,
     'Add leading space to comment',
