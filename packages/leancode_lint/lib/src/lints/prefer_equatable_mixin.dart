@@ -79,7 +79,7 @@ class ConvertToEquatableMixin extends ResolvedCorrectionProducer {
   ConvertToEquatableMixin({required super.context});
 
   @override
-  FixKind? get fixKind => const FixKind(
+  FixKind get fixKind => const .new(
     'leancode_lint.fix.convertToEquatableMixin',
     DartFixKindPriority.standard,
     'Convert to EquatableMixin',
