@@ -141,6 +141,44 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_catch_error</code></summary>
+
+### `avoid_catch_error`
+
+**AVOID** using `Future.catchError`.
+
+Prefer `async`/`await` with `try`/`catch`, which keeps error handling in normal
+control flow and preserves stack traces more predictably.
+
+**BAD:**
+
+```dart
+Future<void> load() {
+  return repository.load().catchError((err, st) {
+    logger.error(err, st);
+  });
+}
+```
+
+**GOOD:**
+
+```dart
+Future<void> load() async {
+  try {
+    await repository.load();
+  } catch (err, st) {
+    logger.error(err, st);
+  }
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>avoid_conditional_hooks</code></summary>
 
 ### `avoid_conditional_hooks`

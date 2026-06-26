@@ -52,14 +52,15 @@ class ForceUpdateGuard extends StatefulWidget {
   State<ForceUpdateGuard> createState() => _ForceUpdateGuardState();
 }
 
-class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
-  _ForceUpdateGuardState() : _storage = ForceUpdateStorage();
-
-  final ForceUpdateStorage _storage;
+class _ForceUpdateGuardState extends State<ForceUpdateGuard>
+    with WidgetsBindingObserver {
+  final _storage = ForceUpdateStorage();
   late PackageInfo _packageInfo;
   final force = ValueNotifier<bool?>(null);
   late Listenable listenable;
   Timer? _checkForEnforcedUpdateTimer;
+  var _isAppInForeground = true;
+  DateTime? _lastVersionCheckAt;
 
   final _logger = Logger('ForceUpdateGuard');
 
@@ -68,6 +69,58 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
     super.initState();
 
     init();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final wasInForeground = _isAppInForeground;
+    _syncForegroundFromLifecycle(state);
+
+    if (wasInForeground && !_isAppInForeground) {
+      _stopTimer();
+    } else if (!wasInForeground && _isAppInForeground) {
+      _startTimer();
+      _updateIfIntervalElapsed();
+    }
+  }
+
+  void _syncForegroundFromLifecycle(AppLifecycleState state) {
+    _isAppInForeground = state == AppLifecycleState.resumed;
+  }
+
+  void _startTimer() {
+    _checkForEnforcedUpdateTimer?.cancel();
+    _checkForEnforcedUpdateTimer = Timer.periodic(
+      ForceUpdateGuard.updateCheckingInterval,
+      (_) => _tryForegroundUpdateCheck(),
+    );
+  }
+
+  void _stopTimer() {
+    _checkForEnforcedUpdateTimer?.cancel();
+    _checkForEnforcedUpdateTimer = null;
+  }
+
+  void _updateIfIntervalElapsed() {
+    if (!_isAppInForeground) {
+      return;
+    }
+
+    if (_lastVersionCheckAt case final lastCheck?
+        when DateTime.now().difference(lastCheck) <
+            ForceUpdateGuard.updateCheckingInterval) {
+      return;
+    }
+
+    _tryForegroundUpdateCheck();
+  }
+
+  void _tryForegroundUpdateCheck() {
+    if (!_isAppInForeground) {
+      return;
+    }
+
+    unawaited(_updateAndMaybeApplyVersionsInfo());
   }
 
   Future<void> _applyResult({required ForceUpdateResult? result}) async {
@@ -91,34 +144,45 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
   }
 
   Future<void> _updateAndMaybeApplyVersionsInfo() async {
-    await _updateVersionsInfo();
+    try {
+      await _updateVersionsInfo();
 
-    final recentResult = await _storage.readMostRecentResult();
+      final recentResult = await _storage.readMostRecentResult();
 
-    if ((recentResult?.conclusion == VersionSupportResultDTO.updateRequired &&
-            widget.showForceUpdateScreenImmediately) ||
-        (recentResult?.conclusion == VersionSupportResultDTO.updateSuggested &&
-            widget.showSuggestUpdateDialogImmediately)) {
-      return _applyResult(result: recentResult);
+      if ((recentResult?.conclusion == VersionSupportResultDTO.updateRequired &&
+              widget.showForceUpdateScreenImmediately) ||
+          (recentResult?.conclusion ==
+                  VersionSupportResultDTO.updateSuggested &&
+              widget.showSuggestUpdateDialogImmediately)) {
+        return _applyResult(result: recentResult);
+      }
+    } catch (err, st) {
+      _logger.warning('Failed to check for updates', err, st);
     }
   }
 
   Future<void> init() async {
+    WidgetsBinding.instance.addObserver(this);
+    _syncForegroundFromLifecycle(
+      WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.detached,
+    );
+
     listenable = Listenable.merge([force, widget.controller._suggest]);
     _packageInfo = await PackageInfo.fromPlatform();
 
-    _checkForEnforcedUpdateTimer = Timer.periodic(
-      ForceUpdateGuard.updateCheckingInterval,
-      (_) => _updateAndMaybeApplyVersionsInfo(),
-    );
+    if (_isAppInForeground) {
+      _startTimer();
+    }
 
     final recentResult = await _storage.readMostRecentResult();
     await _applyResult(result: recentResult);
 
-    unawaited(_updateAndMaybeApplyVersionsInfo());
+    _tryForegroundUpdateCheck();
   }
 
   Future<void> _updateVersionsInfo() async {
+    _lastVersionCheckAt = DateTime.now();
+
     _logger.info('Looking for updates...');
 
     final platform = switch (defaultTargetPlatform) {
@@ -181,7 +245,8 @@ class _ForceUpdateGuardState extends State<ForceUpdateGuard> {
 
   @override
   void dispose() {
-    _checkForEnforcedUpdateTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    _stopTimer();
 
     super.dispose();
   }

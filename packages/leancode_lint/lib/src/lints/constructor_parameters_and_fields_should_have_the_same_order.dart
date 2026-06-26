@@ -3,6 +3,7 @@ import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart';
 
 /// Displays warning when constructor's parameters' order vary from class
@@ -122,7 +123,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _isNotSuperFormal(FormalParameter parameter) =>
-      !(parameter.declaredFragment?.element.isSuperFormal ?? false);
+      parameter.declaredFragment?.element is! SuperFormalParameterElement;
 
   bool _compareEffectiveNames(
     FieldDeclaration field,

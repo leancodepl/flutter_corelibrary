@@ -5,6 +5,7 @@ import 'package:leancode_lint/src/assists/convert_iterable_map_to_collection_for
 import 'package:leancode_lint/src/assists/convert_positional_to_named_formal.dart';
 import 'package:leancode_lint/src/assists/convert_record_into_nominal_type.dart';
 import 'package:leancode_lint/src/lints/add_cubit_suffix_for_cubits.dart';
+import 'package:leancode_lint/src/lints/avoid_catch_error.dart';
 import 'package:leancode_lint/src/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
@@ -61,6 +62,7 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerWarningRule(
         CatchParameterNames(config: config.catchParameterNames),
       )
+      ..registerWarningRule(AvoidCatchError())
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(HookWidgetDoesNotUseHooks())
       ..registerFixForRule(
