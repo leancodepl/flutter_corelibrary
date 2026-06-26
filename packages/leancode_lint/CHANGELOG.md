@@ -2,6 +2,7 @@
 
 - Add new custom lint:
   - [`missing_equatable_props`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#missing_equatable_props)
+- Replace usages of members deprecated in the analyzer.
 
 # 23.0.0
 
