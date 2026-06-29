@@ -29,7 +29,9 @@ class RequestDetailsScreen extends StatelessWidget {
     );
 
     if (summary.isNotEmpty) {
-      await Share.share(summary, sharePositionOrigin: sharePositionOrigin);
+      await SharePlus.instance.share(
+        ShareParams(text: summary, sharePositionOrigin: sharePositionOrigin),
+      );
     }
   }
 

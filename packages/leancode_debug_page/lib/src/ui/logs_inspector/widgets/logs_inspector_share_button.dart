@@ -41,9 +41,11 @@ class LogsInspectorShareButton extends StatelessWidget {
         }
 
         if (sharedData.isNotEmpty) {
-          await Share.share(
-            sharedData,
-            sharePositionOrigin: sharePositionOrigin,
+          await SharePlus.instance.share(
+            ShareParams(
+              text: sharedData,
+              sharePositionOrigin: sharePositionOrigin,
+            ),
           );
         }
       },

@@ -174,7 +174,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.1.1"
+    version: "3.1.2"
   lints:
     dependency: transitive
     description:

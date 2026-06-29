@@ -94,9 +94,11 @@ class LoggerLogDetailsScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: ShareButton(
-        onPressed: (sharePositionOrigin) => Share.share(
-          _shareLogDetails(),
-          sharePositionOrigin: sharePositionOrigin,
+        onPressed: (sharePositionOrigin) => SharePlus.instance.share(
+          ShareParams(
+            text: _shareLogDetails(),
+            sharePositionOrigin: sharePositionOrigin,
+          ),
         ),
       ),
       appBar: AppBar(
