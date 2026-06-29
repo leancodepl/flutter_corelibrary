@@ -23,13 +23,13 @@ class RequestDetailsScreen extends StatelessWidget {
 
   final RequestLogRecord requestLog;
 
-  Future<void> _shareRequest() async {
+  Future<void> _shareRequest({required Rect sharePositionOrigin}) async {
     final summary = await requestLog.toSummary(
       const RequestSharingConfiguration(includeResponse: true),
     );
 
     if (summary.isNotEmpty) {
-      await Share.share(summary);
+      await Share.share(summary, sharePositionOrigin: sharePositionOrigin);
     }
   }
 
@@ -39,7 +39,11 @@ class RequestDetailsScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        floatingActionButton: ShareButton(onPressed: _shareRequest),
+        floatingActionButton: ShareButton(
+          onPressed: (sharePositionOrigin) => _shareRequest(
+            sharePositionOrigin: sharePositionOrigin,
+          ),
+        ),
         appBar: AppBar(
           title: const Text('Request details'),
           bottom: const TabBar(

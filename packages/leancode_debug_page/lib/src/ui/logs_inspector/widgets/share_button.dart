@@ -6,12 +6,15 @@ class ShareButton extends StatelessWidget {
     required this.onPressed,
   });
 
-  final VoidCallback onPressed;
+  final void Function(Rect sharePositionOrigin) onPressed;
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: onPressed,
+      onPressed: () {
+        final box = context.findRenderObject()! as RenderBox;
+        onPressed(box.localToGlobal(Offset.zero) & box.size);
+      },
       child: const Icon(Icons.share),
     );
   }
