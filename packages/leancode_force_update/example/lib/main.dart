@@ -18,20 +18,17 @@ void main() {
 
   final cqrs = MockCqrs();
   registerFallbackValue(MockQuery());
-  when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer(
-    (_) async {
-      return QuerySuccess(VersionSupportDTO(
+  when(() => cqrs.get<VersionSupportDTO>(any())).thenAnswer((_) async {
+    return QuerySuccess(
+      VersionSupportDTO(
         currentlySupportedVersion: '1.0.0',
         minimumRequiredVersion: '1.2.0',
         result: VersionSupportResultDTO.upToDate,
-      ));
-    },
-  );
+      ),
+    );
+  });
 
-  runApp(MyApp(
-    forceUpdateController: forceUpdateController,
-    cqrs: cqrs,
-  ));
+  runApp(MyApp(forceUpdateController: forceUpdateController, cqrs: cqrs));
 }
 
 class MyApp extends StatelessWidget {
@@ -39,8 +36,8 @@ class MyApp extends StatelessWidget {
     super.key,
     required ForceUpdateController forceUpdateController,
     required Cqrs cqrs,
-  })  : _forceUpdateController = forceUpdateController,
-        _cqrs = cqrs;
+  }) : _forceUpdateController = forceUpdateController,
+       _cqrs = cqrs;
 
   final ForceUpdateController _forceUpdateController;
   final Cqrs _cqrs;

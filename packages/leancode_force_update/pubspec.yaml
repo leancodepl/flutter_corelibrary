@@ -1,13 +1,12 @@
 name: leancode_force_update
-version: 1.0.1-alpha
+version: 1.0.2-alpha
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_force_update
 repository: https://github.com/leancodepl/flutter_corelibrary
-description: >-
-  An internal package that speeds up implementation of Force Update
-  
+description: An internal package that speeds up implementation of Force Update
+
 environment:
-  sdk: '>=3.8.0 <4.0.0'
-  flutter: ">=3.32.0"
+  sdk: '>=3.10.0 <4.0.0'
+  flutter: ">=3.38.0"
 
 dependencies:
   cqrs: ^10.0.2
@@ -16,7 +15,7 @@ dependencies:
   in_app_update: ^4.2.3
   leancode_contracts: ^0.8.0
   logging: ^1.3.0
-  package_info_plus: ^8.3.0
+  package_info_plus: ^10.2.0
   shared_preferences: ^2.5.3
   url_launcher: ^6.3.1
   version: ^3.0.2

@@ -16,10 +16,7 @@ class ForceUpdateScreen extends StatelessWidget {
         body: SafeArea(
           child: DefaultTextStyle(
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
+            style: const TextStyle(fontSize: 16, color: Colors.black),
             child: Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),

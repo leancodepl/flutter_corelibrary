@@ -20,7 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 3.32.x
+          - version: 3.38.x
+          - channel: stable
     defaults:
       run:
         working-directory: packages/leancode_force_update
