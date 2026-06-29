@@ -2,6 +2,8 @@
 
 - Upgrade `share_plus` dependency to `^13.2.0`
 - Fix share buttons on iOS and macOS
+- Bump minimum Flutter version to 3.38.0
+- Bump minimum Dart version to 3.10.0
 
 ## 3.1.1
 
