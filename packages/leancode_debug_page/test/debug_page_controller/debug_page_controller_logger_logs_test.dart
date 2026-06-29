@@ -14,29 +14,27 @@ void main() {
   group('DebugPageController - logs:', () {
     late DebugPageController controller;
 
-    setUp(
-      () {
-        final mockClient = MockHttpClient();
-        controller = DebugPageController(
-          loggingHttpClient: LoggingHttpClient(client: mockClient),
-          showOnShake: false,
-          navigatorKey: GlobalKey(),
-        );
+    setUp(() {
+      final mockClient = MockHttpClient();
+      controller = DebugPageController(
+        loggingHttpClient: LoggingHttpClient(client: mockClient),
+        showOnShake: false,
+        navigatorKey: GlobalKey(),
+      );
 
-        Logger.root.level = Level.ALL;
+      Logger.root.level = Level.ALL;
 
-        Logger('TestLogger')
-          ..info('Some info logs')
-          ..fine('Some fine logs')
-          ..finer('Some finer logs')
-          ..finest('Some finest logs')
-          ..severe('Some severe logs');
+      Logger('TestLogger')
+        ..info('Some info logs')
+        ..fine('Some fine logs')
+        ..finer('Some finer logs')
+        ..finest('Some finest logs')
+        ..severe('Some severe logs');
 
-        Logger('OtherLogger')
-          ..info('Info from another logger')
-          ..severe('Some severe logs from another logger');
-      },
-    );
+      Logger('OtherLogger')
+        ..info('Info from another logger')
+        ..severe('Some severe logs from another logger');
+    });
 
     test('logs logger logs', () async {
       await expectLater(

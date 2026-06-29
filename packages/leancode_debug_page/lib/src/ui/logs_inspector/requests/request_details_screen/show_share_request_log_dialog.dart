@@ -40,9 +40,8 @@ class _ShareRequestLogDialogState extends State<_ShareRequestLogDialog> {
             CheckboxListTile(
               title: const Text('Include response'),
               value: includeResponse,
-              onChanged: (value) => setState(
-                () => includeResponse = value ?? false,
-              ),
+              onChanged: (value) =>
+                  setState(() => includeResponse = value ?? false),
             ),
             const SizedBox(height: 16),
             SizedBox(

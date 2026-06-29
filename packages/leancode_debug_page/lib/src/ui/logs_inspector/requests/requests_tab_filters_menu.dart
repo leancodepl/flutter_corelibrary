@@ -6,11 +6,7 @@ import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/filtered_searc
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/labeled_dropdown.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
 
-enum RequestSearchType {
-  url,
-  body,
-  all,
-}
+enum RequestSearchType { url, body, all }
 
 class RequestsTabFiltersMenu extends StatefulWidget {
   const RequestsTabFiltersMenu({
@@ -56,10 +52,7 @@ class _RequestsTabFiltersMenuState extends State<RequestsTabFiltersMenu> {
       if (requestStatus != null)
         RequestStatusFilter(desiredStatus: requestStatus),
       if (searchPhrase.isNotEmpty)
-        RequestSearchFilter(
-          type: searchType,
-          phrase: searchPhrase,
-        ),
+        RequestSearchFilter(type: searchType, phrase: searchPhrase),
     ];
   }
 

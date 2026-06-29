@@ -6,10 +6,7 @@ import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
 
 class RequestDetailsScreenResponseTab extends StatelessWidget {
-  const RequestDetailsScreenResponseTab({
-    super.key,
-    required this.requestLog,
-  });
+  const RequestDetailsScreenResponseTab({super.key, required this.requestLog});
 
   final RequestLogRecord requestLog;
 
@@ -30,10 +27,7 @@ class RequestDetailsScreenResponseTab extends StatelessWidget {
             const SizedBox(height: 8),
             MapView(map: requestLog.responseHeaders),
             const SizedBox(height: 16),
-            Text(
-              'Body',
-              style: DebugPageTypography.large,
-            ),
+            Text('Body', style: DebugPageTypography.large),
             FutureBuilder(
               future: requestLog.responseBodyCompleter.future,
               builder: (context, snapshot) {

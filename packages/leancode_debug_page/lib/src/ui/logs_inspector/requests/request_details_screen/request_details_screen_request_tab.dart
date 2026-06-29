@@ -4,10 +4,7 @@ import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
 
 class RequestDetailsScreenRequestTab extends StatelessWidget {
-  const RequestDetailsScreenRequestTab({
-    super.key,
-    required this.requestLog,
-  });
+  const RequestDetailsScreenRequestTab({super.key, required this.requestLog});
 
   final RequestLogRecord requestLog;
 
@@ -29,10 +26,7 @@ class RequestDetailsScreenRequestTab extends StatelessWidget {
             else
               const Text('Empty headers'),
             const SizedBox(height: 16),
-            Text(
-              'Body',
-              style: DebugPageTypography.large,
-            ),
+            Text('Body', style: DebugPageTypography.large),
             const SizedBox(height: 8),
             if (body != null && body.isNotEmpty)
               Text(body)

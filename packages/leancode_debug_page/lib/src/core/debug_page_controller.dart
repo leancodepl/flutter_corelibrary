@@ -25,9 +25,7 @@ class DebugPageController {
       _updateRequestsStream,
     );
     requestsFilters.addListener(
-      () => _updateRequestsStream(
-        loggingHttpClient.logs,
-      ),
+      () => _updateRequestsStream(loggingHttpClient.logs),
     );
 
     loggerFilters = ValueNotifier([]);
@@ -66,7 +64,7 @@ class DebugPageController {
   late ValueNotifier<List<Filter<LogRecord>>> loggerFilters;
 
   late StreamSubscription<List<RequestLogRecord>>
-      _sourceRequestsStreamSubscription;
+  _sourceRequestsStreamSubscription;
   final _requestsLogController = BehaviorSubject<List<RequestLogRecord>>();
   List<RequestLogRecord> get requestsLogs => _requestsLogController.value;
   Stream<List<RequestLogRecord>> get requestsLogStream =>

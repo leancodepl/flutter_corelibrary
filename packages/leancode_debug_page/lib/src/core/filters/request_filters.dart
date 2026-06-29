@@ -13,10 +13,7 @@ class RequestStatusFilter implements Filter<RequestLogRecord> {
 }
 
 class RequestSearchFilter implements Filter<RequestLogRecord> {
-  const RequestSearchFilter({
-    required this.type,
-    required this.phrase,
-  });
+  const RequestSearchFilter({required this.type, required this.phrase});
 
   final RequestSearchType type;
   final String phrase;
@@ -29,10 +26,9 @@ class RequestSearchFilter implements Filter<RequestLogRecord> {
     final lowercasePhrase = phrase.toLowerCase();
 
     if ([RequestSearchType.url, RequestSearchType.all].contains(type)) {
-      url = requestLogRecord.url
-          .toString()
-          .toLowerCase()
-          .contains(lowercasePhrase);
+      url = requestLogRecord.url.toString().toLowerCase().contains(
+        lowercasePhrase,
+      );
     }
 
     if ([RequestSearchType.body, RequestSearchType.all].contains(type)) {

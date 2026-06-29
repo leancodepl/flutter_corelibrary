@@ -5,21 +5,21 @@ import 'package:leancode_debug_page/src/ui/typography.dart';
 
 extension _ColorExtension on RequestStatus {
   Color color(BuildContext context) => switch (Theme.of(context).brightness) {
-        Brightness.dark => switch (this) {
-            RequestStatus.success => Colors.green.shade800,
-            RequestStatus.redirect => Colors.orange.shade800,
-            RequestStatus.clientError => Colors.red,
-            RequestStatus.serverError => Colors.red.shade800,
-            RequestStatus.unknown => Colors.grey.shade700,
-          },
-        Brightness.light => switch (this) {
-            RequestStatus.success => Colors.green,
-            RequestStatus.redirect => Colors.orange,
-            RequestStatus.clientError => Colors.red.shade400,
-            RequestStatus.serverError => Colors.red,
-            RequestStatus.unknown => Colors.grey,
-          },
-      };
+    Brightness.dark => switch (this) {
+      RequestStatus.success => Colors.green.shade800,
+      RequestStatus.redirect => Colors.orange.shade800,
+      RequestStatus.clientError => Colors.red,
+      RequestStatus.serverError => Colors.red.shade800,
+      RequestStatus.unknown => Colors.grey.shade700,
+    },
+    Brightness.light => switch (this) {
+      RequestStatus.success => Colors.green,
+      RequestStatus.redirect => Colors.orange,
+      RequestStatus.clientError => Colors.red.shade400,
+      RequestStatus.serverError => Colors.red,
+      RequestStatus.unknown => Colors.grey,
+    },
+  };
 }
 
 class RequestLogTile extends StatelessWidget {

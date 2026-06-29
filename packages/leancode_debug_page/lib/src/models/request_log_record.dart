@@ -2,13 +2,7 @@ import 'dart:async';
 
 import 'package:leancode_debug_page/src/ui/logs_inspector/requests/request_details_screen/show_share_request_log_dialog.dart';
 
-enum RequestStatus {
-  success,
-  redirect,
-  clientError,
-  serverError,
-  unknown;
-}
+enum RequestStatus { success, redirect, clientError, serverError, unknown }
 
 class RequestLogRecord {
   const RequestLogRecord({
@@ -44,7 +38,7 @@ class RequestLogRecord {
       (final code) when 300 <= code && code < 400 => RequestStatus.redirect,
       (final code) when 400 <= code && code < 500 => RequestStatus.clientError,
       (final code) when 500 <= code && code < 600 => RequestStatus.serverError,
-      _ => RequestStatus.unknown
+      _ => RequestStatus.unknown,
     };
   }
 

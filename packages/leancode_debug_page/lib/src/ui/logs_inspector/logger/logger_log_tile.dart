@@ -6,10 +6,7 @@ import 'package:leancode_debug_page/src/ui/typography.dart';
 import 'package:logging/logging.dart';
 
 class LoggerLogTile extends StatelessWidget {
-  const LoggerLogTile({
-    super.key,
-    required this.log,
-  });
+  const LoggerLogTile({super.key, required this.log});
 
   final LogRecord log;
 
@@ -18,9 +15,8 @@ class LoggerLogTile extends StatelessWidget {
     return Material(
       color: log.level.color(context),
       child: ListTile(
-        onTap: () => Navigator.of(context).push(
-          LoggerLogDetailsRoute(logRecord: log),
-        ),
+        onTap: () =>
+            Navigator.of(context).push(LoggerLogDetailsRoute(logRecord: log)),
         title: Text(
           log.format(),
           style: DebugPageTypography.medium,

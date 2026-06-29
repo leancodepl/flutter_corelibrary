@@ -10,16 +10,11 @@ import 'package:share_plus/share_plus.dart';
 
 class RequestDetailsRoute extends DebugPageRoute {
   RequestDetailsRoute(RequestLogRecord requestLog)
-      : super(
-          builder: (context) => RequestDetailsScreen(requestLog: requestLog),
-        );
+    : super(builder: (context) => RequestDetailsScreen(requestLog: requestLog));
 }
 
 class RequestDetailsScreen extends StatelessWidget {
-  const RequestDetailsScreen({
-    super.key,
-    required this.requestLog,
-  });
+  const RequestDetailsScreen({super.key, required this.requestLog});
 
   final RequestLogRecord requestLog;
 
@@ -42,18 +37,13 @@ class RequestDetailsScreen extends StatelessWidget {
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: ShareButton(
-          onPressed: (sharePositionOrigin) => _shareRequest(
-            sharePositionOrigin: sharePositionOrigin,
-          ),
+          onPressed: (sharePositionOrigin) =>
+              _shareRequest(sharePositionOrigin: sharePositionOrigin),
         ),
         appBar: AppBar(
           title: const Text('Request details'),
           bottom: const TabBar(
-            tabs: [
-              Text('Overview'),
-              Text('Request'),
-              Text('Response'),
-            ],
+            tabs: [Text('Overview'), Text('Request'), Text('Response')],
           ),
         ),
         body: SafeArea(

@@ -10,8 +10,8 @@ class LogsInspectorLoggerTab extends StatelessWidget {
     super.key,
     required DebugPageController controller,
     required bool showFilters,
-  })  : _controller = controller,
-        _showFilters = showFilters;
+  }) : _controller = controller,
+       _showFilters = showFilters;
 
   final DebugPageController _controller;
   final bool _showFilters;
@@ -65,10 +65,7 @@ class _EmptyPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        'No logs yet',
-        style: DebugPageTypography.medium,
-      ),
+      child: Text('No logs yet', style: DebugPageTypography.medium),
     );
   }
 }

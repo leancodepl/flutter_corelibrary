@@ -3,10 +3,7 @@ import 'package:leancode_debug_page/src/models/request_log_record.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/map_view.dart';
 
 class RequestDetailsScreenOverviewTab extends StatelessWidget {
-  const RequestDetailsScreenOverviewTab({
-    super.key,
-    required this.requestLog,
-  });
+  const RequestDetailsScreenOverviewTab({super.key, required this.requestLog});
 
   final RequestLogRecord requestLog;
 
