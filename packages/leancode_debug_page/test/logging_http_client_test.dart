@@ -16,32 +16,130 @@ import 'util/mock_http_client.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group(
-    'LoggingHttpClient',
-    () {
-      final homeUrl = Uri.parse('https://leancode.co/');
-      final request = Request('get', homeUrl);
-      const stream = Stream<List<int>>.empty();
-      const statusCode = 200;
-      const contentLength = 123;
-      const headers = <String, String>{};
-      const isRedirect = false;
-      const persistentConnection = true;
-      const reasonPhrase = 'reasonPhrase';
+  group('LoggingHttpClient', () {
+    final homeUrl = Uri.parse('https://leancode.co/');
+    final request = Request('get', homeUrl);
+    const stream = Stream<List<int>>.empty();
+    const statusCode = 200;
+    const contentLength = 123;
+    const headers = <String, String>{};
+    const isRedirect = false;
+    const persistentConnection = true;
+    const reasonPhrase = 'reasonPhrase';
 
-      late MockHttpClient mockHttpClient;
-      late LoggingHttpClient loggingHttpClient;
+    late MockHttpClient mockHttpClient;
+    late LoggingHttpClient loggingHttpClient;
 
-      setUpAll(() {
-        registerFallbackValue(Request('get', Uri()));
-      });
+    setUpAll(() {
+      registerFallbackValue(Request('get', Uri()));
+    });
 
-      setUp(() {
-        mockHttpClient = MockHttpClient();
-        loggingHttpClient = LoggingHttpClient(client: mockHttpClient);
+    setUp(() {
+      mockHttpClient = MockHttpClient();
+      loggingHttpClient = LoggingHttpClient(client: mockHttpClient);
 
-        when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
-            .thenAnswer(
+      when<Future<StreamedResponse>>(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer(
+        (invocation) async => StreamedResponse(
+          stream,
+          statusCode,
+          contentLength: contentLength,
+          request: request,
+          headers: headers,
+          isRedirect: isRedirect,
+          persistentConnection: persistentConnection,
+          reasonPhrase: reasonPhrase,
+        ),
+      );
+    });
+
+    test(
+      'send a http request through logging http client and log it',
+      () async {
+        await loggingHttpClient.get(homeUrl);
+
+        await expectLater(
+          loggingHttpClient.logStream,
+          emits(const TypeMatcher<List<RequestLogRecord>>()),
+        );
+      },
+    );
+
+    test('rewrites all response fields', () async {
+      final response = await loggingHttpClient.send(request);
+
+      expect(response.stream, isA<Stream<dynamic>>());
+      expect(response.statusCode, statusCode);
+      expect(response.contentLength, contentLength);
+      expect(response.request, request);
+      expect(response.headers, headers);
+      expect(response.isRedirect, isRedirect);
+      expect(response.persistentConnection, persistentConnection);
+      expect(response.reasonPhrase, reasonPhrase);
+    });
+
+    test('decodes request body using request encoding', () async {
+      final request = Request('post', homeUrl)
+        ..encoding = latin1
+        ..bodyBytes = [0xE9];
+
+      when<Future<StreamedResponse>>(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer(
+        (invocation) async => StreamedResponse(
+          stream,
+          statusCode,
+          contentLength: contentLength,
+          request: request,
+          headers: headers,
+          isRedirect: isRedirect,
+          persistentConnection: persistentConnection,
+          reasonPhrase: reasonPhrase,
+        ),
+      );
+
+      await loggingHttpClient.send(request);
+
+      expect(loggingHttpClient.logs.single.requestBody, 'é');
+    });
+
+    test('logs binary request body when decoding fails', () async {
+      final request = Request('post', homeUrl)..bodyBytes = [0xBE, 0xEF, 0x00];
+
+      when<Future<StreamedResponse>>(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer(
+        (invocation) async => StreamedResponse(
+          stream,
+          statusCode,
+          contentLength: contentLength,
+          request: request,
+          headers: headers,
+          isRedirect: isRedirect,
+          persistentConnection: persistentConnection,
+          reasonPhrase: reasonPhrase,
+        ),
+      );
+
+      await loggingHttpClient.send(request);
+
+      expect(
+        loggingHttpClient.logs.single.requestBody,
+        '[binary body, 3 bytes]',
+      );
+    });
+
+    test(
+      'logs binary request body when explicit encoding cannot decode body',
+      () async {
+        final request = Request('post', homeUrl)
+          ..encoding = utf8
+          ..bodyBytes = [0xBE, 0xEF];
+
+        when<Future<StreamedResponse>>(
+          () => mockHttpClient.send(any()),
+        ).thenAnswer(
           (invocation) async => StreamedResponse(
             stream,
             statusCode,
@@ -53,137 +151,24 @@ void main() {
             reasonPhrase: reasonPhrase,
           ),
         );
-      });
 
-      test(
-        'send a http request through logging http client and log it',
-        () async {
-          await loggingHttpClient.get(homeUrl);
+        await loggingHttpClient.send(request);
 
-          await expectLater(
-            loggingHttpClient.logStream,
-            emits(const TypeMatcher<List<RequestLogRecord>>()),
-          );
-        },
-      );
+        expect(
+          loggingHttpClient.logs.single.requestBody,
+          '[binary body, 2 bytes]',
+        );
+      },
+    );
 
-      test(
-        'rewrites all response fields',
-        () async {
-          final response = await loggingHttpClient.send(request);
+    test('clear logs', () async {
+      await loggingHttpClient.get(homeUrl);
+      expect(loggingHttpClient.logs, hasLength(1));
 
-          expect(response.stream, isA<Stream<dynamic>>());
-          expect(response.statusCode, statusCode);
-          expect(response.contentLength, contentLength);
-          expect(response.request, request);
-          expect(response.headers, headers);
-          expect(response.isRedirect, isRedirect);
-          expect(response.persistentConnection, persistentConnection);
-          expect(response.reasonPhrase, reasonPhrase);
-        },
-      );
+      loggingHttpClient.clear();
 
-      test(
-        'decodes request body using request encoding',
-        () async {
-          final request = Request('post', homeUrl)
-            ..encoding = latin1
-            ..bodyBytes = [0xE9];
-
-          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
-              .thenAnswer(
-            (invocation) async => StreamedResponse(
-              stream,
-              statusCode,
-              contentLength: contentLength,
-              request: request,
-              headers: headers,
-              isRedirect: isRedirect,
-              persistentConnection: persistentConnection,
-              reasonPhrase: reasonPhrase,
-            ),
-          );
-
-          await loggingHttpClient.send(request);
-
-          expect(loggingHttpClient.logs.single.requestBody, 'é');
-        },
-      );
-
-      test(
-        'logs binary request body when decoding fails',
-        () async {
-          final request = Request('post', homeUrl)
-            ..bodyBytes = [0xBE, 0xEF, 0x00];
-
-          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
-              .thenAnswer(
-            (invocation) async => StreamedResponse(
-              stream,
-              statusCode,
-              contentLength: contentLength,
-              request: request,
-              headers: headers,
-              isRedirect: isRedirect,
-              persistentConnection: persistentConnection,
-              reasonPhrase: reasonPhrase,
-            ),
-          );
-
-          await loggingHttpClient.send(request);
-
-          expect(
-            loggingHttpClient.logs.single.requestBody,
-            '[binary body, 3 bytes]',
-          );
-        },
-      );
-
-      test(
-        'logs binary request body when explicit encoding cannot decode body',
-        () async {
-          final request = Request('post', homeUrl)
-            ..encoding = utf8
-            ..bodyBytes = [0xBE, 0xEF];
-
-          when<Future<StreamedResponse>>(() => mockHttpClient.send(any()))
-              .thenAnswer(
-            (invocation) async => StreamedResponse(
-              stream,
-              statusCode,
-              contentLength: contentLength,
-              request: request,
-              headers: headers,
-              isRedirect: isRedirect,
-              persistentConnection: persistentConnection,
-              reasonPhrase: reasonPhrase,
-            ),
-          );
-
-          await loggingHttpClient.send(request);
-
-          expect(
-            loggingHttpClient.logs.single.requestBody,
-            '[binary body, 2 bytes]',
-          );
-        },
-      );
-
-      test(
-        'clear logs',
-        () async {
-          await loggingHttpClient.get(homeUrl);
-          expect(loggingHttpClient.logs, hasLength(1));
-
-          loggingHttpClient.clear();
-
-          expect(loggingHttpClient.logs, isEmpty);
-          await expectLater(
-            loggingHttpClient.logStream,
-            emits(isEmpty),
-          );
-        },
-      );
-    },
-  );
+      expect(loggingHttpClient.logs, isEmpty);
+      await expectLater(loggingHttpClient.logStream, emits(isEmpty));
+    });
+  });
 }

@@ -26,54 +26,44 @@ void main() {
     late DebugPageController controller;
     late LoggingHttpClient loggingHttpClient;
 
-    setUp(
-      () {
-        registerFallbackValue(http.Request('GET', Uri()));
+    setUp(() {
+      registerFallbackValue(http.Request('GET', Uri()));
 
-        final mockClient = MockHttpClient();
+      final mockClient = MockHttpClient();
 
-        void registerResponseForUri(
-          Uri uri,
-          int statusCode, [
-          String? response,
-        ]) {
-          when(
-            () => mockClient.send(
-              any(that: predicate<http.BaseRequest>((r) => r.url == uri)),
-            ),
-          ).thenAnswer(
-            (_) async => http.StreamedResponse(
-              Stream.value(utf8.encode(response ?? '')),
-              statusCode,
-            ),
-          );
-        }
+      void registerResponseForUri(Uri uri, int statusCode, [String? response]) {
+        when(
+          () => mockClient.send(
+            any(that: predicate<http.BaseRequest>((r) => r.url == uri)),
+          ),
+        ).thenAnswer(
+          (_) async => http.StreamedResponse(
+            Stream.value(utf8.encode(response ?? '')),
+            statusCode,
+          ),
+        );
+      }
 
-        registerResponseForUri(homeUrl, 200);
-        registerResponseForUri(
-          nonExistingUrl,
-          404,
-          'Not found',
-        );
-        registerResponseForUri(
-          birdsQuestionsUrl,
-          200,
-          'why do birds sleep standing up?',
-        );
-        registerResponseForUri(
-          elephantsUrl,
-          200,
-          'elephants eat around 150kg of food daily',
-        );
+      registerResponseForUri(homeUrl, 200);
+      registerResponseForUri(nonExistingUrl, 404, 'Not found');
+      registerResponseForUri(
+        birdsQuestionsUrl,
+        200,
+        'why do birds sleep standing up?',
+      );
+      registerResponseForUri(
+        elephantsUrl,
+        200,
+        'elephants eat around 150kg of food daily',
+      );
 
-        loggingHttpClient = LoggingHttpClient(client: mockClient);
-        controller = DebugPageController(
-          loggingHttpClient: loggingHttpClient,
-          showOnShake: false,
-          navigatorKey: GlobalKey(),
-        );
-      },
-    );
+      loggingHttpClient = LoggingHttpClient(client: mockClient);
+      controller = DebugPageController(
+        loggingHttpClient: loggingHttpClient,
+        showOnShake: false,
+        navigatorKey: GlobalKey(),
+      );
+    });
 
     test('log a single request', () async {
       await loggingHttpClient.get(homeUrl);
@@ -115,25 +105,27 @@ void main() {
       expect(controller.requestsLogs.length, 1);
     });
 
-    test('filter requests by status and search by body at the same time',
-        () async {
-      await Future.wait([
-        loggingHttpClient.get(homeUrl),
-        loggingHttpClient.get(nonExistingUrl),
-        loggingHttpClient.get(birdsQuestionsUrl),
-      ]);
+    test(
+      'filter requests by status and search by body at the same time',
+      () async {
+        await Future.wait([
+          loggingHttpClient.get(homeUrl),
+          loggingHttpClient.get(nonExistingUrl),
+          loggingHttpClient.get(birdsQuestionsUrl),
+        ]);
 
-      controller.requestsFilters.value = [
-        const RequestStatusFilter(desiredStatus: RequestStatus.clientError),
-        const RequestSearchFilter(
-          type: RequestSearchType.body,
-          phrase: 'found',
-        ),
-      ];
+        controller.requestsFilters.value = [
+          const RequestStatusFilter(desiredStatus: RequestStatus.clientError),
+          const RequestSearchFilter(
+            type: RequestSearchType.body,
+            phrase: 'found',
+          ),
+        ];
 
-      await Future<void>.delayed(Duration.zero);
-      expect(controller.requestsLogs.length, 1);
-    });
+        await Future<void>.delayed(Duration.zero);
+        expect(controller.requestsLogs.length, 1);
+      },
+    );
 
     test('clear requests logs', () async {
       await Future.wait([

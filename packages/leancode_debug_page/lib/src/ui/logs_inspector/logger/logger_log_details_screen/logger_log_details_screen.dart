@@ -11,16 +11,11 @@ import 'package:share_plus/share_plus.dart';
 
 class LoggerLogDetailsRoute extends DebugPageRoute {
   LoggerLogDetailsRoute({required LogRecord logRecord})
-      : super(
-          builder: (context) => LoggerLogDetailsScreen(logRecord: logRecord),
-        );
+    : super(builder: (context) => LoggerLogDetailsScreen(logRecord: logRecord));
 }
 
 class LoggerLogDetailsScreen extends StatelessWidget {
-  const LoggerLogDetailsScreen({
-    super.key,
-    required this.logRecord,
-  });
+  const LoggerLogDetailsScreen({super.key, required this.logRecord});
 
   final LogRecord logRecord;
 
@@ -94,16 +89,18 @@ class LoggerLogDetailsScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: ShareButton(
-        onPressed: () => Share.share(_shareLogDetails()),
+        onPressed: (sharePositionOrigin) => SharePlus.instance.share(
+          ShareParams(
+            text: _shareLogDetails(),
+            sharePositionOrigin: sharePositionOrigin,
+          ),
+        ),
       ),
       appBar: AppBar(
         title: const Text('Logger log details'),
         backgroundColor: logRecord.level.color(context),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(24),
-        children: widgets,
-      ),
+      body: ListView(padding: const EdgeInsets.all(24), children: widgets),
     );
   }
 

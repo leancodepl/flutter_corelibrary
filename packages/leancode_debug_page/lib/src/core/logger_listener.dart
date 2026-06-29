@@ -6,11 +6,9 @@ import 'package:rxdart/rxdart.dart';
 
 class LoggerListener implements LogGatherer<LogRecord> {
   LoggerListener() {
-    _subscription = Logger.root.onRecord.listen(
-      (record) {
-        _logsController.add(logs..add(record));
-      },
-    );
+    _subscription = Logger.root.onRecord.listen((record) {
+      _logsController.add(logs..add(record));
+    });
   }
 
   final _logsController = BehaviorSubject<List<LogRecord>>.seeded([]);

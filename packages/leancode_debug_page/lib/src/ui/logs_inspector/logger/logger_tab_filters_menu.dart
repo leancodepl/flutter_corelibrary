@@ -6,11 +6,7 @@ import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/labeled_dropdo
 import 'package:leancode_debug_page/src/ui/typography.dart';
 import 'package:logging/logging.dart';
 
-enum LogSearchType {
-  loggerName,
-  logMessage,
-  all,
-}
+enum LogSearchType { loggerName, logMessage, all }
 
 class LoggerTabFiltersMenu extends StatefulWidget {
   const LoggerTabFiltersMenu({
@@ -53,10 +49,7 @@ class _LoggerTabFiltersMenuState extends State<LoggerTabFiltersMenu> {
     widget._controller.loggerFilters.value = [
       if (logLevel != null) LoggerLevelFilter(desiredLevel: logLevel),
       if (searchPhrase.isNotEmpty)
-        LoggerSearchFilter(
-          type: searchType,
-          phrase: searchPhrase,
-        ),
+        LoggerSearchFilter(type: searchType, phrase: searchPhrase),
     ];
   }
 

@@ -18,7 +18,7 @@ class LogsInspectorShareButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShareButton(
-      onPressed: () async {
+      onPressed: (sharePositionOrigin) async {
         final String sharedData;
         final tabIndex = DefaultTabController.of(context).index;
 
@@ -41,7 +41,12 @@ class LogsInspectorShareButton extends StatelessWidget {
         }
 
         if (sharedData.isNotEmpty) {
-          await Share.share(sharedData);
+          await SharePlus.instance.share(
+            ShareParams(
+              text: sharedData,
+              sharePositionOrigin: sharePositionOrigin,
+            ),
+          );
         }
       },
     );

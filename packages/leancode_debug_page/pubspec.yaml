@@ -1,13 +1,13 @@
 name: leancode_debug_page
-version: 3.1.1
+version: 3.1.2
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_debug_page
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
   A package providing a debug page which shows outgoing http requests and Logger logs
 
 environment:
-  sdk: '>=3.6.0 <4.0.0'
-  flutter: ">=3.27.0"
+  sdk: '>=3.10.0 <4.0.0'
+  flutter: ">=3.38.0"
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dependencies:
   logging: ^1.2.0
   rxdart: ^0.28.0
   sensors_plus: ^6.0.0
-  share_plus: ^10.0.0
+  share_plus: ^13.2.0
 
 dev_dependencies:
   custom_lint: ^0.7.0

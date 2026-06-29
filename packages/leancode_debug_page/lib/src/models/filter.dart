@@ -5,12 +5,10 @@ extension ApplyExtension<T> on List<Filter<T>> {
     final sourceCopy = [...source];
 
     final criteriaMet = await Future.wait(
-      sourceCopy.map(
-        (item) async {
-          final f = await Future.wait(map((filter) => filter.filter(item)));
-          return f.every((e) => e);
-        },
-      ),
+      sourceCopy.map((item) async {
+        final f = await Future.wait(map((filter) => filter.filter(item)));
+        return f.every((e) => e);
+      }),
     );
 
     return sourceCopy.indexed

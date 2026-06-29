@@ -6,23 +6,16 @@ import 'package:leancode_debug_page/src/ui/logs_inspector/requests/logs_inspecto
 import 'package:leancode_debug_page/src/ui/logs_inspector/widgets/logs_inspector_share_button.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
 
-enum LogsInspectorTab {
-  requests,
-  logs,
-}
+enum LogsInspectorTab { requests, logs }
 
 class LogsInspectorRoute extends DebugPageRoute {
   LogsInspectorRoute(DebugPageController controller)
-      : super(
-          builder: (context) => LogsInspector(controller: controller),
-        );
+    : super(builder: (context) => LogsInspector(controller: controller));
 }
 
 class LogsInspector extends StatefulWidget {
-  const LogsInspector({
-    super.key,
-    required DebugPageController controller,
-  }) : _controller = controller;
+  const LogsInspector({super.key, required DebugPageController controller})
+    : _controller = controller;
 
   final DebugPageController _controller;
 
@@ -72,27 +65,18 @@ class _LogsInspectorState extends State<LogsInspector> {
           bottom: TabBar(
             labelPadding: const EdgeInsets.only(bottom: 8),
             labelStyle: DebugPageTypography.medium,
-            tabs: const [
-              Text('Requests'),
-              Text('Logs'),
-            ],
+            tabs: const [Text('Requests'), Text('Logs')],
           ),
         ),
-        body: Column(
+        body: TabBarView(
           children: [
-            Expanded(
-              child: TabBarView(
-                children: [
-                  LogsInspectorRequestsTab(
-                    controller: widget._controller,
-                    showFilters: showFilters,
-                  ),
-                  LogsInspectorLoggerTab(
-                    controller: widget._controller,
-                    showFilters: showFilters,
-                  ),
-                ],
-              ),
+            LogsInspectorRequestsTab(
+              controller: widget._controller,
+              showFilters: showFilters,
+            ),
+            LogsInspectorLoggerTab(
+              controller: widget._controller,
+              showFilters: showFilters,
             ),
           ],
         ),

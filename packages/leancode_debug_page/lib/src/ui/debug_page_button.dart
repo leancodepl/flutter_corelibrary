@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:leancode_debug_page/leancode_debug_page.dart';
 
 class DebugPageButton extends StatelessWidget {
-  const DebugPageButton({
-    super.key,
-    required DebugPageController controller,
-  }) : _controller = controller;
+  const DebugPageButton({super.key, required DebugPageController controller})
+    : _controller = controller;
 
   final DebugPageController _controller;
 
@@ -32,9 +30,8 @@ class DebugPageButton extends StatelessWidget {
 }
 
 class _DraggableFloatingButton extends StatefulWidget {
-  const _DraggableFloatingButton({
-    required DebugPageController controller,
-  }) : _controller = controller;
+  const _DraggableFloatingButton({required DebugPageController controller})
+    : _controller = controller;
 
   final DebugPageController _controller;
 

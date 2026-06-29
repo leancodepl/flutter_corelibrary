@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
 
 class MapView extends StatelessWidget {
-  const MapView({
-    super.key,
-    required this.map,
-  });
+  const MapView({super.key, required this.map});
 
   final Map<Object, Object> map;
 
@@ -14,16 +11,14 @@ class MapView extends StatelessWidget {
     return DefaultTextStyle.merge(
       style: DebugPageTypography.medium,
       child: Table(
-        children: map.entries.map(
-          (entry) {
-            return TableRow(
-              children: [
-                Text(entry.key.toString()),
-                Text(entry.value.toString()),
-              ],
-            );
-          },
-        ).toList(),
+        children: map.entries.map((entry) {
+          return TableRow(
+            children: [
+              Text(entry.key.toString()),
+              Text(entry.value.toString()),
+            ],
+          );
+        }).toList(),
       ),
     );
   }

@@ -18,10 +18,7 @@ class LoggerLevelFilter implements Filter<LogRecord> {
 }
 
 class LoggerSearchFilter implements Filter<LogRecord> {
-  const LoggerSearchFilter({
-    required this.type,
-    required this.phrase,
-  });
+  const LoggerSearchFilter({required this.type, required this.phrase});
 
   final LogSearchType type;
   final String phrase;
