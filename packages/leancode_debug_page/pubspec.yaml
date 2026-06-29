@@ -16,7 +16,7 @@ dependencies:
   logging: ^1.2.0
   rxdart: ^0.28.0
   sensors_plus: ^6.0.0
-  share_plus: ^10.0.0
+  share_plus: ^13.2.0
 
 dev_dependencies:
   custom_lint: ^0.7.0
