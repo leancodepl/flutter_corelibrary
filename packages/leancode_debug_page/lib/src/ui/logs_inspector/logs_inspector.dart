@@ -78,21 +78,15 @@ class _LogsInspectorState extends State<LogsInspector> {
             ],
           ),
         ),
-        body: Column(
+        body: TabBarView(
           children: [
-            Expanded(
-              child: TabBarView(
-                children: [
-                  LogsInspectorRequestsTab(
-                    controller: widget._controller,
-                    showFilters: showFilters,
-                  ),
-                  LogsInspectorLoggerTab(
-                    controller: widget._controller,
-                    showFilters: showFilters,
-                  ),
-                ],
-              ),
+            LogsInspectorRequestsTab(
+              controller: widget._controller,
+              showFilters: showFilters,
+            ),
+            LogsInspectorLoggerTab(
+              controller: widget._controller,
+              showFilters: showFilters,
             ),
           ],
         ),
