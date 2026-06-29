@@ -1,3 +1,8 @@
+## 3.1.2
+
+- Upgrade `share_plus` dependency to `^13.2.0`
+- Fix share buttons on iOS and macOS
+
 ## 3.1.1
 
 - Fix decoding non-UTF8 data in requests.
