@@ -25,10 +25,7 @@ class SuggestUpdateDialog extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 child: DefaultTextStyle(
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
