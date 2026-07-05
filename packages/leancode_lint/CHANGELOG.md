@@ -1,3 +1,7 @@
+# 24.1.0
+
+- Update [`prefer_equatable_mixin`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_equatable_mixin) to suggest mixing in `Equatable` directly when the linted package depends on `equatable` 2.1.0 or higher, where `EquatableMixin` is deprecated.
+
 # 24.0.0
 
 - Add new custom lints:

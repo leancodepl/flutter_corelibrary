@@ -5,6 +5,7 @@ import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
@@ -17,7 +18,7 @@ class PreferEquatableMixin extends AnalysisRule {
 
   static const code = LintCode(
     'prefer_equatable_mixin',
-    'The class {0} should mix in EquatableMixin instead of extending Equatable.',
+    'The class {0} should mix in {1} instead of extending Equatable.',
     correctionMessage: 'Replace with a mixin.',
     severity: .WARNING,
   );
@@ -69,11 +70,22 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (isEquatable && !isEquatableMixin) {
       rule.reportAtNode(
         extendsClause.superclass,
-        arguments: [node.namePart.typeName.lexeme],
+        arguments: [
+          node.namePart.typeName.lexeme,
+          _recommendedMixinName(extendsClause.superclass),
+        ],
       );
     }
   }
 }
+
+/// Recommends `Equatable` for `equatable` >= 2.1.0 (where it's a `mixin class`)
+/// and the deprecated `EquatableMixin` for older versions.
+String _recommendedMixinName(NamedType equatableType) =>
+    switch (equatableType.element) {
+      ClassElement(isMixinClass: true) => 'Equatable',
+      _ => 'EquatableMixin',
+    };
 
 class ConvertToEquatableMixin extends ResolvedCorrectionProducer {
   ConvertToEquatableMixin({required super.context});
@@ -82,7 +94,7 @@ class ConvertToEquatableMixin extends ResolvedCorrectionProducer {
   FixKind get fixKind => const .new(
     'leancode_lint.fix.convertToEquatableMixin',
     DartFixKindPriority.standard,
-    'Convert to EquatableMixin',
+    'Convert to a mixin',
   );
 
   @override
@@ -93,6 +105,7 @@ class ConvertToEquatableMixin extends ResolvedCorrectionProducer {
     final classDeclaration = node.thisOrAncestorOfType<ClassDeclaration>()!;
     final extendsClause = classDeclaration.extendsClause!;
     final withClause = classDeclaration.withClause;
+    final mixinName = _recommendedMixinName(extendsClause.superclass);
 
     await builder.addDartFileEdit(file, (builder) {
       if (withClause != null) {
@@ -103,12 +116,12 @@ class ConvertToEquatableMixin extends ResolvedCorrectionProducer {
           )
           ..addSimpleInsertion(
             withClause.mixinTypes.first.offset,
-            'EquatableMixin, ',
+            '$mixinName, ',
           );
       } else {
         builder.addSimpleReplacement(
           extendsClause.sourceRange,
-          'with EquatableMixin',
+          'with $mixinName',
         );
       }
     });

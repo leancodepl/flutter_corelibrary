@@ -826,7 +826,12 @@ None
 
 ### `prefer_equatable_mixin`
 
-**DO** mix in `EquatableMixin` instead of extending `Equatable`.
+**DO** mix in `Equatable` instead of extending it.
+
+Since `equatable` 2.1.0, `Equatable` can be used as a mixin and `EquatableMixin`
+is deprecated. This lint suggests mixing in `Equatable` directly when the package
+depends on `equatable` 2.1.0 or higher, and falls back to suggesting `EquatableMixin`
+for older versions.
 
 **BAD:**
 
@@ -848,6 +853,17 @@ class Foobar extends Equatable {
 ```dart
 import 'package:equatable/equatable.dart';
 
+// `equatable` >= 2.1.0
+class Foobar with Equatable {
+  const Foobar(this.value);
+
+  final int value;
+
+  @override
+  List<Object?> get props => [value];
+}
+
+// `equatable` < 2.1.0
 class Foobar with EquatableMixin {
   const Foobar(this.value);
 
