@@ -242,7 +242,7 @@ List<String> _findMissingFieldNames(
 ///
 /// Returns `false` when:
 /// - the superclass has no Equatable-shaped ancestor (e.g. a plain class that
-///   only mixes in `EquatableMixin` — its supertype is [Object]);
+///   only mixes in `Equatable`/`EquatableMixin` — its supertype is [Object]);
 /// - the superclass is `Equatable` or `EquatableMixin` itself (both declare
 ///   `props` as abstract, so `super.props` would target the abstract member);
 /// - the superclass is an intermediate Equatable-shaped class that does not
