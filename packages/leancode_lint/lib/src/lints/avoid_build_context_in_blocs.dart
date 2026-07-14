@@ -18,7 +18,10 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// constructor) and declaring one inside a Bloc/Cubit (as a parameter or field).
 class AvoidBuildContextInBlocs extends AnalysisRule {
   AvoidBuildContextInBlocs()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+    : super(
+        name: code.lowerCaseName,
+        description: "Avoid letting a 'BuildContext' cross into a Bloc/Cubit.",
+      );
 
   static const code = LintCode(
     'avoid_build_context_in_blocs',
@@ -45,7 +48,7 @@ class AvoidBuildContextInBlocs extends AnalysisRule {
   }
 }
 
-const _passingMessage = "Avoid passing 'BuildContext' to blocs.";
+const _passingMessage = "Avoid passing 'BuildContext' to a Bloc/Cubit.";
 
 String _parameterMessage(BlocType type) => switch (type) {
   .bloc => "Avoid declaring 'BuildContext' parameters for Blocs.",
