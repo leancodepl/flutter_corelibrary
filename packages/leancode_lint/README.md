@@ -141,6 +141,56 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_build_context_in_blocs</code></summary>
+
+### `avoid_build_context_in_blocs`
+
+**AVOID** letting a `BuildContext` cross into a Bloc/Cubit.
+
+A `BuildContext` couples business logic to the widget tree, which risks stale
+contexts and wrong `InheritedWidget` reads and makes the logic hard to test. The
+rule flags both passing a `BuildContext` into a Bloc/Cubit (via a method such as
+`add`, or a constructor) and declaring one inside a Bloc/Cubit (as a parameter or
+field). A value merely derived from a context (e.g. `MediaQuery.sizeOf(context)`)
+is allowed.
+
+**BAD:**
+
+```dart
+bloc.add(CounterEvent(context));
+
+final event = CounterEvent(context);
+bloc.add(event);
+
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  final BuildContext context;
+
+  void another(BuildContext context) {}
+}
+```
+
+**GOOD:**
+
+```dart
+bloc.add(CounterEvent());
+bloc.add(CounterEvent(MediaQuery.sizeOf(context)));
+
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  void another() {}
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>avoid_catch_error</code></summary>
 
 ### `avoid_catch_error`

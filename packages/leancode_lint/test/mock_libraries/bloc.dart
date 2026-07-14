@@ -15,6 +15,7 @@ abstract class Cubit<State> extends BlocBase<State> {
 
 abstract class Bloc<Event, State> extends BlocBase<State> {
   Bloc(State initialState) : super(initialState);
+  void add(Event event) {}
 }
 ''');
     super.setUp();
