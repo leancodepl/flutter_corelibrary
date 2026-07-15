@@ -257,6 +257,56 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_direct_collection_equality_checks</code></summary>
+
+### `avoid_direct_collection_equality_checks`
+
+**AVOID** comparing collections directly with `==` or `!=`.
+
+For `List`, `Set`, and `Map`, `==` compares identity (reference equality), not
+contents, so `[1, 2] == [1, 2]` is `false`. Use a content-equality helper
+instead.
+
+The rule offers two quick fixes: one rewriting the comparison to Flutter's
+`listEquals`/`setEquals`/`mapEquals` (from `package:flutter/foundation.dart`),
+and one to `package:collection`'s `ListEquality`/`SetEquality`/`MapEquality`.
+Both add the required import and negate the result for `!=`.
+
+**BAD:**
+
+```dart
+bool sameItems(List<int> a, List<int> b) {
+  return a == b;
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:flutter/foundation.dart';
+
+bool sameItems(List<int> a, List<int> b) {
+  return listEquals(a, b);
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:collection/collection.dart';
+
+bool sameItems(List<int> a, List<int> b) {
+  return const ListEquality<int>().equals(a, b);
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
