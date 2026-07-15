@@ -18,17 +18,13 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// constructor) and declaring one inside a Bloc/Cubit (as a parameter or field).
 class AvoidBuildContextInBlocs extends AnalysisRule {
   AvoidBuildContextInBlocs()
-    : super(
-        name: code.lowerCaseName,
-        description: "Avoid letting a 'BuildContext' cross into a Bloc/Cubit.",
-      );
+    : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'avoid_build_context_in_blocs',
-    // The specific clause is supplied per report site via `arguments`.
-    '{0}',
+    "Avoid using 'BuildContext' in a Bloc/Cubit.",
     correctionMessage:
-        "Business logic shouldn't depend on the widget tree. Pass only the data the Bloc/Cubit needs.",
+        "Remove the 'BuildContext' and directly pass only the data the Bloc/Cubit needs instead.",
     severity: .WARNING,
   );
 
@@ -47,18 +43,6 @@ class AvoidBuildContextInBlocs extends AnalysisRule {
       ..addClassDeclaration(this, visitor);
   }
 }
-
-const _passingMessage = "Avoid passing 'BuildContext' to a Bloc/Cubit.";
-
-String _parameterMessage(BlocType type) => switch (type) {
-  .bloc => "Avoid declaring 'BuildContext' parameters for Blocs.",
-  .cubit => "Avoid declaring 'BuildContext' parameters for Cubits.",
-};
-
-String _fieldMessage(BlocType type) => switch (type) {
-  .bloc => "Avoid declaring 'BuildContext' fields in Blocs.",
-  .cubit => "Avoid declaring 'BuildContext' fields in Cubits.",
-};
 
 class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
@@ -95,8 +79,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final element = node.declaredFragment?.element;
-    final blocType = determineBlocType(element);
-    if (blocType == null) {
+    if (determineBlocType(element) == null) {
       return;
     }
 
@@ -108,32 +91,32 @@ class _Visitor extends SimpleAstVisitor<void> {
     for (final member in members) {
       switch (member) {
         case MethodDeclaration(:final parameters?):
-          _checkParameters(parameters, blocType);
+          _checkParameters(parameters);
         case ConstructorDeclaration(:final parameters):
-          _checkParameters(parameters, blocType);
+          _checkParameters(parameters);
         case FieldDeclaration(:final fields):
-          _checkFields(fields, blocType);
+          _checkFields(fields);
         case _:
           break;
       }
     }
   }
 
-  void _checkParameters(FormalParameterList parameters, BlocType blocType) {
+  void _checkParameters(FormalParameterList parameters) {
     for (final parameter in parameters.parameters) {
       final name = parameter.name;
       final type = parameter.declaredFragment?.element.type;
       if (name != null && type != null && _isBuildContext(type)) {
-        rule.reportAtToken(name, arguments: [_parameterMessage(blocType)]);
+        rule.reportAtToken(name);
       }
     }
   }
 
-  void _checkFields(VariableDeclarationList fields, BlocType blocType) {
+  void _checkFields(VariableDeclarationList fields) {
     for (final variable in fields.variables) {
       final type = variable.declaredFragment?.element.type;
       if (type != null && _isBuildContext(type)) {
-        rule.reportAtToken(variable.name, arguments: [_fieldMessage(blocType)]);
+        rule.reportAtToken(variable.name);
       }
     }
   }
@@ -142,7 +125,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     for (final argument in argumentList.arguments) {
       final expression = argument.argumentExpression;
       if (_carriesContext(expression, {}, 0)) {
-        rule.reportAtNode(expression, arguments: [_passingMessage]);
+        rule.reportAtNode(expression);
       }
     }
   }
