@@ -8,10 +8,12 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:analyzer/workspace/workspace.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/type_checker.dart';
+import 'package:yaml/yaml.dart';
 
 /// Displays a warning when collections are compared directly with `==` or `!=`.
 class AvoidDirectCollectionEqualityChecks extends AnalysisRule {
@@ -21,7 +23,8 @@ class AvoidDirectCollectionEqualityChecks extends AnalysisRule {
   static const code = LintCode(
     'avoid_direct_collection_equality_checks',
     'Avoid comparing {0}s directly with `==` or `!=`. This compares identity, not contents.',
-    correctionMessage: 'Use `{1}` or `const {2}().equals` instead.',
+    correctionMessage:
+        'Use `{1}` or `const {2}().equals` to compare contents, or `identical` if an identity check is intended.',
     severity: .WARNING,
   );
 
@@ -59,7 +62,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       node,
       arguments: [
         leftKind.displayName,
-        leftKind.flutterFn,
+        leftKind.flutterFunction,
         leftKind.collectionClass,
       ],
     );
@@ -69,13 +72,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 /// The kind of a core collection type, used to pick the matching equality
 /// helper for the quick fixes.
 enum CollectionKind {
-  list('List', flutterFn: 'listEquals', collectionClass: 'ListEquality'),
-  set('Set', flutterFn: 'setEquals', collectionClass: 'SetEquality'),
-  map('Map', flutterFn: 'mapEquals', collectionClass: 'MapEquality');
+  list('List', flutterFunction: 'listEquals', collectionClass: 'ListEquality'),
+  set('Set', flutterFunction: 'setEquals', collectionClass: 'SetEquality'),
+  map('Map', flutterFunction: 'mapEquals', collectionClass: 'MapEquality');
 
   const CollectionKind(
     this.displayName, {
-    required this.flutterFn,
+    required this.flutterFunction,
     required this.collectionClass,
   });
 
@@ -83,7 +86,7 @@ enum CollectionKind {
   final String displayName;
 
   /// The `package:flutter/foundation.dart` function, e.g. `listEquals`.
-  final String flutterFn;
+  final String flutterFunction;
 
   /// The `package:collection` equality class, e.g. `ListEquality`.
   final String collectionClass;
@@ -137,7 +140,7 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
     final kind = binary == null
         ? null
         : collectionKind(binary.leftOperand.staticType);
-    return [(kind ?? CollectionKind.list).flutterFn];
+    return [(kind ?? CollectionKind.list).flutterFunction];
   }
 
   @override
@@ -165,7 +168,7 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
         ..addReplacement(
           range.node(binary),
           (builder) => builder.write(
-            '${negate ? '!' : ''}${kind.flutterFn}($left, $right)',
+            '${negate ? '!' : ''}${kind.flutterFunction}($left, $right)',
           ),
         )
         ..format(range.node(binary));
@@ -198,10 +201,44 @@ class ReplaceWithCollectionPackageEqualityFix
   @override
   CorrectionApplicability get applicability => .automatically;
 
+  /// Whether the package that owns the analyzed file directly depends on
+  /// `package:collection`. Transitive dependencies do not count, since the
+  /// rewrite must not introduce an import the package cannot resolve on its
+  /// own.
+  bool get _dependsOnCollection {
+    final WorkspacePackage? package = sessionHelper
+        .session
+        .analysisContext
+        .contextRoot
+        .workspace
+        .findPackageFor(file);
+    final pubspec = package?.root.getFile('pubspec.yaml');
+    if (pubspec == null || !pubspec.exists) {
+      return false;
+    }
+
+    final YamlNode document;
+    try {
+      document = loadYamlNode(pubspec.readAsStringSync());
+    } on Exception {
+      return false;
+    }
+    if (document is! YamlMap) {
+      return false;
+    }
+
+    final dependencies = document['dependencies'];
+    return dependencies is YamlMap && dependencies.containsKey('collection');
+  }
+
   @override
   Future<void> compute(ChangeBuilder builder) async {
     final binary = _targetBinary(node);
     if (binary == null) {
+      return;
+    }
+
+    if (!_dependsOnCollection) {
       return;
     }
 
@@ -247,6 +284,44 @@ class ReplaceWithCollectionPackageEqualityFix
           }
           builder.write('().equals($left, $right)');
         })
+        ..format(range.node(binary));
+    });
+  }
+}
+
+/// Replaces a direct collection equality check with an `identical` call, for
+/// the cases where an identity comparison is actually intended.
+class ReplaceWithIdenticalFix extends ResolvedCorrectionProducer {
+  ReplaceWithIdenticalFix({required super.context});
+
+  @override
+  FixKind get fixKind => const .new(
+    'leancode_lint.fix.replaceWithIdentical',
+    DartFixKindPriority.standard,
+    "Replace with 'identical'",
+  );
+
+  @override
+  CorrectionApplicability get applicability => .automatically;
+
+  @override
+  Future<void> compute(ChangeBuilder builder) async {
+    final binary = _targetBinary(node);
+    if (binary == null) {
+      return;
+    }
+
+    final negate = binary.operator.type == TokenType.BANG_EQ;
+    final left = binary.leftOperand.toSource();
+    final right = binary.rightOperand.toSource();
+
+    await builder.addDartFileEdit(file, (builder) {
+      builder
+        ..addReplacement(
+          range.node(binary),
+          (builder) =>
+              builder.write('${negate ? '!' : ''}identical($left, $right)'),
+        )
         ..format(range.node(binary));
     });
   }

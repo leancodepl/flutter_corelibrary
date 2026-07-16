@@ -267,10 +267,14 @@ For `List`, `Set`, and `Map`, `==` compares identity (reference equality), not
 contents, so `[1, 2] == [1, 2]` is `false`. Use a content-equality helper
 instead.
 
-The rule offers two quick fixes: one rewriting the comparison to Flutter's
+The rule offers three quick fixes: one rewriting the comparison to Flutter's
 `listEquals`/`setEquals`/`mapEquals` (from `package:flutter/foundation.dart`),
-and one to `package:collection`'s `ListEquality`/`SetEquality`/`MapEquality`.
-Both add the required import and negate the result for `!=`.
+one to `package:collection`'s `ListEquality`/`SetEquality`/`MapEquality`, and one
+to `identical` for the cases where an identity comparison is actually intended.
+The `package:collection` fix is only offered when the equality class is reachable
+through a direct dependency — either `package:collection` itself or a package
+that re-exports it — and imports it via that dependency. The content-equality
+fixes add the required import, and all fixes negate the result for `!=`.
 
 **BAD:**
 

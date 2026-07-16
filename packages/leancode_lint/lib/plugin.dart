@@ -74,6 +74,10 @@ final class LeanCodeLintPlugin extends Plugin {
         AvoidDirectCollectionEqualityChecks.code,
         ReplaceWithCollectionPackageEqualityFix.new,
       )
+      ..registerFixForRule(
+        AvoidDirectCollectionEqualityChecks.code,
+        ReplaceWithIdenticalFix.new,
+      )
       ..registerWarningRule(HookWidgetDoesNotUseHooks())
       ..registerFixForRule(
         HookWidgetDoesNotUseHooks.code,
