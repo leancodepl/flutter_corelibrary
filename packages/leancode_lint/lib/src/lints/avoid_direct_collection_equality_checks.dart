@@ -212,7 +212,7 @@ class ReplaceWithCollectionPackageEqualityFix
         .contextRoot
         .workspace
         .findPackageFor(file);
-    final pubspec = package?.root.getFile('pubspec.yaml');
+    final pubspec = package?.root.getChildAssumingFile('pubspec.yaml');
     if (pubspec == null || !pubspec.exists) {
       return false;
     }
