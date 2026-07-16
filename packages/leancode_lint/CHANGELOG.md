@@ -1,3 +1,8 @@
+# Unreleased
+
+- Add new custom lints:
+  - [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build)
+
 # 24.0.0
 
 - Add new custom lints:

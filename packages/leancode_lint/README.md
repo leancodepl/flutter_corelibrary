@@ -257,6 +257,48 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_context_read_in_build</code></summary>
+
+### `avoid_context_read_in_build`
+
+**AVOID** reading reactive data with `context.read` inside a `build` method.
+
+`read` grabs a value once and never re-subscribes, so using its result to render
+leaves the UI stale when the value changes — `watch` (or a `BlocBuilder` /
+`BlocSelector`) is what you want.
+
+The lint is intentionally narrow. It does **not** flag the many legitimate uses
+of `context.read` in `build`: calling a method, adding a bloc event, or grabbing
+a bloc/service reference. It only flags reads whose value is consumed as data —
+a getter/property read (e.g. `.state`), or a plain non-bloc value used directly.
+Reads inside deferred interaction callbacks (`onTap`, `onPressed`) are exempt;
+reads inside builder closures that run during `build` are checked.
+
+**BAD:**
+
+```dart
+Widget build(BuildContext context) {
+  final count = context.read<CounterCubit>().state;
+  return Text('$count');
+}
+```
+
+**GOOD:**
+
+```dart
+Widget build(BuildContext context) {
+  final count = context.watch<CounterCubit>().state;
+  return Text('$count');
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
