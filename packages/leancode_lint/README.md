@@ -938,7 +938,7 @@ None.
 
 **PREFER** declaring a static-members-only holder as an `abstract final class` instead of using a private constructor to prevent instantiation.
 
-The lint fires only on a plain `class` that exposes at least one static member and whose sole constructor is a private, unnamed-style `_()` used purely to block instantiation. To avoid false positives it does **not** fire when the class has any other constructor or a factory, when the private constructor has parameters, initializers, a redirection or a non-empty body, when the class has any instance member, when it already carries a class modifier (`abstract`, `final`, `sealed`, `base`, `interface`, `mixin`), or when it `extends`/`with`/`implements` anything.
+The lint fires only on a plain `class` with at least one static member whose sole constructor is a private, empty `_()` guarding against instantiation. To stay conservative it skips classes with any other constructor or factory, any instance member, a non-trivial `_()` (parameters, initializers, redirection or body), an existing class modifier, or an `extends`/`with`/`implements` clause.
 
 The `Convert to an abstract final class` quick fix marks the class `abstract final` and removes the redundant private constructor.
 
