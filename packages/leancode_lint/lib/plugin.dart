@@ -16,6 +16,7 @@ import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:leancode_lint/src/lints/missing_equatable_props.dart';
 import 'package:leancode_lint/src/lints/never_discard_build_context.dart';
+import 'package:leancode_lint/src/lints/prefer_abstract_final_class.dart';
 import 'package:leancode_lint/src/lints/prefer_equatable_mixin.dart';
 import 'package:leancode_lint/src/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/src/lints/start_comments_with_space.dart';
@@ -96,6 +97,11 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerFixForRule(
         PreferEquatableMixin.code,
         ConvertToEquatableMixin.new,
+      )
+      ..registerWarningRule(PreferAbstractFinalClass())
+      ..registerFixForRule(
+        PreferAbstractFinalClass.code,
+        ConvertToAbstractFinalClass.new,
       )
       ..registerWarningRule(MissingEquatableProps())
       ..registerFixForRule(
