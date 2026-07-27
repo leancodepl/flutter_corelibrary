@@ -112,7 +112,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       ) when _isBuildContext(fragment.element.type)) {
         rule.reportAtToken(
           name,
-          arguments: ['declaring', 'parameter in', _blocTypeName(blocType)],
+          arguments: ['declaring', 'parameter in', blocType.name],
         );
       }
     }
@@ -124,7 +124,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (type != null && _isBuildContext(type)) {
         rule.reportAtToken(
           variable.name,
-          arguments: ['declaring', 'field in', _blocTypeName(blocType)],
+          arguments: ['declaring', 'field in', blocType.name],
         );
       }
     }
@@ -136,7 +136,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (_carriesContext(expression, {}, 0)) {
         rule.reportAtNode(
           expression,
-          arguments: ['passing', 'to', _blocTypeName(blocType)],
+          arguments: ['passing', 'to', blocType.name],
         );
       }
     }
@@ -214,11 +214,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool _isBuildContext(DartType type) =>
       _buildContextChecker.isExactlyType(type);
 }
-
-String _blocTypeName(BlocType type) => switch (type) {
-  .bloc => 'Bloc',
-  .cubit => 'Cubit',
-};
 
 /// Finds the declaration initializer of a specific [LocalVariableElement].
 class _InitializerFinder extends GeneralizingAstVisitor<void> {

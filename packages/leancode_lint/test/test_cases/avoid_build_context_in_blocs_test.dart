@@ -59,9 +59,9 @@ void f(CounterBloc bloc, BuildContext context) {
       lint(
         code.lastIndexOf('context'),
         'context'.length,
-        messageContainsAll: ["Avoid passing a 'BuildContext' to a Bloc."],
+        messageContainsAll: ["Avoid passing a 'BuildContext' to a bloc."],
         correctionContains:
-            "Remove the 'BuildContext' and pass only the data the Bloc needs.",
+            "Remove the 'BuildContext' and pass only the data the bloc needs.",
       ),
     ]);
   }
@@ -130,9 +130,9 @@ void f(BuildContext context) {
       lint(
         code.lastIndexOf('context'),
         'context'.length,
-        messageContainsAll: ["Avoid passing a 'BuildContext' to a Cubit."],
+        messageContainsAll: ["Avoid passing a 'BuildContext' to a cubit."],
         correctionContains:
-            "Remove the 'BuildContext' and pass only the data the Cubit needs.",
+            "Remove the 'BuildContext' and pass only the data the cubit needs.",
       ),
     ]);
   }
@@ -154,7 +154,7 @@ class CounterCubit extends Cubit<int> {
         code.lastIndexOf('context'),
         'context'.length,
         messageContainsAll: [
-          "Avoid declaring a 'BuildContext' parameter in a Cubit.",
+          "Avoid declaring a 'BuildContext' parameter in a cubit.",
         ],
       ),
     ]);
@@ -218,7 +218,7 @@ class CounterCubit extends Cubit<int> {
         code.lastIndexOf('context'),
         'context'.length,
         messageContainsAll: [
-          "Avoid declaring a 'BuildContext' field in a Cubit.",
+          "Avoid declaring a 'BuildContext' field in a cubit.",
         ],
       ),
     ]);
