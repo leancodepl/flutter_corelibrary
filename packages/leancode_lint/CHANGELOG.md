@@ -2,6 +2,10 @@
 
 - Add new custom lints:
   - [`avoid_build_context_in_blocs`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_build_context_in_blocs)
+  
+# 25.0.0
+
+- Add new custom lint [`prefer_abstract_final_class`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_abstract_final_class)
 
 # 24.0.0
 
