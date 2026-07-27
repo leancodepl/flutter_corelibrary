@@ -42,7 +42,7 @@ void f(CounterBloc bloc, BuildContext context) {
   }
 
   Future<void> test_passingContextDirectly_flagged() async {
-    await assertDiagnosticsInRanges('''
+    const code = '''
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 
@@ -51,9 +51,19 @@ class CounterBloc extends Bloc<Object, int> {
 }
 
 void f(CounterBloc bloc, BuildContext context) {
-  bloc.add([!context!]);
+  bloc.add(context);
 }
-''');
+''';
+
+    await assertDiagnostics(code, [
+      lint(
+        code.lastIndexOf('context'),
+        'context'.length,
+        messageContainsAll: ["Avoid passing a 'BuildContext' to a Bloc."],
+        correctionContains:
+            "Remove the 'BuildContext' and pass only the data the Bloc needs.",
+      ),
+    ]);
   }
 
   Future<void> test_passingContextViaLocalVariable_flagged() async {
@@ -103,7 +113,7 @@ void f(CounterBloc bloc, BuildContext context) {
   }
 
   Future<void> test_passingContextToConstructor_flagged() async {
-    await assertDiagnosticsInRanges('''
+    const code = '''
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 
@@ -112,22 +122,42 @@ class CounterCubit extends Cubit<int> {
 }
 
 void f(BuildContext context) {
-  CounterCubit([!context!]);
+  CounterCubit(context);
 }
-''');
+''';
+
+    await assertDiagnostics(code, [
+      lint(
+        code.lastIndexOf('context'),
+        'context'.length,
+        messageContainsAll: ["Avoid passing a 'BuildContext' to a Cubit."],
+        correctionContains:
+            "Remove the 'BuildContext' and pass only the data the Cubit needs.",
+      ),
+    ]);
   }
 
   Future<void> test_cubitMethodParameter_flagged() async {
-    await assertDiagnosticsInRanges('''
+    const code = '''
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 
 class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
 
-  void another(BuildContext [!context!]) {}
+  void another(BuildContext context) {}
 }
-''');
+''';
+
+    await assertDiagnostics(code, [
+      lint(
+        code.lastIndexOf('context'),
+        'context'.length,
+        messageContainsAll: [
+          "Avoid declaring a 'BuildContext' parameter in a Cubit.",
+        ],
+      ),
+    ]);
   }
 
   Future<void> test_blocMethodParameter_flagged() async {
@@ -172,14 +202,87 @@ class CounterCubit extends Cubit<int> {
   }
 
   Future<void> test_cubitField_flagged() async {
-    await assertDiagnosticsInRanges('''
+    const code = '''
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 
 class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
 
-  late final BuildContext [!context!];
+  late final BuildContext context;
+}
+''';
+
+    await assertDiagnostics(code, [
+      lint(
+        code.lastIndexOf('context'),
+        'context'.length,
+        messageContainsAll: [
+          "Avoid declaring a 'BuildContext' field in a Cubit.",
+        ],
+      ),
+    ]);
+  }
+
+  Future<void> test_passingParenthesizedLocalVariable_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+
+class CounterEvent {
+  CounterEvent(this.context);
+  final BuildContext context;
+}
+
+class CounterBloc extends Bloc<Object, int> {
+  CounterBloc() : super(0);
+}
+
+void f(CounterBloc bloc, BuildContext context) {
+  final event = CounterEvent(context);
+  bloc.add([!(event)!]);
+}
+''');
+  }
+
+  Future<void> test_passingCastLocalVariable_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+
+class CounterEvent {
+  CounterEvent(this.context);
+  final BuildContext context;
+}
+
+class CounterBloc extends Bloc<Object, int> {
+  CounterBloc() : super(0);
+}
+
+void f(CounterBloc bloc, BuildContext context) {
+  final event = CounterEvent(context);
+  bloc.add([!event as Object!]);
+}
+''');
+  }
+
+  Future<void> test_passingNullAssertedLocalVariable_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+
+class CounterEvent {
+  CounterEvent(this.context);
+  final BuildContext context;
+}
+
+class CounterBloc extends Bloc<Object, int> {
+  CounterBloc() : super(0);
+}
+
+void f(CounterBloc bloc, BuildContext context) {
+  final CounterEvent? event = CounterEvent(context) as dynamic;
+  bloc.add(/*[0*/event!/*0]*/);
 }
 ''');
   }

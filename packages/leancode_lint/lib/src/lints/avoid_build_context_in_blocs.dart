@@ -2,6 +2,7 @@ import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -22,9 +23,9 @@ class AvoidBuildContextInBlocs extends AnalysisRule {
 
   static const code = LintCode(
     'avoid_build_context_in_blocs',
-    "Avoid using 'BuildContext' in a Bloc/Cubit.",
+    "Avoid {0} a 'BuildContext' {1} a {2}.",
     correctionMessage:
-        "Remove the 'BuildContext' and directly pass only the data the Bloc/Cubit needs instead.",
+        "Remove the 'BuildContext' and pass only the data the {2} needs.",
     severity: .WARNING,
   );
 
@@ -57,29 +58,30 @@ class _Visitor extends SimpleAstVisitor<void> {
   // Passing side: `bloc.add(...)` and other method calls on a Bloc/Cubit.
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    final targetType = node.realTarget?.staticType;
-    if (targetType == null || determineBlocType(targetType.element) == null) {
+    final blocType = determineBlocType(node.realTarget?.staticType?.element);
+    if (blocType == null) {
       return;
     }
 
-    _reportContextArguments(node.argumentList);
+    _reportContextArguments(node.argumentList, blocType);
   }
 
   // Passing side: `CounterCubit(context)` / `CounterBloc(context)`.
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    if (determineBlocType(node.staticType?.element) == null) {
+    final blocType = determineBlocType(node.staticType?.element);
+    if (blocType == null) {
       return;
     }
 
-    _reportContextArguments(node.argumentList);
+    _reportContextArguments(node.argumentList, blocType);
   }
 
   // Declaration side: `BuildContext` parameters and fields inside a Bloc/Cubit.
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    final element = node.declaredFragment?.element;
-    if (determineBlocType(element) == null) {
+    final blocType = determineBlocType(node.declaredFragment?.element);
+    if (blocType == null) {
       return;
     }
 
@@ -91,41 +93,51 @@ class _Visitor extends SimpleAstVisitor<void> {
     for (final member in members) {
       switch (member) {
         case MethodDeclaration(:final parameters?):
-          _checkParameters(parameters);
+          _checkParameters(parameters, blocType);
         case ConstructorDeclaration(:final parameters):
-          _checkParameters(parameters);
+          _checkParameters(parameters, blocType);
         case FieldDeclaration(:final fields):
-          _checkFields(fields);
+          _checkFields(fields, blocType);
         case _:
           break;
       }
     }
   }
 
-  void _checkParameters(FormalParameterList parameters) {
+  void _checkParameters(FormalParameterList parameters, BlocType blocType) {
     for (final parameter in parameters.parameters) {
-      final name = parameter.name;
-      final type = parameter.declaredFragment?.element.type;
-      if (name != null && type != null && _isBuildContext(type)) {
-        rule.reportAtToken(name);
+      if (parameter case FormalParameter(
+        :final name?,
+        declaredFragment: final fragment?,
+      ) when _isBuildContext(fragment.element.type)) {
+        rule.reportAtToken(
+          name,
+          arguments: ['declaring', 'parameter in', _blocTypeName(blocType)],
+        );
       }
     }
   }
 
-  void _checkFields(VariableDeclarationList fields) {
+  void _checkFields(VariableDeclarationList fields, BlocType blocType) {
     for (final variable in fields.variables) {
       final type = variable.declaredFragment?.element.type;
       if (type != null && _isBuildContext(type)) {
-        rule.reportAtToken(variable.name);
+        rule.reportAtToken(
+          variable.name,
+          arguments: ['declaring', 'field in', _blocTypeName(blocType)],
+        );
       }
     }
   }
 
-  void _reportContextArguments(ArgumentList argumentList) {
+  void _reportContextArguments(ArgumentList argumentList, BlocType blocType) {
     for (final argument in argumentList.arguments) {
       final expression = argument.argumentExpression;
       if (_carriesContext(expression, {}, 0)) {
-        rule.reportAtNode(expression);
+        rule.reportAtNode(
+          expression,
+          arguments: ['passing', 'to', _blocTypeName(blocType)],
+        );
       }
     }
   }
@@ -150,8 +162,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return false;
     }
 
-    final type = expression.staticType;
-    if (type != null && _isBuildContext(type)) {
+    if (expression.staticType case final type? when _isBuildContext(type)) {
       return true;
     }
 
@@ -166,8 +177,14 @@ class _Visitor extends SimpleAstVisitor<void> {
             return true;
           }
         }
-      case SimpleIdentifier(:final Element element?)
-          when element is LocalVariableElement && visited.add(element):
+      case ParenthesizedExpression(:final expression):
+      case AsExpression(:final expression):
+        return _carriesContext(expression, visited, depth + 1);
+      case PostfixExpression(:final operand, :final operator)
+          when operator.type == TokenType.BANG:
+        return _carriesContext(operand, visited, depth + 1);
+      case SimpleIdentifier(:final LocalVariableElement element?)
+          when visited.add(element):
         final initializer = _localVariableInitializer(expression, element);
         if (_carriesContext(initializer, visited, depth + 1)) {
           return true;
@@ -198,12 +215,24 @@ class _Visitor extends SimpleAstVisitor<void> {
       _buildContextChecker.isExactlyType(type);
 }
 
+String _blocTypeName(BlocType type) => switch (type) {
+  .bloc => 'Bloc',
+  .cubit => 'Cubit',
+};
+
 /// Finds the declaration initializer of a specific [LocalVariableElement].
-class _InitializerFinder extends RecursiveAstVisitor<void> {
+class _InitializerFinder extends GeneralizingAstVisitor<void> {
   _InitializerFinder(this.element);
 
   final LocalVariableElement element;
   Expression? initializer;
+
+  @override
+  void visitNode(AstNode node) {
+    if (initializer == null) {
+      super.visitNode(node);
+    }
+  }
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
