@@ -173,10 +173,10 @@ packages:
     dependency: transitive
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3bce007a596ff8b3119c45d68aaef631272537c03d30e5d4534dd24bf4c5eaa2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -316,10 +316,10 @@ packages:
     dependency: transitive
     description:
       name: leancode_contracts
-      sha256: bb41f0a00f3a97d227bd45be14d4a9286caa78b8a49f343ef5cd937f653345fd
+      sha256: "1acf05253c522134ddda25a46b31adaf4b5756714e97f5fff0e29437fd4dce87"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.0"
+    version: "0.9.0"
   leancode_force_update:
     dependency: "direct main"
     description:

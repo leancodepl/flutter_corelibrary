@@ -11,7 +11,7 @@ enum PlatformDTO {
 }
 
 @ContractsSerializable()
-class VersionSupport with EquatableMixin implements Query<VersionSupportDTO> {
+class VersionSupport with Equatable implements Query<VersionSupportDTO> {
   VersionSupport({required this.platform, required this.version});
 
   factory VersionSupport.fromJson(Map<String, dynamic> json) =>
@@ -21,16 +21,20 @@ class VersionSupport with EquatableMixin implements Query<VersionSupportDTO> {
 
   final String version;
 
+  static const fullName$ = 'LeanCode.ForceUpdate.Contracts.VersionSupport';
+
   List<Object?> get props => [platform, version];
 
   Map<String, dynamic> toJson() => _$VersionSupportToJson(this);
+
   VersionSupportDTO resultFactory(dynamic decodedJson) =>
       _$VersionSupportDTOFromJson(decodedJson as Map<String, dynamic>);
-  String getFullName() => 'LeanCode.ForceUpdate.Contracts.VersionSupport';
+
+  String getFullName() => fullName$;
 }
 
 @ContractsSerializable()
-class VersionSupportDTO with EquatableMixin {
+class VersionSupportDTO with Equatable {
   VersionSupportDTO({
     required this.currentlySupportedVersion,
     required this.minimumRequiredVersion,
@@ -45,6 +49,8 @@ class VersionSupportDTO with EquatableMixin {
   final String minimumRequiredVersion;
 
   final VersionSupportResultDTO result;
+
+  static const fullName$ = 'LeanCode.ForceUpdate.Contracts.VersionSupportDTO';
 
   List<Object?> get props => [
     currentlySupportedVersion,
@@ -65,10 +71,12 @@ enum VersionSupportResultDTO {
 }
 
 @ContractsSerializable()
-class Class1 with EquatableMixin {
+class Class1 with Equatable {
   Class1();
 
   factory Class1.fromJson(Map<String, dynamic> json) => _$Class1FromJson(json);
+
+  static const fullName$ = 'backend.Class1';
 
   List<Object?> get props => [];
 
