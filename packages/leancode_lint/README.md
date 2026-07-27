@@ -985,6 +985,41 @@ None.
 
 </details>
 
+<details>
+<summary><code>prefer_abstract_final_class</code></summary>
+
+### `prefer_abstract_final_class`
+
+**PREFER** declaring a static-members-only holder as an `abstract final class` instead of using a private constructor to prevent instantiation.
+
+The lint fires only on a plain `class` with at least one static member whose sole constructor is a private, empty `_()` guarding against instantiation. To stay conservative it skips classes with any other constructor or factory, any instance member, a non-trivial `_()` (parameters, initializers, redirection or body), an existing class modifier, or an `extends`/`with`/`implements` clause.
+
+The `Convert to an abstract final class` quick fix marks the class `abstract final` and removes the redundant private constructor.
+
+**BAD:**
+
+```dart
+class MyConstants {
+  MyConstants._();
+
+  static const foo = 1;
+}
+```
+
+**GOOD:**
+
+```dart
+abstract final class MyConstants {
+  static const foo = 1;
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
 ## Disabling custom lint rules
 
 To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
