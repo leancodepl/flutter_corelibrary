@@ -23,6 +23,8 @@ class MyCubit extends Cubit<int> {
   void doThing() {}
 }
 
+class MyService {}
+
 class Consumer extends StatelessWidget {
   const Consumer({super.key, this.value});
   final Object? value;
@@ -79,22 +81,6 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     );
   }
 
-  Future<void> test_tracedPlainValue_flagged() async {
-    await assertDiagnosticsInRanges(
-      _widget('''
-    final v = context.[!read!]<int>();
-    return Consumer(value: v);'''),
-    );
-  }
-
-  Future<void> test_tracedStateGetter_flagged() async {
-    await assertDiagnosticsInRanges(
-      _widget('''
-    final c = context.[!read!]<MyCubit>();
-    return Consumer(value: c.state);'''),
-    );
-  }
-
   Future<void> test_insideBuilder_flagged() async {
     await assertDiagnosticsInRanges(
       _widget('''
@@ -104,42 +90,42 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     );
   }
 
-  Future<void> test_methodReceiver_ok() async {
-    await assertNoDiagnostics(
+  Future<void> test_methodReceiver_flagged() async {
+    await assertDiagnosticsInRanges(
       _widget('''
-    context.read<MyCubit>().doThing();
+    context.[!read!]<MyCubit>().doThing();
     return const SizedBox();'''),
     );
   }
 
-  Future<void> test_tracedMethodReceiver_ok() async {
-    await assertNoDiagnostics(
+  Future<void> test_blocObjectReference_flagged() async {
+    await assertDiagnosticsInRanges(
       _widget('''
-    final c = context.read<MyCubit>();
-    c.doThing();
-    return const SizedBox();'''),
+    return Consumer(value: context.[!read!]<MyCubit>());'''),
     );
   }
 
-  Future<void> test_blocObjectReference_ok() async {
-    await assertNoDiagnostics(
+  /// The tear-off evaluates the read during build, unlike
+  /// [test_deferredCallback_ok] which defers it until the tap.
+  Future<void> test_methodTearOff_flagged() async {
+    await assertDiagnosticsInRanges(
       _widget('''
-    return Consumer(value: context.read<MyCubit>());'''),
+    return Button(onTap: context.[!read!]<MyCubit>().doThing);'''),
     );
   }
 
-  Future<void> test_tracedBlocObjectReference_ok() async {
-    await assertNoDiagnostics(
+  Future<void> test_serviceReference_flagged() async {
+    await assertDiagnosticsInRanges(
       _widget('''
-    final c = context.read<MyCubit>();
-    return Consumer(value: c);'''),
+    final s = context.[!read!]<MyService>();
+    return Consumer(value: s);'''),
     );
   }
 
   Future<void> test_deferredCallback_ok() async {
     await assertNoDiagnostics(
       _widget('''
-    return Button(onTap: () => context.read<MyCubit>().state);'''),
+    return Button(onTap: () => context.read<MyCubit>().doThing());'''),
     );
   }
 
@@ -147,23 +133,9 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     await assertNoDiagnostics(
       _widget('''
     return Builder(
-      builder: (context) => Button(onTap: () => context.read<MyCubit>().state),
+      builder: (context) =>
+          Button(onTap: () => context.read<MyCubit>().doThing()),
     );'''),
-    );
-  }
-
-  Future<void> test_methodTearOff_ok() async {
-    await assertNoDiagnostics(
-      _widget('''
-    return Button(onTap: context.read<MyCubit>().doThing);'''),
-    );
-  }
-
-  Future<void> test_tracedMethodTearOff_ok() async {
-    await assertNoDiagnostics(
-      _widget('''
-    final c = context.read<MyCubit>();
-    return Button(onTap: c.doThing);'''),
     );
   }
 

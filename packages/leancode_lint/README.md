@@ -261,18 +261,19 @@ None.
 
 ### `avoid_context_read_in_build`
 
-**AVOID** reading reactive data with `context.read` inside a `build` method.
+**AVOID** using `context.read` inside a `build` method.
 
 `read` grabs a value once and never re-subscribes, so using its result to render
 leaves the UI stale when the value changes — `watch` (or a `BlocBuilder` /
 `BlocSelector`) is what you want.
 
-The lint is intentionally narrow. It does **not** flag the many legitimate uses
-of `context.read` in `build`: calling a method, adding a bloc event, or grabbing
-a bloc/service reference. It only flags reads whose value is consumed as data —
-a getter/property read (e.g. `.state`), or a plain non-bloc value used directly.
-Reads inside deferred interaction callbacks (`onTap`, `onPressed`) are exempt;
-reads inside builder closures that run during `build` are checked.
+Every `read` that executes during `build` is flagged, whatever it is used for:
+reading a value, calling a method, or grabbing a bloc/service reference. All
+three run on every rebuild, so none of them belong in `build`. Either consume
+the value with `watch` / `BlocBuilder` / `BlocSelector`, or move the read into a
+callback. Reads inside deferred interaction callbacks (`onTap`, `onPressed`) are
+exempt — that's where `read` is meant to be used; reads inside builder closures
+that run during `build` are checked.
 
 **BAD:**
 
@@ -283,12 +284,29 @@ Widget build(BuildContext context) {
 }
 ```
 
+```dart
+Widget build(BuildContext context) {
+  // Fires on every rebuild.
+  context.read<CounterCubit>().increment();
+  return const SizedBox();
+}
+```
+
 **GOOD:**
 
 ```dart
 Widget build(BuildContext context) {
   final count = context.watch<CounterCubit>().state;
   return Text('$count');
+}
+```
+
+```dart
+Widget build(BuildContext context) {
+  return ElevatedButton(
+    onPressed: () => context.read<CounterCubit>().increment(),
+    child: const Text('+'),
+  );
 }
 ```
 
