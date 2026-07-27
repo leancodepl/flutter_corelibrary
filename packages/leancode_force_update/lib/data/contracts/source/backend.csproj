@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Leancode.ForceUpdate.Contracts" Version="8.0.1996-preview" />
+    <PackageReference Include="Leancode.ForceUpdate.Contracts" Version="10.0.2860" />
   </ItemGroup>
 
 </Project>

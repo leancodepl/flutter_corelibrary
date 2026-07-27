@@ -1,3 +1,10 @@
+## 1.0.3-alpha
+
+- Upgrade `leancode_contracts` dependency to `^0.9.0`
+- Upgrade `leancode_contracts_generator` dev dependency to `^0.18.0`
+- Upgrade `Leancode.ForceUpdate.Contracts` to `10.0.2860`
+- Regenerate contracts
+
 ## 1.0.2-alpha
 
 - Upgrade `package_info_plus` dependency to `^10.2.0`
