@@ -1,15 +1,23 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
 import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/pubspec.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+// `PubPackage`, the only way to reach the parsed pubspec of the package owning
+// a file, has no public equivalent. The SDK's own
+// `depend_on_referenced_packages` reaches for it the same way.
+// ignore: implementation_imports
+import 'package:analyzer/src/workspace/pub.dart';
+import 'package:analyzer/workspace/workspace.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/type_checker.dart';
 import 'package:leancode_lint/src/utils.dart';
+import 'package:meta/meta.dart';
 
 String typeParametersString(
   Iterable<TypeParameter> typeParameters, {
@@ -250,6 +258,59 @@ class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
 
     listener(buildMethod.body, diagnosticNode);
   }
+}
+
+extension PackageDependencies on ResolvedCorrectionProducer {
+  bool dependsOnPackage(String packageName) => packageDependsOn(
+    packageName,
+    package: sessionHelper.session.analysisContext.contextRoot.workspace
+        .findPackageFor(file),
+    filePath: file,
+  );
+}
+
+/// Whether [package] declares a direct dependency on [packageName], as seen
+/// from the file at [filePath].
+///
+/// A transitive dependency does not count: an import of it resolves today, but
+/// breaks as soon as the intermediate package stops depending on
+/// [packageName]. The package config cannot tell the two apart, hence the
+/// pubspec. Dev dependencies count only outside the package's public
+/// directories, since code that ships to consumers cannot rely on them.
+///
+/// This mirrors how the SDK's `depend_on_referenced_packages` answers the very
+/// same question.
+@visibleForTesting
+bool packageDependsOn(
+  String packageName, {
+  required WorkspacePackage? package,
+  required String filePath,
+}) {
+  if (package is! PubPackage) {
+    return false;
+  }
+  final pubspec = package.pubspec;
+  if (pubspec == null) {
+    return false;
+  }
+
+  bool declares(Iterable<PubspecDependency>? dependencies) =>
+      dependencies?.any((dep) => dep.name?.text == packageName) ?? false;
+
+  return declares(pubspec.dependencies) ||
+      (!_isInPublicDir(filePath, package) && declares(pubspec.devDependencies));
+}
+
+/// Mirrors `isInPublicDir` from the SDK's linter.
+bool _isInPublicDir(String filePath, WorkspacePackage package) {
+  final pathContext = package.root.provider.pathContext;
+  String inRoot(List<String> parts) =>
+      pathContext.joinAll([package.root.path, ...parts]);
+
+  return pathContext.isWithin(inRoot(['lib']), filePath) ||
+      pathContext.isWithin(inRoot(['bin']), filePath) ||
+      filePath == inRoot(['hook', 'build.dart']) ||
+      filePath == inRoot(['hook', 'link.dart']);
 }
 
 bool isExpressionExactlyType(

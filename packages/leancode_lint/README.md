@@ -271,10 +271,10 @@ The rule offers three quick fixes: one rewriting the comparison to Flutter's
 `listEquals`/`setEquals`/`mapEquals` (from `package:flutter/foundation.dart`),
 one to `package:collection`'s `ListEquality`/`SetEquality`/`MapEquality`, and one
 to `identical` for the cases where an identity comparison is actually intended.
-The `package:collection` fix is only offered when the equality class is reachable
-through a direct dependency — either `package:collection` itself or a package
-that re-exports it — and imports it via that dependency. The content-equality
-fixes add the required import, and all fixes negate the result for `!=`.
+The content-equality fixes add the required import, so each is only offered when
+the package owning the analyzed file declares a direct dependency on the package
+it imports (`flutter` and `collection` respectively). All fixes negate the result for
+`!=`.
 
 **BAD:**
 
@@ -301,6 +301,14 @@ import 'package:collection/collection.dart';
 
 bool sameItems(List<int> a, List<int> b) {
   return const ListEquality<int>().equals(a, b);
+}
+```
+
+**GOOD:**
+
+```dart
+bool isSameList(List<int> a, List<int> b) {
+  return identical(a, b);
 }
 ```
 
@@ -1045,6 +1053,7 @@ See linked source code containing explanation in dart doc.
 ---
 
 ## 🛠️ Maintained by LeanCode
+
 <div align="center">
 
   [<img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />][leancode-landing]

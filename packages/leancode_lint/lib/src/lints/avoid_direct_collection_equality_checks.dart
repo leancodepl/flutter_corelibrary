@@ -8,14 +8,11 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/workspace/workspace.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
-import 'package:leancode_lint/src/type_checker.dart';
-import 'package:yaml/yaml.dart';
+import 'package:leancode_lint/src/helpers.dart';
 
-/// Displays a warning when collections are compared directly with `==` or `!=`.
 class AvoidDirectCollectionEqualityChecks extends AnalysisRule {
   AvoidDirectCollectionEqualityChecks()
     : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -69,8 +66,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-/// The kind of a core collection type, used to pick the matching equality
-/// helper for the quick fixes.
 enum CollectionKind {
   list('List', flutterFunction: 'listEquals', collectionClass: 'ListEquality'),
   set('Set', flutterFunction: 'setEquals', collectionClass: 'SetEquality'),
@@ -82,48 +77,43 @@ enum CollectionKind {
     required this.collectionClass,
   });
 
-  /// The name used in the diagnostic message, e.g. `List`.
   final String displayName;
 
-  /// The `package:flutter/foundation.dart` function, e.g. `listEquals`.
+  /// From `package:flutter/foundation.dart`.
   final String flutterFunction;
 
-  /// The `package:collection` equality class, e.g. `ListEquality`.
+  /// From `package:collection`.
   final String collectionClass;
 }
 
-/// Returns the [CollectionKind] of [type] if it is (a subtype of) a core
-/// `List`, `Set`, or `Map`, otherwise `null`.
+/// Also matches subtypes of `List`, `Set` and `Map`.
 CollectionKind? collectionKind(DartType? type) {
-  if (type == null) {
+  if (type is! InterfaceType) {
     return null;
   }
 
+  final types = [type, ...type.allSupertypes];
+
   // `Map` is checked first because it is not an `Iterable`, while `Set` and
   // `List` both are.
-  const map = TypeChecker.fromName('Map', packageName: 'dart:core');
-  const set = TypeChecker.fromName('Set', packageName: 'dart:core');
-  const list = TypeChecker.fromName('List', packageName: 'dart:core');
-
-  if (map.isAssignableFromType(type)) {
+  if (types.any((it) => it.isDartCoreMap)) {
     return CollectionKind.map;
   }
-  if (set.isAssignableFromType(type)) {
+  if (types.any((it) => it.isDartCoreSet)) {
     return CollectionKind.set;
   }
-  if (list.isAssignableFromType(type)) {
+  if (types.any((it) => it.isDartCoreList)) {
     return CollectionKind.list;
   }
   return null;
 }
 
-/// Returns the [BinaryExpression] a collection-equality fix should rewrite, or
-/// `null` if it cannot be resolved from [node].
+const _flutterFoundationUri = 'package:flutter/foundation.dart';
+const _collectionUri = 'package:collection/collection.dart';
+
 BinaryExpression? _targetBinary(AstNode node) =>
     node.thisOrAncestorOfType<BinaryExpression>();
 
-/// Replaces a direct collection equality check with the matching Flutter
-/// `listEquals`/`setEquals`/`mapEquals` call.
 class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
   ReplaceWithFlutterFoundationEqualsFix({required super.context});
 
@@ -153,6 +143,10 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
       return;
     }
 
+    if (!dependsOnPackage('flutter')) {
+      return;
+    }
+
     final kind = collectionKind(binary.leftOperand.staticType);
     if (kind == null) {
       return;
@@ -164,7 +158,7 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
 
     await builder.addDartFileEdit(file, (builder) {
       builder
-        ..importLibraryElement(.parse('package:flutter/foundation.dart'))
+        ..importLibraryElement(.parse(_flutterFoundationUri))
         ..addReplacement(
           range.node(binary),
           (builder) => builder.write(
@@ -176,8 +170,6 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
   }
 }
 
-/// Replaces a direct collection equality check with the matching
-/// `package:collection` equality, e.g. `const ListEquality().equals(a, b)`.
 class ReplaceWithCollectionPackageEqualityFix
     extends ResolvedCorrectionProducer {
   ReplaceWithCollectionPackageEqualityFix({required super.context});
@@ -201,36 +193,6 @@ class ReplaceWithCollectionPackageEqualityFix
   @override
   CorrectionApplicability get applicability => .automatically;
 
-  /// Whether the package that owns the analyzed file directly depends on
-  /// `package:collection`. Transitive dependencies do not count, since the
-  /// rewrite must not introduce an import the package cannot resolve on its
-  /// own.
-  bool get _dependsOnCollection {
-    final WorkspacePackage? package = sessionHelper
-        .session
-        .analysisContext
-        .contextRoot
-        .workspace
-        .findPackageFor(file);
-    final pubspec = package?.root.getChildAssumingFile('pubspec.yaml');
-    if (pubspec == null || !pubspec.exists) {
-      return false;
-    }
-
-    final YamlNode document;
-    try {
-      document = loadYamlNode(pubspec.readAsStringSync());
-    } on Exception {
-      return false;
-    }
-    if (document is! YamlMap) {
-      return false;
-    }
-
-    final dependencies = document['dependencies'];
-    return dependencies is YamlMap && dependencies.containsKey('collection');
-  }
-
   @override
   Future<void> compute(ChangeBuilder builder) async {
     final binary = _targetBinary(node);
@@ -238,7 +200,7 @@ class ReplaceWithCollectionPackageEqualityFix
       return;
     }
 
-    if (!_dependsOnCollection) {
+    if (!dependsOnPackage('collection')) {
       return;
     }
 
@@ -266,7 +228,7 @@ class ReplaceWithCollectionPackageEqualityFix
 
     await builder.addDartFileEdit(file, (builder) {
       builder
-        ..importLibraryElement(.parse('package:collection/collection.dart'))
+        ..importLibraryElement(.parse(_collectionUri))
         ..addReplacement(range.node(binary), (builder) {
           if (negate) {
             builder.write('!');
@@ -289,8 +251,7 @@ class ReplaceWithCollectionPackageEqualityFix
   }
 }
 
-/// Replaces a direct collection equality check with an `identical` call, for
-/// the cases where an identity comparison is actually intended.
+/// For the cases where an identity comparison is actually intended.
 class ReplaceWithIdenticalFix extends ResolvedCorrectionProducer {
   ReplaceWithIdenticalFix({required super.context});
 
