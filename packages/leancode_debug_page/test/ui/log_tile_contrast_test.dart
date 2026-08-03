@@ -20,9 +20,10 @@ void main() {
   );
 
   double contrastRatio(Color a, Color b) {
-    final luminances = [a.computeLuminance(), b.computeLuminance()];
+    final lumA = a.computeLuminance();
+    final lumB = b.computeLuminance();
 
-    return (luminances.reduce(max) + 0.05) / (luminances.reduce(min) + 0.05);
+    return (max(lumA, lumB) + 0.05) / (min(lumA, lumB) + 0.05);
   }
 
   Future<void> pumpTile(
