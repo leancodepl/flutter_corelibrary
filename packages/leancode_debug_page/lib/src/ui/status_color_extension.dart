@@ -1,6 +1,4 @@
-import 'dart:ui';
-
-import 'package:flutter/material.dart' show Colors, ThemeData;
+import 'package:flutter/material.dart';
 
 extension StatusColorExtension on Color {
   /// A foreground legible on a surface painted with this color.
