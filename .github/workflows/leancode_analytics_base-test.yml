@@ -61,6 +61,6 @@ jobs:
       - name: Score with pana
         id: pana
         continue-on-error: true
-        uses: leancodepl/mobile-tools/.github/actions/pana-score@pana-score-v1
+        uses: leancodepl/mobile-tools/.github/actions/pana-score@68d925e42153f53e69d6c2501534f0c3c0a1a3be # v1.1
         with:
           path: packages/leancode_analytics_base
