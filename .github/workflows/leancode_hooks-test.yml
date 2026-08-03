@@ -6,10 +6,12 @@ on:
     tags-ignore: ['leancode_hooks-v*']
     paths:
       - 'packages/leancode_hooks/**'
+      - '.github/workflows/leancode_hooks-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/leancode_hooks/**'
+      - '.github/workflows/leancode_hooks-test.yml'
 
 jobs:
   test:

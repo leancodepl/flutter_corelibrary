@@ -6,10 +6,12 @@ on:
     tags-ignore: ["enhanced_gradients-v*"]
     paths:
       - "packages/enhanced_gradients/**"
+      - ".github/workflows/enhanced_gradients-test.yml"
   pull_request:
     branches: [master]
     paths:
       - "packages/enhanced_gradients/**"
+      - ".github/workflows/enhanced_gradients-test.yml"
   # Run a check daily due to the dependency on `material_color_utilities: any`
   schedule:
     - cron: "0 17 * * *"

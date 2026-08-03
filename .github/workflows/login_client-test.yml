@@ -6,10 +6,12 @@ on:
     tags-ignore: ['login_client-v*']
     paths:
       - 'packages/login_client/**'
+      - '.github/workflows/login_client-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/login_client/**'
+      - '.github/workflows/login_client-test.yml'
 
 jobs:
   test:

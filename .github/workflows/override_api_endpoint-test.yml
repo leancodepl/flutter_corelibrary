@@ -6,10 +6,12 @@ on:
     tags-ignore: ['override_api_endpoint-v*']
     paths:
       - 'packages/override_api_endpoint/**'
+      - '.github/workflows/override_api_endpoint-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/override_api_endpoint/**'
+      - '.github/workflows/override_api_endpoint-test.yml'
 
 jobs:
   test:

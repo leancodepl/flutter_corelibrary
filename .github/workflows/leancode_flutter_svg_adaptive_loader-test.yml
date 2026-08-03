@@ -6,10 +6,12 @@ on:
     tags-ignore: ['leancode_flutter_svg_adaptive_loader-v*']
     paths:
       - 'packages/leancode_flutter_svg_adaptive_loader/**'
+      - '.github/workflows/leancode_flutter_svg_adaptive_loader-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/leancode_flutter_svg_adaptive_loader/**'
+      - '.github/workflows/leancode_flutter_svg_adaptive_loader-test.yml'
 
 jobs:
   test:

@@ -6,10 +6,12 @@ on:
     tags-ignore: ['login_client_flutter-v*']
     paths:
       - 'packages/login_client_flutter/**'
+      - '.github/workflows/login_client_flutter-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/login_client_flutter/**'
+      - '.github/workflows/login_client_flutter-test.yml'
 
 jobs:
   test:

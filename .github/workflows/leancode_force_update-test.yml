@@ -6,10 +6,12 @@ on:
     tags-ignore: ['leancode_force_update-v*']
     paths:
       - 'packages/leancode_force_update/**'
+      - '.github/workflows/leancode_force_update-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/leancode_force_update/**'
+      - '.github/workflows/leancode_force_update-test.yml'
 
 jobs:
   test:

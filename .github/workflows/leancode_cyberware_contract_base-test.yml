@@ -6,10 +6,12 @@ on:
     tags-ignore: ['leancode_cyberware_contract_base-v*']
     paths:
       - 'packages/leancode_cyberware_contract_base/**'
+      - '.github/workflows/leancode_cyberware_contract_base-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/leancode_cyberware_contract_base/**'
+      - '.github/workflows/leancode_cyberware_contract_base-test.yml'
 
 jobs:
   test:

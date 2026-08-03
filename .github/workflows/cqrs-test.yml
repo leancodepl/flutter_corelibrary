@@ -6,10 +6,12 @@ on:
     tags-ignore: ['cqrs-v*']
     paths:
       - 'packages/cqrs/**'
+      - '.github/workflows/cqrs-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/cqrs/**'
+      - '.github/workflows/cqrs-test.yml'
 
 jobs:
   test:

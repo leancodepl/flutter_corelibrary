@@ -7,11 +7,13 @@ on:
     paths:
       - 'packages/leancode_analytics_posthog/**'
       - 'packages/leancode_analytics_base/**'
+      - '.github/workflows/leancode_analytics_posthog-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/leancode_analytics_posthog/**'
       - 'packages/leancode_analytics_base/**'
+      - '.github/workflows/leancode_analytics_posthog-test.yml'
 
 jobs:
   test:
