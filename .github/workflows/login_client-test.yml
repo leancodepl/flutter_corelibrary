@@ -16,6 +16,11 @@ jobs:
     name: Dart ${{ matrix.dart_release }}
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      statuses: write
+
     strategy:
       fail-fast: false
       matrix:
@@ -64,3 +69,10 @@ jobs:
       - uses: codecov/codecov-action@v1
         with:
           flags: login_client
+
+      - name: Score with pana
+        id: pana
+        continue-on-error: true
+        uses: leancodepl/mobile-tools/.github/actions/pana-score@pana-score-v1
+        with:
+          path: packages/login_client

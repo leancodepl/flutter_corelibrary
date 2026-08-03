@@ -16,6 +16,11 @@ jobs:
     name: Flutter ${{ matrix.channel }}${{ matrix.version }}
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      statuses: write
+
     strategy:
       fail-fast: false
       matrix:
@@ -58,3 +63,10 @@ jobs:
       - uses: codecov/codecov-action@v1
         with:
           flags: leancode_hooks
+
+      - name: Score with pana
+        id: pana
+        continue-on-error: true
+        uses: leancodepl/mobile-tools/.github/actions/pana-score@pana-score-v1
+        with:
+          path: packages/leancode_hooks
