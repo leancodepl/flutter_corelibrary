@@ -1,3 +1,7 @@
+## 3.1.3
+
+- Fix illegible text on log tiles, the log details app bar and the entry button in apps whose theme foregrounds don't happen to contrast with them.
+
 ## 3.1.2
 
 - Upgrade `share_plus` dependency to `^13.2.0`
