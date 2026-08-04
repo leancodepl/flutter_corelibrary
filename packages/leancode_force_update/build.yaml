@@ -1,0 +1,9 @@
+targets:
+  $default:
+    # Limit the build to the generated contracts, so that neither the example app
+    # nor the rest of the library is needlessly analyzed by `json_serializable`.
+    sources:
+      - $package$
+      - lib/$lib$
+      - lib/data/contracts/contracts.dart
+      - pubspec.yaml
