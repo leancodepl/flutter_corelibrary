@@ -16,7 +16,9 @@ import 'package:leancode_lint/src/type_checker.dart';
 ///
 /// `read` grabs a value once and never re-subscribes, so using its result to
 /// render leaves the UI stale when the value changes — `watch` (or a
-/// `BlocBuilder`/`BlocSelector`) is what's actually wanted.
+/// `BlocBuilder`/`BlocSelector`) is what's actually wanted. `select` (or
+/// `BlocSelector`) works too, and is preferable when only part of the state
+/// is needed.
 ///
 /// Every `read` that executes during build is reported, whatever it is used
 /// for: reading a value, calling a method, or grabbing a bloc/service
@@ -32,7 +34,7 @@ class AvoidContextReadInBuild extends AnalysisRule {
     'avoid_context_read_in_build',
     "Avoid using 'context.read' inside 'build' method.",
     correctionMessage:
-        "Use 'context.watch' (or BlocBuilder/BlocSelector) to consume the value, or move the read into a callback.",
+        "Use 'context.watch' or 'context.select' (or BlocBuilder/BlocSelector) to consume the value, or move the read into a callback.",
     severity: .WARNING,
   );
 
