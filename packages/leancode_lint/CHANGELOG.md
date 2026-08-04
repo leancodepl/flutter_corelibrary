@@ -2,6 +2,7 @@
 
 - Add new custom lints:
   - [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build)
+  - [`avoid_build_context_in_blocs`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_build_context_in_blocs)
 
 # 25.0.0
 
@@ -102,7 +103,7 @@
 - Remove the following lints which have been removed from Dart:
   - [`package_api_docs`](https://dart.dev/tools/linter-rules/package_api_docs)
   - [`unsafe_html`](https://dart.dev/tools/linter-rules/unsafe_html)
-- Disable the [`require_trailing_commas`](https://dart.dev/tools/linter-rules/require_trailing_commas) lint as it conflicts with Dart 3.7 formatter (https://github.com/dart-lang/sdk/issues/60119).
+- Disable the [`require_trailing_commas`](https://dart.dev/tools/linter-rules/require_trailing_commas) lint as it conflicts with Dart 3.7 formatter (<https://github.com/dart-lang/sdk/issues/60119>).
 
 # 15.1.0
 
