@@ -27,6 +27,15 @@ For a complete working sample, see [example](example).
 
 Android has an API for performing updates within the app, without necessity of opening Play Store. To use the API, set `useAndroidSystemUI` to true in in the constructor of `ForceUpdateGuard`.
 
+## Regenerating contracts
+
+The contracts in [lib/data/contracts](lib/data/contracts) are generated from the `Leancode.ForceUpdate.Contracts` NuGet package referenced by [backend.csproj](lib/data/contracts/source/backend.csproj). Regenerating them requires the .NET SDK, since `leancode_contracts_generator` delegates to the .NET generator pinned in [.config/dotnet-tools.json](.config/dotnet-tools.json):
+
+```sh
+dart run leancode_contracts_generator
+dart run build_runner build
+```
+
 ---
 
 ## 🛠️ Maintained by LeanCode
