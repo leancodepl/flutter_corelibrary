@@ -124,11 +124,9 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
 
   @override
   List<String>? get fixArguments {
-    final binary = _targetBinary(node);
-    final kind = binary == null
-        ? null
-        : collectionKind(binary.leftOperand.staticType);
-    return [kind!.flutterFunction];
+    final binary = _targetBinary(node)!;
+    final kind = collectionKind(binary.leftOperand.staticType)!;
+    return [kind.flutterFunction];
   }
 
   @override
@@ -181,11 +179,9 @@ class ReplaceWithCollectionPackageEqualityFix
 
   @override
   List<String>? get fixArguments {
-    final binary = _targetBinary(node);
-    final kind = binary == null
-        ? null
-        : collectionKind(binary.leftOperand.staticType);
-    return [kind!.collectionClass];
+    final binary = _targetBinary(node)!;
+    final kind = collectionKind(binary.leftOperand.staticType)!;
+    return [kind.collectionClass];
   }
 
   @override
