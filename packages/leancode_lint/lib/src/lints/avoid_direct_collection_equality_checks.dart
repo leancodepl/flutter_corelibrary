@@ -214,9 +214,9 @@ class ReplaceWithCollectionPackageEqualityFix
     // the generated constructor is `const ListEquality<int>()` rather than a
     // raw `const ListEquality()`, which fails type inference.
     final collectionElement = switch (kind) {
-      CollectionKind.list => typeProvider.listElement,
-      CollectionKind.set => typeProvider.setElement,
-      CollectionKind.map => typeProvider.mapElement,
+      .list => typeProvider.listElement,
+      .set => typeProvider.setElement,
+      .map => typeProvider.mapElement,
     };
     final typeArguments = leftType is InterfaceType
         ? leftType.asInstanceOf(collectionElement)?.typeArguments ?? const []
