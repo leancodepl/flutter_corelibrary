@@ -2,6 +2,7 @@
 
 - Add new custom lints:
   - [`avoid_direct_collection_equality_checks`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_direct_collection_equality_checks)
+  - [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build)
   - [`avoid_build_context_in_blocs`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_build_context_in_blocs)
 
 # 25.0.0
