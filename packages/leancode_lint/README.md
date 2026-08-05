@@ -368,6 +368,68 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_direct_collection_equality_checks</code></summary>
+
+### `avoid_direct_collection_equality_checks`
+
+**AVOID** comparing collections directly with `==` or `!=`.
+
+For `List`, `Set`, and `Map`, `==` compares identity (reference equality), not
+contents, so `[1, 2] == [1, 2]` is `false`. Use a content-equality helper
+instead.
+
+The rule offers three quick fixes: one rewriting the comparison to Flutter's
+`listEquals`/`setEquals`/`mapEquals` (from `package:flutter/foundation.dart`),
+one to `package:collection`'s `ListEquality`/`SetEquality`/`MapEquality`, and one
+to `identical` for the cases where an identity comparison is actually intended.
+The content-equality fixes add the required import, so each is only offered when
+the package owning the analyzed file declares a direct dependency on the package
+it imports (`flutter` and `collection` respectively). All fixes negate the result for
+`!=`.
+
+**BAD:**
+
+```dart
+bool sameItems(List<int> a, List<int> b) {
+  return a == b;
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:flutter/foundation.dart';
+
+bool sameItems(List<int> a, List<int> b) {
+  return listEquals(a, b);
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:collection/collection.dart';
+
+bool sameItems(List<int> a, List<int> b) {
+  return const ListEquality<int>().equals(a, b);
+}
+```
+
+**GOOD:**
+
+```dart
+bool isSameList(List<int> a, List<int> b) {
+  return identical(a, b);
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
@@ -1102,6 +1164,7 @@ See linked source code containing explanation in dart doc.
 ---
 
 ## 🛠️ Maintained by LeanCode
+
 <div align="center">
 
   [<img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />][leancode-landing]
