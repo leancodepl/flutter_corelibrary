@@ -5,6 +5,7 @@ import 'package:leancode_lint/src/assists/convert_iterable_map_to_collection_for
 import 'package:leancode_lint/src/assists/convert_positional_to_named_formal.dart';
 import 'package:leancode_lint/src/assists/convert_record_into_nominal_type.dart';
 import 'package:leancode_lint/src/lints/add_cubit_suffix_for_cubits.dart';
+import 'package:leancode_lint/src/lints/avoid_build_context_in_blocs.dart';
 import 'package:leancode_lint/src/lints/avoid_catch_error.dart';
 import 'package:leancode_lint/src/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget.dart';
@@ -15,6 +16,7 @@ import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:leancode_lint/src/lints/missing_equatable_props.dart';
 import 'package:leancode_lint/src/lints/never_discard_build_context.dart';
+import 'package:leancode_lint/src/lints/prefer_abstract_final_class.dart';
 import 'package:leancode_lint/src/lints/prefer_equatable_mixin.dart';
 import 'package:leancode_lint/src/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/src/lints/start_comments_with_space.dart';
@@ -63,6 +65,7 @@ final class LeanCodeLintPlugin extends Plugin {
         CatchParameterNames(config: config.catchParameterNames),
       )
       ..registerWarningRule(AvoidCatchError())
+      ..registerWarningRule(AvoidBuildContextInBlocs())
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(HookWidgetDoesNotUseHooks())
       ..registerFixForRule(
@@ -90,6 +93,11 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerFixForRule(
         PreferEquatableMixin.code,
         ConvertToEquatableMixin.new,
+      )
+      ..registerWarningRule(PreferAbstractFinalClass())
+      ..registerFixForRule(
+        PreferAbstractFinalClass.code,
+        ConvertToAbstractFinalClass.new,
       )
       ..registerWarningRule(MissingEquatableProps())
       ..registerFixForRule(

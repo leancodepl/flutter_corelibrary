@@ -141,6 +141,56 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_build_context_in_blocs</code></summary>
+
+### `avoid_build_context_in_blocs`
+
+**AVOID** letting a `BuildContext` cross into a Bloc/Cubit.
+
+A `BuildContext` couples business logic to the widget tree, which risks stale
+contexts and wrong `InheritedWidget` reads and makes the logic hard to test. The
+rule flags both passing a `BuildContext` into a Bloc/Cubit (via a method such as
+`add`, or a constructor) and declaring one inside a Bloc/Cubit (as a parameter or
+field). A value merely derived from a context (e.g. `MediaQuery.sizeOf(context)`)
+is allowed.
+
+**BAD:**
+
+```dart
+bloc.add(CounterEvent(context));
+
+final event = CounterEvent(context);
+bloc.add(event);
+
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  final BuildContext context;
+
+  void another(BuildContext context) {}
+}
+```
+
+**GOOD:**
+
+```dart
+bloc.add(CounterEvent());
+bloc.add(CounterEvent(MediaQuery.sizeOf(context)));
+
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  void another() {}
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>avoid_catch_error</code></summary>
 
 ### `avoid_catch_error`
@@ -938,6 +988,41 @@ class FoobarChild extends Foobar {
 
   @override
   List<Object?> get props => [super.props, c];
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
+<summary><code>prefer_abstract_final_class</code></summary>
+
+### `prefer_abstract_final_class`
+
+**PREFER** declaring a static-members-only holder as an `abstract final class` instead of using a private constructor to prevent instantiation.
+
+The lint fires only on a plain `class` with at least one static member whose sole constructor is a private, empty `_()` guarding against instantiation. To stay conservative it skips classes with any other constructor or factory, any instance member, a non-trivial `_()` (parameters, initializers, redirection or body), an existing class modifier, or an `extends`/`with`/`implements` clause.
+
+The `Convert to an abstract final class` quick fix marks the class `abstract final` and removes the redundant private constructor.
+
+**BAD:**
+
+```dart
+class MyConstants {
+  MyConstants._();
+
+  static const foo = 1;
+}
+```
+
+**GOOD:**
+
+```dart
+abstract final class MyConstants {
+  static const foo = 1;
 }
 ```
 

@@ -49,16 +49,17 @@ class _DraggableFloatingButtonState extends State<_DraggableFloatingButton> {
     final Size(:height, :width) = MediaQuery.sizeOf(context);
     final horizontalCenter = width / 2;
     final verticalCenter = height / 2;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final floatingActionButton = GestureDetector(
       onTap: () => widget._controller.open(),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Icon(Icons.bug_report),
+        child: Icon(Icons.bug_report, color: colorScheme.onPrimaryContainer),
       ),
     );
 

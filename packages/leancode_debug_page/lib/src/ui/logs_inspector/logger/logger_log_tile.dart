@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leancode_debug_page/src/models/log_record_format_extension.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/logger/level_color_extension.dart';
 import 'package:leancode_debug_page/src/ui/logs_inspector/logger/logger_log_details_screen/logger_log_details_screen.dart';
+import 'package:leancode_debug_page/src/ui/status_color_extension.dart';
 import 'package:leancode_debug_page/src/ui/typography.dart';
 import 'package:logging/logging.dart';
 
@@ -12,9 +13,13 @@ class LoggerLogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = log.level.color(context);
+
     return Material(
-      color: log.level.color(context),
+      color: color,
       child: ListTile(
+        textColor: color.onStatusColor,
+        iconColor: color.onStatusColor,
         onTap: () =>
             Navigator.of(context).push(LoggerLogDetailsRoute(logRecord: log)),
         title: Text(
