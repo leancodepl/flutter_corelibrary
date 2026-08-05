@@ -94,8 +94,6 @@ CollectionKind? collectionKind(DartType? type) {
 
   final types = [type, ...type.allSupertypes];
 
-  // `Map` is checked first because it is not an `Iterable`, while `Set` and
-  // `List` both are.
   if (types.any((it) => it.isDartCoreMap)) {
     return CollectionKind.map;
   }
@@ -130,7 +128,7 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
     final kind = binary == null
         ? null
         : collectionKind(binary.leftOperand.staticType);
-    return [(kind ?? CollectionKind.list).flutterFunction];
+    return [kind!.flutterFunction];
   }
 
   @override
@@ -187,7 +185,7 @@ class ReplaceWithCollectionPackageEqualityFix
     final kind = binary == null
         ? null
         : collectionKind(binary.leftOperand.staticType);
-    return [(kind ?? CollectionKind.list).collectionClass];
+    return [kind!.collectionClass];
   }
 
   @override
@@ -235,14 +233,13 @@ class ReplaceWithCollectionPackageEqualityFix
           }
           builder.write('const ${kind.collectionClass}');
           if (typeArguments.isNotEmpty) {
-            builder.write('<');
-            for (var i = 0; i < typeArguments.length; i++) {
-              if (i > 0) {
-                builder.write(', ');
-              }
-              builder.writeType(typeArguments[i], shouldWriteDynamic: true);
-            }
-            builder.write('>');
+            builder
+              ..writeTypes(
+                typeArguments,
+                prefix: '<',
+                shouldWriteDynamic: true,
+              )
+              ..write('>');
           }
           builder.write('().equals($left, $right)');
         })

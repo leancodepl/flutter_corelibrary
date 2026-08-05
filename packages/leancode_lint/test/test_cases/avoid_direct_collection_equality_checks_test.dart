@@ -97,6 +97,22 @@ bool test() {
 ''');
   }
 
+  Future<void> test_to_list_conversion_is_marked() async {
+    await assertDiagnosticsInRanges('''
+bool test(List<int> a, Iterable<int> b) {
+  return [!a == b.toList()!];
+}
+''');
+  }
+
+  Future<void> test_to_set_conversion_is_marked() async {
+    await assertDiagnosticsInRanges('''
+bool test(Set<int> a, Iterable<int> b) {
+  return [!a == b.toSet()!];
+}
+''');
+  }
+
   Future<void> test_comparison_with_null_is_not_marked() async {
     await assertNoDiagnostics('''
 bool test(List<int>? a) {
