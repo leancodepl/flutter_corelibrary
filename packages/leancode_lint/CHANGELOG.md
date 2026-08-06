@@ -1,4 +1,4 @@
-# Unreleased
+# 26.0.0
 
 - Add new custom lints:
   - [`avoid_direct_collection_equality_checks`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_direct_collection_equality_checks)
