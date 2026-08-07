@@ -5,8 +5,11 @@ import 'package:leancode_lint/src/assists/convert_iterable_map_to_collection_for
 import 'package:leancode_lint/src/assists/convert_positional_to_named_formal.dart';
 import 'package:leancode_lint/src/assists/convert_record_into_nominal_type.dart';
 import 'package:leancode_lint/src/lints/add_cubit_suffix_for_cubits.dart';
+import 'package:leancode_lint/src/lints/avoid_build_context_in_blocs.dart';
 import 'package:leancode_lint/src/lints/avoid_catch_error.dart';
 import 'package:leancode_lint/src/lints/avoid_conditional_hooks.dart';
+import 'package:leancode_lint/src/lints/avoid_context_read_in_build.dart';
+import 'package:leancode_lint/src/lints/avoid_direct_collection_equality_checks.dart';
 import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
 import 'package:leancode_lint/src/lints/bloc_subclasses_naming.dart';
@@ -64,7 +67,21 @@ final class LeanCodeLintPlugin extends Plugin {
         CatchParameterNames(config: config.catchParameterNames),
       )
       ..registerWarningRule(AvoidCatchError())
+      ..registerWarningRule(AvoidBuildContextInBlocs())
       ..registerWarningRule(AvoidConditionalHooks())
+      ..registerWarningRule(AvoidDirectCollectionEqualityChecks())
+      ..registerFixForRule(
+        AvoidDirectCollectionEqualityChecks.code,
+        ReplaceWithFlutterFoundationEqualsFix.new,
+      )
+      ..registerFixForRule(
+        AvoidDirectCollectionEqualityChecks.code,
+        ReplaceWithCollectionPackageEqualityFix.new,
+      )
+      ..registerFixForRule(
+        AvoidDirectCollectionEqualityChecks.code,
+        ReplaceWithIdenticalFix.new,
+      )
       ..registerWarningRule(HookWidgetDoesNotUseHooks())
       ..registerFixForRule(
         HookWidgetDoesNotUseHooks.code,
@@ -74,6 +91,11 @@ final class LeanCodeLintPlugin extends Plugin {
       ..registerFixForRule(
         NeverDiscardBuildContext.code,
         RenameDiscardedBuildContextFix.new,
+      )
+      ..registerWarningRule(AvoidContextReadInBuild())
+      ..registerFixForRule(
+        AvoidContextReadInBuild.code,
+        ReplaceContextReadWithWatchFix.new,
       )
       // TODO: disabled by default until stabilized. Add documentation.
       ..registerLintRule(ConstructorParametersAndFieldsShouldHaveTheSameOrder())

@@ -141,6 +141,56 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_build_context_in_blocs</code></summary>
+
+### `avoid_build_context_in_blocs`
+
+**AVOID** letting a `BuildContext` cross into a Bloc/Cubit.
+
+A `BuildContext` couples business logic to the widget tree, which risks stale
+contexts and wrong `InheritedWidget` reads and makes the logic hard to test. The
+rule flags both passing a `BuildContext` into a Bloc/Cubit (via a method such as
+`add`, or a constructor) and declaring one inside a Bloc/Cubit (as a parameter or
+field). A value merely derived from a context (e.g. `MediaQuery.sizeOf(context)`)
+is allowed.
+
+**BAD:**
+
+```dart
+bloc.add(CounterEvent(context));
+
+final event = CounterEvent(context);
+bloc.add(event);
+
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  final BuildContext context;
+
+  void another(BuildContext context) {}
+}
+```
+
+**GOOD:**
+
+```dart
+bloc.add(CounterEvent());
+bloc.add(CounterEvent(MediaQuery.sizeOf(context)));
+
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  void another() {}
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>avoid_catch_error</code></summary>
 
 ### `avoid_catch_error`
@@ -247,6 +297,129 @@ Widget build(BuildContext context) {
   if (condition) {
     return Text('Early return');
   }
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
+<summary><code>avoid_context_read_in_build</code></summary>
+
+### `avoid_context_read_in_build`
+
+**AVOID** using `context.read` inside a `build` method.
+
+`read` grabs a value once and never re-subscribes, so using its result to render
+leaves the UI stale when the value changes — `watch` (or a `BlocBuilder` /
+`BlocSelector`) is what you want. `select` (or `BlocSelector`) works too, and is
+preferable when only part of the state is needed.
+
+Every `read` that executes during `build` is flagged, whatever it is used for:
+reading a value, calling a method, or grabbing a bloc/service reference. All
+three run on every rebuild, so none of them belong in `build`. Either consume
+the value with `watch` / `select` / `BlocBuilder` / `BlocSelector`, or move the
+read into a callback. Reads inside deferred interaction callbacks (`onTap`,
+`onPressed`) are exempt — that's where `read` is meant to be used; reads inside
+builder closures that run during `build` are checked.
+
+**BAD:**
+
+```dart
+Widget build(BuildContext context) {
+  final count = context.read<CounterCubit>().state;
+  return Text('$count');
+}
+```
+
+```dart
+Widget build(BuildContext context) {
+  // Fires on every rebuild.
+  context.read<CounterCubit>().increment();
+  return const SizedBox();
+}
+```
+
+**GOOD:**
+
+```dart
+Widget build(BuildContext context) {
+  final count = context.watch<CounterCubit>().state;
+  return Text('$count');
+}
+```
+
+```dart
+Widget build(BuildContext context) {
+  return ElevatedButton(
+    onPressed: () => context.read<CounterCubit>().increment(),
+    child: const Text('+'),
+  );
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
+<summary><code>avoid_direct_collection_equality_checks</code></summary>
+
+### `avoid_direct_collection_equality_checks`
+
+**AVOID** comparing collections directly with `==` or `!=`.
+
+For `List`, `Set`, and `Map`, `==` compares identity (reference equality), not
+contents, so `[1, 2] == [1, 2]` is `false`. Use a content-equality helper
+instead.
+
+The rule offers three quick fixes: one rewriting the comparison to Flutter's
+`listEquals`/`setEquals`/`mapEquals` (from `package:flutter/foundation.dart`),
+one to `package:collection`'s `ListEquality`/`SetEquality`/`MapEquality`, and one
+to `identical` for the cases where an identity comparison is actually intended.
+The content-equality fixes add the required import, so each is only offered when
+the package owning the analyzed file declares a direct dependency on the package
+it imports (`flutter` and `collection` respectively). All fixes negate the result for
+`!=`.
+
+**BAD:**
+
+```dart
+bool sameItems(List<int> a, List<int> b) {
+  return a == b;
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:flutter/foundation.dart';
+
+bool sameItems(List<int> a, List<int> b) {
+  return listEquals(a, b);
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:collection/collection.dart';
+
+bool sameItems(List<int> a, List<int> b) {
+  return const ListEquality<int>().equals(a, b);
+}
+```
+
+**GOOD:**
+
+```dart
+bool isSameList(List<int> a, List<int> b) {
+  return identical(a, b);
 }
 ```
 
@@ -991,6 +1164,7 @@ See linked source code containing explanation in dart doc.
 ---
 
 ## 🛠️ Maintained by LeanCode
+
 <div align="center">
 
   [<img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />][leancode-landing]
