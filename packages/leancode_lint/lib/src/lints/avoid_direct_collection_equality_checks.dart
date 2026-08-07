@@ -230,11 +230,7 @@ class ReplaceWithCollectionPackageEqualityFix
           builder.write('const ${kind.collectionClass}');
           if (typeArguments.isNotEmpty) {
             builder
-              ..writeTypes(
-                typeArguments,
-                prefix: '<',
-                shouldWriteDynamic: true,
-              )
+              ..writeTypes(typeArguments, prefix: '<', shouldWriteDynamic: true)
               ..write('>');
           }
           builder.write('().equals($left, $right)');
