@@ -1,3 +1,8 @@
+## 3.1.4
+
+- Fix garbled non-ASCII characters in logged response bodies
+- Bump minimum `http` version to 1.4.0
+
 ## 3.1.3
 
 - Fix illegible text on log tiles, the log details app bar and the entry button in apps whose theme foregrounds don't happen to contrast with them.

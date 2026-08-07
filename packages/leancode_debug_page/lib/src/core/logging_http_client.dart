@@ -53,7 +53,7 @@ class LoggingHttpClient extends http.BaseClient
     return http.StreamedResponse(
       response.stream.doOnData(responseBodyBytes.addAll).doOnDone(() {
         responseBodyCompleter.complete(
-          http.Response.bytes(responseBodyBytes, response.statusCode).body,
+          _decodeResponseBodyForLogging(responseBodyBytes, response),
         );
       }),
       response.statusCode,
@@ -76,5 +76,21 @@ String? _decodeRequestBodyForLogging(http.BaseRequest request) {
     return request.encoding.decode(request.bodyBytes);
   } on FormatException {
     return '[binary body, ${request.bodyBytes.length} bytes]';
+  }
+}
+
+/// Guards [http.Response.body], which throws on bytes its charset can't decode.
+String _decodeResponseBodyForLogging(
+  List<int> bodyBytes,
+  http.StreamedResponse response,
+) {
+  try {
+    return http.Response.bytes(
+      bodyBytes,
+      response.statusCode,
+      headers: response.headers,
+    ).body;
+  } on FormatException {
+    return '[binary body, ${bodyBytes.length} bytes]';
   }
 }

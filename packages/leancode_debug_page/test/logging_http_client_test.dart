@@ -161,6 +161,94 @@ void main() {
       },
     );
 
+    Future<String> logResponseBody(
+      List<int> responseBodyBytes, {
+      Map<String, String> responseHeaders = const {},
+    }) async {
+      when<Future<StreamedResponse>>(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer(
+        (invocation) async => StreamedResponse(
+          Stream.value(responseBodyBytes),
+          statusCode,
+          contentLength: responseBodyBytes.length,
+          request: request,
+          headers: responseHeaders,
+          isRedirect: isRedirect,
+          persistentConnection: persistentConnection,
+          reasonPhrase: reasonPhrase,
+        ),
+      );
+
+      final response = await loggingHttpClient.send(request);
+      await response.stream.drain<void>();
+
+      return loggingHttpClient.logs.single.responseBodyCompleter.future;
+    }
+
+    test('decodes a charset-less json response body as utf8', () async {
+      expect(
+        await logResponseBody(
+          utf8.encode('Łódź'),
+          responseHeaders: {'content-type': 'application/json'},
+        ),
+        'Łódź',
+      );
+    });
+
+    test('decodes response body using the declared charset', () async {
+      expect(
+        await logResponseBody(
+          utf8.encode('Łódź'),
+          responseHeaders: {'content-type': 'text/plain; charset=utf-8'},
+        ),
+        'Łódź',
+      );
+    });
+
+    test('honours a declared charset other than utf8', () async {
+      expect(
+        await logResponseBody(
+          latin1.encode('Éé'),
+          responseHeaders: {'content-type': 'text/plain; charset="iso-8859-1"'},
+        ),
+        'Éé',
+      );
+    });
+
+    // Only `application/json` gets utf8 out of `http` without a charset; every
+    // other type falls back to latin1. Pinned so widening it is a deliberate
+    // change rather than a surprise.
+    test('leaves a charset-less text response on latin1', () async {
+      expect(
+        await logResponseBody(
+          utf8.encode('Łódź'),
+          responseHeaders: {'content-type': 'text/plain'},
+        ),
+        latin1.decode(utf8.encode('Łódź')),
+      );
+    });
+
+    test('logs binary response body when decoding fails', () async {
+      expect(
+        await logResponseBody(
+          [0xBE, 0xEF],
+          responseHeaders: {'content-type': 'application/json'},
+        ),
+        '[binary body, 2 bytes]',
+      );
+    });
+
+    test('logs binary response body for an unparseable content type', () async {
+      expect(
+        await logResponseBody(
+          utf8.encode('Łódź'),
+          responseHeaders: {'content-type': 'not a media type'},
+        ),
+        '[binary body, 7 bytes]',
+      );
+    });
+
     test('clear logs', () async {
       await loggingHttpClient.get(homeUrl);
       expect(loggingHttpClient.logs, hasLength(1));
