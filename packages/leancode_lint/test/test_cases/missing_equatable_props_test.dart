@@ -250,7 +250,8 @@ class Sub extends Parent {
 ''');
   }
 
-  Future<void> test_super_props_not_suggested_for_direct_equatable_subclass() async {
+  Future<void>
+  test_super_props_not_suggested_for_direct_equatable_subclass() async {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
@@ -266,7 +267,8 @@ class MyState extends Equatable {
 ''');
   }
 
-  Future<void> test_super_props_not_suggested_when_parent_has_no_concrete_props() async {
+  Future<void>
+  test_super_props_not_suggested_when_parent_has_no_concrete_props() async {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
@@ -286,7 +288,8 @@ class Sub extends AbstractBase {
 ''');
   }
 
-  Future<void> test_no_diagnostic_when_parent_has_no_concrete_props_and_all_fields_listed() async {
+  Future<void>
+  test_no_diagnostic_when_parent_has_no_concrete_props_and_all_fields_listed() async {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
@@ -306,7 +309,8 @@ class Sub extends AbstractBase {
 ''');
   }
 
-  Future<void> test_super_props_suggested_when_abstract_parent_has_concrete_props() async {
+  Future<void>
+  test_super_props_suggested_when_abstract_parent_has_concrete_props() async {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
