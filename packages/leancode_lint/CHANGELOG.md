@@ -1,3 +1,7 @@
+# 26.1.0 
+
+- Require `analyzer: '>=13.0.0 <15.0.0'`
+
 # 26.0.0
 
 - Add new custom lints:
