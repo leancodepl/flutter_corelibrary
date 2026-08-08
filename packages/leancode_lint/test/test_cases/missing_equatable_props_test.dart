@@ -352,6 +352,161 @@ class Sub extends AbstractBase {
 ''');
   }
 
+  Future<void>
+  test_super_props_not_suggested_when_parent_props_is_empty() async {
+    await assertNoDiagnostics('''
+import 'package:equatable/equatable.dart';
+
+class Parent with Equatable {
+  const Parent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class Sub extends Parent {
+  const Sub(this.a);
+
+  final int a;
+
+  @override
+  List<Object?> get props => [a];
+}
+''');
+  }
+
+  Future<void>
+  test_super_props_not_suggested_when_whole_parent_chain_has_no_fields() async {
+    await assertDiagnosticsInRanges('''
+import 'package:equatable/equatable.dart';
+
+class Base with Equatable {
+  const Base();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class Middle extends Base {
+  const Middle();
+}
+
+class Sub extends Middle {
+  const Sub(this.a, this.b);
+
+  final int a;
+  final int b;
+
+  @override
+  List<Object?> get props => [![a]!];
+}
+''');
+  }
+
+  Future<void>
+  test_super_props_suggested_when_grandparent_declares_fields() async {
+    await assertDiagnosticsInRanges('''
+import 'package:equatable/equatable.dart';
+
+class Base with Equatable {
+  const Base(this.shared);
+
+  final int shared;
+
+  @override
+  List<Object?> get props => [shared];
+}
+
+class Middle extends Base {
+  const Middle(super.shared);
+}
+
+class Sub extends Middle {
+  const Sub(super.shared, this.a);
+
+  final int a;
+
+  @override
+  List<Object?> get props => [![a]!];
+}
+''');
+  }
+
+  Future<void>
+  test_super_props_not_suggested_when_parent_only_declares_getters() async {
+    await assertNoDiagnostics('''
+import 'package:equatable/equatable.dart';
+
+class Parent with Equatable {
+  const Parent();
+
+  int get computed => 1;
+
+  @override
+  List<Object?> get props => [];
+}
+
+class Sub extends Parent {
+  const Sub(this.a);
+
+  final int a;
+
+  @override
+  List<Object?> get props => [a];
+}
+''');
+  }
+
+  Future<void>
+  test_super_props_not_suggested_when_parent_only_declares_static_fields() async {
+    await assertNoDiagnostics('''
+import 'package:equatable/equatable.dart';
+
+class Parent with Equatable {
+  const Parent();
+
+  static const int constant = 0;
+
+  @override
+  List<Object?> get props => [];
+}
+
+class Sub extends Parent {
+  const Sub(this.a);
+
+  final int a;
+
+  @override
+  List<Object?> get props => [a];
+}
+''');
+  }
+
+  Future<void>
+  test_super_props_suggested_when_parent_mixin_declares_fields() async {
+    await assertDiagnosticsInRanges('''
+import 'package:equatable/equatable.dart';
+
+mixin SharedFields {
+  final int shared = 0;
+}
+
+class Parent with Equatable, SharedFields {
+  @override
+  List<Object?> get props => [shared];
+}
+
+class Sub extends Parent {
+  Sub(this.a);
+
+  final int a;
+
+  @override
+  List<Object?> get props => [![a]!];
+}
+''');
+  }
+
   Future<void> test_unrecognized_spread_skips_lint() async {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';

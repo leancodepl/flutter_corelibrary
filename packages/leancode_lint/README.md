@@ -1058,7 +1058,7 @@ None.
 
 ### `missing_equatable_props`
 
-**DO** include every non-static field of an `Equatable`/`EquatableMixin` class in its `props` getter. When the class extends another Equatable-shaped class whose `props` getter is concrete, `super.props` must also be referenced so inherited fields participate in equality.
+**DO** include every non-static field of an `Equatable`/`EquatableMixin` class in its `props` getter. When the class extends another Equatable-shaped class whose `props` getter is concrete, `super.props` must also be referenced so inherited fields participate in equality. `super.props` is not required when the superclass chain declares no fields, since it can only be empty.
 
 The lint only fires when `props` is defined as a list literal (e.g. `=> [a, b]` or `{ return [a, b]; }`) so it can safely reason about the contents. If the list contains expressions the rule cannot enumerate (other spreads, `if`/`for` elements, method calls, …) it silently skips the class to avoid false positives.
 
