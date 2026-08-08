@@ -9,6 +9,7 @@ extension AssertDiagnosticsInRangesX on AnalysisRuleTest {
     bool positionShorthand = true,
     bool rangeShorthand = true,
     bool zeroWidthMarker = true,
+    List<List<Pattern>> messageContainsAll = const [],
   }) {
     final code = TestCode.parse(
       content,
@@ -17,8 +18,12 @@ extension AssertDiagnosticsInRangesX on AnalysisRuleTest {
       zeroWidthMarker: zeroWidthMarker,
     );
     return assertDiagnostics(code.code, [
-      for (final range in code.ranges)
-        lint(range.sourceRange.offset, range.sourceRange.length),
+      for (final (index, range) in code.ranges.indexed)
+        lint(
+          range.sourceRange.offset,
+          range.sourceRange.length,
+          messageContainsAll: messageContainsAll.elementAtOrNull(index) ?? [],
+        ),
       for (final position in code.positions) lint(position.offset, 0),
     ]);
   }

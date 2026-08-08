@@ -24,7 +24,7 @@ class MissingEquatablePropsTest extends AnalysisRuleTest with MockEquatable {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a, this.b);
 
   final int a;
@@ -40,6 +40,24 @@ class MyState with EquatableMixin {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
+class MyState with Equatable {
+  MyState(this.a, this.b, this.c);
+
+  final int a;
+  final String b;
+  final double c;
+
+  @override
+  List<Object?> get props => /*[0*/[a]/*0]*/;
+}
+''');
+  }
+
+  Future<void> test_missing_fields_in_deprecated_mixin_class() async {
+    await assertDiagnosticsInRanges('''
+import 'package:equatable/equatable.dart';
+
+// ignore: deprecated_member_use
 class MyState with EquatableMixin {
   MyState(this.a, this.b, this.c);
 
@@ -73,7 +91,7 @@ class MyState extends Equatable {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a);
 
   static const int unused = 0;
@@ -89,7 +107,7 @@ class MyState with EquatableMixin {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a);
 
   final int a;
@@ -105,7 +123,7 @@ class MyState with EquatableMixin {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a, this.b);
 
   final int a;
@@ -135,7 +153,7 @@ class Plain {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a, this.b);
 
   final int a, b;
@@ -150,7 +168,7 @@ class MyState with EquatableMixin {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a, this.onTap);
 
   final int a;
@@ -166,7 +184,7 @@ class MyState with EquatableMixin {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a, this.b);
 
   final int a;
@@ -182,7 +200,7 @@ class MyState with EquatableMixin {
     await assertDiagnosticsInRanges('''
 import 'package:equatable/equatable.dart';
 
-class Parent with EquatableMixin {
+class Parent with Equatable {
   Parent(this.a);
 
   final int a;
@@ -206,7 +224,7 @@ class Sub extends Parent {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class Parent with EquatableMixin {
+class Parent with Equatable {
   Parent(this.a);
 
   final int a;
@@ -230,7 +248,7 @@ class Sub extends Parent {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class Parent with EquatableMixin {
+class Parent with Equatable {
   Parent(this.a);
 
   final int a;
@@ -338,7 +356,7 @@ class Sub extends AbstractBase {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a, this.b);
 
   final int a;
@@ -356,7 +374,7 @@ class MyState with EquatableMixin {
     await assertNoDiagnostics('''
 import 'package:equatable/equatable.dart';
 
-class MyState with EquatableMixin {
+class MyState with Equatable {
   MyState(this.a, this.b);
 
   final int a;
