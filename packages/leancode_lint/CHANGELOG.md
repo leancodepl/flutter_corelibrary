@@ -1,9 +1,18 @@
 # Unreleased
 
-- Add new custom lints:
-  - [`avoid_build_context_in_blocs`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_build_context_in_blocs)
 - Update [`prefer_equatable_mixin`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_equatable_mixin) to suggest mixing in `Equatable` directly when the linted package depends on `equatable` 2.1.0 or higher, where `EquatableMixin` is deprecated.
-  
+
+# 26.1.0
+
+- Require `analyzer: '>=13.0.0 <15.0.0'`
+
+# 26.0.0
+
+- Add new custom lints:
+  - [`avoid_direct_collection_equality_checks`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_direct_collection_equality_checks)
+  - [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build)
+  - [`avoid_build_context_in_blocs`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_build_context_in_blocs)
+
 # 25.0.0
 
 - Add new custom lint [`prefer_abstract_final_class`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_abstract_final_class)

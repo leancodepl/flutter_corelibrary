@@ -6,16 +6,19 @@ on:
     tags-ignore: ['login_client_flutter-v*']
     paths:
       - 'packages/login_client_flutter/**'
+      - '.github/workflows/login_client_flutter-test.yml'
   pull_request:
     branches: [master]
     paths:
       - 'packages/login_client_flutter/**'
+      - '.github/workflows/login_client_flutter-test.yml'
 
 jobs:
   test:
     name: Flutter ${{ matrix.channel }}${{ matrix.version }}
 
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
@@ -51,3 +54,21 @@ jobs:
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
         run: dart pub publish --dry-run || true
+
+  pana-score:
+    name: pana score
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      statuses: write
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Score with pana
+        continue-on-error: true
+        uses: leancodepl/mobile-tools/.github/actions/pana-score@e9f138c252f8e2254c88273367958fcc6bb39cad # pana-score-v1.3
+        with:
+          path: packages/login_client_flutter
