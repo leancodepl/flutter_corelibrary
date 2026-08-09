@@ -1,3 +1,11 @@
+## 1.0.4-alpha
+
+- Upgrade `leancode_contracts` dependency to `^0.10.0`
+- Upgrade `leancode_contracts_generator` dev dependency to `^0.19.0`
+- Upgrade `leancode_lint` dev dependency to `^19.0.0`
+- Upgrade `dotnet-contracts-generate` to `4.1.0`
+- Regenerate contracts
+
 ## 1.0.3-alpha
 
 - Upgrade `leancode_contracts` dependency to `^0.9.0`
