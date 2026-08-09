@@ -1,10 +1,7 @@
 ## 1.0.4-alpha
 
-- Upgrade `leancode_contracts` dependency to `^0.10.0`
-- Upgrade `leancode_contracts_generator` dev dependency to `^0.19.0`
-- Upgrade `leancode_lint` dev dependency to `^19.0.0`
-- Upgrade `dotnet-contracts-generate` to `4.1.0`
-- Drop the `json_serializable` dev dependency, no longer used for generating contracts serialization
+- Upgrade `leancode_contracts` to `^0.10.0` and `leancode_contracts_generator` to `^0.19.0`
+- Drop the now-unused `json_serializable` dev dependency
 - Regenerate contracts
 
 ## 1.0.3-alpha
