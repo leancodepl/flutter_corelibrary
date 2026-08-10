@@ -17,8 +17,8 @@ import 'package:leancode_lint/src/utils.dart';
 ///
 /// Every non-static field declared in the class must be referenced in the
 /// `props` list literal. When the class extends another Equatable-shaped
-/// class, `super.props` must also be present so that inherited fields
-/// participate in equality.
+/// class that contributes fields of its own, `super.props` must also be
+/// present so that inherited fields participate in equality.
 class MissingEquatableProps extends AnalysisRule {
   MissingEquatableProps()
     : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -247,7 +247,10 @@ List<String> _findMissingFieldNames(
 ///   `props` as abstract, so `super.props` would target the abstract member);
 /// - the superclass is an intermediate Equatable-shaped class that does not
 ///   provide a concrete `props` implementation anywhere in its chain (also
-///   making `super.props` resolve to an abstract member).
+///   making `super.props` resolve to an abstract member);
+/// - the superclass chain declares no fields, in which case `super.props` is
+///   empty and referencing it would contribute nothing (see
+///   [_hasInheritedFields]).
 bool _shouldHaveSuperProps(InterfaceElement element) {
   final supertype = element.supertype;
   if (supertype == null) {
@@ -265,6 +268,27 @@ bool _shouldHaveSuperProps(InterfaceElement element) {
     name: 'props',
     library: element.library,
   );
+  if (propsGetter == null || propsGetter.isAbstract) {
+    return false;
+  }
 
-  return propsGetter != null && !propsGetter.isAbstract;
+  return _hasInheritedFields(supertypeElement);
 }
+
+/// Whether [element] or any of its ancestors declares a field that
+/// `super.props` could contribute.
+///
+/// This rule models `props` as the list of a class's non-static fields, so a
+/// superclass chain that declares no such fields has an empty `props` and
+/// referencing `super.props` from a subclass would add nothing.
+bool _hasInheritedFields(InterfaceElement element) =>
+    [
+      element,
+      ...element.allSupertypes.map((supertype) => supertype.element),
+    ].any(
+      (ancestor) =>
+          !_equatableTypeChecker.isExactly(ancestor) &&
+          ancestor.fields.any(
+            (field) => !field.isStatic && field.isOriginDeclaration,
+          ),
+    );
