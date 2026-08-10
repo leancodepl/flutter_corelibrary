@@ -34,10 +34,9 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required ForceUpdateController forceUpdateController,
-    required Cqrs cqrs,
-  }) : _forceUpdateController = forceUpdateController,
-       _cqrs = cqrs;
+    required this._forceUpdateController,
+    required this._cqrs,
+  });
 
   final ForceUpdateController _forceUpdateController;
   final Cqrs _cqrs;

@@ -326,7 +326,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.4-alpha"
+    version: "1.0.5-alpha"
   leancode_lint:
     dependency: "direct dev"
     description:
