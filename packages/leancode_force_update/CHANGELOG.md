@@ -1,3 +1,8 @@
+## 1.0.4-alpha
+
+- Upgrade `leancode_contracts` to `^0.10.0` and `leancode_contracts_generator` to `^0.19.0`
+- Drop the now-unused `json_serializable` dev dependency
+
 ## 1.0.3-alpha
 
 - Upgrade `leancode_contracts` dependency to `^0.9.0`

@@ -3,7 +3,7 @@
 part of 'contracts.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
+// ContractsSerializableGenerator
 // **************************************************************************
 
 VersionSupport _$VersionSupportFromJson(Map<String, dynamic> json) =>
