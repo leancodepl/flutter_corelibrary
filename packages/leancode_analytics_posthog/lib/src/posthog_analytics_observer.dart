@@ -5,6 +5,11 @@ import 'package:posthog_flutter/posthog_flutter.dart';
 /// PostHog observer that tracks screen views for routes implementing
 /// [LeanAnalyticsRoute].
 class LeanAnalyticsPostHogObserver extends PosthogObserver {
+  /// Screen views come from [_sendLeanAnalyticsScreen]. Suppressing the
+  /// inherited ones keeps [PosthogObserver]'s bookkeeping while stopping it from
+  /// sending a second `$screen` named after `RouteSettings.name`.
+  LeanAnalyticsPostHogObserver() : super(nameExtractor: (_) => null);
+
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is LeanAnalyticsRoute) {
