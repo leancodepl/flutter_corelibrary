@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 3.38.x
+          - version: 3.44.x
           - channel: stable
     defaults:
       run:
