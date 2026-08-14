@@ -39,6 +39,25 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox();
 }
 
+/// A widget-agnostic stand-in for lazy, non-widget-returning factories such as
+/// a provider's `create`: it takes a `BuildContext`-accepting callback under
+/// an arbitrary name and does not itself return a `Widget`.
+class Factory extends StatelessWidget {
+  const Factory({super.key, required this.make});
+  final Object Function(BuildContext context) make;
+  @override
+  Widget build(BuildContext context) => const SizedBox();
+}
+
+/// Same shape as [Factory], but its callback returns a `Widget` — i.e. it is
+/// a builder in disguise, under a name that isn't `builder`/`create`.
+class WidgetFactory extends StatelessWidget {
+  const WidgetFactory({super.key, required this.make});
+  final Widget Function(BuildContext context) make;
+  @override
+  Widget build(BuildContext context) => const SizedBox();
+}
+
 class MyWidget extends StatelessWidget {
   const MyWidget({super.key});
 
@@ -150,6 +169,28 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
         return MyCubit();
       },
       child: const SizedBox(),
+    );'''),
+    );
+  }
+
+  /// The exemption is about the callback's return type, not its parameter
+  /// name or the enclosing widget's name: any `BuildContext`-taking closure
+  /// that doesn't produce a `Widget` is a one-off factory, not a builder.
+  Future<void> test_nonWidgetReturningCallback_arbitraryName_ok() async {
+    await assertNoDiagnostics(
+      _widget('''
+    return Factory(make: (context) => context.read<MyService>());'''),
+    );
+  }
+
+  /// Conversely, a `Widget`-returning callback is still checked even when
+  /// it's neither named `builder`/`create` nor declared on a widget with
+  /// "Provider" in its name.
+  Future<void> test_widgetReturningCallback_arbitraryName_flagged() async {
+    await assertDiagnosticsInRanges(
+      _widget('''
+    return WidgetFactory(
+      make: (context) => Consumer(value: context.[!read!]<MyCubit>().state),
     );'''),
     );
   }

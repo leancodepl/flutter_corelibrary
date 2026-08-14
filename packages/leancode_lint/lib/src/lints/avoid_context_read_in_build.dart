@@ -25,10 +25,11 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// reference. All three run on every rebuild, so none of them belong in
 /// `build`. Reads inside deferred interaction callbacks (`onTap`, `onPressed`)
 /// are exempt — that is where `read` is meant to be used; reads inside builder
-/// closures that run during build are checked. Reads inside a provider's
-/// `create` callback (e.g. `BlocProvider`, `RepositoryProvider`, `Provider`)
-/// are exempt too, since `create` runs lazily once rather than on every
-/// rebuild.
+/// closures that run during build are checked. A closure that takes a
+/// `BuildContext` but does not itself produce a `Widget` (e.g. a provider's
+/// `create` callback, which builds a service/bloc lazily once rather than on
+/// every rebuild) is exempt too — it is not part of the render tree, so
+/// nothing re-runs it when the read value changes.
 class AvoidContextReadInBuild extends AnalysisRule {
   AvoidContextReadInBuild()
     : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -63,6 +64,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     packageName: 'flutter',
   );
 
+  static const _widgetChecker = TypeChecker.fromName(
+    'Widget',
+    packageName: 'flutter',
+  );
+
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.methodName.name != 'read') {
@@ -82,9 +88,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   /// Whether [node] executes during build: it is inside a widget's `build`
-  /// method, and every closure between [node] and that method declares a
-  /// `BuildContext` parameter (i.e. is a builder that runs during build, not a
-  /// deferred interaction callback).
+  /// method, and every closure between [node] and that method both declares a
+  /// `BuildContext` parameter and produces a `Widget` (i.e. is a builder that
+  /// runs during build, not a deferred interaction callback or a lazy factory
+  /// like a provider's `create`).
   bool _runsDuringBuild(AstNode node) {
     for (
       AstNode? current = node.parent;
@@ -92,8 +99,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       current = current.parent
     ) {
       if (current is FunctionExpression &&
-          (_isProviderCreateCallback(current) ||
-              !_declaresBuildContextParameter(current))) {
+          (!_declaresBuildContextParameter(current) ||
+              !_returnsWidget(current))) {
         return false;
       }
       if (current is MethodDeclaration) {
@@ -108,29 +115,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     return false;
   }
 
-  /// Whether [function] is the `create` callback of a provider-style widget
-  /// (`Provider`, `ChangeNotifierProvider`, `BlocProvider`,
-  /// `RepositoryProvider`, ...), from either package:provider or
-  /// package:flutter_bloc.
-  ///
-  /// Unlike a builder that runs on every rebuild, `create` is invoked lazily
-  /// exactly once to construct the provided value, so `read`ing inside it is
-  /// the intended, documented pattern rather than a stale-UI bug.
-  bool _isProviderCreateCallback(FunctionExpression function) {
-    final parent = function.parent;
-    if (parent is! NamedArgument || parent.name.lexeme != 'create') {
-      return false;
-    }
-    final argumentList = parent.parent;
-    if (argumentList is! ArgumentList) {
-      return false;
-    }
-    final creation = argumentList.parent;
-    return creation is InstanceCreationExpression &&
-        (creation.constructorName.type.element?.name?.contains('Provider') ??
-            false);
-  }
-
   bool _declaresBuildContextParameter(FunctionExpression function) {
     final parameters = function.parameters?.parameters;
     if (parameters == null) {
@@ -143,6 +127,19 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
     return false;
+  }
+
+  /// Whether [function] produces a `Widget`.
+  ///
+  /// Only widget-returning closures are re-invoked to render part of the tree
+  /// on every rebuild. A `BuildContext`-taking closure that returns something
+  /// else — a bloc, a repository, a plain value — is a factory that runs
+  /// once (e.g. a provider's `create`), not a builder, so `read`ing inside it
+  /// is the intended pattern rather than a stale-UI bug.
+  bool _returnsWidget(FunctionExpression function) {
+    final returnType = function.declaredFragment?.element.returnType;
+    return returnType != null &&
+        _widgetChecker.isAssignableFromType(returnType);
   }
 }
 

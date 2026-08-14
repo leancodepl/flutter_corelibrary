@@ -1,6 +1,6 @@
 # Unreleased
 
-- Fix a false positive in [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build) where `context.read` inside a provider's `create` callback (e.g. `BlocProvider(create: (context) => ...)`) was flagged, even though `create` runs lazily once rather than on every rebuild.
+- Update [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build) to not report a `BuildContext`-taking closure that doesn't itself produce a `Widget` (e.g. a provider's `create` callback, such as `BlocProvider(create: (context) => ...)`), since it runs once as a lazy factory rather than on every rebuild.
 
 # 26.2.0
 

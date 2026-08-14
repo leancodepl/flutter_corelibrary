@@ -324,10 +324,11 @@ three run on every rebuild, so none of them belong in `build`. Either consume
 the value with `watch` / `select` / `BlocBuilder` / `BlocSelector`, or move the
 read into a callback. Reads inside deferred interaction callbacks (`onTap`,
 `onPressed`) are exempt — that's where `read` is meant to be used; reads inside
-builder closures that run during `build` are checked. Reads inside a
-provider's `create` callback (e.g. `BlocProvider`, `RepositoryProvider`,
-`Provider`) are also exempt, since `create` runs lazily once rather than on
-every rebuild.
+builder closures that run during `build` are checked. A closure that takes a
+`BuildContext` but doesn't itself return a `Widget` — e.g. a provider's
+`create` callback, such as `BlocProvider(create: (context) => ...)` — is
+exempt too, since it runs once as a lazy factory rather than on every
+rebuild.
 
 **BAD:**
 
