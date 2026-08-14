@@ -542,4 +542,103 @@ class MyState with Equatable {
 }
 ''');
   }
+
+  Future<void> test_primary_constructor_all_fields_present() async {
+    await assertNoDiagnostics('''
+import 'package:equatable/equatable.dart';
+
+class MyState(final int a, final String b) with Equatable {
+  @override
+  List<Object?> get props => [a, b];
+}
+''');
+  }
+
+  Future<void> test_primary_constructor_missing_fields() async {
+    await assertDiagnosticsInRanges(
+      '''
+import 'package:equatable/equatable.dart';
+
+class MyState(final int a, final int b, final int c) with Equatable {
+  @override
+  List<Object?> get props => /*[0*/[a]/*0]*/;
+}
+''',
+      messageContainsAll: [
+        ['b, c'],
+      ],
+    );
+  }
+
+  Future<void> test_primary_constructor_var_declaring_parameter() async {
+    await assertDiagnosticsInRanges(
+      '''
+import 'package:equatable/equatable.dart';
+
+class MyState(final int a, var int b) with Equatable {
+  @override
+  List<Object?> get props => /*[0*/[a]/*0]*/;
+}
+''',
+      messageContainsAll: [
+        ['b'],
+      ],
+    );
+  }
+
+  Future<void>
+  test_primary_constructor_non_declaring_parameters_ignored() async {
+    await assertNoDiagnostics('''
+import 'package:equatable/equatable.dart';
+
+class MyState(final int a, int b) with Equatable {
+  @override
+  List<Object?> get props => [a];
+}
+''');
+  }
+
+  Future<void> test_primary_constructor_and_body_fields_both_required() async {
+    await assertDiagnosticsInRanges(
+      '''
+import 'package:equatable/equatable.dart';
+
+class MyState(final int a) with Equatable {
+  final int b = 0;
+
+  @override
+  List<Object?> get props => /*[0*/[]/*0]*/;
+}
+''',
+      messageContainsAll: [
+        ['a, b'],
+      ],
+    );
+  }
+
+  Future<void>
+  test_super_props_required_when_parent_declares_fields_in_primary_constructor() async {
+    await assertDiagnosticsInRanges(
+      '''
+import 'package:equatable/equatable.dart';
+
+class Parent(final int a) with Equatable {
+  @override
+  List<Object?> get props => [a];
+}
+
+class Sub extends Parent {
+  Sub(super.a, this.b);
+
+  final int b;
+
+  @override
+  List<Object?> get props => /*[0*/[b]/*0]*/;
+}
+''',
+      messageContainsAll: [
+        ['super.props'],
+      ],
+    );
+  }
 }

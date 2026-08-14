@@ -366,4 +366,60 @@ class ClassWithValidOrderButOneFieldIsNullableAndMutable {
 }
 ''');
   }
+
+  Future<void> test_primary_constructor_alone_is_not_reported() async {
+    await assertNoDiagnostics('''
+class Point(final int first, final int second);
+''');
+  }
+
+  Future<void>
+  test_redirecting_constructor_matching_primary_constructor_field_order() async {
+    await assertNoDiagnostics('''
+class Point(final int first, final int second) {
+  Point.flipped(int first, int second) : this(second, first);
+}
+''');
+  }
+
+  Future<void>
+  test_redirecting_constructor_violating_primary_constructor_field_order() async {
+    await assertDiagnosticsInRanges('''
+class Point(final int first, final int second) {
+  /*[0*/Point.flipped(int second, int first) : this(first, second);/*0]*/
+}
+''');
+  }
+
+  Future<void> test_primary_constructor_fields_precede_body_fields() async {
+    await assertDiagnosticsInRanges('''
+class Point(final int first) {
+  /*[0*/factory Point.reversed(int second, int first) =>
+      Point(first)..second = second;/*0]*/
+
+  int second = 0;
+}
+''');
+  }
+
+  Future<void>
+  test_primary_constructor_fields_precede_body_fields_valid_order() async {
+    await assertNoDiagnostics('''
+class Point(final int first) {
+  factory Point.ordered(int first, int second) =>
+      Point(first)..second = second;
+
+  int second = 0;
+}
+''');
+  }
+
+  Future<void>
+  test_non_declaring_primary_constructor_parameters_are_not_fields() async {
+    await assertNoDiagnostics('''
+class Point(int scale, final int first) {
+  Point.other(int first, int scale) : this(scale, first);
+}
+''');
+  }
 }

@@ -1,3 +1,12 @@
+# Unreleased
+
+- Support Dart 3.13 primary constructors:
+  - [`missing_equatable_props`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#missing_equatable_props) now requires fields declared by a primary constructor's declaring parameters to be listed in `props`, and recognizes `super.props` as needed when the superclass declares its fields in a primary constructor.
+  - [`constructor_parameters_and_fields_should_have_the_same_order`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#constructor_parameters_and_fields_should_have_the_same_order) now treats fields declared by a primary constructor as coming before the fields declared in the class body.
+  - [`avoid_build_context_in_blocs`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_build_context_in_blocs) now reports `BuildContext` parameters declared in a Bloc/Cubit's primary constructor.
+  - [`prefer_abstract_final_class`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_abstract_final_class) now recognizes a private `._()` primary constructor as an instantiation guard, and its fix removes it from the class header.
+  - The "convert to a named formal parameter" assist now preserves the parameter's own declaration (e.g. a primary constructor's declaring `final int x` or a `super.x` parameter) instead of always producing `this.`-prefixed parameters.
+
 # 26.2.0
 
 - Update [`prefer_equatable_mixin`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_equatable_mixin) to suggest mixing in `Equatable` directly when the linted package depends on `equatable` 2.1.0 or higher, where `EquatableMixin` is deprecated.

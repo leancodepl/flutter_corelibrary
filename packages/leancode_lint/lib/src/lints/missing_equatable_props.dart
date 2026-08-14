@@ -77,7 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     final missing = _findMissingPropEntries(
       element: element,
-      members: members,
+      node: node,
       contents: contents,
     );
     if (missing.isEmpty) {
@@ -117,7 +117,10 @@ class AddToEquatablePropsFix extends ResolvedCorrectionProducer {
 
     final needsSuper =
         _shouldHaveSuperProps(element) && !contents.hasSuperPropsReference;
-    final missingFields = _findMissingFieldNames(members, contents.names);
+    final missingFields = _findMissingFieldNames(
+      classDeclaration,
+      contents.names,
+    );
 
     await builder.addDartFileEdit(file, (builder) {
       if (listLiteral.elements.isEmpty) {
@@ -215,7 +218,7 @@ _PropsListContents _collectExistingProps(ListLiteral listLiteral) {
 
 List<String> _findMissingPropEntries({
   required InterfaceElement element,
-  required List<ClassMember> members,
+  required ClassDeclaration node,
   required _PropsListContents contents,
 }) {
   final needsSuper =
@@ -223,18 +226,35 @@ List<String> _findMissingPropEntries({
 
   return [
     if (needsSuper) 'super.props',
-    ..._findMissingFieldNames(members, contents.names),
+    ..._findMissingFieldNames(node, contents.names),
   ];
 }
 
 List<String> _findMissingFieldNames(
-  List<ClassMember> members,
+  ClassDeclaration node,
   Set<String> existingNames,
 ) => [
-  for (final fieldDeclaration in members.whereType<FieldDeclaration>())
+  for (final name in _primaryConstructorFieldNames(node))
+    if (!existingNames.contains(name)) name,
+  for (final fieldDeclaration in _getMembers(
+    node,
+  ).whereType<FieldDeclaration>())
     if (!fieldDeclaration.isStatic)
       for (final variable in fieldDeclaration.fields.variables)
         if (!existingNames.contains(variable.name.lexeme)) variable.name.lexeme,
+];
+
+/// Names of the fields introduced by the primary constructor's declaring
+/// formal parameters (`final`/`var` parameters in the class header), in
+/// declaration order.
+List<String> _primaryConstructorFieldNames(ClassDeclaration node) => [
+  if (node.namePart case PrimaryConstructorDeclaration(:final formalParameters))
+    for (final parameter in formalParameters.parameters)
+      if (parameter.declaredFragment?.element case FieldFormalParameterElement(
+        isDeclaring: true,
+        field: FieldElement(:final name?),
+      ))
+        name,
 ];
 
 /// Whether the class's superclass exposes a concrete `props` getter that
@@ -289,6 +309,9 @@ bool _hasInheritedFields(InterfaceElement element) =>
       (ancestor) =>
           !_equatableTypeChecker.isExactly(ancestor) &&
           ancestor.fields.any(
-            (field) => !field.isStatic && field.isOriginDeclaration,
+            (field) =>
+                !field.isStatic &&
+                (field.isOriginDeclaration ||
+                    field.isOriginDeclaringFormalParameter),
           ),
     );

@@ -85,6 +85,12 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
+    if (node.namePart case PrimaryConstructorDeclaration(
+      :final formalParameters,
+    )) {
+      _checkParameters(formalParameters, blocType);
+    }
+
     final members = switch (node.body) {
       BlockClassBody(:final members) => members,
       _ => const <ClassMember>[],

@@ -6,6 +6,7 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:analyzer/source/source_range.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
@@ -66,14 +67,20 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    // A primary constructor declares an additional constructor, so the class is
-    // not a simple static holder.
-    if (node.namePart is! NameWithTypeParameters) {
+    // A primary constructor is a guard only when it is the private `._()`;
+    // anything else means the class is meant to be instantiated.
+    final primaryConstructor = switch (node.namePart) {
+      final PrimaryConstructorDeclaration primaryConstructor =>
+        primaryConstructor,
+      _ => null,
+    };
+    if (primaryConstructor != null &&
+        !_isPrimaryInstantiationGuard(primaryConstructor)) {
       return;
     }
 
     ConstructorDeclaration? theConstructor;
-    var constructorCount = 0;
+    var constructorCount = primaryConstructor != null ? 1 : 0;
     var staticMemberCount = 0;
 
     for (final member in node.body.members) {
@@ -86,8 +93,9 @@ class _Visitor extends SimpleAstVisitor<void> {
           staticMemberCount++;
         default:
           // Any instance member (field, method, getter, setter, operator) or
-          // any other unexpected member means this is not a pure static
-          // holder. Bail out to avoid false positives.
+          // any other unexpected member (including a primary constructor
+          // `this` body) means this is not a pure static holder. Bail out to
+          // avoid false positives.
           return;
       }
     }
@@ -95,9 +103,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Fire only when there is exactly one constructor, it is the private
     // instantiation-guard `_()`, and the class exposes at least one static
     // member (otherwise the transformation is pointless).
-    if (constructorCount != 1 ||
-        staticMemberCount == 0 ||
-        !_isInstantiationGuard(theConstructor!)) {
+    if (constructorCount != 1 || staticMemberCount == 0) {
+      return;
+    }
+    if (theConstructor != null && !_isInstantiationGuard(theConstructor)) {
       return;
     }
 
@@ -134,6 +143,15 @@ class _Visitor extends SimpleAstVisitor<void> {
       _ => false,
     };
   }
+
+  /// Whether [primaryConstructor] is a private `._()` primary constructor
+  /// without parameters, serving only to prevent instantiation. A `this` body
+  /// member (initializers or a body block) is rejected by the member loop.
+  static bool _isPrimaryInstantiationGuard(
+    PrimaryConstructorDeclaration primaryConstructor,
+  ) =>
+      primaryConstructor.constructorName?.name.lexeme == '_' &&
+      primaryConstructor.formalParameters.parameters.isEmpty;
 }
 
 class ConvertToAbstractFinalClass extends ResolvedCorrectionProducer {
@@ -156,20 +174,36 @@ class ConvertToAbstractFinalClass extends ResolvedCorrectionProducer {
       return;
     }
 
-    final constructor = classDeclaration.body.members
-        .whereType<ConstructorDeclaration>()
-        .firstOrNull;
-    if (constructor == null) {
-      return;
+    final List<SourceRange> deletions;
+    switch (classDeclaration.namePart) {
+      case PrimaryConstructorDeclaration(
+        :final constKeyword,
+        :final typeName,
+        :final constructorName?,
+        :final formalParameters,
+      ):
+        deletions = [
+          if (constKeyword != null) range.startStart(constKeyword, typeName),
+          range.startEnd(constructorName, formalParameters),
+        ];
+      case PrimaryConstructorDeclaration():
+        return;
+      case NameWithTypeParameters():
+        final constructor = classDeclaration.body.members
+            .whereType<ConstructorDeclaration>()
+            .firstOrNull;
+        if (constructor == null) {
+          return;
+        }
+        deletions = [range.deletionRange(constructor)];
     }
 
     await builder.addDartFileEdit(file, (builder) {
-      builder
-        ..addSimpleInsertion(
-          classDeclaration.classKeyword.offset,
-          'abstract final ',
-        )
-        ..addDeletion(range.deletionRange(constructor));
+      builder.addSimpleInsertion(
+        classDeclaration.classKeyword.offset,
+        'abstract final ',
+      );
+      deletions.forEach(builder.addDeletion);
     });
   }
 }

@@ -242,4 +242,59 @@ mixin MyMixin {
 }
 ''');
   }
+
+  Future<void> test_private_primary_constructor_guard_is_marked() async {
+    await assertDiagnosticsInRanges('''
+class [!MyConstants!]._() {
+  static const foo = 1;
+}
+''');
+  }
+
+  Future<void> test_const_private_primary_constructor_guard_is_marked() async {
+    await assertDiagnosticsInRanges('''
+class const [!MyConstants!]._() {
+  static const foo = 1;
+}
+''');
+  }
+
+  Future<void> test_unnamed_primary_constructor_is_not_marked() async {
+    await assertNoDiagnostics('''
+class MyConstants() {
+  static const foo = 1;
+}
+''');
+  }
+
+  Future<void>
+  test_primary_constructor_guard_with_parameters_is_not_marked() async {
+    await assertNoDiagnostics('''
+class MyConstants._(final int x) {
+  static const foo = 1;
+}
+''');
+  }
+
+  Future<void> test_primary_constructor_guard_with_body_is_not_marked() async {
+    await assertNoDiagnostics('''
+class MyConstants._() {
+  this {
+    print(1);
+  }
+
+  static const foo = 1;
+}
+''');
+  }
+
+  Future<void>
+  test_primary_constructor_guard_with_additional_constructor_is_not_marked() async {
+    await assertNoDiagnostics('''
+class MyConstants._() {
+  factory MyConstants.create() => MyConstants._();
+  static const foo = 1;
+}
+''');
+  }
 }

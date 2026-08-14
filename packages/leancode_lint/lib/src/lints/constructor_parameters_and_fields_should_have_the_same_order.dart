@@ -44,23 +44,38 @@ class _Visitor extends SimpleAstVisitor<void> {
       _ => <ClassMember>[],
     };
 
-    final fields = members.whereType<FieldDeclaration>().toList();
+    // Fields introduced by the primary constructor's declaring formal
+    // parameters come before the fields declared in the class body.
+    final fieldNames = [
+      ..._primaryConstructorFieldNames(node),
+      for (final field in members.whereType<FieldDeclaration>())
+        _effectiveName(field.fields.variables.first.name.lexeme),
+    ];
 
-    if (fields.isEmpty) {
+    if (fieldNames.isEmpty) {
       return;
     }
 
     final constructors = members.whereType<ConstructorDeclaration>();
     for (final constructor in constructors) {
-      if (!_hasValidOrder(constructor, fields)) {
+      if (!_hasValidOrder(constructor, fieldNames)) {
         rule.reportAtNode(constructor);
       }
     }
   }
 
+  List<String> _primaryConstructorFieldNames(ClassDeclaration node) => [
+    if (node.namePart case PrimaryConstructorDeclaration(
+      :final formalParameters,
+    ))
+      for (final parameter in formalParameters.parameters)
+        if (parameter.declaredFragment?.element is FieldFormalParameterElement)
+          if (parameter.name case final name?) _effectiveName(name.lexeme),
+  ];
+
   bool _hasValidOrder(
     ConstructorDeclaration constructor,
-    List<FieldDeclaration> fields,
+    List<String> fieldNames,
   ) {
     final parameters = constructor.parameters.parameters;
     if (parameters.isEmpty) {
@@ -77,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         )
         .toList();
 
-    final fieldsWithNamedParameters = fields
+    final fieldsWithNamedParameters = fieldNames
         .where(
           (field) => namedParameters.any(
             (parameter) => _compareEffectiveNames(field, parameter),
@@ -85,7 +100,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         )
         .toList();
 
-    final fieldsWithUnnamedParameters = fields
+    final fieldsWithUnnamedParameters = fieldNames
         .where(
           (field) => unnamedParameters.any(
             (parameter) => _compareEffectiveNames(field, parameter),
@@ -126,20 +141,17 @@ class _Visitor extends SimpleAstVisitor<void> {
       parameter.declaredFragment?.element is! SuperFormalParameterElement;
 
   bool _compareEffectiveNames(
-    FieldDeclaration field,
+    String effectiveFieldName,
     FormalParameter parameter,
   ) {
-    final relevantField = field.fields.variables.first;
-
-    final effectiveFieldName = relevantField.name.lexeme.startsWith('_')
-        ? relevantField.name.lexeme.substring(1)
-        : relevantField.name.lexeme;
-
-    final effectiveParameterName =
-        parameter.name?.lexeme.startsWith('_') ?? false
-        ? parameter.name?.lexeme.substring(1)
-        : parameter.name?.lexeme;
+    final effectiveParameterName = switch (parameter.name?.lexeme) {
+      final name? => _effectiveName(name),
+      null => null,
+    };
 
     return effectiveParameterName == effectiveFieldName;
   }
+
+  static String _effectiveName(String name) =>
+      name.startsWith('_') ? name.substring(1) : name;
 }

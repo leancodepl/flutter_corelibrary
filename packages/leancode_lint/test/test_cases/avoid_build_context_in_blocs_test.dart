@@ -355,4 +355,36 @@ void f(NotABloc notABloc, BuildContext context) {
 }
 ''');
   }
+
+  Future<void> test_contextParameterInPrimaryConstructor_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+
+class CounterCubit(BuildContext [!context!]) extends Cubit<int> {
+  this : super(0);
+}
+''');
+  }
+
+  Future<void> test_contextFieldDeclaredInPrimaryConstructor_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+
+class CounterCubit(final BuildContext [!context!]) extends Cubit<int> {
+  this : super(0);
+}
+''');
+  }
+
+  Future<void> test_primaryConstructorWithoutContext_ok() async {
+    await assertNoDiagnostics('''
+import 'package:bloc/bloc.dart';
+
+class CounterCubit(final int start) extends Cubit<int> {
+  this : super(start);
+}
+''');
+  }
 }
