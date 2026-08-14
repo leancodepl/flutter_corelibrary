@@ -292,7 +292,7 @@ class MyConstants._() {
   test_primary_constructor_guard_with_additional_constructor_is_not_marked() async {
     await assertNoDiagnostics('''
 class MyConstants._() {
-  factory MyConstants.create() => MyConstants._();
+  factory create() => MyConstants._();
   static const foo = 1;
 }
 ''');
