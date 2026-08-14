@@ -55,7 +55,7 @@ class ProperlyNamedCubit(final int start) extends Cubit<int> {
   this : super(start);
 }
 
-class /*[0*/NotProperlyNamed/*0]*/(final int start) extends Cubit<int> {
+class [!NotProperlyNamed!](final int start) extends Cubit<int> {
   this : super(start);
 }
 ''');
