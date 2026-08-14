@@ -1,3 +1,8 @@
+## 1.0.5-alpha
+
+- Upgrade `in_app_update` to `^5.0.0`
+- Require Flutter `>=3.44.0` and Dart `>=3.12.0`, as mandated by `in_app_update` 5.0.0
+
 ## 1.0.4-alpha
 
 - Upgrade `leancode_contracts` to `^0.10.0` and `leancode_contracts_generator` to `^0.19.0`

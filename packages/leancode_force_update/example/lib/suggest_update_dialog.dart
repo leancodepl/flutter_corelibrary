@@ -4,8 +4,8 @@ import 'package:leancode_force_update/leancode_force_update.dart';
 class SuggestUpdateDialog extends StatelessWidget {
   const SuggestUpdateDialog({
     super.key,
-    required ForceUpdateController forceUpdateController,
-  }) : _forceUpdateController = forceUpdateController;
+    required this._forceUpdateController,
+  });
 
   final ForceUpdateController _forceUpdateController;
 
