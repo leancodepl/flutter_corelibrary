@@ -386,7 +386,7 @@ class Point(final int first, final int second) {
   test_redirecting_constructor_violating_primary_constructor_field_order() async {
     await assertDiagnosticsInRanges('''
 class Point(final int first, final int second) {
-  /*[0*/Point.flipped(int second, int first) : this(first, second);/*0]*/
+  [!Point.flipped(int second, int first) : this(first, second);!]
 }
 ''');
   }
@@ -394,8 +394,8 @@ class Point(final int first, final int second) {
   Future<void> test_primary_constructor_fields_precede_body_fields() async {
     await assertDiagnosticsInRanges('''
 class Point(final int first) {
-  /*[0*/factory Point.reversed(int second, int first) =>
-      Point(first)..second = second;/*0]*/
+  [!factory Point.reversed(int second, int first) =>
+      Point(first)..second = second;!]
 
   int second = 0;
 }

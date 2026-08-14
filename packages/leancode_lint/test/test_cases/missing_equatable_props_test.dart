@@ -561,7 +561,7 @@ import 'package:equatable/equatable.dart';
 
 class MyState(final int a, final int b, final int c) with Equatable {
   @override
-  List<Object?> get props => /*[0*/[a]/*0]*/;
+  List<Object?> get props => [![a]!];
 }
 ''',
       messageContainsAll: [
@@ -577,7 +577,7 @@ import 'package:equatable/equatable.dart';
 
 class MyState(final int a, var int b) with Equatable {
   @override
-  List<Object?> get props => /*[0*/[a]/*0]*/;
+  List<Object?> get props => [![a]!];
 }
 ''',
       messageContainsAll: [
@@ -607,7 +607,7 @@ class MyState(final int a) with Equatable {
   final int b = 0;
 
   @override
-  List<Object?> get props => /*[0*/[]/*0]*/;
+  List<Object?> get props => [![]!];
 }
 ''',
       messageContainsAll: [
@@ -633,7 +633,7 @@ class Sub extends Parent {
   final int b;
 
   @override
-  List<Object?> get props => /*[0*/[b]/*0]*/;
+  List<Object?> get props => [![b]!];
 }
 ''',
       messageContainsAll: [
