@@ -25,7 +25,10 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// reference. All three run on every rebuild, so none of them belong in
 /// `build`. Reads inside deferred interaction callbacks (`onTap`, `onPressed`)
 /// are exempt — that is where `read` is meant to be used; reads inside builder
-/// closures that run during build are checked.
+/// closures that run during build are checked. Reads inside a provider's
+/// `create` callback (e.g. `BlocProvider`, `RepositoryProvider`, `Provider`)
+/// are exempt too, since `create` runs lazily once rather than on every
+/// rebuild.
 class AvoidContextReadInBuild extends AnalysisRule {
   AvoidContextReadInBuild()
     : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -89,7 +92,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       current = current.parent
     ) {
       if (current is FunctionExpression &&
-          !_declaresBuildContextParameter(current)) {
+          (_isProviderCreateCallback(current) ||
+              !_declaresBuildContextParameter(current))) {
         return false;
       }
       if (current is MethodDeclaration) {
@@ -102,6 +106,29 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
     return false;
+  }
+
+  /// Whether [function] is the `create` callback of a provider-style widget
+  /// (`Provider`, `ChangeNotifierProvider`, `BlocProvider`,
+  /// `RepositoryProvider`, ...), from either package:provider or
+  /// package:flutter_bloc.
+  ///
+  /// Unlike a builder that runs on every rebuild, `create` is invoked lazily
+  /// exactly once to construct the provided value, so `read`ing inside it is
+  /// the intended, documented pattern rather than a stale-UI bug.
+  bool _isProviderCreateCallback(FunctionExpression function) {
+    final parent = function.parent;
+    if (parent is! NamedArgument || parent.name.lexeme != 'create') {
+      return false;
+    }
+    final argumentList = parent.parent;
+    if (argumentList is! ArgumentList) {
+      return false;
+    }
+    final creation = argumentList.parent;
+    return creation is InstanceCreationExpression &&
+        (creation.constructorName.type.element?.name?.contains('Provider') ??
+            false);
   }
 
   bool _declaresBuildContextParameter(FunctionExpression function) {

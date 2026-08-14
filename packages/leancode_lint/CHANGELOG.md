@@ -1,3 +1,7 @@
+# Unreleased
+
+- Fix a false positive in [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build) where `context.read` inside a provider's `create` callback (e.g. `BlocProvider(create: (context) => ...)`) was flagged, even though `create` runs lazily once rather than on every rebuild.
+
 # 26.2.0
 
 - Update [`prefer_equatable_mixin`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_equatable_mixin) to suggest mixing in `Equatable` directly when the linted package depends on `equatable` 2.1.0 or higher, where `EquatableMixin` is deprecated.

@@ -139,6 +139,21 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     );
   }
 
+  /// `create` is invoked lazily, once, to construct the provided value — not
+  /// on every rebuild — so `read`ing inside it is the intended pattern.
+  Future<void> test_providerCreateCallback_ok() async {
+    await assertNoDiagnostics(
+      _widget('''
+    return BlocProvider(
+      create: (context) {
+        final s = context.read<MyService>();
+        return MyCubit();
+      },
+      child: const SizedBox(),
+    );'''),
+    );
+  }
+
   Future<void> test_watch_ok() async {
     await assertNoDiagnostics(
       _widget('''
