@@ -125,11 +125,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   /// Whether [function] returns a `Widget`. Only such closures re-run on
   /// every rebuild; anything else is a one-off factory (e.g. a provider's
   /// `create`).
-  bool _returnsWidget(FunctionExpression function) {
-    final returnType = function.declaredFragment?.element.returnType;
-    return returnType != null &&
-        _widgetChecker.isAssignableFromType(returnType);
-  }
+  bool _returnsWidget(FunctionExpression function) =>
+      switch (function.declaredFragment?.element.returnType) {
+        final returnType? => _widgetChecker.isAssignableFromType(returnType),
+        null => false,
+      };
 }
 
 class ReplaceContextReadWithWatchFix extends ResolvedCorrectionProducer {
