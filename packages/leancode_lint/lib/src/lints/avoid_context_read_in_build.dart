@@ -22,14 +22,10 @@ import 'package:leancode_lint/src/type_checker.dart';
 ///
 /// Every `read` that executes during build is reported, whatever it is used
 /// for: reading a value, calling a method, or grabbing a bloc/service
-/// reference. All three run on every rebuild, so none of them belong in
-/// `build`. Reads inside deferred interaction callbacks (`onTap`, `onPressed`)
-/// are exempt — that is where `read` is meant to be used; reads inside builder
-/// closures that run during build are checked. A closure that takes a
-/// `BuildContext` but does not itself produce a `Widget` (e.g. a provider's
-/// `create` callback, which builds a service/bloc lazily once rather than on
-/// every rebuild) is exempt too — it is not part of the render tree, so
-/// nothing re-runs it when the read value changes.
+/// reference. Reads inside deferred interaction callbacks (`onTap`,
+/// `onPressed`) are exempt, and so are `BuildContext`-taking closures that
+/// don't return a `Widget` (e.g. a provider's `create`), since neither runs
+/// on every rebuild.
 class AvoidContextReadInBuild extends AnalysisRule {
   AvoidContextReadInBuild()
     : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -87,11 +83,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     rule.reportAtNode(node.methodName);
   }
 
-  /// Whether [node] executes during build: it is inside a widget's `build`
-  /// method, and every closure between [node] and that method both declares a
-  /// `BuildContext` parameter and produces a `Widget` (i.e. is a builder that
-  /// runs during build, not a deferred interaction callback or a lazy factory
-  /// like a provider's `create`).
+  /// Whether [node] is inside a widget's `build` method, with every closure
+  /// in between taking `BuildContext` and returning a `Widget`.
   bool _runsDuringBuild(AstNode node) {
     for (
       AstNode? current = node.parent;
@@ -129,13 +122,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     return false;
   }
 
-  /// Whether [function] produces a `Widget`.
-  ///
-  /// Only widget-returning closures are re-invoked to render part of the tree
-  /// on every rebuild. A `BuildContext`-taking closure that returns something
-  /// else — a bloc, a repository, a plain value — is a factory that runs
-  /// once (e.g. a provider's `create`), not a builder, so `read`ing inside it
-  /// is the intended pattern rather than a stale-UI bug.
+  /// Whether [function] returns a `Widget`. Only such closures re-run on
+  /// every rebuild; anything else is a one-off factory (e.g. a provider's
+  /// `create`).
   bool _returnsWidget(FunctionExpression function) {
     final returnType = function.declaredFragment?.element.returnType;
     return returnType != null &&

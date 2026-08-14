@@ -39,9 +39,8 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox();
 }
 
-/// A widget-agnostic stand-in for lazy, non-widget-returning factories such as
-/// a provider's `create`: it takes a `BuildContext`-accepting callback under
-/// an arbitrary name and does not itself return a `Widget`.
+/// A non-widget-returning callback under an arbitrary name, e.g. a
+/// provider's `create`.
 class Factory extends StatelessWidget {
   const Factory({super.key, required this.make});
   final Object Function(BuildContext context) make;
@@ -49,8 +48,7 @@ class Factory extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox();
 }
 
-/// Same shape as [Factory], but its callback returns a `Widget` — i.e. it is
-/// a builder in disguise, under a name that isn't `builder`/`create`.
+/// Same as [Factory], but the callback returns a `Widget`.
 class WidgetFactory extends StatelessWidget {
   const WidgetFactory({super.key, required this.make});
   final Widget Function(BuildContext context) make;
@@ -158,8 +156,6 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     );
   }
 
-  /// `create` is invoked lazily, once, to construct the provided value — not
-  /// on every rebuild — so `read`ing inside it is the intended pattern.
   Future<void> test_providerCreateCallback_ok() async {
     await assertNoDiagnostics(
       _widget('''
@@ -173,9 +169,7 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     );
   }
 
-  /// The exemption is about the callback's return type, not its parameter
-  /// name or the enclosing widget's name: any `BuildContext`-taking closure
-  /// that doesn't produce a `Widget` is a one-off factory, not a builder.
+  /// Exemption tracks return type, not the callback's name.
   Future<void> test_nonWidgetReturningCallback_arbitraryName_ok() async {
     await assertNoDiagnostics(
       _widget('''
@@ -183,9 +177,7 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     );
   }
 
-  /// Conversely, a `Widget`-returning callback is still checked even when
-  /// it's neither named `builder`/`create` nor declared on a widget with
-  /// "Provider" in its name.
+  /// Still flagged regardless of the callback's name.
   Future<void> test_widgetReturningCallback_arbitraryName_flagged() async {
     await assertDiagnosticsInRanges(
       _widget('''
