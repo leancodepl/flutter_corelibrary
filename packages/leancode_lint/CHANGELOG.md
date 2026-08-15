@@ -1,5 +1,6 @@
-# Unreleased
+# 26.3.0
 
+- Update [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build) to exempt `BuildContext`-taking closures that don't return a `Widget` (e.g. a provider's `create`), since they run once rather than on every rebuild.
 - Support Dart 3.13 primary constructors:
   - [`missing_equatable_props`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#missing_equatable_props) now requires fields declared by a primary constructor's declaring parameters to be listed in `props`, and recognizes `super.props` as needed when the superclass declares its fields in a primary constructor.
   - [`constructor_parameters_and_fields_should_have_the_same_order`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#constructor_parameters_and_fields_should_have_the_same_order) now treats fields declared by a primary constructor as coming before the fields declared in the class body.

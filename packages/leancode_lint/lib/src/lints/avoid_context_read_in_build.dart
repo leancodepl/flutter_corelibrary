@@ -22,10 +22,10 @@ import 'package:leancode_lint/src/type_checker.dart';
 ///
 /// Every `read` that executes during build is reported, whatever it is used
 /// for: reading a value, calling a method, or grabbing a bloc/service
-/// reference. All three run on every rebuild, so none of them belong in
-/// `build`. Reads inside deferred interaction callbacks (`onTap`, `onPressed`)
-/// are exempt — that is where `read` is meant to be used; reads inside builder
-/// closures that run during build are checked.
+/// reference. Reads inside deferred interaction callbacks (`onTap`,
+/// `onPressed`) are exempt, and so are `BuildContext`-taking closures that
+/// don't return a `Widget` (e.g. a provider's `create`), since neither runs
+/// on every rebuild.
 class AvoidContextReadInBuild extends AnalysisRule {
   AvoidContextReadInBuild()
     : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -60,6 +60,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     packageName: 'flutter',
   );
 
+  static const _widgetChecker = TypeChecker.fromName(
+    'Widget',
+    packageName: 'flutter',
+  );
+
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.methodName.name != 'read') {
@@ -78,10 +83,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     rule.reportAtNode(node.methodName);
   }
 
-  /// Whether [node] executes during build: it is inside a widget's `build`
-  /// method, and every closure between [node] and that method declares a
-  /// `BuildContext` parameter (i.e. is a builder that runs during build, not a
-  /// deferred interaction callback).
+  /// Whether [node] is inside a widget's `build` method, with every closure
+  /// in between taking `BuildContext` and returning a `Widget`.
   bool _runsDuringBuild(AstNode node) {
     for (
       AstNode? current = node.parent;
@@ -89,7 +92,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       current = current.parent
     ) {
       if (current is FunctionExpression &&
-          !_declaresBuildContextParameter(current)) {
+          (!_declaresBuildContextParameter(current) ||
+              !_returnsWidget(current))) {
         return false;
       }
       if (current is MethodDeclaration) {
@@ -117,6 +121,15 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     return false;
   }
+
+  /// Whether [function] returns a `Widget`. Only such closures re-run on
+  /// every rebuild; anything else is a one-off factory (e.g. a provider's
+  /// `create`).
+  bool _returnsWidget(FunctionExpression function) =>
+      switch (function.declaredFragment?.element.returnType) {
+        final returnType? => _widgetChecker.isAssignableFromType(returnType),
+        null => false,
+      };
 }
 
 class ReplaceContextReadWithWatchFix extends ResolvedCorrectionProducer {
