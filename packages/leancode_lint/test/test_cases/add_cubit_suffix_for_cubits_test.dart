@@ -46,4 +46,18 @@ class /*[2*/ClassExtendingOtherCubitClassWithoutSuffix/*2]*/ extends NotProperly
 }
 ''');
   }
+
+  Future<void> test_primary_constructor() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class ProperlyNamedCubit(final int start) extends Cubit<int> {
+  this : super(start);
+}
+
+class [!NotProperlyNamed!](final int start) extends Cubit<int> {
+  this : super(start);
+}
+''');
+  }
 }

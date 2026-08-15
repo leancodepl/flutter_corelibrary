@@ -87,8 +87,11 @@ class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
         // delete positional parameter
         builder.addDeletion(sourceRange);
 
+        // Keep the parameter's own declaration (`this.x`, `super.x`, or a
+        // primary constructor's declaring `final int x`) instead of
+        // synthesizing a `this.`-prefixed one.
         final namedParam =
-            '${Keyword.REQUIRED.lexeme} ${Keyword.THIS.lexeme}.${parameter.name},';
+            '${Keyword.REQUIRED.lexeme} ${parameter.toSource()},';
 
         if (node.leftDelimiter case final brace?) {
           // has named parameters, add to list
