@@ -39,6 +39,23 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox();
 }
 
+/// A non-widget-returning callback under an arbitrary name, e.g. a
+/// provider's `create`.
+class Factory extends StatelessWidget {
+  const Factory({super.key, required this.make});
+  final Object Function(BuildContext context) make;
+  @override
+  Widget build(BuildContext context) => const SizedBox();
+}
+
+/// Same as [Factory], but the callback returns a `Widget`.
+class WidgetFactory extends StatelessWidget {
+  const WidgetFactory({super.key, required this.make});
+  final Widget Function(BuildContext context) make;
+  @override
+  Widget build(BuildContext context) => const SizedBox();
+}
+
 class MyWidget extends StatelessWidget {
   const MyWidget({super.key});
 
@@ -135,6 +152,37 @@ class AvoidContextReadInBuildTest extends AnalysisRuleTest
     return Builder(
       builder: (context) =>
           Button(onTap: () => context.read<MyCubit>().doThing()),
+    );'''),
+    );
+  }
+
+  Future<void> test_providerCreateCallback_ok() async {
+    await assertNoDiagnostics(
+      _widget('''
+    return BlocProvider(
+      create: (context) {
+        final s = context.read<MyService>();
+        return MyCubit();
+      },
+      child: const SizedBox(),
+    );'''),
+    );
+  }
+
+  /// Exemption tracks return type, not the callback's name.
+  Future<void> test_nonWidgetReturningCallback_arbitraryName_ok() async {
+    await assertNoDiagnostics(
+      _widget('''
+    return Factory(make: (context) => context.read<MyService>());'''),
+    );
+  }
+
+  /// Still flagged regardless of the callback's name.
+  Future<void> test_widgetReturningCallback_arbitraryName_flagged() async {
+    await assertDiagnosticsInRanges(
+      _widget('''
+    return WidgetFactory(
+      make: (context) => Consumer(value: context.[!read!]<MyCubit>().state),
     );'''),
     );
   }

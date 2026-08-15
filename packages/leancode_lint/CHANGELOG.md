@@ -1,3 +1,7 @@
+# Unreleased
+
+- Update [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build) to exempt `BuildContext`-taking closures that don't return a `Widget` (e.g. a provider's `create`), since they run once rather than on every rebuild.
+
 # 26.2.0
 
 - Update [`prefer_equatable_mixin`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_equatable_mixin) to suggest mixing in `Equatable` directly when the linted package depends on `equatable` 2.1.0 or higher, where `EquatableMixin` is deprecated.

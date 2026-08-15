@@ -324,7 +324,9 @@ three run on every rebuild, so none of them belong in `build`. Either consume
 the value with `watch` / `select` / `BlocBuilder` / `BlocSelector`, or move the
 read into a callback. Reads inside deferred interaction callbacks (`onTap`,
 `onPressed`) are exempt — that's where `read` is meant to be used; reads inside
-builder closures that run during `build` are checked.
+builder closures that run during `build` are checked. A `BuildContext`-taking
+closure that doesn't return a `Widget` (e.g. a provider's `create`) is exempt
+too, since it runs once rather than on every rebuild.
 
 **BAD:**
 
@@ -357,6 +359,15 @@ Widget build(BuildContext context) {
   return ElevatedButton(
     onPressed: () => context.read<CounterCubit>().increment(),
     child: const Text('+'),
+  );
+}
+```
+
+```dart
+Widget build(BuildContext context) {
+  return BlocProvider(
+    create: (context) => CounterCubit(repository: context.read()),
+    child: const CounterPage(),
   );
 }
 ```
