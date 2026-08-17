@@ -1,3 +1,5 @@
+include: package:leancode_lint/analysis_options.yaml
+
 analyzer:
   exclude:
     - build/**
@@ -7,7 +9,6 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-include: package:leancode_lint/analysis_options.yaml
 
 plugins:
   my_lints:
