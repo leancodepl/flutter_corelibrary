@@ -1,1 +1,12 @@
 include: lib/analysis_options_package.yaml
+
+analyzer:
+  # Added automatically on `pub get` by a migration in Flutter 3.47
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
