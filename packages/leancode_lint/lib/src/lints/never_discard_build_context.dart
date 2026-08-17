@@ -22,8 +22,7 @@ class NeverDiscardBuildContext extends AnalysisRule {
   static const code = LintCode(
     'never_discard_build_context',
     "Don't discard BuildContext parameters.",
-    correctionMessage:
-        'Give the BuildContext parameter a name to avoid accidentally using an ancestor context.',
+    correctionMessage: 'Give the BuildContext parameter a name to avoid accidentally using an ancestor context.',
     severity: .WARNING,
   );
 

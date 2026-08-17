@@ -112,10 +112,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkParameters(FormalParameterList parameters, BlocType blocType) {
     for (final parameter in parameters.parameters) {
-      if (parameter case FormalParameter(
-        :final name?,
-        declaredFragment: final fragment?,
-      ) when _isBuildContext(fragment.element.type)) {
+      if (parameter
+          case FormalParameter(:final name?, declaredFragment: final fragment?)
+          when _isBuildContext(fragment.element.type)) {
         rule.reportAtToken(
           name,
           arguments: ['declaring', 'parameter in', blocType.name],

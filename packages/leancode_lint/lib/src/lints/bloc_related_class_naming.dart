@@ -68,11 +68,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     void checkName(TypeAnnotation type, String classType, String suffix) {
       final expectedName = '$subject$suffix';
 
-      if (type case NamedType(
-        :final name,
-        :final element?,
-        :final CompilationUnit root,
-      ) when name.lexeme != expectedName) {
+      if (type
+          case NamedType(
+            :final name,
+            :final element?,
+            :final CompilationUnit root,
+          )
+          when name.lexeme != expectedName) {
         if (element is TypeParameterElement ||
             element.library != classElement?.library) {
           return;

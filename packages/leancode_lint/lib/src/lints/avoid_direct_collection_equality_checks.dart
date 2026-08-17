@@ -20,8 +20,7 @@ class AvoidDirectCollectionEqualityChecks extends AnalysisRule {
   static const code = LintCode(
     'avoid_direct_collection_equality_checks',
     'Avoid comparing {0}s directly with `==` or `!=`. This compares identity, not contents.',
-    correctionMessage:
-        'Use `{1}` or `const {2}().equals` to compare contents, or `identical` if an identity check is intended.',
+    correctionMessage: 'Use `{1}` or `const {2}().equals` to compare contents, or `identical` if an identity check is intended.',
     severity: .WARNING,
   );
 

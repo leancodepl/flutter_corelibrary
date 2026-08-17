@@ -33,8 +33,7 @@ class AvoidContextReadInBuild extends AnalysisRule {
   static const code = LintCode(
     'avoid_context_read_in_build',
     "Avoid using 'context.read' inside 'build' method.",
-    correctionMessage:
-        "Use 'context.watch' or 'context.select' (or BlocBuilder/BlocSelector) to consume the value, or move the read into a callback.",
+    correctionMessage: "Use 'context.watch' or 'context.select' (or BlocBuilder/BlocSelector) to consume the value, or move the read into a callback.",
     severity: .WARNING,
   );
 
