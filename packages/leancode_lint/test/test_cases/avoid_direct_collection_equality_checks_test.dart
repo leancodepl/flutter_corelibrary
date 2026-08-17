@@ -11,7 +11,7 @@ void main() {
 }
 
 @reflectiveTest
-class AvoidDirectCollectionEqualityChecksTest extends AnalysisRuleTest {
+class AvoidDirectCollectionEqualityChecksTest() extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = AvoidDirectCollectionEqualityChecks();

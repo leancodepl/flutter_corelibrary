@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class UseDedicatedMediaQueryMethodsTest extends AnalysisRuleTest
+class UseDedicatedMediaQueryMethodsTest()
+    extends AnalysisRuleTest
     with MockFlutter {
   @override
   void setUp() {

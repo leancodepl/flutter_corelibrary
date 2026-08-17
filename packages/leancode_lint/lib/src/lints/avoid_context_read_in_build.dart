@@ -26,9 +26,8 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// `onPressed`) are exempt, and so are `BuildContext`-taking closures that
 /// don't return a `Widget` (e.g. a provider's `create`), since neither runs
 /// on every rebuild.
-class AvoidContextReadInBuild extends AnalysisRule {
-  AvoidContextReadInBuild()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class AvoidContextReadInBuild() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'avoid_context_read_in_build',
@@ -49,11 +48,7 @@ class AvoidContextReadInBuild extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   static const _buildContextChecker = TypeChecker.fromName(
     'BuildContext',
     packageName: 'flutter',
@@ -131,9 +126,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       };
 }
 
-class ReplaceContextReadWithWatchFix extends ResolvedCorrectionProducer {
-  ReplaceContextReadWithWatchFix({required super.context});
-
+class ReplaceContextReadWithWatchFix({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.replaceContextReadWithWatch',

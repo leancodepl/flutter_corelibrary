@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class AvoidConditionalHooksTest extends AnalysisRuleTest
+class AvoidConditionalHooksTest()
+    extends AnalysisRuleTest
     with MockFlutter, MockFlutterHooks, MockHooksRiverpod {
   @override
   void setUp() {

@@ -11,7 +11,7 @@ void main() {
 }
 
 @reflectiveTest
-class AvoidCatchErrorTest extends AnalysisRuleTest {
+class AvoidCatchErrorTest() extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = AvoidCatchError();

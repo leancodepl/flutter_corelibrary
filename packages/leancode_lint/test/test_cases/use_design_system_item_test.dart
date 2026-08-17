@@ -14,7 +14,7 @@ void main() {
 }
 
 @reflectiveTest
-class UseDesignSystemItemTextTest extends AnalysisRuleTest with MockFlutter {
+class UseDesignSystemItemTextTest() extends AnalysisRuleTest with MockFlutter {
   @override
   void setUp() {
     rule = UseDesignSystemItem.fromConfig(
@@ -76,7 +76,8 @@ void test() {
 }
 
 @reflectiveTest
-class UseDesignSystemItemScaffoldTest extends AnalysisRuleTest
+class UseDesignSystemItemScaffoldTest()
+    extends AnalysisRuleTest
     with MockFlutter {
   @override
   void setUp() {
@@ -105,7 +106,8 @@ void test() {
 }
 
 @reflectiveTest
-class UseDesignSystemItemWithSpacesTest extends AnalysisRuleTest
+class UseDesignSystemItemWithSpacesTest()
+    extends AnalysisRuleTest
     with MockFlutter {
   @override
   void setUp() {

@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class AvoidSingleChildInMultiChildWidgetsTest extends AnalysisRuleTest
+class AvoidSingleChildInMultiChildWidgetsTest()
+    extends AnalysisRuleTest
     with MockFlutter, MockSliverTools {
   @override
   void setUp() {

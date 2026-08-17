@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class BlocSubclassesNamingTest extends AnalysisRuleTest
+class BlocSubclassesNamingTest()
+    extends AnalysisRuleTest
     with MockBloc, MockBlocPresentation, MockFlutterBloc {
   @override
   void setUp() {

@@ -8,17 +8,12 @@ import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/src/type_checker.dart';
 
 /// Enforces that items that have a replacement defined are used.
-abstract base class UseInsteadType extends AnalysisRule {
-  UseInsteadType({
-    required super.name,
-    required super.description,
-    required this.correctionMessage,
-    this.severity = .WARNING,
-  });
-
-  final String correctionMessage;
-  final DiagnosticSeverity severity;
-
+abstract base class UseInsteadType({
+  required super.name,
+  required super.description,
+  required final String correctionMessage,
+  final DiagnosticSeverity severity = .WARNING,
+}) extends AnalysisRule {
   @override
   LintCode get diagnosticCode => .new(
     name,
@@ -44,12 +39,9 @@ abstract base class UseInsteadType extends AnalysisRule {
   }
 }
 
-class _Visitor extends GeneralizingAstVisitor<void> {
-  _Visitor(this.rule, this.context) : checker = rule.getChecker(context);
-
-  final UseInsteadType rule;
-  final RuleContext context;
-  final TypeChecker checker;
+class _Visitor(final UseInsteadType rule, final RuleContext context)
+    extends GeneralizingAstVisitor<void> {
+  final TypeChecker checker = rule.getChecker(context);
 
   @override
   void visitIdentifier(Identifier node) {

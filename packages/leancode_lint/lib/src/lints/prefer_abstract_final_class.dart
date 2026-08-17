@@ -11,9 +11,8 @@ import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dar
 import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 
-class PreferAbstractFinalClass extends AnalysisRule {
-  PreferAbstractFinalClass()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class PreferAbstractFinalClass() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'prefer_abstract_final_class',
@@ -38,12 +37,8 @@ class PreferAbstractFinalClass extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     // Only a plain `class` is a candidate. Any existing class modifier
@@ -154,9 +149,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       primaryConstructor.formalParameters.parameters.isEmpty;
 }
 
-class ConvertToAbstractFinalClass extends ResolvedCorrectionProducer {
-  ConvertToAbstractFinalClass({required super.context});
-
+class ConvertToAbstractFinalClass({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.convertToAbstractFinalClass',

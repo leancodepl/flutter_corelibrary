@@ -11,7 +11,7 @@ void main() {
 }
 
 @reflectiveTest
-class StartCommentsWithSpaceTest extends AnalysisRuleTest {
+class StartCommentsWithSpaceTest() extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = StartCommentsWithSpace();

@@ -16,9 +16,8 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// - `FooState` subclasses → `FooStateInitial`, `FooStateLoaded`, …
 /// - `FooEvent` subclasses → `FooEventLoad`, `FooEventReset`, …
 /// - `FooPresentationEvent` subclasses → `FooPresentationEventSuccess`, …
-class BlocSubclassesNaming extends AnalysisRule {
-  BlocSubclassesNaming()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class BlocSubclassesNaming() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'bloc_subclasses_naming',
@@ -38,12 +37,8 @@ class BlocSubclassesNaming extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitCompilationUnit(CompilationUnit node) {
     final classes = node.declarations.whereType<ClassDeclaration>();

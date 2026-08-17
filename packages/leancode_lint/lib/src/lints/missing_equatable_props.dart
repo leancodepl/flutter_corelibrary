@@ -19,9 +19,8 @@ import 'package:leancode_lint/src/utils.dart';
 /// `props` list literal. When the class extends another Equatable-shaped
 /// class that contributes fields of its own, `super.props` must also be
 /// present so that inherited fields participate in equality.
-class MissingEquatableProps extends AnalysisRule {
-  MissingEquatableProps()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class MissingEquatableProps() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'missing_equatable_props',
@@ -46,12 +45,8 @@ const _equatableTypeChecker = TypeChecker.any([
   .fromName('EquatableMixin', packageName: 'equatable'),
 ]);
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final element = node.declaredFragment?.element;
@@ -92,9 +87,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 ///
 /// `super.props` is inserted at the start of the list; missing fields are
 /// appended at the end, preserving declaration order.
-class AddToEquatablePropsFix extends ResolvedCorrectionProducer {
-  AddToEquatablePropsFix({required super.context});
-
+class AddToEquatablePropsFix({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind? get fixKind => const FixKind(
     'leancode_lint.fix.addToEquatableProps',
@@ -162,25 +156,19 @@ ListLiteral? _getPropsListLiteral(MethodDeclaration propsGetter) {
   return expression is ListLiteral ? expression : null;
 }
 
-class _PropsListContents {
-  const _PropsListContents({
-    required this.names,
-    required this.hasSuperPropsReference,
-    required this.hasUnrecognizedContent,
-  });
-
+class const _PropsListContents({
   /// Names referenced in the list, including those written as `this.x`.
-  final Set<String> names;
+  required final Set<String> names,
 
   /// Whether the list contains a reference to `super.props`, either directly
   /// or as a spread (`...super.props`).
-  final bool hasSuperPropsReference;
+  required final bool hasSuperPropsReference,
 
   /// `true` when the list contains expressions the rule cannot reason about
   /// (other spreads, if/for elements, method calls, …). In that case the
   /// lint should silently skip the class to avoid false positives.
-  final bool hasUnrecognizedContent;
-}
+  required final bool hasUnrecognizedContent,
+});
 
 _PropsListContents _collectExistingProps(ListLiteral listLiteral) {
   final names = <String>{};

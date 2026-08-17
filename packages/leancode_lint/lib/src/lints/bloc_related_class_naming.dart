@@ -19,11 +19,10 @@ import 'package:leancode_lint/src/utils.dart';
 /// - presentation event → `FooPresentationEvent`
 ///
 /// The suffixes are configurable via [BlocRelatedClassNamingConfig].
-class BlocRelatedClassNaming extends AnalysisRule {
-  BlocRelatedClassNaming({this.config = const .new()})
-    : super(name: code.lowerCaseName, description: code.problemMessage);
-
-  final BlocRelatedClassNamingConfig config;
+class BlocRelatedClassNaming({
+  final BlocRelatedClassNamingConfig config = const .new(),
+}) extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'bloc_related_class_naming',
@@ -43,13 +42,11 @@ class BlocRelatedClassNaming extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context, this.config);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-  final BlocRelatedClassNamingConfig config;
-
+class _Visitor(
+  final AnalysisRule rule,
+  final RuleContext context,
+  final BlocRelatedClassNamingConfig config,
+) extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final blocInfo = getBlocInfo(node);

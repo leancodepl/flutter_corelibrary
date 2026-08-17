@@ -11,7 +11,7 @@ void main() {
 }
 
 @reflectiveTest
-class CatchParameterNamesTest extends AnalysisRuleTest {
+class CatchParameterNamesTest() extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = CatchParameterNames(config: const .new());

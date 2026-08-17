@@ -16,11 +16,9 @@ import 'package:leancode_lint/config.dart';
 ///
 /// Untyped `catch` clauses check both parameters, while typed `on T catch`
 /// clauses only enforce the stack trace name.
-class CatchParameterNames extends AnalysisRule {
-  CatchParameterNames({required this.config})
-    : super(name: code.lowerCaseName, description: code.problemMessage);
-
-  final CatchParameterNamesConfig config;
+class CatchParameterNames({required final CatchParameterNamesConfig config})
+    extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'catch_parameter_names',
@@ -41,13 +39,11 @@ class CatchParameterNames extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context, this.config);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-  final CatchParameterNamesConfig config;
-
+class _Visitor(
+  final AnalysisRule rule,
+  final RuleContext context,
+  final CatchParameterNamesConfig config,
+) extends SimpleAstVisitor<void> {
   @override
   void visitCatchClause(CatchClause node) {
     // not a typed catch `} on TypeName {`
@@ -77,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-enum _CatchClauseParameter {
+enum _CatchClauseParameter() {
   exception,
   stackTrace;
 

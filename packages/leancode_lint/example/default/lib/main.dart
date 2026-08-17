@@ -12,9 +12,7 @@ Future<void> fetchData() async {
   }
 }
 
-class DefaultExampleApp extends StatelessWidget {
-  const DefaultExampleApp({super.key});
-
+class const DefaultExampleApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,9 +23,7 @@ class DefaultExampleApp extends StatelessWidget {
   }
 }
 
-class DefaultExampleHome extends StatelessWidget {
-  const DefaultExampleHome({super.key});
-
+class const DefaultExampleHome({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

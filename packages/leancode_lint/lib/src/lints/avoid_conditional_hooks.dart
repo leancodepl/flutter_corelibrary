@@ -8,9 +8,8 @@ import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/helpers.dart';
 
 /// Displays warning for conditional hooks usage.
-class AvoidConditionalHooks extends AnalysisRule {
-  AvoidConditionalHooks()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class AvoidConditionalHooks() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'avoid_conditional_hooks',

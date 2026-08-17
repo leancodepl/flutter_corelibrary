@@ -13,7 +13,7 @@ void main() {
 }
 
 @reflectiveTest
-class ConstructorParametersAndFieldsShouldHaveTheSameOrderTest
+class ConstructorParametersAndFieldsShouldHaveTheSameOrderTest()
     extends AnalysisRuleTest {
   @override
   void setUp() {

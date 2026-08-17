@@ -14,7 +14,8 @@ void main() {
 }
 
 @reflectiveTest
-class BlocRelatedClassNamingTest extends AnalysisRuleTest
+class BlocRelatedClassNamingTest()
+    extends AnalysisRuleTest
     with MockBloc, MockBlocPresentation, MockFlutterBloc {
   @override
   void setUp() {
@@ -157,7 +158,8 @@ class MyBloc<E extends WrongEvent, S extends WrongState> extends Bloc<E, S> {
 }
 
 @reflectiveTest
-class BlocRelatedClassNamingCustomSuffixesTest extends AnalysisRuleTest
+class BlocRelatedClassNamingCustomSuffixesTest()
+    extends AnalysisRuleTest
     with MockBloc, MockBlocPresentation, MockFlutterBloc {
   @override
   void setUp() {

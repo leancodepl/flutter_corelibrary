@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class PrefixWidgetsReturningSliversTest extends AnalysisRuleTest
+class PrefixWidgetsReturningSliversTest()
+    extends AnalysisRuleTest
     with MockFlutter {
   @override
   void setUp() {

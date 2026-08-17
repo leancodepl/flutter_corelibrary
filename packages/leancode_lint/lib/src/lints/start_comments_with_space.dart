@@ -12,9 +12,8 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:leancode_lint/src/helpers.dart';
 
 /// Forces comments/docs to start with a space.
-class StartCommentsWithSpace extends AnalysisRule {
-  StartCommentsWithSpace()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class StartCommentsWithSpace() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'start_comments_with_space',
@@ -46,12 +45,8 @@ class StartCommentsWithSpace extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final StartCommentsWithSpace rule;
-  final RuleContext context;
-
+class _Visitor(final StartCommentsWithSpace rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitComment(Comment node) {
     for (final token in node.tokens) {
@@ -78,18 +73,13 @@ int? _commentErrorOffset(Token comment) {
   return null;
 }
 
-enum _CommentType {
+enum _CommentType(final String pluralName) {
   comment('comments'),
   doc('doc comments');
-
-  const _CommentType(this.pluralName);
-
-  final String pluralName;
 }
 
-class AddStartingSpaceToComment extends ResolvedCorrectionProducer {
-  AddStartingSpaceToComment({required super.context});
-
+class AddStartingSpaceToComment({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.addStartingSpaceToComment',

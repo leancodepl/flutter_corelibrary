@@ -34,14 +34,10 @@ export 'package:leancode_lint/config.dart';
 /// Consumers that want to configure the lints programmatically should import
 /// `package:leancode_lint/plugin.dart` and instantiate [LeanCodeLintPlugin]
 /// from their own plugin package.
-final class LeanCodeLintPlugin extends Plugin {
-  LeanCodeLintPlugin({this.name = 'leancode_lint', this.config = const .new()});
-
-  @override
-  final String name;
-
-  final LeanCodeLintConfig config;
-
+final class LeanCodeLintPlugin({
+  @override final String name = 'leancode_lint',
+  final LeanCodeLintConfig config = const .new(),
+}) extends Plugin {
   @override
   void register(PluginRegistry registry) {
     UseDesignSystemItem.fromConfig(config)

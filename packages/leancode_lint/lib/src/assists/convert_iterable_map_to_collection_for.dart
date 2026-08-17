@@ -25,9 +25,8 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// final someList = [for(final e in iterable) e * 2];
 /// final someSet = {for(final e in iterable) e / 2};
 /// ```
-class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
-  ConvertIterableMapToCollectionFor({required super.context});
-
+class ConvertIterableMapToCollectionFor({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   AssistKind? get assistKind => const .new(
     'leancode_lint.assist.convertIterableMapToCollectionFor',
@@ -106,7 +105,7 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
   }
 }
 
-enum _IterableCollect {
+enum _IterableCollect() {
   list,
   set;
 

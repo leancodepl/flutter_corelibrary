@@ -35,9 +35,8 @@ import 'package:leancode_lint/src/helpers.dart';
 ///   final T named2;
 /// }
 /// ```
-class ConvertRecordIntoNominalType extends ResolvedCorrectionProducer {
-  ConvertRecordIntoNominalType({required super.context});
-
+class ConvertRecordIntoNominalType({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   AssistKind? get assistKind => const .new(
     'leancode_lint.assist.convertRecordIntoNominalType',

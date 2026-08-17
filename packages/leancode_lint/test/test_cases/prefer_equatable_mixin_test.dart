@@ -13,7 +13,7 @@ void main() {
 }
 
 @reflectiveTest
-class PreferEquatableMixinTest extends AnalysisRuleTest with MockEquatable {
+class PreferEquatableMixinTest() extends AnalysisRuleTest with MockEquatable {
   @override
   void setUp() {
     rule = PreferEquatableMixin();
@@ -103,7 +103,8 @@ class MyState extends [!Equatable!] {
 /// Tests the behavior with `equatable` older than 2.1.0, where `Equatable`
 /// cannot be used as a mixin and `EquatableMixin` should be used instead.
 @reflectiveTest
-class PreferEquatableMixinWithOldEquatableTest extends AnalysisRuleTest
+class PreferEquatableMixinWithOldEquatableTest()
+    extends AnalysisRuleTest
     with MockOldEquatable {
   @override
   void setUp() {
