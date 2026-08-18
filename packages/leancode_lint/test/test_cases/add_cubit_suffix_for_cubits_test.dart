@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class AddCubitSuffixForYourCubitsTest extends AnalysisRuleTest
+class AddCubitSuffixForYourCubitsTest()
+    extends AnalysisRuleTest
     with MockBloc, MockFlutterBloc {
   @override
   void setUp() {

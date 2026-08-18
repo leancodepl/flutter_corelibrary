@@ -12,7 +12,7 @@ void main() {
 }
 
 @reflectiveTest
-class NeverDiscardBuildContextTest extends AnalysisRuleTest with MockFlutter {
+class NeverDiscardBuildContextTest() extends AnalysisRuleTest with MockFlutter {
   @override
   void setUp() {
     rule = NeverDiscardBuildContext();

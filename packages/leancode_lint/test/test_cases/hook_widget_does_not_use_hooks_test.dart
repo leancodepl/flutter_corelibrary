@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class HookWidgetDoesNotUseHooksTest extends AnalysisRuleTest
+class HookWidgetDoesNotUseHooksTest()
+    extends AnalysisRuleTest
     with MockFlutter, MockFlutterHooks, MockHooksRiverpod {
   @override
   void setUp() {

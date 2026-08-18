@@ -13,9 +13,8 @@ import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/helpers.dart';
 import 'package:leancode_lint/src/utils.dart';
 
-class UsePadding extends AnalysisRule {
-  UsePadding()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class UsePadding() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'use_padding',
@@ -35,12 +34,8 @@ class UsePadding extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (isExpressionExactlyType(node, 'Container', 'flutter') &&
@@ -62,9 +57,8 @@ Token? _findMarginParameterLabel(InstanceCreationExpression node) => node
     .firstWhereOrNull((e) => e.name.lexeme == 'margin')
     ?.name;
 
-class UsePaddingFix extends ResolvedCorrectionProducer {
-  UsePaddingFix({required super.context});
-
+class UsePaddingFix({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.usePadding',

@@ -8,9 +8,8 @@ import 'package:leancode_lint/src/type_checker.dart';
 
 /// Displays warning for cubits which do not have the `Cubit` suffix in their
 /// class name.
-class AddCubitSuffixForYourCubits extends AnalysisRule {
-  AddCubitSuffixForYourCubits()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class AddCubitSuffixForYourCubits() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'add_cubit_suffix_for_your_cubits',
@@ -31,12 +30,8 @@ class AddCubitSuffixForYourCubits extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     if (!_isCubitClass(node)) {

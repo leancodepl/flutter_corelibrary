@@ -42,9 +42,8 @@ import 'package:leancode_lint/src/utils.dart';
 ///   final int? named1;
 /// }
 /// ```
-class ConvertPositionalToNamedFormal extends ResolvedCorrectionProducer {
-  ConvertPositionalToNamedFormal({required super.context});
-
+class ConvertPositionalToNamedFormal({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   AssistKind? get assistKind => const .new(
     'leancode_lint.assist.convertPositionalToNamedFormal',

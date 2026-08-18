@@ -13,15 +13,13 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/helpers.dart';
 
-class AvoidDirectCollectionEqualityChecks extends AnalysisRule {
-  AvoidDirectCollectionEqualityChecks()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class AvoidDirectCollectionEqualityChecks() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'avoid_direct_collection_equality_checks',
     'Avoid comparing {0}s directly with `==` or `!=`. This compares identity, not contents.',
-    correctionMessage:
-        'Use `{1}` or `const {2}().equals` to compare contents, or `identical` if an identity check is intended.',
+    correctionMessage: 'Use `{1}` or `const {2}().equals` to compare contents, or `identical` if an identity check is intended.',
     severity: .WARNING,
   );
 
@@ -37,11 +35,7 @@ class AvoidDirectCollectionEqualityChecks extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   @override
   void visitBinaryExpression(BinaryExpression node) {
     final operator = node.operator.type;
@@ -66,24 +60,18 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-enum CollectionKind {
+enum CollectionKind(
+  final String displayName, {
+
+  /// From `package:flutter/foundation.dart`.
+  required final String flutterFunction,
+
+  /// From `package:collection`.
+  required final String collectionClass,
+}) {
   list('List', flutterFunction: 'listEquals', collectionClass: 'ListEquality'),
   set('Set', flutterFunction: 'setEquals', collectionClass: 'SetEquality'),
   map('Map', flutterFunction: 'mapEquals', collectionClass: 'MapEquality');
-
-  const CollectionKind(
-    this.displayName, {
-    required this.flutterFunction,
-    required this.collectionClass,
-  });
-
-  final String displayName;
-
-  /// From `package:flutter/foundation.dart`.
-  final String flutterFunction;
-
-  /// From `package:collection`.
-  final String collectionClass;
 }
 
 /// Also matches subtypes of `List`, `Set` and `Map`.
@@ -112,9 +100,8 @@ const _collectionUri = 'package:collection/collection.dart';
 BinaryExpression? _targetBinary(AstNode node) =>
     node.thisOrAncestorOfType<BinaryExpression>();
 
-class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
-  ReplaceWithFlutterFoundationEqualsFix({required super.context});
-
+class ReplaceWithFlutterFoundationEqualsFix({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.replaceWithFlutterFoundationEquals',
@@ -166,10 +153,8 @@ class ReplaceWithFlutterFoundationEqualsFix extends ResolvedCorrectionProducer {
   }
 }
 
-class ReplaceWithCollectionPackageEqualityFix
+class ReplaceWithCollectionPackageEqualityFix({required super.context})
     extends ResolvedCorrectionProducer {
-  ReplaceWithCollectionPackageEqualityFix({required super.context});
-
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.replaceWithCollectionPackageEquality',
@@ -241,9 +226,8 @@ class ReplaceWithCollectionPackageEqualityFix
 }
 
 /// For the cases where an identity comparison is actually intended.
-class ReplaceWithIdenticalFix extends ResolvedCorrectionProducer {
-  ReplaceWithIdenticalFix({required super.context});
-
+class ReplaceWithIdenticalFix({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.replaceWithIdentical',

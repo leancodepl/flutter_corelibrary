@@ -12,9 +12,8 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/type_checker.dart';
 
-class PreferEquatableMixin extends AnalysisRule {
-  PreferEquatableMixin()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class PreferEquatableMixin() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'prefer_equatable_mixin',
@@ -35,12 +34,8 @@ class PreferEquatableMixin extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   static const equatable = TypeChecker.fromName(
     'Equatable',
     packageName: 'equatable',
@@ -87,9 +82,8 @@ String _recommendedMixinName(NamedType equatableType) =>
       _ => 'EquatableMixin',
     };
 
-class ConvertToEquatableMixin extends ResolvedCorrectionProducer {
-  ConvertToEquatableMixin({required super.context});
-
+class ConvertToEquatableMixin({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.convertToEquatableMixin',

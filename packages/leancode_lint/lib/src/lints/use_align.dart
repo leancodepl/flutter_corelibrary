@@ -6,9 +6,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:leancode_lint/src/helpers.dart';
 
-class UseAlign extends AnalysisRule {
-  UseAlign()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class UseAlign() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'use_align',
@@ -28,12 +27,8 @@ class UseAlign extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (isExpressionExactlyType(node, 'Container', 'flutter') &&
@@ -48,6 +43,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-class UseAlignFix extends ChangeWidgetNameFix {
-  UseAlignFix({required super.context}) : super(widgetName: 'Align');
+class UseAlignFix({required super.context}) extends ChangeWidgetNameFix {
+  this : super(widgetName: 'Align');
 }

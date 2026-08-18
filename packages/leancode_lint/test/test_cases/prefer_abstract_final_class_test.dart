@@ -11,7 +11,7 @@ void main() {
 }
 
 @reflectiveTest
-class PreferAbstractFinalClassTest extends AnalysisRuleTest {
+class PreferAbstractFinalClassTest() extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = PreferAbstractFinalClass();

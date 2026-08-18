@@ -17,9 +17,8 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// test. This rule flags a `BuildContext` on both sides of the boundary:
 /// passing one into a Bloc/Cubit (via a method, e.g. `bloc.add(...)`, or a
 /// constructor) and declaring one inside a Bloc/Cubit (as a parameter or field).
-class AvoidBuildContextInBlocs extends AnalysisRule {
-  AvoidBuildContextInBlocs()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class AvoidBuildContextInBlocs() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'avoid_build_context_in_blocs',
@@ -45,11 +44,7 @@ class AvoidBuildContextInBlocs extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   static const _buildContextChecker = TypeChecker.fromName(
     'BuildContext',
     packageName: 'flutter',
@@ -112,10 +107,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkParameters(FormalParameterList parameters, BlocType blocType) {
     for (final parameter in parameters.parameters) {
-      if (parameter case FormalParameter(
-        :final name?,
-        declaredFragment: final fragment?,
-      ) when _isBuildContext(fragment.element.type)) {
+      if (parameter
+          case FormalParameter(:final name?, declaredFragment: final fragment?)
+          when _isBuildContext(fragment.element.type)) {
         rule.reportAtToken(
           name,
           arguments: ['declaring', 'parameter in', blocType.name],
@@ -222,10 +216,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 }
 
 /// Finds the declaration initializer of a specific [LocalVariableElement].
-class _InitializerFinder extends GeneralizingAstVisitor<void> {
-  _InitializerFinder(this.element);
-
-  final LocalVariableElement element;
+class _InitializerFinder(final LocalVariableElement element)
+    extends GeneralizingAstVisitor<void> {
   Expression? initializer;
 
   @override

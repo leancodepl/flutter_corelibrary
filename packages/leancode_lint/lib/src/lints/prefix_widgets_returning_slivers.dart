@@ -9,11 +9,9 @@ import 'package:leancode_lint/src/helpers.dart';
 /// Displays warning for widgets which return slivers but do not have the
 /// `Sliver`/`_Sliver` (or `${AppPrefix}Sliver`/`_${AppPrefix}Sliver` if
 /// `AppPrefix` is specified in the config) prefix in their name.
-class PrefixWidgetsReturningSlivers extends AnalysisRule {
-  PrefixWidgetsReturningSlivers({required this.applicationPrefix})
-    : super(name: code.lowerCaseName, description: code.problemMessage);
-
-  final String? applicationPrefix;
+class PrefixWidgetsReturningSlivers({required final String? applicationPrefix})
+    extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'prefix_widgets_returning_slivers',
@@ -37,13 +35,11 @@ class PrefixWidgetsReturningSlivers extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context, this.applicationPrefix);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-  final String? applicationPrefix;
-
+class _Visitor(
+  final AnalysisRule rule,
+  final RuleContext context,
+  final String? applicationPrefix,
+) extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final isThisWidgetClass = isWidgetClass(node);

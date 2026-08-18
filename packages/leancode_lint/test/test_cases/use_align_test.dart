@@ -12,7 +12,7 @@ void main() {
 }
 
 @reflectiveTest
-class UseAlignTest extends AnalysisRuleTest with MockFlutter {
+class UseAlignTest() extends AnalysisRuleTest with MockFlutter {
   @override
   void setUp() {
     rule = UseAlign();

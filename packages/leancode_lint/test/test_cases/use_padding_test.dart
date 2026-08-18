@@ -12,7 +12,7 @@ void main() {
 }
 
 @reflectiveTest
-class UsePaddingTest extends AnalysisRuleTest with MockFlutter {
+class UsePaddingTest() extends AnalysisRuleTest with MockFlutter {
   @override
   void setUp() {
     rule = UsePadding();

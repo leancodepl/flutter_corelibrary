@@ -24,7 +24,10 @@ String? getBlocSubject(String className, {required BlocType blocType}) =>
       _ => null,
     };
 
-enum BlocType { bloc, cubit }
+enum BlocType() {
+  bloc,
+  cubit
+}
 
 BlocType? determineBlocType(Element? element) {
   if (element == null) {
@@ -40,19 +43,12 @@ BlocType? determineBlocType(Element? element) {
   return null;
 }
 
-class BlocInfo {
-  const BlocInfo({
-    required this.type,
-    this.stateType,
-    this.eventType,
-    this.presentationEventType,
-  });
-
-  final BlocType type;
-  final TypeAnnotation? stateType;
-  final TypeAnnotation? eventType;
-  final TypeAnnotation? presentationEventType;
-}
+class const BlocInfo({
+  required final BlocType type,
+  final TypeAnnotation? stateType,
+  final TypeAnnotation? eventType,
+  final TypeAnnotation? presentationEventType,
+});
 
 BlocInfo? getBlocInfo(ClassDeclaration node) {
   final extendsClause = node.extendsClause;

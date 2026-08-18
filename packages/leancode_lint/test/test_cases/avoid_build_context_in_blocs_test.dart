@@ -12,7 +12,8 @@ void main() {
 }
 
 @reflectiveTest
-class AvoidBuildContextInBlocsTest extends AnalysisRuleTest
+class AvoidBuildContextInBlocsTest()
+    extends AnalysisRuleTest
     with MockBloc, MockFlutter {
   @override
   void setUp() {

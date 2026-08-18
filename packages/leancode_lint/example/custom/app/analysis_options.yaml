@@ -1,5 +1,15 @@
 include: package:leancode_lint/analysis_options.yaml
 
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
 plugins:
   my_lints:
     path: ../my_lints

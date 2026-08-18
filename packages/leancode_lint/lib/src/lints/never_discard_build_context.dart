@@ -15,15 +15,13 @@ import 'package:leancode_lint/src/type_checker.dart';
 ///
 /// Discarding a context causes the body to use an ancestor context instead,
 /// risking incorrect theme lookups, navigation, or inherited widget reads.
-class NeverDiscardBuildContext extends AnalysisRule {
-  NeverDiscardBuildContext()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class NeverDiscardBuildContext() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'never_discard_build_context',
     "Don't discard BuildContext parameters.",
-    correctionMessage:
-        'Give the BuildContext parameter a name to avoid accidentally using an ancestor context.',
+    correctionMessage: 'Give the BuildContext parameter a name to avoid accidentally using an ancestor context.',
     severity: .WARNING,
   );
 
@@ -39,11 +37,7 @@ class NeverDiscardBuildContext extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
-
-  final AnalysisRule rule;
-
+class _Visitor(final AnalysisRule rule) extends SimpleAstVisitor<void> {
   static const _buildContextChecker = TypeChecker.fromName(
     'BuildContext',
     packageName: 'flutter',
@@ -71,9 +65,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-class RenameDiscardedBuildContextFix extends ResolvedCorrectionProducer {
-  RenameDiscardedBuildContextFix({required super.context});
-
+class RenameDiscardedBuildContextFix({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.renameDiscardedBuildContext',

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Design system text widget.
-class AppText extends StatelessWidget {
-  const AppText(this.data, {super.key});
-
-  final String data;
-
+class const AppText(final String data, {super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // When ignoring custom lints, use the prefix with the package name.
@@ -16,12 +12,11 @@ class AppText extends StatelessWidget {
 }
 
 /// Design system scaffold widget.
-class AppScaffold extends StatelessWidget {
-  const AppScaffold({super.key, this.appBar, required this.body});
-
-  final PreferredSizeWidget? appBar;
-  final Widget body;
-
+class const AppScaffold({
+  super.key,
+  final PreferredSizeWidget? appBar,
+  required final Widget body,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Ignores are case-insensitive:

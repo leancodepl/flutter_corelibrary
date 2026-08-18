@@ -25,9 +25,8 @@ import 'package:leancode_lint/src/type_checker.dart';
 /// final someList = [for(final e in iterable) e * 2];
 /// final someSet = {for(final e in iterable) e / 2};
 /// ```
-class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
-  ConvertIterableMapToCollectionFor({required super.context});
-
+class ConvertIterableMapToCollectionFor({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   AssistKind? get assistKind => const .new(
     'leancode_lint.assist.convertIterableMapToCollectionFor',
@@ -51,19 +50,21 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
   ) async {
     const iterableChecker = TypeChecker.fromUrl('dart:core#Iterable');
 
-    if (node case MethodInvocation(
-      target: Expression(staticType: final targetType?) && final target,
-      methodName: SimpleIdentifier(name: 'map'),
-      :final parent,
-      argumentList: ArgumentList(
-        arguments: [
-          FunctionExpression(
-            body: final functionBody,
-            parameters: FormalParameterList(parameters: [final parameter]),
+    if (node
+        case MethodInvocation(
+          target: Expression(staticType: final targetType?) && final target,
+          methodName: SimpleIdentifier(name: 'map'),
+          :final parent,
+          argumentList: ArgumentList(
+            arguments: [
+              FunctionExpression(
+                body: final functionBody,
+                parameters: FormalParameterList(parameters: [final parameter]),
+              ),
+            ],
           ),
-        ],
-      ),
-    ) when iterableChecker.isAssignableFromType(targetType)) {
+        )
+        when iterableChecker.isAssignableFromType(targetType)) {
       final expression = maybeGetSingleReturnExpression(functionBody);
       if (expression == null) {
         return;
@@ -104,7 +105,7 @@ class ConvertIterableMapToCollectionFor extends ResolvedCorrectionProducer {
   }
 }
 
-enum _IterableCollect {
+enum _IterableCollect() {
   list,
   set;
 

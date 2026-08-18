@@ -1,14 +1,7 @@
-final class LeanCodeLintConfig {
-  const LeanCodeLintConfig({
-    this.applicationPrefix,
-    this.designSystemItemReplacements = const {},
-    this.catchParameterNames = const .new(),
-    this.blocRelatedClassNaming = const .new(),
-  });
-
+final class const LeanCodeLintConfig({
   /// Used by some rules (e.g. `prefix_widgets_returning_slivers`) to match
   /// project-specific prefixes.
-  final String? applicationPrefix;
+  final String? applicationPrefix,
 
   /// Configuration for the `use_design_system_item` rule.
   /// Defines which types are forbidden and what to use instead.
@@ -16,14 +9,15 @@ final class LeanCodeLintConfig {
   /// Map key is the preferred item name (e.g. `LftText`) and map value is the
   /// list of forbidden items (e.g. `Text` from `flutter`).
   final Map<String, List<DesignSystemForbiddenItem>>
-  designSystemItemReplacements;
+      designSystemItemReplacements =
+      const {},
 
   /// Configuration for the `catch_parameter_names` rule.
-  final CatchParameterNamesConfig catchParameterNames;
+  final CatchParameterNamesConfig catchParameterNames = const .new(),
 
   /// Configuration for the `bloc_related_class_naming` rule.
-  final BlocRelatedClassNamingConfig blocRelatedClassNaming;
-}
+  final BlocRelatedClassNamingConfig blocRelatedClassNaming = const .new(),
+});
 
 /// Configuration for the `bloc_related_class_naming` rule.
 ///
@@ -34,34 +28,18 @@ final class LeanCodeLintConfig {
 /// - state → `FooState`
 /// - event → `FooEvent`
 /// - presentation event → `FooPresentationEvent`
-class BlocRelatedClassNamingConfig {
-  const BlocRelatedClassNamingConfig({
-    this.stateSuffix = 'State',
-    this.eventSuffix = 'Event',
-    this.presentationEventSuffix = 'PresentationEvent',
-  });
+class const BlocRelatedClassNamingConfig({
+  final String stateSuffix = 'State',
+  final String eventSuffix = 'Event',
+  final String presentationEventSuffix = 'PresentationEvent',
+});
 
-  final String stateSuffix;
-  final String eventSuffix;
-  final String presentationEventSuffix;
-}
+class const CatchParameterNamesConfig({
+  final String exception = 'err',
+  final String stackTrace = 'st',
+});
 
-class CatchParameterNamesConfig {
-  const CatchParameterNamesConfig({
-    this.exception = 'err',
-    this.stackTrace = 'st',
-  });
-
-  final String exception;
-  final String stackTrace;
-}
-
-class DesignSystemForbiddenItem {
-  const DesignSystemForbiddenItem({
-    required this.name,
-    required this.packageName,
-  });
-
-  final String name;
-  final String packageName;
-}
+class const DesignSystemForbiddenItem({
+  required final String name,
+  required final String packageName,
+});

@@ -67,7 +67,8 @@ $buildBody
 ''';
 
 @reflectiveTest
-class AvoidContextReadInBuildTest extends AnalysisRuleTest
+class AvoidContextReadInBuildTest()
+    extends AnalysisRuleTest
     with MockFlutter, MockBloc, MockFlutterBloc {
   @override
   void setUp() {

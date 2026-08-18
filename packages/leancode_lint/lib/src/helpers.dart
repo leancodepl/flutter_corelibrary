@@ -44,7 +44,7 @@ Expression? maybeGetSingleReturnExpression(FunctionBody body) {
   };
 }
 
-class _HookExpressionsGatherer extends GeneralizingAstVisitor<void> {
+class _HookExpressionsGatherer() extends GeneralizingAstVisitor<void> {
   final List<InvocationExpression> _hookExpressions = [];
 
   static List<InvocationExpression> gather(AstNode node) {
@@ -107,7 +107,7 @@ FunctionBody? maybeHookBuilderBody(InstanceCreationExpression node) {
   return null;
 }
 
-class _ReturnExpressionGatherer extends GeneralizingAstVisitor<void> {
+class _ReturnExpressionGatherer() extends GeneralizingAstVisitor<void> {
   final List<Expression?> _returnExpressions = [];
 
   static List<Expression?> gather(AstNode node) {
@@ -173,11 +173,8 @@ extension NodeLintRegistryExtensions on RuleVisitorRegistry {
   }
 }
 
-class _RegularCommentVisitor extends SimpleAstVisitor<void> {
-  _RegularCommentVisitor(this.listener);
-
-  final void Function(Token comment) listener;
-
+class _RegularCommentVisitor(final void Function(Token comment) listener)
+    extends SimpleAstVisitor<void> {
   @override
   void visitCompilationUnit(CompilationUnit node) {
     bool isRegularComment(Token commentToken) {
@@ -205,12 +202,10 @@ class _RegularCommentVisitor extends SimpleAstVisitor<void> {
   }
 }
 
-class _HookWidgetBodyVisitor extends SimpleAstVisitor<void> {
-  _HookWidgetBodyVisitor(this.listener, this.isExactly);
-
-  final void Function(FunctionBody node, AstNode diagnosticNode) listener;
-  final bool isExactly;
-
+class _HookWidgetBodyVisitor(
+  final void Function(FunctionBody node, AstNode diagnosticNode) listener,
+  final bool isExactly,
+) extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (maybeHookBuilderBody(node) case final body?) {
@@ -382,11 +377,10 @@ bool isInstanceCreationExpressionOnlyUsingParameter(
 /// ```dart
 /// Align(alignment: null, child: const SizedBox());
 /// ```
-abstract class ChangeWidgetNameFix extends ResolvedCorrectionProducer {
-  ChangeWidgetNameFix({required this.widgetName, required super.context});
-
-  final String widgetName;
-
+abstract class ChangeWidgetNameFix({
+  required final String widgetName,
+  required super.context,
+}) extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => .new(
     'leancode_lint.fix.replaceWith$widgetName',

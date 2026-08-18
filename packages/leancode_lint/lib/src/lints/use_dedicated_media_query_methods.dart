@@ -34,9 +34,8 @@ const _supportedGetters = {
   'supportsShowingSystemContextMenu',
 };
 
-class UseDedicatedMediaQueryMethods extends AnalysisRule {
-  UseDedicatedMediaQueryMethods()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class UseDedicatedMediaQueryMethods() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'use_dedicated_media_query_methods',
@@ -58,12 +57,8 @@ class UseDedicatedMediaQueryMethods extends AnalysisRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (_isValidMediaQueryUsage(node)) {
@@ -142,10 +137,8 @@ String? _getUsedGetter(MethodInvocation node) => switch (node.parent) {
   _ => null,
 };
 
-class ReplaceMediaQueryOfWithDedicatedMethodFix
+class ReplaceMediaQueryOfWithDedicatedMethodFix({required super.context})
     extends ResolvedCorrectionProducer {
-  ReplaceMediaQueryOfWithDedicatedMethodFix({required super.context});
-
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.replaceMediaQueryOfWithDedicatedMethod',

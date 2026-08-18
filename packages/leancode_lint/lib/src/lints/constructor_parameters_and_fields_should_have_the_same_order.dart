@@ -8,10 +8,9 @@ import 'package:analyzer/error/error.dart';
 
 /// Displays warning when constructor's parameters' order vary from class
 /// declared fields order. Works for the both named and unnamed parameters.
-class ConstructorParametersAndFieldsShouldHaveTheSameOrder
+class ConstructorParametersAndFieldsShouldHaveTheSameOrder()
     extends AnalysisRule {
-  ConstructorParametersAndFieldsShouldHaveTheSameOrder()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'constructor_parameters_and_fields_should_have_the_same_order',
@@ -31,12 +30,8 @@ class ConstructorParametersAndFieldsShouldHaveTheSameOrder
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final AnalysisRule rule;
-  final RuleContext context;
-
+class _Visitor(final AnalysisRule rule, final RuleContext context)
+    extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final members = switch (node.body) {

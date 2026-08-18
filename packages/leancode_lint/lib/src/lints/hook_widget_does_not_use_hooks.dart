@@ -11,9 +11,8 @@ import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/helpers.dart';
 
 /// Displays warning when a `HookWidget` does not use hooks in the build method.
-class HookWidgetDoesNotUseHooks extends AnalysisRule {
-  HookWidgetDoesNotUseHooks()
-    : super(name: code.lowerCaseName, description: code.problemMessage);
+class HookWidgetDoesNotUseHooks() extends AnalysisRule {
+  this : super(name: code.lowerCaseName, description: code.problemMessage);
 
   static const code = LintCode(
     'hook_widget_does_not_use_hooks',
@@ -49,9 +48,8 @@ class HookWidgetDoesNotUseHooks extends AnalysisRule {
   }
 }
 
-class ConvertHookWidgetToStatelessWidget extends ResolvedCorrectionProducer {
-  ConvertHookWidgetToStatelessWidget({required super.context});
-
+class ConvertHookWidgetToStatelessWidget({required super.context})
+    extends ResolvedCorrectionProducer {
   @override
   FixKind get fixKind => const .new(
     'leancode_lint.fix.convertHookWidgetToStatelessWidget',

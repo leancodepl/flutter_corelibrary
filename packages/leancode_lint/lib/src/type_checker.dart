@@ -16,9 +16,7 @@ import 'package:source_span/source_span.dart';
 import 'package:yaml/yaml.dart';
 
 /// An abstraction around doing static type checking at compile/build time.
-abstract class TypeChecker {
-  const TypeChecker._();
-
+abstract class const TypeChecker._() {
   /// Creates a new [TypeChecker] that delegates to other [checkers].
   ///
   /// This implementation will return `true` for type checks if _any_ of the
@@ -31,10 +29,10 @@ abstract class TypeChecker {
   /// // Used until $Foo is deleted.
   /// const $FooOrBar = const TypeChecker.forAny(const [$Foo, $Bar]);
   /// ```
-  const factory TypeChecker.any(Iterable<TypeChecker> checkers) = _AnyChecker;
+  const factory any(Iterable<TypeChecker> checkers) = _AnyChecker;
 
   /// Create a new [TypeChecker] backed by a static [type].
-  const factory TypeChecker.fromStatic(DartType type) = _LibraryTypeChecker;
+  const factory fromStatic(DartType type) = _LibraryTypeChecker;
 
   /// Checks that the element has a specific name, and optionally checks that it
   /// is defined from a specific package.
@@ -43,8 +41,7 @@ abstract class TypeChecker {
   /// the definition of the element comes from.
   /// The downside is that if somehow a package exposes two elements with the
   /// same name, there could be a conflict.
-  const factory TypeChecker.fromName(String name, {String? packageName}) =
-      _NamedChecker;
+  const factory fromName(String name, {String? packageName}) = _NamedChecker;
 
   /// Create a new [TypeChecker] backed by a library [url].
   ///
@@ -60,7 +57,7 @@ abstract class TypeChecker {
   /// `export` directives). You should ideally only use `fromUrl` when you know
   /// the full path (likely you own/control the package) or it is in a stable
   /// package like in the `dart:` SDK.
-  const factory TypeChecker.fromUrl(dynamic url) = _UriTypeChecker;
+  const factory fromUrl(dynamic url) = _UriTypeChecker;
 
   /// Returns the first constant annotating [element] assignable to this type.
   ///
@@ -228,10 +225,8 @@ abstract class TypeChecker {
 }
 
 // Checks a static type against another static type;
-class _LibraryTypeChecker extends TypeChecker {
-  const _LibraryTypeChecker(this._type) : super._();
-
-  final DartType _type;
+class const _LibraryTypeChecker(final DartType _type) extends TypeChecker {
+  this : super._();
 
   @override
   bool isExactly(Element element) =>
@@ -241,10 +236,8 @@ class _LibraryTypeChecker extends TypeChecker {
   String toString() => urlOfElement(_type.element!);
 }
 
-class _PackageChecker extends TypeChecker {
-  const _PackageChecker(this._packageName) : super._();
-
-  final String _packageName;
+class const _PackageChecker(final String _packageName) extends TypeChecker {
+  this : super._();
 
   @override
   bool isExactly(Element element) {
@@ -273,11 +266,9 @@ class _PackageChecker extends TypeChecker {
   String toString() => _packageName;
 }
 
-class _NamedChecker extends TypeChecker {
-  const _NamedChecker(this._name, {this.packageName}) : super._();
-
-  final String _name;
-  final String? packageName;
+class const _NamedChecker(final String _name, {final String? packageName})
+    extends TypeChecker {
+  this : super._();
 
   @override
   bool isExactly(Element element) {
@@ -309,9 +300,9 @@ class _NamedChecker extends TypeChecker {
 }
 
 // Checks a runtime type against an Uri and Symbol.
-class _UriTypeChecker extends TypeChecker {
-  const _UriTypeChecker(dynamic url) : _url = '$url', super._();
-  final String _url;
+class const _UriTypeChecker(dynamic url) extends TypeChecker {
+  this : super._();
+  final String _url = '$url';
 
   // Precomputed cache of String --> Uri.
   static final _cache = Expando<Uri>();
@@ -337,10 +328,9 @@ class _UriTypeChecker extends TypeChecker {
   String toString() => '$uri';
 }
 
-class _AnyChecker extends TypeChecker {
-  const _AnyChecker(this._checkers) : super._();
-  final Iterable<TypeChecker> _checkers;
-
+class const _AnyChecker(final Iterable<TypeChecker> _checkers)
+    extends TypeChecker {
+  this : super._();
   @override
   bool isExactly(Element element) => _checkers.any((c) => c.isExactly(element));
 }
@@ -351,37 +341,27 @@ class _AnyChecker extends TypeChecker {
 /// when one or more annotations are not resolvable. This is usually a sign that
 /// something was misspelled, an import is missing, or a dependency was not
 /// defined (for build systems such as Bazel).
-class UnresolvedAnnotationException implements Exception {
-  /// Creates an exception from an annotation ([annotationIndex]) that was not
-  /// resolvable while traversing `Element2.metadata` on [annotatedElement].
-  factory UnresolvedAnnotationException._from(
-    Element annotatedElement,
-    int annotationIndex,
-  ) {
-    final sourceSpan = _findSpan(annotatedElement, annotationIndex);
-    return UnresolvedAnnotationException._(annotatedElement, sourceSpan);
-  }
-
-  const UnresolvedAnnotationException._(
-    this.annotatedElement,
-    this.annotationSource,
-  );
-
+class const UnresolvedAnnotationException._(
   /// Element that was annotated with something we could not resolve.
-  final Element annotatedElement;
+  final Element annotatedElement,
 
   /// Source span of the annotation that was not resolved.
   ///
   /// May be `null` if the import library was not found.
-  final SourceSpan? annotationSource;
+  final SourceSpan? annotationSource,
+) implements Exception {
+  /// Creates an exception from an annotation ([annotationIndex]) that was not
+  /// resolvable while traversing `Element2.metadata` on [annotatedElement].
+  factory _from(Element annotatedElement, int annotationIndex) {
+    final sourceSpan = _findSpan(annotatedElement, annotationIndex);
+    return UnresolvedAnnotationException._(annotatedElement, sourceSpan);
+  }
 
   static SourceSpan? _findSpan(Element annotatedElement, int annotationIndex) {
     try {
-      final parsedLibrary =
-          annotatedElement.session!.getParsedLibraryByElement(
-                annotatedElement.library!,
-              )
-              as ParsedLibraryResult;
+      final parsedLibrary = annotatedElement.session!.getParsedLibraryByElement(
+        annotatedElement.library!,
+      ) as ParsedLibraryResult;
       final declaration = parsedLibrary.getFragmentDeclaration(
         annotatedElement.firstFragment,
       );
@@ -427,9 +407,9 @@ class UnresolvedAnnotationException implements Exception {
 String urlOfElement(Element element) => element.kind == ElementKind.DYNAMIC
     ? 'dart:core#dynamic'
     // using librarySource.uri – in case the element is in a part
-    : normalizeUrl(
-        element.library!.uri,
-      ).replace(fragment: element.name).toString();
+    : normalizeUrl(element.library!.uri)
+          .replace(fragment: element.name)
+          .toString();
 
 Uri normalizeUrl(Uri url) => switch (url.scheme) {
   'dart' => normalizeDartUrl(url),

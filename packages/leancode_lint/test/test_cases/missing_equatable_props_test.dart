@@ -12,7 +12,7 @@ void main() {
 }
 
 @reflectiveTest
-class MissingEquatablePropsTest extends AnalysisRuleTest with MockEquatable {
+class MissingEquatablePropsTest() extends AnalysisRuleTest with MockEquatable {
   @override
   void setUp() {
     rule = MissingEquatableProps();

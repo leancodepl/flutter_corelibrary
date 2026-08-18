@@ -1,3 +1,20 @@
+# 27.0.0
+
+- Support Dart 3.13
+- Enable the following lints:
+  - [`async_return_with_no_await`](https://dart.dev/tools/linter-rules/async_return_with_no_await)
+  - [`empty_container_bodies`](https://dart.dev/tools/linter-rules/empty_container_bodies)
+  - [`initialize_in_field_declaration`](https://dart.dev/tools/linter-rules/initialize_in_field_declaration)
+  - [`unnecessary_const_in_enum_constructor`](https://dart.dev/tools/linter-rules/unnecessary_const_in_enum_constructor)
+  - [`unnecessary_primary_constructor_body`](https://dart.dev/tools/linter-rules/unnecessary_primary_constructor_body)
+  - [`unnecessary_type_name_in_constructor`](https://dart.dev/tools/linter-rules/unnecessary_type_name_in_constructor)
+  - [`use_declaring_parameters`](https://dart.dev/tools/linter-rules/use_declaring_parameters)
+  - [`use_primary_constructors`](https://dart.dev/tools/linter-rules/use_primary_constructors)
+- Remove deprecated lints:
+  - [`avoid_private_typedef_functions`](https://dart.dev/tools/linter-rules/avoid_private_typedef_functions)
+  - [`one_member_abstracts`](https://dart.dev/tools/linter-rules/one_member_abstracts)
+  - [`unnecessary_await_in_return`](https://dart.dev/tools/linter-rules/unnecessary_await_in_return)
+
 # 26.3.0
 
 - Update [`avoid_context_read_in_build`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_context_read_in_build) to exempt `BuildContext`-taking closures that don't return a `Widget` (e.g. a provider's `create`), since they run once rather than on every rebuild.
