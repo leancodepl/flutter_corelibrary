@@ -85,7 +85,13 @@ class DebugPageController {
     _loggerLogController.add(filtered);
   }
 
-  void open() => navigatorKey.currentState!.push(LogsInspectorRoute(this));
+  void open() {
+    if (_isOpen.value) {
+      return;
+    }
+
+    navigatorKey.currentState!.push(LogsInspectorRoute(this));
+  }
 
   void close() =>
       navigatorKey.currentState!.popUntil((route) => route is! DebugPageRoute);
