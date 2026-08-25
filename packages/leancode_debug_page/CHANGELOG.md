@@ -1,3 +1,7 @@
+## 3.1.5
+
+- Fix opening a second debug page when one is already open
+
 ## 3.1.4
 
 - Fix garbled non-ASCII characters in logged response bodies
