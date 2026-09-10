@@ -55,12 +55,13 @@ meet; a raw `'grid'` string elsewhere matches neither.
   name — the same on the VM and on the web, on every machine, and across
   versions of this package, so server-rendered and client-rendered markup
   agree and the diff of a rebuild stays empty.
-- **No collisions at all, with the builder.**
+- **Collisions caught at build time, with the builder.**
   [`jaspr_class_scope_builder`][builder] hashes the file a component is
   declared in, so two components of the same name are different scopes by
-  construction. Without it, two scopes that would hash alike throw a
-  `StateError` the first time either one renders, rather than silently sharing
-  a namespace.
+  construction, and it fails the build if two suffixes ever meet anyway.
+  Without it the same check runs behind an `assert` the first time a scope
+  renders — loud in development and in tests, compiled out of a release
+  build.
 - **No dependency on Jaspr** — it is plain Dart making strings, so it works
   with any way of writing CSS, and Jaspr's own `css()`/`classes:` take the
   strings as they are.
@@ -109,8 +110,9 @@ class Hero extends StatelessComponent {
 Two `Hero` classes in two files then get two suffixes, without either knowing
 about the other and without anything having to fail; the class name never
 reaches the page through `Type.toString()`, so minified client code renders
-what the server rendered; and the suffix is a `const`, so nothing is hashed in
-the browser.
+what the server rendered; the suffix is a `const`, so nothing is hashed in the
+browser; and a suffix two components would somehow share fails
+`build_runner`, not a render.
 
 ### Classes somebody else knows by name
 

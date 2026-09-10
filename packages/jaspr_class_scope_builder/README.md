@@ -57,6 +57,22 @@ so `_grid` renders as `grid-16rv7`, and the same `Hero` under
 The constant is named after the class: `Hero` gives `_$heroScope`, `CardGrid`
 gives `_$cardGridScope`. A file with no `@scoped` classes produces no output.
 
+## The check phase
+
+A second builder runs once per package, after the scopes are written, and reads
+them back: two components holding one suffix — five base-36 digits leave room
+for that, rarely — fail the build, naming both files.
+
+```
+[SEVERE] jaspr_class_scope_builder:class_scope_check on $package$:
+Hero (lib/marketing/hero.scopes.dart) and Hero (lib/components/hero.scopes.dart)
+both scope to "-16rv7". Rename or move one of them; the suffix is hashed from
+the file a component is declared in.
+```
+
+Nothing has to render for that to come out, and `jaspr_class_scope`'s own
+runtime check sits behind an `assert`, so a release build carries neither.
+
 ## What it buys you
 
 - **No name collisions, ever.** Two same-named components in different files
@@ -66,6 +82,8 @@ gives `_$cardGridScope`. A file with no `@scoped` classes produces no output.
   and server- and client-rendered markup agree.
 - **No hashing at runtime.** The suffix is a `const` in the generated file, so
   it is visible in code review and costs nothing in the browser.
+- **Nothing left to check while rendering.** The one collision the hash still
+  allows is caught by the check phase above, at build time.
 
 The suffix follows the file: moving or renaming `hero.dart` changes it, exactly
 as it does for CSS modules. Only the generated stylesheet and markup depend on

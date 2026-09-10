@@ -3,8 +3,14 @@ library;
 
 import 'package:build/build.dart';
 import 'package:jaspr_class_scope_builder/src/class_scope_builder.dart';
+import 'package:jaspr_class_scope_builder/src/class_scope_check_builder.dart';
 
 export 'src/class_scope_builder.dart';
+export 'src/class_scope_check_builder.dart';
 
-/// The entry point `build.yaml` names.
+/// Writes the scope of every component annotated with `@scoped`.
 Builder classScopeBuilder(BuilderOptions options) => const ClassScopeBuilder();
+
+/// Fails the build when two of those scopes took one suffix.
+Builder classScopeCheckBuilder(BuilderOptions options) =>
+    const ClassScopeCheckBuilder();

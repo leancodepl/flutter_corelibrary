@@ -5,3 +5,11 @@ builders:
     build_extensions: {'.dart': ['.scopes.dart']}
     auto_apply: dependents
     build_to: source
+
+  class_scope_check:
+    import: 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart'
+    builder_factories: ['classScopeCheckBuilder']
+    build_extensions: {'$package$': ['jaspr_class_scope.check']}
+    auto_apply: dependents
+    build_to: cache
+    required_inputs: ['.scopes.dart']
