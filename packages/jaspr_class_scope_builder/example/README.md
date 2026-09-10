@@ -32,8 +32,8 @@ part of 'hero.dart';
 
 /// The class-name scope of [Hero], hashed from
 /// `site|lib/components/hero.dart#Hero`.
-const _$heroScope = ClassScope('Hero', '0dc8kc');
+const _$heroScope = ClassScope('Hero', 'iur6ms');
 ```
 
-and `_grid` renders as `grid-0dc8kc`. A second `Hero`, in another file, gets a
+and `_grid` renders as `grid-iur6ms`. A second `Hero`, in another file, gets a
 different suffix — the hash covers the file, not the class name.

@@ -9,7 +9,7 @@ import 'package:meta/meta.dart';
 ///
 /// ```dart
 /// static const _class = _$heroScope;
-/// static final _grid = _class('grid'); // 'grid-0dc8kc'
+/// static final _grid = _class('grid'); // 'grid-iur6ms'
 /// ```
 ///
 /// Two components can then both call something `grid` without meeting in the
