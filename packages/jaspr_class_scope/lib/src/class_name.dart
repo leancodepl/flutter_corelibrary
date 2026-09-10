@@ -26,13 +26,13 @@ final class ClassName {
   final ClassScope? _scope;
   final ClassName? _and;
 
-  /// The `classes:` value: `grid-iur6ms`, or `a b` for a combination.
+  /// The `classes:` value: `grid-lz7xyh`, or `a b` for a combination.
   String get name => switch (_and) {
     null => _rendered,
     final and => '$_rendered ${and.name}',
   };
 
-  /// The selector: `.grid-iur6ms`, or `.a.b` for a combination — an element
+  /// The selector: `.grid-lz7xyh`, or `.a.b` for a combination — an element
   /// carrying both.
   String get selector => switch (_and) {
     null => '.$_rendered',

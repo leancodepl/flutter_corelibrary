@@ -11,22 +11,21 @@ void main() {
       );
     });
 
-    // MurmurHash3's published vectors, so that this stays the hash it claims
-    // to be.
-    test('is MurmurHash3 x86_32', () {
-      expect(classScopeSuffix(''), '000000'); // 0
-      expect(classScopeSuffix('a'), 'gos6uq'); // 0x3c2569b2
-      expect(classScopeSuffix('abc'), 'dwmk8q'); // 0xb3dd93fa
+    // The first four bytes of the md5, so that `md5sum` says the same thing:
+    // '' digests to d41d8cd9…, 'abc' to 90015098…, both taken mod 36^6.
+    test('is the md5', () {
+      expect(classScopeSuffix(''), 'murffd'); // 0xd41d8cd9
+      expect(classScopeSuffix('abc'), '3yfdlk'); // 0x90015098
     });
 
     // The suffix ends up in the rendered page and in the stylesheet built from
     // it, so it may not move between versions of this package.
     test('hashes to a stable suffix', () {
-      expect(classScopeSuffix('Hero'), 'mthhuz');
-      expect(classScopeSuffix('NavBar'), 'e97iy4');
-      expect(classScopeSuffix('site|lib/components/hero.dart#Hero'), 'iur6ms');
-      // Hashed as UTF-8 bytes, the way Murmur is defined.
-      expect(classScopeSuffix('ą'), 'a8fliq');
+      expect(classScopeSuffix('Hero'), 'qbywlo');
+      expect(classScopeSuffix('NavBar'), 'poogac');
+      expect(classScopeSuffix('site|lib/components/hero.dart#Hero'), 'lz7xyh');
+      // Hashed as UTF-8 bytes.
+      expect(classScopeSuffix('ą'), 'oaa6rb');
     });
 
     test('gives two files different suffixes', () {

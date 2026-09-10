@@ -8,7 +8,7 @@ import 'package:jaspr_class_scope/src/class_name.dart';
 ///
 /// ```dart
 /// static const _class = _$heroScope;
-/// static final _grid = _class('grid'); // 'grid-iur6ms'
+/// static final _grid = _class('grid'); // 'grid-lz7xyh'
 /// ```
 ///
 /// Two components can then both call something `grid` without meeting in the

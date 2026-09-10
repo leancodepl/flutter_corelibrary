@@ -23,7 +23,7 @@ class Hero extends StatelessComponent {
 ```
 
 `dart run build_runner build` writes `lib/components/hero.scopes.dart`, and
-`_grid` renders as `grid-iur6ms`. A second `Hero`, in another file, gets a
+`_grid` renders as `grid-lz7xyh`. A second `Hero`, in another file, gets a
 different suffix — the hash covers where the class is declared, not its name.
 See the [package readme](../README.md) for the generated file and the check
 phase.

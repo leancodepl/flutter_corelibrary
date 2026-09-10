@@ -27,17 +27,17 @@ void main() {
     test('fails the build when two components share a suffix', () async {
       final result = await testBuilder(const ClassScopeCheckBuilder(), {
         r'site|$package$': '',
-        'site|lib/c32758.dart': _component('C32758'),
-        'site|lib/c56771.dart': _component('C56771'),
+        'site|lib/c22156.dart': _component('C22156'),
+        'site|lib/c59137.dart': _component('C59137'),
       }, rootPackage: 'site');
 
       expect(result.succeeded, isFalse);
       expect(
         result.errors.join('\n'),
         allOf(
-          contains('lib/c32758.dart'),
-          contains('lib/c56771.dart'),
-          contains('-v1ods7'),
+          contains('lib/c22156.dart'),
+          contains('lib/c59137.dart'),
+          contains('-uyqd52'),
         ),
       );
     });

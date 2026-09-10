@@ -43,11 +43,11 @@ part of 'hero.dart';
 
 /// The class-name scope of [Hero], hashed from
 /// `site|lib/components/hero.dart#Hero`.
-const _$heroScope = ClassScope('Hero', 'iur6ms');
+const _$heroScope = ClassScope('Hero', 'lz7xyh');
 ```
 
-so `_grid` renders as `grid-iur6ms`, while the same `Hero` under `lib/marketing/`
-renders as `grid-q8ks2q`. The constant is named after the class: `CardGrid` gives
+so `_grid` renders as `grid-lz7xyh`, while the same `Hero` under `lib/marketing/`
+renders as `grid-vldqky`. The constant is named after the class: `CardGrid` gives
 `_$cardGridScope`. A file with no annotated classes produces no output.
 
 Moving the file, or renaming the class, changes the suffix — both are part of
@@ -64,7 +64,7 @@ the build fails instead of a page discovering it while rendering:
 ```
 [SEVERE] jaspr_class_scope_builder:class_scope_check on $package$:
 Hero (lib/marketing/hero.dart) and Hero (lib/components/hero.dart) both scope
-to "-iur6ms". Rename or move one of them; the suffix is hashed from where a
+to "-lz7xyh". Rename or move one of them; the suffix is hashed from where a
 component is declared.
 ```
 
