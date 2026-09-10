@@ -47,15 +47,6 @@ jobs:
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
-      - name: Link the sibling package
-        # Drop this once jaspr_class_scope is released to pub.dev.
-        run: |
-          cat > pubspec_overrides.yaml <<'YAML'
-          dependency_overrides:
-            jaspr_class_scope:
-              path: ../jaspr_class_scope
-          YAML
-
       - name: Download pub dependencies
         run: dart pub get
 

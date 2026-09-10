@@ -12,7 +12,7 @@ final class ClassScopeCheckBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ClassScopeCheckBuilder();
 
-  static final _scope = RegExp(r"ClassScope\.literal\('([^']+)', '([^']+)'\)");
+  static final _scope = RegExp(r"ClassScope\('([^']+)', '([^']+)'\)");
 
   @override
   Map<String, List<String>> get buildExtensions => const {

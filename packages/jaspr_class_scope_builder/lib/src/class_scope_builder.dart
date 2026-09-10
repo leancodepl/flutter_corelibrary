@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:build/build.dart';
-import 'package:jaspr_class_scope/jaspr_class_scope.dart';
+import 'package:jaspr_class_scope_builder/src/suffix.dart';
 
 /// Writes the class-name scope of every component annotated with `@scopedCss`.
 ///
@@ -82,7 +82,7 @@ final class ClassScopeBuilder implements Builder {
         ..writeln('/// The class-name scope of [$component], hashed from')
         ..writeln('/// `$source`.')
         ..writeln(
-          "const $constant = ClassScope.literal('$component', "
+          "const $constant = ClassScope('$component', "
           "'${classScopeSuffix(source)}');",
         );
     }

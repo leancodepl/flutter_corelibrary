@@ -9,15 +9,23 @@ nothing][jaspr-css], so two components that both style `.grid` style each other.
 Here a component declares one scope, makes its classes from it, and each renders
 with a short hash appended.
 
+The scope itself comes from [`jaspr_class_scope_builder`][builder], which hashes
+the file a component is declared in — two components of the same name are
+different scopes by construction.
+
 ## Usage
 
 ```shell
 dart pub add jaspr_class_scope
+dart pub add --dev jaspr_class_scope_builder build_runner
 ```
 
 ```dart
+part 'hero.scopes.dart';
+
+@scopedCss
 class Hero extends StatelessComponent {
-  static const _class = ClassScope('Hero');
+  static const _class = _$heroScope;
 
   static final _grid = _class('grid');
   static final _title = _class('title');
@@ -34,32 +42,12 @@ class Hero extends StatelessComponent {
 }
 ```
 
-renders `<div class="grid-174ao"><h1 class="title-174ao">Hero</h1></div>`.
-Another component's `_class('grid')` renders as `grid-f1teh`, so the two never
-meet, and a raw `'grid'` string elsewhere matches neither. The `classes:`
-attribute (`.name`) and the selector (`.selector`) come from the same constant,
-so a rename cannot leave one behind.
-
-## Naming a scope
-
-A scope's name is its whole identity, so it has to be unique across the project.
-`ClassScope.ofType(Hero)` names it after the component's type instead, which
-survives a rename but reaches the page through `Type.toString()` — a minifying
-compiler may rewrite it, and it drops the library, so two `Card` classes hash
-alike and throw.
-
-[`jaspr_class_scope_builder`][builder] takes that question away: it hashes the
-*file* a component is declared in, so two same-named components are different
-scopes by construction.
-
-```dart
-part 'hero.scopes.dart';
-
-@scopedCss
-class Hero extends StatelessComponent {
-  static const _class = _$heroScope; // ClassScope.literal('Hero', '16rv7')
-}
-```
+After `dart run build_runner build`, this renders
+`<div class="grid-16rv7"><h1 class="title-16rv7">Hero</h1></div>`. Another
+component's `_class('grid')` renders with its own suffix, so the two never meet,
+and a raw `'grid'` string elsewhere matches neither. The `classes:` attribute
+(`.name`) and the selector (`.selector`) come from the same constant, so a
+rename cannot leave one behind.
 
 ## Classes another file knows by name
 
@@ -75,8 +63,8 @@ static const copyButton = ClassName.shared('js-copy');
 ```dart
 final primary = _class('button') + _class('primary');
 
-primary.name; // 'button-174ao primary-174ao'
-primary.selector; // '.button-174ao.primary-174ao'
+primary.name; // 'button-16rv7 primary-16rv7'
+primary.selector; // '.button-16rv7.primary-16rv7'
 ```
 
 ---

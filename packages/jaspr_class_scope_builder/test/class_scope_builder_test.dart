@@ -1,11 +1,9 @@
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
-import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 import 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart';
 import 'package:test/test.dart';
 
 const _hero = r'''
-import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 part 'hero.scopes.dart';
 
@@ -29,9 +27,7 @@ Future<TestReaderWriter> _build(Map<String, String> sources) async {
 }
 
 String _suffixIn(String generated) =>
-    RegExp(
-      r"ClassScope\.literal\('\w+', '(\w+)'\)",
-    ).firstMatch(generated)!.group(1)!;
+    RegExp(r"ClassScope\('\w+', '(\w+)'\)").firstMatch(generated)!.group(1)!;
 
 void main() {
   group('ClassScopeBuilder', () {
@@ -46,7 +42,7 @@ void main() {
       expect(
         output,
         contains(
-          r"const _$heroScope = ClassScope.literal('Hero', "
+          r"const _$heroScope = ClassScope('Hero', "
           "'${classScopeSuffix('site|lib/components/hero.dart#Hero')}');",
         ),
       );
@@ -85,7 +81,6 @@ void main() {
     test('writes one scope per annotated component', () async {
       final written = await _build({
         'site|lib/cards.dart': '''
-import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 part 'cards.scopes.dart';
 
@@ -103,13 +98,10 @@ class NotAComponent {}
         AssetId('site', 'lib/cards.scopes.dart'),
       );
 
+      expect(output, contains(r"const _$cardScope = ClassScope('Card'"));
       expect(
         output,
-        contains(r"const _$cardScope = ClassScope.literal('Card'"),
-      );
-      expect(
-        output,
-        contains(r"const _$cardGridScope = ClassScope.literal('CardGrid'"),
+        contains(r"const _$cardGridScope = ClassScope('CardGrid'"),
       );
       expect(output, isNot(contains('NotAComponent')));
     });

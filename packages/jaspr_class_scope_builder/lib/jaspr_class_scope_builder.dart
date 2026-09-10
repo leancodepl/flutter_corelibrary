@@ -7,6 +7,7 @@ import 'package:jaspr_class_scope_builder/src/class_scope_check_builder.dart';
 
 export 'src/class_scope_builder.dart';
 export 'src/class_scope_check_builder.dart';
+export 'src/suffix.dart';
 
 /// Writes the scope of every component annotated with `@scopedCss`.
 Builder classScopeBuilder(BuilderOptions options) => const ClassScopeBuilder();

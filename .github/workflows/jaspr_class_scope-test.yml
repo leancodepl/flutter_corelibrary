@@ -59,11 +59,6 @@ jobs:
       - name: Run tests
         run: dart test
 
-      # The suffixes must come out the same on the VM and in the browser,
-      # or a server-rendered class would not match its client-rendered one.
-      - name: Run tests in Chrome
-        run: dart test -p chrome
-
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
         run: dart pub publish --dry-run || true

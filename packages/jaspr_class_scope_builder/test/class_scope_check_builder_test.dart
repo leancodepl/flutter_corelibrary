@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 String _scopes(String file, String component, String suffix) => """
 part of '$file';
 
-const _\$scope = ClassScope.literal('$component', '$suffix');
+const _\$scope = ClassScope('$component', '$suffix');
 """;
 
 void main() {

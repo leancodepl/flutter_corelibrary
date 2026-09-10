@@ -32,7 +32,7 @@ part of 'hero.dart';
 
 /// The class-name scope of [Hero], hashed from
 /// `site|lib/components/hero.dart#Hero`.
-const _$heroScope = ClassScope.literal('Hero', '16rv7');
+const _$heroScope = ClassScope('Hero', '16rv7');
 ```
 
 and `_grid` renders as `grid-16rv7`. A second `Hero`, in another file, gets a
