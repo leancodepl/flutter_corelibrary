@@ -3,9 +3,9 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:build/build.dart';
 import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
-/// Writes the class-name scope of every component annotated with `@scoped`.
+/// Writes the class-name scope of every component annotated with `@scopedCss`.
 ///
-/// For `lib/components/hero.dart` declaring `@scoped class Hero`, it writes
+/// For `lib/components/hero.dart` declaring `@scopedCss class Hero`, it writes
 /// `lib/components/hero.scopes.dart` holding
 ///
 /// ```dart
@@ -52,7 +52,7 @@ final class ClassScopeBuilder implements Builder {
     final components =
         unit.declarations
             .whereType<ClassDeclaration>()
-            .where(_isScoped)
+            .where(_isScopedCss)
             .map((declaration) => declaration.namePart.typeName.lexeme)
             .toList();
 
@@ -64,11 +64,11 @@ final class ClassScopeBuilder implements Builder {
     await buildStep.writeAsString(output, _render(input, components));
   }
 
-  bool _isScoped(ClassDeclaration declaration) =>
+  bool _isScopedCss(ClassDeclaration declaration) =>
       declaration.metadata.any((annotation) {
-        // `@scoped`, `@Scoped()`, or either behind an import prefix.
+        // `@scopedCss`, `@ScopedCss()`, or either behind an import prefix.
         final name = annotation.name.name.split('.').last;
-        return name == 'scoped' || name == 'Scoped';
+        return name == 'scopedCss' || name == 'ScopedCss';
       });
 
   String _render(AssetId input, List<String> components) {

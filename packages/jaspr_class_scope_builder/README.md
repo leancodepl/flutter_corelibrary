@@ -30,7 +30,7 @@ import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 part 'hero.scopes.dart';
 
-@scoped
+@scopedCss
 class Hero extends StatelessComponent {
   static const _class = _$heroScope;
 
@@ -55,7 +55,7 @@ so `_grid` renders as `grid-16rv7`, and the same `Hero` under
 `lib/marketing/` renders as `grid-1f3xc`.
 
 The constant is named after the class: `Hero` gives `_$heroScope`, `CardGrid`
-gives `_$cardGridScope`. A file with no `@scoped` classes produces no output.
+gives `_$cardGridScope`. A file with no `@scopedCss` classes produces no output.
 
 ## The check phase
 

@@ -4,15 +4,15 @@
 /// ```dart
 /// part 'hero.scopes.dart';
 ///
-/// @scoped
+/// @scopedCss
 /// class Hero extends StatelessComponent {
 ///   static const _class = _$heroScope;
 /// }
 /// ```
-const scoped = Scoped();
+const scopedCss = ScopedCss();
 
-/// The annotation behind [scoped].
-final class Scoped {
+/// The annotation behind [scopedCss].
+final class ScopedCss {
   /// Marks the annotated component as one the builder writes a scope for.
-  const Scoped();
+  const ScopedCss();
 }

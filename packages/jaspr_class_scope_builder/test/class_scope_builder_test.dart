@@ -9,7 +9,7 @@ import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 part 'hero.scopes.dart';
 
-@scoped
+@scopedCss
 class Hero {
   static const _class = _$heroScope;
 }
@@ -89,10 +89,10 @@ import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 part 'cards.scopes.dart';
 
-@scoped
+@scopedCss
 class Card {}
 
-@Scoped()
+@ScopedCss()
 class CardGrid {}
 
 class NotAComponent {}

@@ -4,7 +4,7 @@ homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
   Build-time scopes for jaspr_class_scope: gives every component annotated with
-  `@scoped` a class-name suffix hashed from the file it lives in.
+  `@scopedCss` a class-name suffix hashed from the file it lives in.
 
 topics:
   - build-runner

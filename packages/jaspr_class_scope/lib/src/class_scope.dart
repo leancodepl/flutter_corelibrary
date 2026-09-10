@@ -66,7 +66,7 @@ final class ClassScope {
   /// component is declared in.
   ///
   /// Written by `jaspr_class_scope_builder` for a component annotated with
-  /// `@scoped`, never by hand: the builder is what knows where a class lives,
+  /// `@scopedCss`, never by hand: the builder is what knows where a class lives,
   /// which is what keeps two components of the same name apart.
   const ClassScope.literal(this.name, String suffix)
     : _owner = '$name#$suffix',

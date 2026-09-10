@@ -6,7 +6,7 @@ import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 part 'hero.scopes.dart';
 
-@scoped
+@scopedCss
 class Hero extends StatelessComponent {
   static const _class = _$heroScope;
 

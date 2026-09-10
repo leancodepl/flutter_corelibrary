@@ -101,7 +101,7 @@ declared in instead of its name, the way CSS modules hash the file path:
 ```dart
 part 'hero.scopes.dart';
 
-@scoped
+@scopedCss
 class Hero extends StatelessComponent {
   static const _class = _$heroScope; // ClassScope.literal('Hero', '16rv7')
 }
