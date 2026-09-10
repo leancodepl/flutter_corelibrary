@@ -26,10 +26,10 @@ final class ClassName {
   final ClassScope? _scope;
   final ClassName? _and;
 
-  /// The `classes:` value: `grid-74ao3d`, or `a b` for a combination.
+  /// The `classes:` value: `grid-wszcpk`, or `a b` for a combination.
   String get name => _parts.join(' ');
 
-  /// The selector: `.grid-74ao3d`, or `.a.b` for a combination — an element
+  /// The selector: `.grid-wszcpk`, or `.a.b` for a combination — an element
   /// carrying both.
   String get selector => '.${_parts.join('.')}';
 

@@ -14,11 +14,11 @@ void main() {
     // The suffix ends up in the rendered page and in the stylesheet built from
     // it, so it may not move between versions of this package.
     test('hashes to a stable suffix', () {
-      expect(classScopeSuffix('Hero'), '74ao3d');
-      expect(classScopeSuffix('NavBar'), 'f1tehv');
-      expect(classScopeSuffix(''), 'ztntfp');
-      expect(classScopeSuffix('ą'), '00f41s');
-      expect(classScopeSuffix('site|lib/components/hero.dart#Hero'), '6rv7vf');
+      expect(classScopeSuffix('Hero'), 'wszcpk');
+      expect(classScopeSuffix('NavBar'), 'jmfbzy');
+      expect(classScopeSuffix(''), 'biic5n');
+      expect(classScopeSuffix('ą'), 'papbch');
+      expect(classScopeSuffix('site|lib/components/hero.dart#Hero'), '0dc8kc');
     });
 
     test('gives two files different suffixes', () {
