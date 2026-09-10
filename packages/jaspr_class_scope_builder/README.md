@@ -50,25 +50,27 @@ so `_grid` renders as `grid-iur6ms`, while the same `Hero` under `lib/marketing/
 renders as `grid-q8ks2q`. The constant is named after the class: `CardGrid` gives
 `_$cardGridScope`. A file with no annotated classes produces no output.
 
-Moving or renaming `hero.dart` changes the suffix. Only the generated stylesheet
-and markup depend on it; a class another file knows by name is declared with
-`ClassName.shared` and never scoped.
+Moving the file, or renaming the class, changes the suffix — both are part of
+what is hashed. Only the generated stylesheet and markup depend on it; a class
+another file knows by name is declared with `ClassName.shared` and never
+scoped.
 
 ## The check phase
 
-Six base-36 digits leave room for two unrelated files to hash alike, rarely. A
-second builder reads the scopes back once per package, so when that happens the
-build fails instead of a page discovering it while rendering:
+Six base-36 digits leave room for two components to hash alike, rarely. A second
+builder hashes every annotated component once per package, so when that happens
+the build fails instead of a page discovering it while rendering:
 
 ```
 [SEVERE] jaspr_class_scope_builder:class_scope_check on $package$:
-Hero (lib/marketing/hero.scopes.dart) and Hero (lib/components/hero.scopes.dart)
-both scope to "-iur6ms". Rename or move one of them; the suffix is hashed from
-the file a component is declared in.
+Hero (lib/marketing/hero.dart) and Hero (lib/components/hero.dart) both scope
+to "-iur6ms". Rename or move one of them; the suffix is hashed from where a
+component is declared.
 ```
 
-`jaspr_class_scope`'s own check sits behind an `assert`, so a release build
-carries neither it nor any hashing: the suffix is a `const`.
+It reads the sources rather than the generated part files, so it depends on
+nothing but the same input the generator hashes. Nothing is left to check while
+rendering: the suffix reaches the page as a `const`.
 
 ---
 

@@ -6,8 +6,6 @@ const heroScope = ClassScope('Hero', 'iur6ms');
 const navBarScope = ClassScope('NavBar', 'q8ks2q');
 
 void main() {
-  setUp(ClassScope.resetRegistry);
-
   group('ClassScope', () {
     test('renders a class as local-suffix', () {
       expect(heroScope('grid').name, 'grid-iur6ms');
@@ -16,28 +14,6 @@ void main() {
 
     test('scopes the same local name differently per component', () {
       expect(heroScope('grid').name, isNot(navBarScope('grid').name));
-    });
-
-    test('lets the same scope render again', () {
-      expect(
-        () => [heroScope('grid').name, heroScope('list').name],
-        returnsNormally,
-      );
-    });
-
-    // Within a package the builder catches this; two packages can still meet.
-    test('throws when two components take one suffix', () {
-      expect(heroScope('grid').name, 'grid-iur6ms');
-      expect(
-        () => const ClassScope('OtherHero', 'iur6ms')('grid').name,
-        throwsA(
-          isA<StateError>().having(
-            (e) => e.message,
-            'message',
-            allOf(contains('Hero'), contains('OtherHero'), contains('-iur6ms')),
-          ),
-        ),
-      );
     });
   });
 

@@ -26,20 +26,24 @@ final class ClassName {
   final ClassScope? _scope;
   final ClassName? _and;
 
-  /// The `classes:` value: `grid-mthhuz`, or `a b` for a combination.
-  String get name => _parts.join(' ');
+  /// The `classes:` value: `grid-iur6ms`, or `a b` for a combination.
+  String get name => switch (_and) {
+    null => _rendered,
+    final and => '$_rendered ${and.name}',
+  };
 
-  /// The selector: `.grid-mthhuz`, or `.a.b` for a combination — an element
+  /// The selector: `.grid-iur6ms`, or `.a.b` for a combination — an element
   /// carrying both.
-  String get selector => '.${_parts.join('.')}';
+  String get selector => switch (_and) {
+    null => '.$_rendered',
+    final and => '.$_rendered${and.selector}',
+  };
 
-  List<String> get _parts => [
-    switch (_scope) {
-      null => _local,
-      final scope => '$_local-${scope.suffix}',
-    },
-    ...?_and?._parts,
-  ];
+  /// This class alone, without whatever it was combined with.
+  String get _rendered => switch (_scope) {
+    null => _local,
+    final scope => '$_local-${scope.suffix}',
+  };
 
   /// This class and [other] on the same element.
   ClassName operator +(ClassName other) => switch (_and) {

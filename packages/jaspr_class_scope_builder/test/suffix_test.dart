@@ -1,9 +1,5 @@
-import 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart';
+import 'package:jaspr_class_scope_builder/src/suffix.dart';
 import 'package:test/test.dart';
-
-/// MurmurHash3 x86_32 with seed 0, taken modulo 36^6 and padded.
-String suffixOf(int hash) =>
-    (hash % 279936000000 % 2176782336).toRadixString(36).padLeft(6, '0');
 
 void main() {
   group('classScopeSuffix', () {
@@ -16,17 +12,11 @@ void main() {
     });
 
     // MurmurHash3's published vectors, so that this stays the hash it claims
-    // to be: '' hashes to 0, 'a' to 0x3C2569B2, 'abc' to 0xB3DD93FA.
+    // to be.
     test('is MurmurHash3 x86_32', () {
-      expect(classScopeSuffix(''), '000000');
-      expect(
-        classScopeSuffix('a'),
-        (0x3c2569b2 % 2176782336).toRadixString(36),
-      );
-      expect(
-        classScopeSuffix('abc'),
-        (0xb3dd93fa % 2176782336).toRadixString(36),
-      );
+      expect(classScopeSuffix(''), '000000'); // 0
+      expect(classScopeSuffix('a'), 'gos6uq'); // 0x3c2569b2
+      expect(classScopeSuffix('abc'), 'dwmk8q'); // 0xb3dd93fa
     });
 
     // The suffix ends up in the rendered page and in the stylesheet built from

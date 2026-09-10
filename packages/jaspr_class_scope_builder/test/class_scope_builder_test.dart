@@ -1,6 +1,7 @@
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart';
+import 'package:jaspr_class_scope_builder/src/suffix.dart';
 import 'package:test/test.dart';
 
 const _hero = r'''
