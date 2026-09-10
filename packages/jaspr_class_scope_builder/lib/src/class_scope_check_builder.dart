@@ -4,7 +4,7 @@ import 'package:jaspr_class_scope_builder/src/class_scope_builder.dart';
 
 /// Fails the build when two components in this package took one suffix.
 ///
-/// Five base-36 digits leave room for two unrelated files to hash alike,
+/// Six base-36 digits leave room for two unrelated files to hash alike,
 /// rarely. This runs once per package, after [ClassScopeBuilder] has written
 /// the scopes, and reads them back, so a clash is a build error naming both
 /// components rather than something a page discovers while rendering.

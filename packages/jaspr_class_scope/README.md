@@ -41,7 +41,7 @@ class Hero extends StatelessComponent {
 ```
 
 After `dart run build_runner build` this renders
-`<div class="grid-16rv7"><h1 class="title-16rv7">Hero</h1></div>`. Another
+`<div class="grid-6rv7vf"><h1 class="title-6rv7vf">Hero</h1></div>`. Another
 component's `_class('grid')` gets a different name, so the two never meet, and a
 raw `'grid'` string elsewhere matches neither. The `classes:` attribute
 (`.name`) and the selector (`.selector`) come from the same constant, so a
@@ -61,8 +61,8 @@ static const copyButton = ClassName.shared('js-copy');
 ```dart
 final primary = _class('button') + _class('primary');
 
-primary.name; // 'button-16rv7 primary-16rv7'
-primary.selector; // '.button-16rv7.primary-16rv7'
+primary.name; // 'button-6rv7vf primary-6rv7vf'
+primary.selector; // '.button-6rv7vf.primary-6rv7vf'
 ```
 
 ---

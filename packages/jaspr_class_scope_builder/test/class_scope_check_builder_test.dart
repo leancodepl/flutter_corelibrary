@@ -13,8 +13,8 @@ void main() {
     test('passes when every scope has its own suffix', () async {
       final result = await testBuilder(const ClassScopeCheckBuilder(), {
         r'site|$package$': '',
-        'site|lib/hero.scopes.dart': _scopes('hero.dart', 'Hero', '16rv7'),
-        'site|lib/card.scopes.dart': _scopes('card.dart', 'Card', '1f3xc'),
+        'site|lib/hero.scopes.dart': _scopes('hero.dart', 'Hero', '6rv7vf'),
+        'site|lib/card.scopes.dart': _scopes('card.dart', 'Card', 'f3xchv'),
       }, rootPackage: 'site');
 
       expect(result.succeeded, isTrue);
@@ -24,11 +24,11 @@ void main() {
     test('fails the build when two components share a suffix', () async {
       final result = await testBuilder(const ClassScopeCheckBuilder(), {
         r'site|$package$': '',
-        'site|lib/hero.scopes.dart': _scopes('hero.dart', 'Hero', '16rv7'),
+        'site|lib/hero.scopes.dart': _scopes('hero.dart', 'Hero', '6rv7vf'),
         'site|lib/marketing/hero.scopes.dart': _scopes(
           'hero.dart',
           'Hero',
-          '16rv7',
+          '6rv7vf',
         ),
       }, rootPackage: 'site');
 
@@ -38,7 +38,7 @@ void main() {
         allOf(
           contains('lib/hero.scopes.dart'),
           contains('lib/marketing/hero.scopes.dart'),
-          contains('-16rv7'),
+          contains('-6rv7vf'),
         ),
       );
     });

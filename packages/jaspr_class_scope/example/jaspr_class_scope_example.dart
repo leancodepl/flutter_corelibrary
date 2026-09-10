@@ -8,7 +8,7 @@ import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 /// What `jaspr_class_scope_builder` writes into `hero.scopes.dart` for a
 /// component annotated with `@scopedCss`.
-const _$heroScope = ClassScope('Hero', '16rv7');
+const _$heroScope = ClassScope('Hero', '6rv7vf');
 
 class Hero {
   static const _class = _$heroScope;
@@ -27,7 +27,7 @@ class Hero {
 const copyButton = ClassName.shared('js-copy');
 
 void main() {
-  print(Hero.styles); // .grid-16rv7 > .title-16rv7
-  print(Hero.gridClasses); // grid-16rv7
+  print(Hero.styles); // .grid-6rv7vf > .title-6rv7vf
+  print(Hero.gridClasses); // grid-6rv7vf
   print(copyButton.name); // js-copy
 }

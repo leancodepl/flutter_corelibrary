@@ -9,7 +9,7 @@ import 'package:meta/meta.dart';
 ///
 /// ```dart
 /// static const _class = _$heroScope;
-/// static final _grid = _class('grid'); // 'grid-16rv7'
+/// static final _grid = _class('grid'); // 'grid-6rv7vf'
 /// ```
 ///
 /// Two components can then both call something `grid` without meeting in the
@@ -30,7 +30,7 @@ final class ClassScope {
 
   final String _suffix;
 
-  /// The five base-36 digits this scope's classes end with.
+  /// The six base-36 digits this scope's classes end with.
   ///
   /// In debug mode, taking a suffix another scope already holds throws a
   /// [StateError] instead of the two quietly sharing a namespace. Within one

@@ -1,5 +1,5 @@
-/// Five base-36 digits of an FNV-1a hash of [source]: the suffix every class
-/// of one scope ends with.
+/// Six base-36 digits of an FNV-1a hash of [source]: the suffix every class of
+/// one scope ends with.
 ///
 /// [source] is the asset a component is declared in, so that two components of
 /// the same name in different files never share a namespace.
@@ -15,5 +15,10 @@ String classScopeSuffix(String source) {
         (low * 0x01000193 + ((high * 0x01000193 & 0xffff) << 16)) & 0xffffffff;
   }
 
-  return hash.toRadixString(36).padLeft(5, '0').substring(0, 5);
+  // Taken modulo, not truncated: base 36 of a 32-bit hash is six-and-a-bit
+  // digits, so cutting it short would crowd the suffixes that begin with a 1.
+  return (hash % _space).toRadixString(36).padLeft(6, '0');
 }
+
+/// How many suffixes there are: 36^6, a little over two billion.
+const _space = 36 * 36 * 36 * 36 * 36 * 36;
