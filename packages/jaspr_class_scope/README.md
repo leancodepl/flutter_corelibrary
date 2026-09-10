@@ -5,11 +5,7 @@
 
 Unique CSS class names for [Jaspr] components. Jaspr puts every `@css` getter
 into one global stylesheet and [scopes nothing][jaspr-css], so two components
-that both style `.grid` style each other; here each component gets its own
-`.grid`.
-
-[`jaspr_class_scope_builder`][builder] gives every component its namespace at
-build time — no name to keep unique by hand.
+that both style `.grid` style each other; here each gets its own.
 
 ## Usage
 
@@ -41,16 +37,14 @@ class Hero extends StatelessComponent {
 ```
 
 After `dart run build_runner build` this renders
-`<div class="grid-lz7xyh"><h1 class="title-lz7xyh">Hero</h1></div>`. Another
-component's `_class('grid')` gets a different name, so the two never meet, and a
-raw `'grid'` string elsewhere matches neither. The `classes:` attribute
-(`.name`) and the selector (`.selector`) come from the same constant, so a
-rename cannot leave one behind.
+`<div class="grid-lz7xyh"><h1 class="title-lz7xyh">Hero</h1></div>`. The scope
+itself comes from [`jaspr_class_scope_builder`][builder], which derives it from
+where the component is declared.
 
 ## Classes another file knows by name
 
-A class a script looks up or a hand-written stylesheet styles is a contract with
-that file, so it renders as written:
+A class a script looks up or a hand-written stylesheet styles renders as
+written:
 
 ```dart
 static const copyButton = ClassName.shared('js-copy');

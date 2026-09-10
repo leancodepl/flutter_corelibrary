@@ -1,5 +1,4 @@
-/// Marks a component whose scope `jaspr_class_scope_builder` writes, hashed
-/// from the file it is declared in.
+/// Marks a component whose scope `jaspr_class_scope_builder` writes.
 ///
 /// ```dart
 /// part 'hero.scopes.dart';

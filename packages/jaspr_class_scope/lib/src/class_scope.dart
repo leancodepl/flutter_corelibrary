@@ -1,27 +1,18 @@
 import 'package:jaspr_class_scope/src/class_name.dart';
 
-/// The CSS class names of one component, scoped to it.
-///
-/// Jaspr's `@css` getters all land in one global stylesheet, so this does what
-/// CSS modules do: a component declares one scope and makes its classes from
-/// it, each rendering as `<local>-<suffix>`.
+/// The CSS class names of one component, each rendering as `<local>-<suffix>`.
 ///
 /// ```dart
 /// static const _class = _$heroScope;
 /// static final _grid = _class('grid'); // 'grid-lz7xyh'
 /// ```
 ///
-/// Two components can then both call something `grid` without meeting in the
-/// stylesheet, while a raw `'grid'` string elsewhere matches neither.
-///
-/// Classes another file knows by name are not scoped — declare those with
-/// [ClassName.shared].
+/// Two components can then both call something `grid` without meeting in
+/// Jaspr's one global stylesheet.
 final class ClassScope {
   /// A scope for the component [name], whose classes end with [suffix].
   ///
-  /// Written by `jaspr_class_scope_builder` for a component annotated with
-  /// `@scopedCss`, never by hand: the builder hashes where the component is
-  /// declared, which is what keeps two components of the same name apart.
+  /// Written by `jaspr_class_scope_builder`, never by hand.
   const ClassScope(this.name, this.suffix);
 
   /// The component this scope belongs to.

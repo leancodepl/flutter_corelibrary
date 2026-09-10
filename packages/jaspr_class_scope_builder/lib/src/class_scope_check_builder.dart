@@ -5,15 +5,8 @@ import 'package:jaspr_class_scope_builder/src/suffix.dart';
 
 /// Fails the build when two components in this package took one suffix.
 ///
-/// Six base-36 digits leave room for two of them to hash alike, rarely. This
-/// runs once per package and hashes every annotated component the way
-/// the scope builder does, so a clash is a build error naming both files
-/// rather than something a page discovers while rendering.
-///
-/// It reads the components out of the sources rather than out of the generated
-/// part files: the suffix is a function of where a class is declared, so the
-/// check needs no more than the generator does, and cannot go blind if the
-/// generated code is ever rendered differently.
+/// Hashes the sources rather than reading the generated part files, so it
+/// depends on nothing but the same input the generator hashes.
 final class ClassScopeCheckBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ClassScopeCheckBuilder();

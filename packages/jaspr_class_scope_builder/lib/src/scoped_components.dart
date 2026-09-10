@@ -6,11 +6,10 @@ import 'package:jaspr_class_scope_builder/src/suffix.dart';
 /// The extension of the part file the scopes are written to.
 const scopesExtension = '.scopes.dart';
 
-/// The components [source] declares with `@scopedCss`, in the order written.
+/// The components [source] declares with `@scopedCss`.
 ///
-/// Parsed without resolution: the class name is all a scope needs, and the
-/// input cannot be resolved on a first build anyway, when it declares a part
-/// file that does not exist yet.
+/// Parsed without resolution: the input cannot be resolved on a first build
+/// anyway, when it declares a part file that does not exist yet.
 List<String> scopedComponentsIn(String source) =>
     parseString(content: source, throwIfDiagnostics: false).unit.declarations
         .whereType<ClassDeclaration>()
@@ -18,8 +17,7 @@ List<String> scopedComponentsIn(String source) =>
         .map((declaration) => declaration.namePart.typeName.lexeme)
         .toList();
 
-/// What a component's suffix is hashed from: where it is declared, so that two
-/// components of the same name never share a namespace.
+/// What a component's suffix is hashed from: where it is declared.
 String scopeSourceOf(AssetId asset, String component) =>
     '${asset.package}|${asset.path}#$component';
 
@@ -31,9 +29,8 @@ String renderScope(AssetId asset, String component) {
   return "const ${constant}Scope = ClassScope('$component', '$suffix');";
 }
 
-// Matched by the name the annotation is spelled with, rather than by resolving
-// it: resolution costs a great deal more, and the class name is all this needs
-// from the element model.
+// Matched by the name the annotation is spelled with: resolving it costs a
+// great deal more, and the class name is all this needs.
 bool _isScopedCss(ClassDeclaration declaration) =>
     declaration.metadata.any((annotation) {
       final name = annotation.name.name.split('.').last;

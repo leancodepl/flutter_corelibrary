@@ -1,20 +1,16 @@
 import 'package:jaspr_class_scope/src/class_scope.dart';
 
-/// A CSS class name: made by a [ClassScope] for the component that owns it, or
-/// [ClassName.shared] for one that renders as written.
-///
-/// The `classes:` attribute ([name]) and the selector ([selector]) come from
-/// the same constant, so the two cannot drift apart.
+/// A CSS class name, spelled once for both the `classes:` attribute ([name])
+/// and the selector ([selector]) so the two cannot drift apart.
 final class ClassName {
-  /// A class rendered as written, because something outside the component — a
-  /// script, a hand-written stylesheet, another package — knows it by [name].
+  /// A class rendered as written, because something outside the component —
+  /// a script, a hand-written stylesheet — knows it by [name].
   const ClassName.shared(String name)
     : _local = name,
       _scope = null,
       _and = null;
 
-  /// The class [local] of [scope]'s component, usually spelled by calling the
-  /// scope itself: `_class('grid')`.
+  /// The class [local] of [scope]'s component, usually spelled `_class('grid')`.
   const ClassName.scoped(String local, ClassScope scope)
     : _local = local,
       _scope = scope,
@@ -32,14 +28,12 @@ final class ClassName {
     final and => '$_rendered ${and.name}',
   };
 
-  /// The selector: `.grid-lz7xyh`, or `.a.b` for a combination — an element
-  /// carrying both.
+  /// The selector: `.grid-lz7xyh`, or `.a.b` for a combination.
   String get selector => switch (_and) {
     null => '.$_rendered',
     final and => '.$_rendered${and.selector}',
   };
 
-  /// This class alone, without whatever it was combined with.
   String get _rendered => switch (_scope) {
     null => _local,
     final scope => '$_local-${scope.suffix}',

@@ -1,6 +1,5 @@
-# The extensions here are spelled again in `lib/src/scoped_components.dart` and
-# `lib/src/class_scope_check_builder.dart`; build_runner reads this file without
-# loading Dart, so it cannot share their constants. Keep the two in step.
+# Keep these extensions in step with `lib/src/`; build_runner reads this file
+# without loading Dart.
 builders:
   class_scope:
     import: 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart'

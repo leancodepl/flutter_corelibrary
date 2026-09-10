@@ -3,9 +3,8 @@
 [![jaspr_class_scope_builder pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope_builder continuous integration badge][build-badge]][build-badge-link]
 
-Generates the unique CSS class names [jaspr_class_scope] gives Jaspr components.
-Each name is derived from the file its component is declared in, so two
-components never end up with the same one — what CSS modules do.
+Generates the unique CSS class names [jaspr_class_scope] gives Jaspr
+components, one namespace per component — what CSS modules do.
 
 ## Usage
 
@@ -17,8 +16,6 @@ dev_dependencies:
   build_runner: ^2.4.0
   jaspr_class_scope_builder: ^0.1.0
 ```
-
-Annotate the component and add the part file:
 
 ```dart
 import 'package:jaspr_class_scope/jaspr_class_scope.dart';
@@ -36,30 +33,22 @@ class Hero extends StatelessComponent {
 `dart run build_runner build` writes `hero.scopes.dart` next to it:
 
 ```dart
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// Written by jaspr_class_scope_builder.
-
 part of 'hero.dart';
 
-/// The class-name scope of [Hero], hashed from
-/// `site|lib/components/hero.dart#Hero`.
 const _$heroScope = ClassScope('Hero', 'lz7xyh');
 ```
 
-so `_grid` renders as `grid-lz7xyh`, while the same `Hero` under `lib/marketing/`
-renders as `grid-vldqky`. The constant is named after the class: `CardGrid` gives
-`_$cardGridScope`. A file with no annotated classes produces no output.
-
-Moving the file, or renaming the class, changes the suffix — both are part of
-what is hashed. Only the generated stylesheet and markup depend on it; a class
-another file knows by name is declared with `ClassName.shared` and never
-scoped.
+so `_grid` renders as `grid-lz7xyh`, while the same `Hero` under
+`lib/marketing/` renders as `grid-vldqky`. The suffix is the md5 of
+`package|path#Component`, so moving the file or renaming the class changes it.
+`CardGrid` gives `_$cardGridScope`; a file with no annotated classes produces
+no output.
 
 ## The check phase
 
-Six base-36 digits leave room for two components to hash alike, rarely. A second
-builder hashes every annotated component once per package, so when that happens
-the build fails instead of a page discovering it while rendering:
+Six base-36 digits leave room for two components to hash alike, rarely. A
+second builder hashes them all once per package, so that fails the build
+instead of a page:
 
 ```
 [SEVERE] jaspr_class_scope_builder:class_scope_check on $package$:
@@ -67,10 +56,6 @@ Hero (lib/marketing/hero.dart) and Hero (lib/components/hero.dart) both scope
 to "-lz7xyh". Rename or move one of them; the suffix is hashed from where a
 component is declared.
 ```
-
-It reads the sources rather than the generated part files, so it depends on
-nothing but the same input the generator hashes. Nothing is left to check while
-rendering: the suffix reaches the page as a `const`.
 
 ---
 
