@@ -3,10 +3,9 @@
 [![jaspr_class_scope_builder pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope_builder continuous integration badge][build-badge]][build-badge-link]
 
-Build-time class-name scopes for [jaspr_class_scope]. A scope written by hand is
-only as unique as its name; this builder hashes the file a component is declared
-in, so two components of the same name are different scopes by construction —
-what CSS modules do, where the hash covers the file path.
+Generates the unique CSS class names [jaspr_class_scope] gives Jaspr components.
+Each name is derived from the file its component is declared in, so two
+components never end up with the same one — what CSS modules do.
 
 ## Usage
 
@@ -51,16 +50,15 @@ so `_grid` renders as `grid-16rv7`, while the same `Hero` under `lib/marketing/`
 renders as `grid-1f3xc`. The constant is named after the class: `CardGrid` gives
 `_$cardGridScope`. A file with no annotated classes produces no output.
 
-The suffix follows the file, so moving or renaming `hero.dart` changes it. Only
-the generated stylesheet and markup depend on it; a class another file knows by
-name is declared with `ClassName.shared` and never scoped.
+Moving or renaming `hero.dart` changes the suffix. Only the generated stylesheet
+and markup depend on it; a class another file knows by name is declared with
+`ClassName.shared` and never scoped.
 
 ## The check phase
 
-A second builder runs once per package, after the scopes are written, and reads
-them back. Five base-36 digits leave room for two unrelated files to hash alike,
-rarely — when they do, the build fails instead of a page discovering it while
-rendering:
+Five base-36 digits leave room for two unrelated files to hash alike, rarely. A
+second builder reads the scopes back once per package, so when that happens the
+build fails instead of a page discovering it while rendering:
 
 ```
 [SEVERE] jaspr_class_scope_builder:class_scope_check on $package$:

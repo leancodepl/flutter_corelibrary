@@ -1,4 +1,4 @@
-/// Scoped CSS class names for Jaspr components, the way CSS modules do it.
+/// Unique CSS class names for Jaspr components.
 library;
 
 export 'src/class_name.dart';

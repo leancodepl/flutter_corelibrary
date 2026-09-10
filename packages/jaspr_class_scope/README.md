@@ -3,15 +3,13 @@
 [![jaspr_class_scope pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope continuous integration badge][build-badge]][build-badge-link]
 
-Scoped CSS class names for [Jaspr] components, the way CSS modules do it. Jaspr
-collects every `@css` getter into one global stylesheet and [scopes
-nothing][jaspr-css], so two components that both style `.grid` style each other.
-Here a component declares one scope, makes its classes from it, and each renders
-with a short hash appended.
+Unique CSS class names for [Jaspr] components. Jaspr puts every `@css` getter
+into one global stylesheet and [scopes nothing][jaspr-css], so two components
+that both style `.grid` style each other; here each component gets its own
+`.grid`.
 
-The scope itself comes from [`jaspr_class_scope_builder`][builder], which hashes
-the file a component is declared in — two components of the same name are
-different scopes by construction.
+[`jaspr_class_scope_builder`][builder] gives every component its namespace at
+build time — no name to keep unique by hand.
 
 ## Usage
 
@@ -42,10 +40,10 @@ class Hero extends StatelessComponent {
 }
 ```
 
-After `dart run build_runner build`, this renders
+After `dart run build_runner build` this renders
 `<div class="grid-16rv7"><h1 class="title-16rv7">Hero</h1></div>`. Another
-component's `_class('grid')` renders with its own suffix, so the two never meet,
-and a raw `'grid'` string elsewhere matches neither. The `classes:` attribute
+component's `_class('grid')` gets a different name, so the two never meet, and a
+raw `'grid'` string elsewhere matches neither. The `classes:` attribute
 (`.name`) and the selector (`.selector`) come from the same constant, so a
 rename cannot leave one behind.
 
