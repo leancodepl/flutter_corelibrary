@@ -1,0 +1,26 @@
+name: jaspr_class_scope_builder
+version: 0.1.0
+homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/jaspr_class_scope_builder
+repository: https://github.com/leancodepl/flutter_corelibrary
+description: >-
+  Build-time scopes for jaspr_class_scope: gives every component annotated with
+  `@scoped` a class-name suffix hashed from the file it lives in.
+
+topics:
+  - build-runner
+  - codegen
+  - css
+  - jaspr
+
+environment:
+  sdk: '>=3.7.0 <4.0.0'
+
+dependencies:
+  analyzer: '>=14.3.0 <15.0.0'
+  build: ^4.0.0
+  jaspr_class_scope: ^0.1.0
+
+dev_dependencies:
+  build_test: ^3.0.0
+  leancode_lint: ^27.0.0
+  test: ^1.26.0

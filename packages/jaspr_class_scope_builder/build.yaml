@@ -1,0 +1,7 @@
+builders:
+  class_scope:
+    import: 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart'
+    builder_factories: ['classScopeBuilder']
+    build_extensions: {'.dart': ['.scopes.dart']}
+    auto_apply: dependents
+    build_to: source

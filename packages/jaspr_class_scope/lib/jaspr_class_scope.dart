@@ -3,3 +3,5 @@ library;
 
 export 'src/class_name.dart';
 export 'src/class_scope.dart';
+export 'src/scoped.dart';
+export 'src/suffix.dart';

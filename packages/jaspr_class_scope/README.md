@@ -55,8 +55,12 @@ meet; a raw `'grid'` string elsewhere matches neither.
   name — the same on the VM and on the web, on every machine, and across
   versions of this package, so server-rendered and client-rendered markup
   agree and the diff of a rebuild stays empty.
-- **A loud collision.** Two scopes that would hash alike throw a `StateError`
-  the first time either one renders, instead of silently sharing a namespace.
+- **No collisions at all, with the builder.**
+  [`jaspr_class_scope_builder`][builder] hashes the file a component is
+  declared in, so two components of the same name are different scopes by
+  construction. Without it, two scopes that would hash alike throw a
+  `StateError` the first time either one renders, rather than silently sharing
+  a namespace.
 - **No dependency on Jaspr** — it is plain Dart making strings, so it works
   with any way of writing CSS, and Jaspr's own `css()`/`classes:` take the
   strings as they are.
@@ -81,6 +85,32 @@ that renaming the component renames its scope. The name then reaches the page
 through `Type.toString()`, which a minifying compiler may rewrite — for a
 component whose classes are rendered both on the server and by minified client
 code, spell the name out, so that both sides spell the same suffix.
+
+Both forms hash a bare name, so the name has to be unique across the project:
+two components that both spell `ClassScope('Card')` are one scope, silently,
+and two `Card` classes in different libraries throw, because `Type.toString()`
+renders both as `Card`. To be rid of that question entirely, let the builder
+name the scopes.
+
+### Scopes from the builder
+
+[`jaspr_class_scope_builder`][builder] hashes the *file* a component is
+declared in instead of its name, the way CSS modules hash the file path:
+
+```dart
+part 'hero.scopes.dart';
+
+@scoped
+class Hero extends StatelessComponent {
+  static const _class = _$heroScope; // ClassScope.literal('Hero', '16rv7')
+}
+```
+
+Two `Hero` classes in two files then get two suffixes, without either knowing
+about the other and without anything having to fail; the class name never
+reaches the page through `Type.toString()`, so minified client code renders
+what the server rendered; and the suffix is a `const`, so nothing is hashed in
+the browser.
 
 ### Classes somebody else knows by name
 
@@ -127,6 +157,7 @@ class Button extends StatelessComponent {
 ```
 
 [Jaspr]: https://jaspr.site
+[builder]: https://pub.dev/packages/jaspr_class_scope_builder
 [jaspr-css]: https://docs.jaspr.site/api/utils/at_css
 [pub-badge]: https://img.shields.io/pub/v/jaspr_class_scope
 [pub-badge-link]: https://pub.dev/packages/jaspr_class_scope

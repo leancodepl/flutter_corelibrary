@@ -1,4 +1,5 @@
 import 'package:jaspr_class_scope/src/class_name.dart';
+import 'package:jaspr_class_scope/src/suffix.dart';
 import 'package:meta/meta.dart';
 
 /// Makes the CSS class names of one component, scoped to it.
@@ -37,19 +38,50 @@ import 'package:meta/meta.dart';
 /// [ClassName.shared].
 final class ClassScope {
   /// A scope with the given [name], hashed as written.
-  const ClassScope(this.name);
+  ///
+  /// The name is the scope's whole identity, so two scopes spelling the same
+  /// name are one scope: keep them unique across the project, or name them
+  /// after the type with [ClassScope.ofType], which tells two classes of the
+  /// same name apart.
+  const ClassScope(this.name) : _owner = name, _suffix = null;
 
   /// A scope named after [type], so that renaming the component renames its
   /// scope.
   ///
-  /// The name comes from `Type.toString()`, which a minifying compiler is free
-  /// to rewrite: for a component whose classes are rendered both on the server
-  /// and by minified client code, spell the name out with [ClassScope.new]
-  /// instead, so that both sides spell the same suffix.
-  ClassScope.ofType(Type type) : name = type.toString();
+  /// The name comes from `Type.toString()`, which drops the library the class
+  /// lives in and which a minifying compiler is free to rewrite: for a
+  /// component whose classes are rendered both on the server and by minified
+  /// client code, spell the name out with [ClassScope.new] instead, so that
+  /// both sides spell the same suffix.
+  ///
+  /// Two classes of the same name in different libraries hash alike; that is a
+  /// collision and [suffix] throws on it, rather than quietly handing both
+  /// components one namespace.
+  ClassScope.ofType(Type type)
+    : name = type.toString(),
+      _owner = type,
+      _suffix = null;
+
+  /// A scope whose [suffix] was computed at build time, from the file the
+  /// component is declared in.
+  ///
+  /// Written by `jaspr_class_scope_builder` for a component annotated with
+  /// `@scoped`, never by hand: the builder is what knows where a class lives,
+  /// which is what keeps two components of the same name apart.
+  const ClassScope.literal(this.name, String suffix)
+    : _owner = '$name#$suffix',
+      _suffix = suffix;
 
   /// What this scope hashes.
   final String name;
+
+  /// What this scope is: the type it was made for, or its literal name. Two
+  /// scopes with the same [name] but different owners are two namespaces
+  /// fighting over one suffix.
+  final Object _owner;
+
+  /// The build-time suffix, when this scope came from the builder.
+  final String? _suffix;
 
   /// Five base-36 digits of an FNV-1a hash of [name]: the same on every
   /// platform, machine and version of this package, and short enough to read
@@ -58,14 +90,17 @@ final class ClassScope {
   /// Throws a [StateError] when another scope already took this suffix, which
   /// means the two would share a namespace.
   String get suffix {
-    final digits = _hash(name).toRadixString(36);
-    final suffix = digits.padLeft(5, '0').substring(0, 5);
+    final suffix = _suffix ?? classScopeSuffix(name);
 
-    final taken = _names.putIfAbsent(suffix, () => name);
-    if (taken != name) {
+    final taken = _owners.putIfAbsent(suffix, () => _owner);
+    if (taken != _owner) {
       throw StateError(
-        'ClassScope("$name") and ClassScope("$taken") both scope to '
-        '"-$suffix"; rename one of them.',
+        '$taken' == name
+            ? 'Two scopes are both named "$name" — two classes of that name, '
+                'or a class and a literal — so they share "-$suffix"; name '
+                'one of them explicitly.'
+            : 'ClassScope("$name") and ClassScope("$taken") both scope to '
+                '"-$suffix"; rename one of them.',
       );
     }
 
@@ -78,33 +113,14 @@ final class ClassScope {
   @override
   String toString() => 'ClassScope($name)';
 
-  /// FNV-1a over the code units of [input], in 32 bits.
-  ///
-  /// The multiplication is done in halves so that no intermediate product
-  /// exceeds 2^53: on the web an `int` is a double, and a plain `hash * prime`
-  /// would round there but not on the VM, handing the same component two
-  /// different suffixes.
-  static int _hash(String input) {
-    var hash = 0x811c9dc5;
-    for (final unit in input.codeUnits) {
-      hash ^= unit;
-      final low = hash & 0xffff;
-      final high = hash >> 16;
-      hash =
-          (low * 0x01000193 + ((high * 0x01000193 & 0xffff) << 16)) &
-          0xffffffff;
-    }
-    return hash;
-  }
-
-  /// The name each handed-out suffix belongs to, so that a second scope
+  /// The owner each handed-out suffix belongs to, so that a second scope
   /// hashing to it fails instead of silently sharing the namespace.
-  static final Map<String, String> _names = {};
+  static final Map<String, Object> _owners = {};
 
   /// Forgets which suffixes have been handed out.
   ///
   /// Only useful in tests that deliberately provoke a collision — the registry
   /// outlives them otherwise.
   @visibleForTesting
-  static void resetRegistry() => _names.clear();
+  static void resetRegistry() => _owners.clear();
 }

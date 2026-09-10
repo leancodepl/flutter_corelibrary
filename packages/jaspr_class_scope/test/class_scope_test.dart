@@ -5,6 +5,9 @@ class Hero {}
 
 class NavBar {}
 
+/// A second class of the same name, as a component library ends up with.
+class OtherHero {}
+
 void main() {
   setUp(ClassScope.resetRegistry);
 
@@ -32,7 +35,10 @@ void main() {
     });
 
     test('gives the same suffix to a type and the name it spells', () {
-      expect(ClassScope.ofType(Hero).suffix, const ClassScope('Hero').suffix);
+      final fromType = ClassScope.ofType(Hero).suffix;
+      ClassScope.resetRegistry();
+
+      expect(const ClassScope('Hero').suffix, fromType);
     });
 
     test('gives different scopes different suffixes', () {
@@ -59,8 +65,33 @@ void main() {
 
     test('lets the same scope render again', () {
       expect(
-        () => [const ClassScope('Hero').suffix, ClassScope.ofType(Hero).suffix],
+        () => [
+          const ClassScope('Hero').suffix,
+          const ClassScope('Hero').suffix,
+        ],
         returnsNormally,
+      );
+
+      ClassScope.resetRegistry();
+
+      expect(
+        () => [ClassScope.ofType(Hero).suffix, ClassScope.ofType(Hero).suffix],
+        returnsNormally,
+      );
+    });
+
+    test('throws when two classes of the same name take one suffix', () {
+      expect(ClassScope.ofType(Hero).suffix, '174ao');
+      expect(
+        // Not the same class, but `Type.toString()` drops the library.
+        () => const ClassScope('Hero').suffix,
+        throwsA(
+          isA<StateError>().having(
+            (e) => e.message,
+            'message',
+            allOf(contains('both named "Hero"'), contains('-174ao')),
+          ),
+        ),
       );
     });
   });
@@ -103,8 +134,8 @@ void main() {
     });
 
     test('is a value: equal when it renders the same', () {
-      expect(scope('grid'), ClassScope.ofType(Hero)('grid'));
-      expect(scope('grid').hashCode, ClassScope.ofType(Hero)('grid').hashCode);
+      expect(scope('grid'), const ClassScope('Hero')('grid'));
+      expect(scope('grid').hashCode, const ClassScope('Hero')('grid').hashCode);
       expect(scope('grid'), isNot(scope('list')));
       expect(scope('grid'), isNot(const ClassName.shared('grid')));
     });

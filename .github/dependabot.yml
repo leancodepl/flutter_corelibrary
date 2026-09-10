@@ -139,3 +139,13 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: widen
+
+  - package-ecosystem: "pub"
+    directory: "/packages/jaspr_class_scope_builder/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: widen
