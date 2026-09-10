@@ -5,23 +5,15 @@ import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
 /// Writes the class-name scope of every component annotated with `@scopedCss`.
 ///
-/// For `lib/components/hero.dart` declaring `@scopedCss class Hero`, it writes
+/// For `lib/components/hero.dart` declaring `class Hero`, it writes
 /// `lib/components/hero.scopes.dart` holding
+/// `const _$heroScope = ClassScope.literal('Hero', '<suffix>')`, the suffix
+/// hashed from the asset — `package|lib/components/hero.dart#Hero` — and not
+/// from the bare class name. Two `Hero` classes in two files therefore get two
+/// suffixes, and neither reaches the page through `Type.toString()`.
 ///
-/// ```dart
-/// const _$heroScope = ClassScope.literal('Hero', '<suffix>');
-/// ```
-///
-/// where the suffix is hashed from the asset the class is declared in —
-/// `package|lib/components/hero.dart#Hero` — and not from the bare class name.
-/// Two components called `Hero` in two files therefore get two suffixes,
-/// without either of them having to know about the other, and without the
-/// class name reaching the page through `Type.toString()`, which a minifying
-/// compiler is free to rewrite.
-///
-/// Moving or renaming the file changes the suffix, the same way it does for
-/// CSS modules; nothing outside the generated stylesheet and markup depends on
-/// it.
+/// Moving the file changes the suffix, as it does for CSS modules; only the
+/// generated stylesheet and markup depend on it.
 final class ClassScopeBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ClassScopeBuilder();

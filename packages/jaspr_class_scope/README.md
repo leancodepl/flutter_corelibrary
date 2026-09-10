@@ -1,15 +1,19 @@
 # jaspr_class_scope
 
 [![jaspr_class_scope pub.dev badge][pub-badge]][pub-badge-link]
-[![][build-badge]][build-badge-link]
+[![jaspr_class_scope continuous integration badge][build-badge]][build-badge-link]
 
-Scoped CSS class names for [Jaspr] components, the way CSS modules do it.
+Scoped CSS class names for [Jaspr] components, the way CSS modules do it. Jaspr
+collects every `@css` getter into one global stylesheet and [scopes
+nothing][jaspr-css], so two components that both style `.grid` style each other.
+Here a component declares one scope, makes its classes from it, and each renders
+with a short hash appended.
 
-Jaspr collects every `@css` getter into one global stylesheet and
-[scopes nothing][jaspr-css] — two components that both style `.grid` style each
-other. This package does at build time what CSS modules do: a component
-declares one scope, makes its classes from it, and each renders with a short
-hash of the scope's name appended.
+## Usage
+
+```shell
+dart pub add jaspr_class_scope
+```
 
 ```dart
 class Hero extends StatelessComponent {
@@ -20,83 +24,33 @@ class Hero extends StatelessComponent {
 
   @css
   static List<StyleRule> get styles => [
-    css(_grid.selector, [
-      css('&').styles(display: Display.grid, gap: Gap.all(2.rem)),
-      css(_title.selector).styles(fontSize: 3.rem),
-    ]),
+    css(_grid.selector).styles(display: Display.grid),
+    css(_title.selector).styles(fontSize: 3.rem),
   ];
 
   @override
-  Iterable<Component> build(BuildContext context) sync* {
-    yield div(classes: _grid.name, [
-      h1(classes: _title.name, [text('Hero')]),
-    ]);
-  }
+  Component build(BuildContext context) =>
+      div(classes: _grid.name, [h1(classes: _title.name, [text('Hero')])]);
 }
 ```
 
-renders
-
-```html
-<div class="grid-174ao"><h1 class="title-174ao">Hero</h1></div>
-```
-
+renders `<div class="grid-174ao"><h1 class="title-174ao">Hero</h1></div>`.
 Another component's `_class('grid')` renders as `grid-f1teh`, so the two never
-meet; a raw `'grid'` string elsewhere matches neither.
+meet, and a raw `'grid'` string elsewhere matches neither. The `classes:`
+attribute (`.name`) and the selector (`.selector`) come from the same constant,
+so a rename cannot leave one behind.
 
-## What you get
+## Naming a scope
 
-- **One owner per class.** A class exists only where its scope is declared, so
-  a name can be reused freely across components.
-- **One spelling.** The `classes:` attribute (`.name`) and the selector
-  (`.selector`) come from the same constant, so a rename cannot leave one
-  behind.
-- **A stable suffix.** Five base-36 digits of an FNV-1a hash of the scope's
-  name — the same on the VM and on the web, on every machine, and across
-  versions of this package, so server-rendered and client-rendered markup
-  agree and the diff of a rebuild stays empty.
-- **Collisions caught at build time, with the builder.**
-  [`jaspr_class_scope_builder`][builder] hashes the file a component is
-  declared in, so two components of the same name are different scopes by
-  construction, and it fails the build if two suffixes ever meet anyway.
-  Without it the same check runs behind an `assert` the first time a scope
-  renders — loud in development and in tests, compiled out of a release
-  build.
-- **No dependency on Jaspr** — it is plain Dart making strings, so it works
-  with any way of writing CSS, and Jaspr's own `css()`/`classes:` take the
-  strings as they are.
+A scope's name is its whole identity, so it has to be unique across the project.
+`ClassScope.ofType(Hero)` names it after the component's type instead, which
+survives a rename but reaches the page through `Type.toString()` — a minifying
+compiler may rewrite it, and it drops the library, so two `Card` classes hash
+alike and throw.
 
-## Usage
-
-Add the package:
-
-```sh
-dart pub add jaspr_class_scope
-```
-
-### Scoping to a component
-
-```dart
-static const _class = ClassScope('Hero');
-static final _grid = _class('grid');
-```
-
-`ClassScope.ofType(Hero)` names the scope after the component's type instead, so
-that renaming the component renames its scope. The name then reaches the page
-through `Type.toString()`, which a minifying compiler may rewrite — for a
-component whose classes are rendered both on the server and by minified client
-code, spell the name out, so that both sides spell the same suffix.
-
-Both forms hash a bare name, so the name has to be unique across the project:
-two components that both spell `ClassScope('Card')` are one scope, silently,
-and two `Card` classes in different libraries throw, because `Type.toString()`
-renders both as `Card`. To be rid of that question entirely, let the builder
-name the scopes.
-
-### Scopes from the builder
-
-[`jaspr_class_scope_builder`][builder] hashes the *file* a component is
-declared in instead of its name, the way CSS modules hash the file path:
+[`jaspr_class_scope_builder`][builder] takes that question away: it hashes the
+*file* a component is declared in, so two same-named components are different
+scopes by construction.
 
 ```dart
 part 'hero.scopes.dart';
@@ -107,27 +61,16 @@ class Hero extends StatelessComponent {
 }
 ```
 
-Two `Hero` classes in two files then get two suffixes, without either knowing
-about the other and without anything having to fail; the class name never
-reaches the page through `Type.toString()`, so minified client code renders
-what the server rendered; the suffix is a `const`, so nothing is hashed in the
-browser; and a suffix two components would somehow share fails
-`build_runner`, not a render.
+## Classes another file knows by name
 
-### Classes somebody else knows by name
-
-A class that a script looks up, a hand-written stylesheet styles, or another
-package renders is a contract with that file: declare it shared and it renders
-as written.
+A class a script looks up or a hand-written stylesheet styles is a contract with
+that file, so it renders as written:
 
 ```dart
 static const copyButton = ClassName.shared('js-copy');
 ```
 
-### Two classes on one element
-
-`+` puts both on the same element; the selector then matches an element
-carrying both.
+## Two classes on one element
 
 ```dart
 final primary = _class('button') + _class('primary');
@@ -136,32 +79,44 @@ primary.name; // 'button-174ao primary-174ao'
 primary.selector; // '.button-174ao.primary-174ao'
 ```
 
-### Variants
+---
 
-A variant can carry its class before scoping, and the component that renders it
-does the scoping:
+## 🛠️ Maintained by LeanCode
+<div align="center">
 
-```dart
-enum ButtonVariant {
-  primary('primary'),
-  ghost('ghost');
+  [<img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />][leancode-landing]
 
-  const ButtonVariant(this.local);
+</div>
 
-  final String local;
-}
+This package is built with 💙 by **[LeanCode][leancode-landing]**.
+We are **top-tier experts** focused on Flutter Enterprise solutions.
 
-class Button extends StatelessComponent {
-  static const _class = ClassScope('Button');
+### Why LeanCode?
 
-  static ClassName classOf(ButtonVariant variant) => _class(variant.local);
-}
-```
+- **Creators of [Patrol][patrol-landing]** – the next-gen testing framework for Flutter.
 
-[Jaspr]: https://jaspr.site
-[builder]: https://pub.dev/packages/jaspr_class_scope_builder
-[jaspr-css]: https://docs.jaspr.site/api/utils/at_css
+- **Production-Ready** – We use this package in apps with millions of users.
+- **Full-Cycle Product Development** – We take your product from scratch to long-term maintenance.
+
+<div align="center">
+  <br />
+
+  **Need help with your Flutter project?**
+
+  [**👉 Hire our team**][leancode-estimate]
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  [Check our other packages][leancode-packages]
+
+</div>
+
 [pub-badge]: https://img.shields.io/pub/v/jaspr_class_scope
 [pub-badge-link]: https://pub.dev/packages/jaspr_class_scope
 [build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/jaspr_class_scope-test.yml?branch=master
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/jaspr_class_scope-test.yml
+[builder]: https://pub.dev/packages/jaspr_class_scope_builder
+[Jaspr]: https://jaspr.site
+[jaspr-css]: https://docs.jaspr.site/api/utils/at_css
+[leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=jaspr-class-scope
+[leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=jaspr-class-scope
+[leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads
+[patrol-landing]: https://patrol.leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=jaspr-class-scope

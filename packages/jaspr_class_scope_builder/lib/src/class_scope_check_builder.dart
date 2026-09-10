@@ -4,11 +4,10 @@ import 'package:jaspr_class_scope_builder/src/class_scope_builder.dart';
 
 /// Fails the build when two components in this package took one suffix.
 ///
-/// [ClassScopeBuilder] hashes the asset a component is declared in, so two
-/// components can only meet by hashing alike — five base-36 digits leave room
-/// for that, rarely. This runs once per package, after the scopes are written,
-/// and reads them back: a clash is a build error naming both components, not
-/// something a page discovers while rendering.
+/// Five base-36 digits leave room for two unrelated files to hash alike,
+/// rarely. This runs once per package, after [ClassScopeBuilder] has written
+/// the scopes, and reads them back, so a clash is a build error naming both
+/// components rather than something a page discovers while rendering.
 final class ClassScopeCheckBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ClassScopeCheckBuilder();

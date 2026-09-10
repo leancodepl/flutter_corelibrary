@@ -18,9 +18,7 @@ class Hero extends StatelessComponent {
   ];
 
   @override
-  Iterable<Component> build(BuildContext context) sync* {
-    yield div(classes: _grid.name, []);
-  }
+  Component build(BuildContext context) => div(classes: _grid.name, []);
 }
 ```
 
@@ -37,5 +35,5 @@ part of 'hero.dart';
 const _$heroScope = ClassScope.literal('Hero', '16rv7');
 ```
 
-and `_grid` renders as `grid-16rv7`. A second `Hero`, in another file, renders
-as `grid-<a different suffix>` — the hash covers the file, not the class name.
+and `_grid` renders as `grid-16rv7`. A second `Hero`, in another file, gets a
+different suffix — the hash covers the file, not the class name.

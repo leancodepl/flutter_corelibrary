@@ -1,6 +1,5 @@
-// A component's styles and markup, spelled from one scope. The Jaspr parts —
-// `StatelessComponent`, `@css`, `css()`, `div()` — are left out so that the
-// example stays dependency-free; see the README for the full version.
+// One component's classes, spelled from one scope. The Jaspr parts — `@css`,
+// `css()`, `div()` — are left out so that the example stays dependency-free.
 
 // The example prints what the component would render.
 // ignore_for_file: avoid_print
@@ -13,10 +12,10 @@ class Hero {
   static final _grid = _class('grid');
   static final _title = _class('title');
 
-  /// What a `@css` getter would style: `.grid-<suffix> > .title-<suffix>`.
+  /// What a `@css` getter would style.
   static String get styles => '${_grid.selector} > ${_title.selector}';
 
-  /// What `build` would render: `classes: 'grid-<suffix>'`.
+  /// What `build` would render.
   static String get gridClasses => _grid.name;
 }
 

@@ -1,23 +1,20 @@
 import 'package:jaspr_class_scope/src/class_scope.dart';
 
 /// A CSS class name: made by a [ClassScope] for the component that owns it, or
-/// [ClassName.shared] for a class that another file knows by name, which
-/// renders as written.
+/// [ClassName.shared] for one that renders as written.
 ///
-/// Both the `classes:` attribute ([name]) and the selector ([selector]) are
-/// spelled from the same constant, so the two cannot drift apart.
+/// The `classes:` attribute ([name]) and the selector ([selector]) come from
+/// the same constant, so the two cannot drift apart.
 final class ClassName {
-  /// A class rendered as written, because something outside the component —
-  /// a script, a hand-written stylesheet, another package — knows it by the
-  /// given [name].
+  /// A class rendered as written, because something outside the component — a
+  /// script, a hand-written stylesheet, another package — knows it by [name].
   const ClassName.shared(String name)
     : _local = name,
       _scope = null,
       _and = null;
 
-  /// The class [local] of [scope]'s component.
-  ///
-  /// Usually spelled by calling the scope itself: `_class('grid')`.
+  /// The class [local] of [scope]'s component, usually spelled by calling the
+  /// scope itself: `_class('grid')`.
   const ClassName.scoped(String local, ClassScope scope)
     : _local = local,
       _scope = scope,
@@ -29,12 +26,11 @@ final class ClassName {
   final ClassScope? _scope;
   final ClassName? _and;
 
-  /// The class as it appears in the page: the `classes:` value. For a
-  /// combination of two classes, `a b`.
+  /// The `classes:` value: `grid-174ao`, or `a b` for a combination.
   String get name => _parts.join(' ');
 
-  /// This class in a selector: `.name`. For a combination, `.a.b`: an element
-  /// that carries both.
+  /// The selector: `.grid-174ao`, or `.a.b` for a combination — an element
+  /// carrying both.
   String get selector => '.${_parts.join('.')}';
 
   List<String> get _parts => [
