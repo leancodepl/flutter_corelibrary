@@ -2,6 +2,7 @@
 | ----------------------------------------------------------------------------------- | :-----------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------: |
 | [`cqrs`][cqrs-link]                                                                 |                 [Documentation][cqrs-documentation]                 |                                                 [![cqrs pub.dev badge][cqrs-pub-badge]][cqrs-pub-badge-link]                                                 |                                 [![][cqrs-build-badge]][cqrs-build-badge-link]                                 |
 | [`enhanced_gradients`][enhanced_gradients-link]                                     |          [Documentation][enhanced_gradients-documentation]          |                            [![enhanced_gradients pub.dev badge][enhanced_gradients-pub-badge]][enhanced_gradients-pub-badge-link]                            |                   [![][enhanced_gradients-build-badge]][enhanced_gradients-build-badge-link]                   |
+| [`jaspr_class_scope`][jaspr_class_scope-link] | [Documentation][jaspr_class_scope-documentation] | [![jaspr_class_scope pub.dev badge][jaspr_class_scope-pub-badge]][jaspr_class_scope-pub-badge-link] | [![][jaspr_class_scope-build-badge]][jaspr_class_scope-build-badge-link] |
 | [~~`leancode_analytics`~~][leancode_analytics-link]                                 |          [Documentation][leancode_analytics-documentation]          |                            [![leancode_analytics pub.dev badge][leancode_analytics-pub-badge]][leancode_analytics-pub-badge-link]                            |                   [![][leancode_analytics-build-badge]][leancode_analytics-build-badge-link]                   |
 | [`leancode_analytics_base`][leancode_analytics_base-link]                           |       [Documentation][leancode_analytics_base-documentation]        |                    [![leancode_analytics_base pub.dev badge][leancode_analytics_base-pub-badge]][leancode_analytics_base-pub-badge-link]                     |              [![][leancode_analytics_base-build-badge]][leancode_analytics_base-build-badge-link]              |
 | [`leancode_analytics_firebase`][leancode_analytics_firebase-link]                   |     [Documentation][leancode_analytics_firebase-documentation]      |              [![leancode_analytics_firebase pub.dev badge][leancode_analytics_firebase-pub-badge]][leancode_analytics_firebase-pub-badge-link]               |          [![][leancode_analytics_firebase-build-badge]][leancode_analytics_firebase-build-badge-link]          |
@@ -40,6 +41,13 @@
 [enhanced_gradients-pub-badge-link]: https://pub.dev/packages/enhanced_gradients
 [enhanced_gradients-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/enhanced_gradients-test.yml?branch=master
 [enhanced_gradients-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/enhanced_gradients-test.yml
+
+[jaspr_class_scope-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/jaspr_class_scope
+[jaspr_class_scope-documentation]: https://pub.dev/documentation/jaspr_class_scope/latest/
+[jaspr_class_scope-pub-badge]: https://img.shields.io/pub/v/jaspr_class_scope
+[jaspr_class_scope-pub-badge-link]: https://pub.dev/packages/jaspr_class_scope
+[jaspr_class_scope-build-badge]: https://img.shields.io/github/actions/workflow/status/leancodepl/flutter_corelibrary/jaspr_class_scope-test.yml?branch=master
+[jaspr_class_scope-build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/jaspr_class_scope-test.yml
 
 [leancode_analytics-link]: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_analytics
 [leancode_analytics-documentation]: https://pub.dev/documentation/leancode_analytics/latest/

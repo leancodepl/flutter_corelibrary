@@ -1,0 +1,5 @@
+/// Scoped CSS class names for Jaspr components, the way CSS modules do it.
+library;
+
+export 'src/class_name.dart';
+export 'src/class_scope.dart';
