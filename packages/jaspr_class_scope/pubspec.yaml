@@ -3,8 +3,8 @@ version: 0.1.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/jaspr_class_scope
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
-  Keeps one Jaspr component's styles out of another: every component gets
-  scoped CSS class names of its own, so the same name can be reused anywhere.
+  Gives every Jaspr component its own CSS class names, so a name used in two
+  components cannot make one component's styles apply to the other's markup.
 
 topics:
   - css

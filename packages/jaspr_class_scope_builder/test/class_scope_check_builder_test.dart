@@ -34,11 +34,7 @@ void main() {
       expect(result.succeeded, isFalse);
       expect(
         result.errors.join('\n'),
-        allOf(
-          contains('lib/c22156.dart'),
-          contains('lib/c59137.dart'),
-          contains('-uyqd52'),
-        ),
+        allOf(contains('lib/c22156.dart'), contains('lib/c59137.dart')),
       );
     });
 

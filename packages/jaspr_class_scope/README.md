@@ -3,8 +3,8 @@
 [![jaspr_class_scope pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope continuous integration badge][build-badge]][build-badge-link]
 
-Keeps one [Jaspr] component's styles out of another: every component gets
-scoped CSS class names of its own, so the same name can be reused anywhere.
+Gives every [Jaspr] component its own CSS class names, so a name used in two
+components cannot make one component's styles apply to the other's markup.
 
 ## Usage
 
@@ -35,10 +35,11 @@ class Hero extends StatelessComponent {
 }
 ```
 
-After `dart run build_runner build` this renders
-`<div class="grid-lz7xyh"><h1 class="title-lz7xyh">Hero</h1></div>`. The scope
-itself comes from [`jaspr_class_scope_builder`][builder], which derives it from
-where the component is declared.
+After `dart run build_runner build`, `_grid` and `_title` render as `grid` and
+`title` with a suffix belonging to `Hero`, and another component's
+`_class('grid')` gets a different one. A raw `'grid'` string elsewhere matches
+neither. The scope itself comes from
+[`jaspr_class_scope_builder`][builder].
 
 ## Classes another file knows by name
 
@@ -54,8 +55,8 @@ static const copyButton = ClassName.shared('js-copy');
 ```dart
 final primary = _class('button') + _class('primary');
 
-primary.name; // 'button-lz7xyh primary-lz7xyh'
-primary.selector; // '.button-lz7xyh.primary-lz7xyh'
+primary.name; // the two classes, space-separated
+primary.selector; // the two classes, for an element carrying both
 ```
 
 ---

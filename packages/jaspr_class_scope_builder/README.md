@@ -30,30 +30,21 @@ class Hero extends StatelessComponent {
 }
 ```
 
-`dart run build_runner build` writes `hero.scopes.dart` next to it:
-
-```dart
-part of 'hero.dart';
-
-const _$heroScope = ClassScope('Hero', 'lz7xyh');
-```
-
-so `_grid` renders as `grid-lz7xyh`, while the same `Hero` under
-`lib/marketing/` renders as `grid-vldqky`. Moving the file or renaming the
-class changes the suffix. `CardGrid` gives `_$cardGridScope`; a file with no
-annotated classes produces no output.
+`dart run build_runner build` writes `hero.scopes.dart` next to it, defining
+`_$heroScope`. `_grid` then renders as `grid` with a suffix belonging to this
+`Hero`; the same class under `lib/marketing/` gets a different one. Moving the
+file or renaming the class changes it. `CardGrid` gives `_$cardGridScope`; a
+file with no annotated classes produces no output.
 
 ## The check phase
 
-Six base-36 digits leave room for two components to hash alike, rarely. A
-second builder hashes them all once per package, so that fails the build
-instead of a page:
+Two components can end up with the same suffix, rarely. A second builder checks
+for that once per package, so it fails the build instead of a page:
 
 ```
 [SEVERE] jaspr_class_scope_builder:class_scope_check on $package$:
 Hero (lib/marketing/hero.dart) and Hero (lib/components/hero.dart) both scope
-to "-lz7xyh". Rename or move one of them; the suffix is hashed from where a
-component is declared.
+to the same suffix. Rename or move one of them.
 ```
 
 ---

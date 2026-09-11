@@ -40,8 +40,8 @@ final class ClassScopeCheckBuilder implements Builder {
         final taken = owners[suffix];
         if (taken != null) {
           throw StateError(
-            '$owner and $taken both scope to "-$suffix". Rename or move one of '
-            'them; the suffix is hashed from where a component is declared.',
+            '$owner and $taken both scope to the same suffix. Rename or move '
+            'one of them.',
           );
         }
         owners[suffix] = owner;
