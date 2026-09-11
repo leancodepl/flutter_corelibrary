@@ -49,7 +49,6 @@ void main() {
       );
     });
 
-    // The whole point of hashing the asset instead of the class name.
     test('gives two components of the same name different suffixes', () async {
       final written = await _build({
         'site|lib/components/hero.dart': _hero,

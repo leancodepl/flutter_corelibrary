@@ -1,5 +1,5 @@
-// A component, as a Jaspr app writes one. The Jaspr parts — `@css`, `css()`,
-// `div()` — are left out so that the example stays dependency-free.
+// The Jaspr parts — `@css`, `css()`, `div()` — are left out so that the
+// example stays dependency-free.
 
 import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
@@ -19,5 +19,5 @@ class Hero {
   static String get gridClasses => _grid.name;
 }
 
-/// A class the page's script looks up by name is not scoped.
+/// A class another file knows by name is not scoped.
 const copyButton = ClassName.shared('js-copy');

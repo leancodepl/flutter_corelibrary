@@ -11,6 +11,6 @@ export 'src/class_scope_check_builder.dart';
 /// Writes the scope of every component annotated with `@scopedCss`.
 Builder classScopeBuilder(BuilderOptions options) => const ClassScopeBuilder();
 
-/// Fails the build when two of those scopes took one suffix.
+/// Fails the build when two of those scopes end up the same.
 Builder classScopeCheckBuilder(BuilderOptions options) =>
     const ClassScopeCheckBuilder();
