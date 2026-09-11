@@ -1,11 +1,8 @@
 import 'package:build/build.dart';
 import 'package:jaspr_class_scope_builder/src/scoped_components.dart';
 
-/// Writes the scope of every component annotated with `@scopedCss`.
-///
-/// `lib/components/hero.dart` declaring `class Hero` gets a
-/// `lib/components/hero.scopes.dart` holding
-/// `const _$heroScope = ClassScope('Hero', '<suffix>')`.
+/// Writes the scope of every component annotated with `@scopedCss` into a
+/// `.scopes.dart` part file beside it.
 final class ClassScopeBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ClassScopeBuilder();

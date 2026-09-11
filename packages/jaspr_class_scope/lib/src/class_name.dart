@@ -3,14 +3,14 @@ import 'package:jaspr_class_scope/src/class_scope.dart';
 /// A class name, spelled once for both the `classes:` attribute ([name]) and
 /// the selector ([selector]) so the two cannot drift apart.
 final class ClassName {
-  /// A class rendered as written, because something outside the component —
-  /// a script, a hand-written stylesheet — knows it by [name].
+  /// A class rendered as written, because something outside the component
+  /// knows it by [name].
   const ClassName.shared(String name)
     : _local = name,
       _scope = null,
       _and = null;
 
-  /// The class [local] of [scope]'s component, usually spelled `_class('grid')`.
+  /// The class [local] of [scope]'s component.
   const ClassName.scoped(String local, ClassScope scope)
     : _local = local,
       _scope = scope,
@@ -22,13 +22,13 @@ final class ClassName {
   final ClassScope? _scope;
   final ClassName? _and;
 
-  /// The `classes:` value: `grid-lz7xyh`, or `a b` for a combination.
+  /// The `classes:` value; `a b` for a combination.
   String get name => switch (_and) {
     null => _rendered,
     final and => '$_rendered ${and.name}',
   };
 
-  /// The selector: `.grid-lz7xyh`, or `.a.b` for a combination.
+  /// The selector; `.a.b` for a combination, matching an element with both.
   String get selector => switch (_and) {
     null => '.$_rendered',
     final and => '.$_rendered${and.selector}',

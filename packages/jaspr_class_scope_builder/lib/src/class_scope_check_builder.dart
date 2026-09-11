@@ -6,8 +6,8 @@ import 'package:jaspr_class_scope_builder/src/suffix.dart';
 /// Fails the build when two components in this package end up with the same
 /// suffix, which would put their class names in one scope.
 ///
-/// Hashes the sources rather than reading the generated part files, so it
-/// depends on nothing but the same input the generator hashes.
+/// Hashes the sources, not the generated part files, so a change in how the
+/// generated code is spelled cannot leave it checking nothing.
 final class ClassScopeCheckBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ClassScopeCheckBuilder();
