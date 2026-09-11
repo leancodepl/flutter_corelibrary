@@ -39,13 +39,18 @@ file with no annotated classes produces no output.
 ## The check phase
 
 Two components can end up with the same suffix, rarely. A second builder checks
-for that once per package, so it fails the build instead of a page:
+for that, so it fails the build instead of a page:
 
 ```
 [SEVERE] jaspr_class_scope_builder:class_scope_check on $package$:
-Hero (lib/marketing/hero.dart) and Hero (lib/components/hero.dart) both scope
-to the same suffix. Rename or move one of them.
+Hero (site|lib/marketing/hero.dart) and Hero (site|lib/components/hero.dart)
+both scope to the same suffix. Rename or move one of them.
 ```
+
+It covers the whole build, not just your own package: every package lists its
+scopes for the check to read, so a component of a dependency is checked against
+yours. Fixing such a pair means renaming or moving your own component, since
+the other one is not yours to move.
 
 ---
 

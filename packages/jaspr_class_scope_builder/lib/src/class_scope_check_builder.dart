@@ -1,13 +1,14 @@
-import 'package:build/build.dart';
-import 'package:glob/glob.dart';
-import 'package:jaspr_class_scope_builder/src/scoped_components.dart';
-import 'package:jaspr_class_scope_builder/src/suffix.dart';
+import 'dart:collection';
+import 'dart:convert';
 
-/// Fails the build when two components in this package end up with the same
-/// suffix, which would put their class names in one scope.
+import 'package:build/build.dart';
+import 'package:jaspr_class_scope_builder/src/scoped_components.dart';
+
+/// Fails the build when two components end up with the same suffix, which
+/// would put their class names in one scope.
 ///
-/// Hashes the sources, not the generated part files, so a change in how the
-/// generated code is spelled cannot leave it checking nothing.
+/// Reads the manifest of every package in the build, so it sees the components
+/// of a dependency as well as this package's own.
 final class ClassScopeCheckBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ClassScopeCheckBuilder();
@@ -20,23 +21,27 @@ final class ClassScopeCheckBuilder implements Builder {
   @override
   Future<void> build(BuildStep buildStep) async {
     // Sorted, so that a clash is reported the same way on every machine.
-    final sources =
-        await buildStep.findAssets(Glob('**.dart')).toList()
-          ..sort();
+    final packages = SplayTreeSet<String>.of([
+      buildStep.inputId.package,
+      ...(await buildStep.packageConfig).packages.map((it) => it.name),
+    ]);
 
     final owners = <String, String>{};
     final scopes = StringBuffer();
 
-    for (final asset in sources) {
-      if (asset.path.endsWith(scopesExtension)) {
+    for (final package in packages) {
+      final manifest = AssetId(package, manifestPath);
+      if (!await buildStep.canRead(manifest)) {
         continue;
       }
 
-      for (final component in scopedComponentsIn(
-        await buildStep.readAsString(asset),
-      )) {
-        final suffix = classScopeSuffix(scopeSourceOf(asset, component));
-        final owner = '$component (${asset.path})';
+      final listed =
+          (jsonDecode(await buildStep.readAsString(manifest)) as List<Object?>)
+              .cast<Map<String, Object?>>();
+
+      for (final scope in listed) {
+        final suffix = scope['suffix']! as String;
+        final owner = scope['owner']! as String;
 
         final taken = owners[suffix];
         if (taken != null) {

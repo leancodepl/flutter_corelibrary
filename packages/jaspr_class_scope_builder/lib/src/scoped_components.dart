@@ -6,20 +6,37 @@ import 'package:jaspr_class_scope_builder/src/suffix.dart';
 /// The extension of the part file the scopes are written to.
 const scopesExtension = '.scopes.dart';
 
+/// Where a package lists its scopes. Under `lib/`, the only directory of a
+/// dependency the build can read.
+const manifestPath = 'lib/jaspr_class_scope.scopes.json';
+
 /// The components [source] declares with `@scopedCss`.
 ///
 /// Parsed without resolution: the input cannot be resolved on a first build
 /// anyway, when it declares a part file that does not exist yet.
-List<String> scopedComponentsIn(String source) =>
-    parseString(content: source, throwIfDiagnostics: false).unit.declarations
-        .whereType<ClassDeclaration>()
-        .where(_isScopedCss)
-        .map(_nameOf)
-        .toList();
+List<String> scopedComponentsIn(String source) {
+  // The manifest reads every file of every package in the build, and an
+  // annotation cannot be written without its name, so most files stop here.
+  if (!source.contains('scopedCss') && !source.contains('ScopedCss')) {
+    return const [];
+  }
+
+  return parseString(content: source, throwIfDiagnostics: false)
+      .unit
+      .declarations
+      .whereType<ClassDeclaration>()
+      .where(_isScopedCss)
+      .map(_nameOf)
+      .toList();
+}
 
 /// What a component's suffix is hashed from: where it is declared.
 String scopeSourceOf(AssetId asset, String component) =>
     '${asset.package}|${asset.path}#$component';
+
+/// How a clash names [component] in [asset].
+String scopeOwnerOf(AssetId asset, String component) =>
+    '$component (${asset.package}|${asset.path})';
 
 /// The scope of [component] in [asset], as the part file spells it.
 String renderScope(AssetId asset, String component) {

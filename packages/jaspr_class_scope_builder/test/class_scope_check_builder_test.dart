@@ -10,26 +10,47 @@ import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 class $name {}
 """;
 
+/// The manifests and the check, as `build.yaml` orders them.
+Future<TestBuilderResult> _check(Map<String, String> sources) => testBuilders(
+  [const ScopesManifestBuilder(), const ClassScopeCheckBuilder()],
+  {
+    r'site|$package$': '',
+    r'site|lib/$lib$': '',
+    r'other|lib/$lib$': '',
+    ...sources,
+  },
+  rootPackage: 'site',
+  flattenOutput: true,
+);
+
 void main() {
   group('ClassScopeCheckBuilder', () {
     test('passes when every component has its own suffix', () async {
-      final result = await testBuilder(const ClassScopeCheckBuilder(), {
-        r'site|$package$': '',
+      final result = await _check({
         'site|lib/hero.dart': _component('Hero'),
         'site|lib/card.dart': _component('Card'),
-      }, rootPackage: 'site');
+        'other|lib/hero.dart': _component('Hero'),
+      });
 
       expect(result.succeeded, isTrue);
       expect(result.errors, isEmpty);
+      expect(
+        result.readerWriter.testing.readString(
+          AssetId('site', 'jaspr_class_scope.check'),
+        ),
+        allOf(
+          contains('Hero (site|lib/hero.dart)'),
+          contains('Hero (other|lib/hero.dart)'),
+        ),
+      );
     });
 
     // The one pair of short paths that collides, found by searching the hash.
     test('fails the build when two components share a suffix', () async {
-      final result = await testBuilder(const ClassScopeCheckBuilder(), {
-        r'site|$package$': '',
+      final result = await _check({
         'site|lib/c22156.dart': _component('C22156'),
         'site|lib/c59137.dart': _component('C59137'),
-      }, rootPackage: 'site');
+      });
 
       expect(result.succeeded, isFalse);
       expect(
@@ -38,26 +59,19 @@ void main() {
       );
     });
 
-    test('reads the sources, not the generated part files', () async {
-      final result = await testBuilder(
-        const ClassScopeCheckBuilder(),
-        {
-          r'site|$package$': '',
-          'site|lib/hero.dart': _component('Hero'),
-          // Whatever the generator wrote is beside the point; a stale or
-          // reformatted part file cannot make the check miss a component.
-          'site|lib/hero.scopes.dart': "part of 'hero.dart';",
-        },
-        rootPackage: 'site',
-        flattenOutput: true,
-      );
+    test('sees a component of another package', () async {
+      final result = await _check({
+        'site|lib/c37213.dart': _component('C37213'),
+        'other|lib/c26278.dart': _component('C26278'),
+      });
 
-      expect(result.succeeded, isTrue);
+      expect(result.succeeded, isFalse);
       expect(
-        result.readerWriter.testing.readString(
-          AssetId('site', 'jaspr_class_scope.check'),
+        result.errors.join('\n'),
+        allOf(
+          contains('C37213 (site|lib/c37213.dart)'),
+          contains('C26278 (other|lib/c26278.dart)'),
         ),
-        contains('Hero (lib/hero.dart)'),
       );
     });
   });

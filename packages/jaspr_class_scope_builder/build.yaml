@@ -11,9 +11,19 @@ builders:
       generate_for:
         exclude: ['**.scopes.dart']
 
+  # Every package, not only the dependents: a package that uses
+  # jaspr_class_scope keeps this builder to itself, in its dev_dependencies.
+  scopes_manifest:
+    import: 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart'
+    builder_factories: ['scopesManifestBuilder']
+    build_extensions: {'lib/$lib$': ['lib/jaspr_class_scope.scopes.json']}
+    auto_apply: all_packages
+    build_to: cache
+
   class_scope_check:
     import: 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart'
     builder_factories: ['classScopeCheckBuilder']
     build_extensions: {'$package$': ['jaspr_class_scope.check']}
     auto_apply: dependents
     build_to: cache
+    required_inputs: ['jaspr_class_scope.scopes.json']
