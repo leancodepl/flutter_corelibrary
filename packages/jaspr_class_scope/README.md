@@ -3,8 +3,8 @@
 [![jaspr_class_scope pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope continuous integration badge][build-badge]][build-badge-link]
 
-Gives every [Jaspr] component its own CSS class names, so a name used in two
-components cannot make one component's styles apply to the other's markup.
+Locally scoped CSS class names for [Jaspr] components: a name written in one
+component cannot style another component's markup.
 
 ## Usage
 
