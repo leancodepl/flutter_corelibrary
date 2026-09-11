@@ -1,7 +1,6 @@
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart';
-import 'package:jaspr_class_scope_builder/src/suffix.dart';
 import 'package:test/test.dart';
 
 const _hero = r'''
@@ -27,26 +26,23 @@ Future<TestReaderWriter> _build(Map<String, String> sources) async {
   return result.readerWriter;
 }
 
-String _suffixIn(String generated) =>
-    RegExp(r"ClassScope\('\w+', '(\w+)'\)").firstMatch(generated)!.group(1)!;
+String _scopesIn(TestReaderWriter written, String path) =>
+    written.testing.readString(AssetId('site', path));
 
 void main() {
   group('ClassScopeBuilder', () {
     test('writes a scope for an annotated component', () async {
       final written = await _build({'site|lib/components/hero.dart': _hero});
 
-      final output = written.testing.readString(
-        AssetId('site', 'lib/components/hero.scopes.dart'),
-      );
+      final output = _scopesIn(written, 'lib/components/hero.scopes.dart');
 
       expect(output, contains('// dart format off'));
       expect(output, contains("part of 'hero.dart';"));
+      // The suffix of `site|lib/components/hero.dart#Hero`, spelled out: it is
+      // rendered into a page, so the path it is hashed from is a contract.
       expect(
         output,
-        contains(
-          r"const _$heroScope = ClassScope('Hero', "
-          "'${classScopeSuffix('site|lib/components/hero.dart#Hero')}');",
-        ),
+        contains(r"const _$heroScope = ClassScope('Hero', 'lz7xyh');"),
       );
     });
 
@@ -56,17 +52,13 @@ void main() {
         'site|lib/marketing/hero.dart': _hero,
       });
 
-      final first = written.testing.readString(
-        AssetId('site', 'lib/components/hero.scopes.dart'),
-      );
-      final second = written.testing.readString(
-        AssetId('site', 'lib/marketing/hero.scopes.dart'),
-      );
-
       expect(
-        _suffixIn(first),
-        isNot(_suffixIn(second)),
-        reason: 'two Hero classes must not share one namespace',
+        _scopesIn(written, 'lib/components/hero.scopes.dart'),
+        contains("ClassScope('Hero', 'lz7xyh')"),
+      );
+      expect(
+        _scopesIn(written, 'lib/marketing/hero.scopes.dart'),
+        contains("ClassScope('Hero', 'vldqky')"),
       );
     });
 
@@ -95,9 +87,7 @@ class NotAComponent {}
 ''',
       });
 
-      final output = written.testing.readString(
-        AssetId('site', 'lib/cards.scopes.dart'),
-      );
+      final output = _scopesIn(written, 'lib/cards.scopes.dart');
 
       expect(output, contains(r"const _$cardScope = ClassScope('Card'"));
       expect(

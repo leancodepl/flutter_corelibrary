@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart';
-import 'package:jaspr_class_scope_builder/src/suffix.dart';
 import 'package:test/test.dart';
 
 String _component(String name) => """
@@ -40,11 +39,10 @@ void main() {
         'site|lib/plain.dart': 'class Plain {}',
       });
 
+      // The suffix of `site|lib/hero.dart#Hero`, spelled out for the same
+      // reason the generator's test spells one out.
       expect(manifest, [
-        {
-          'suffix': classScopeSuffix('site|lib/hero.dart#Hero'),
-          'owner': 'Hero (site|lib/hero.dart)',
-        },
+        {'suffix': 'jfw65v', 'owner': 'Hero (site|lib/hero.dart)'},
       ]);
     });
 
