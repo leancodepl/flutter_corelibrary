@@ -3,9 +3,9 @@
 [![jaspr_class_scope pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope continuous integration badge][build-badge]][build-badge-link]
 
-Unique CSS class names for [Jaspr] components. Every component gets its own
-namespace, so three of them can each style a `grid` without reaching into one
-another, and without anyone inventing prefixes by hand.
+Unique CSS class names for [Jaspr] components. A component's classes belong to
+it alone, so two components can use the same name without their styles meeting,
+and nobody has to keep names unique by hand.
 
 ## Usage
 
