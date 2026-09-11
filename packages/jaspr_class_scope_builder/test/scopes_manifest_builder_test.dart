@@ -51,9 +51,9 @@ void main() {
     test('reads the sources, not the generated part files', () async {
       final manifest = await _manifestOf({
         'site|lib/hero.dart': _component('Hero'),
-        // Whatever the generator wrote is beside the point; a stale or
-        // reformatted part file cannot make the check miss a component.
-        'site|lib/hero.scopes.dart': "part of 'hero.dart';",
+        // A part file is a `.dart` file like any other, and whatever stands in
+        // it is not a component of its own.
+        'site|lib/hero.scopes.dart': _component('Ghost'),
       });
 
       expect(manifest, hasLength(1));

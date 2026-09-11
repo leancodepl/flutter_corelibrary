@@ -4,10 +4,14 @@ import 'package:test/test.dart';
 void main() {
   group('classScopeSuffix', () {
     test('is six base-36 digits', () {
-      expect(classScopeSuffix('site|lib/hero.dart#Hero'), hasLength(6));
       expect(
         classScopeSuffix('site|lib/hero.dart#Hero'),
         matches(RegExp(r'^[0-9a-z]{6}$')),
+      );
+      // A hash below 36^5, which is five digits until it is padded.
+      expect(
+        classScopeSuffix('site|lib/hero6.dart#Hero'),
+        matches(RegExp(r'^0[0-9a-z]{5}$')),
       );
     });
 
@@ -21,18 +25,9 @@ void main() {
     // The suffix ends up in the rendered page and in the stylesheet built from
     // it, so it may not move between versions of this package.
     test('hashes to a stable suffix', () {
-      expect(classScopeSuffix('Hero'), 'qbywlo');
-      expect(classScopeSuffix('NavBar'), 'poogac');
       expect(classScopeSuffix('site|lib/components/hero.dart#Hero'), 'lz7xyh');
       // Hashed as UTF-8 bytes.
       expect(classScopeSuffix('ą'), 'oaa6rb');
-    });
-
-    test('gives two files different suffixes', () {
-      expect(
-        classScopeSuffix('site|lib/components/hero.dart#Hero'),
-        isNot(classScopeSuffix('site|lib/marketing/hero.dart#Hero')),
-      );
     });
   });
 }

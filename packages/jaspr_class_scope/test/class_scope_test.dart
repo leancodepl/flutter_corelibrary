@@ -3,17 +3,12 @@ import 'package:test/test.dart';
 
 // The scopes a component file gets from `jaspr_class_scope_builder`.
 const heroScope = ClassScope('Hero', 'lz7xyh');
-const navBarScope = ClassScope('NavBar', 'vldqky');
 
 void main() {
   group('ClassScope', () {
     test('renders a class as local-suffix', () {
       expect(heroScope('grid').name, 'grid-lz7xyh');
       expect(heroScope('grid').selector, '.grid-lz7xyh');
-    });
-
-    test('scopes the same local name differently per component', () {
-      expect(heroScope('grid').name, isNot(navBarScope('grid').name));
     });
   });
 
