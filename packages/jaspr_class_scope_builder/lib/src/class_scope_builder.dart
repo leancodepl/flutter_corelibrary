@@ -24,6 +24,9 @@ final class ClassScopeBuilder implements Builder {
         StringBuffer()
           ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND')
           ..writeln('// Written by jaspr_class_scope_builder.')
+          // A long enough component name makes a line the formatter would
+          // rewrite, and this file is not ours to keep formatted.
+          ..writeln('// dart format off')
           ..writeln()
           ..writeln("part of '${input.pathSegments.last}';");
 

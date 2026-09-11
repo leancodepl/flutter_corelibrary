@@ -39,6 +39,7 @@ void main() {
         AssetId('site', 'lib/components/hero.scopes.dart'),
       );
 
+      expect(output, contains('// dart format off'));
       expect(output, contains("part of 'hero.dart';"));
       expect(
         output,
