@@ -7,8 +7,8 @@ import 'package:jaspr_class_scope/src/class_name.dart';
 /// static final _grid = _class('grid'); // 'grid-lz7xyh'
 /// ```
 ///
-/// Two components can then both call something `grid` without meeting in
-/// Jaspr's one global stylesheet.
+/// Two components can then both call something `grid` without their styles
+/// reaching each other.
 final class ClassScope {
   /// A scope for the component [name], whose classes end with [suffix].
   ///

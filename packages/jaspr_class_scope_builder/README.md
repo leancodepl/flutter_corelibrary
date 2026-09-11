@@ -4,7 +4,8 @@
 [![jaspr_class_scope_builder continuous integration badge][build-badge]][build-badge-link]
 
 Generates the unique CSS class names [jaspr_class_scope] gives Jaspr
-components, one namespace per component — what CSS modules do.
+components: one namespace per component, derived from where the component is
+declared, so no two of them can collide.
 
 ## Usage
 

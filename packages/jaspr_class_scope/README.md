@@ -3,9 +3,9 @@
 [![jaspr_class_scope pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope continuous integration badge][build-badge]][build-badge-link]
 
-Unique CSS class names for [Jaspr] components. Jaspr puts every `@css` getter
-into one global stylesheet and [scopes nothing][jaspr-css], so two components
-that both style `.grid` style each other; here each gets its own.
+Unique CSS class names for [Jaspr] components. Every component gets its own
+namespace, so three of them can each style a `grid` without reaching into one
+another, and without anyone inventing prefixes by hand.
 
 ## Usage
 
@@ -95,7 +95,6 @@ We are **top-tier experts** focused on Flutter Enterprise solutions.
 [build-badge-link]: https://github.com/leancodepl/flutter_corelibrary/actions/workflows/jaspr_class_scope-test.yml
 [builder]: https://pub.dev/packages/jaspr_class_scope_builder
 [Jaspr]: https://jaspr.site
-[jaspr-css]: https://docs.jaspr.site/api/utils/at_css
 [leancode-landing]: https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=jaspr-class-scope
 [leancode-estimate]: https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=jaspr-class-scope
 [leancode-packages]: https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads
