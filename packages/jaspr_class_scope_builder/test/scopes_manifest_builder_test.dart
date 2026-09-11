@@ -33,15 +33,17 @@ Future<List<Object?>?> _manifestOf(Map<String, String> sources) async {
 
 void main() {
   group('ScopesManifestBuilder', () {
-    test('lists every annotated component with its suffix', () async {
+    test('lists every annotated component', () async {
       final manifest = await _manifestOf({
         'site|lib/hero.dart': _component('Hero'),
         'site|lib/plain.dart': 'class Plain {}',
+        'site|lib/card.dart': _component('Card'),
       });
 
-      // The suffix of `site|lib/hero.dart#Hero`, spelled out for the same
-      // reason the generator's test spells one out.
+      // The suffixes spelled out, for the same reason the generator's test
+      // spells one out.
       expect(manifest, [
+        {'suffix': 'pgv5zb', 'owner': 'Card (site|lib/card.dart)'},
         {'suffix': 'jfw65v', 'owner': 'Hero (site|lib/hero.dart)'},
       ]);
     });

@@ -1,7 +1,7 @@
 import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 import 'package:test/test.dart';
 
-// The scopes a component file gets from `jaspr_class_scope_builder`.
+// The scope a component gets from `jaspr_class_scope_builder`.
 const heroScope = ClassScope('Hero', 'lz7xyh');
 
 void main() {
@@ -39,6 +39,11 @@ void main() {
       expect(heroScope('grid'), const ClassScope('Hero', 'lz7xyh')('grid'));
       expect(heroScope('grid'), isNot(heroScope('list')));
       expect(heroScope('grid'), isNot(const ClassName.shared('grid')));
+      // And hashes alike, or a set would hold it twice.
+      expect({
+        heroScope('grid'),
+        const ClassScope('Hero', 'lz7xyh')('grid'),
+      }, hasLength(1));
     });
 
     test('stringifies to the name it renders', () {

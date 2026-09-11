@@ -81,7 +81,7 @@ part 'cards.scopes.dart';
 class Card {}
 
 @ScopedCss()
-class CardGrid {}
+final class CardGrid {}
 
 class NotAComponent {}
 ''',
