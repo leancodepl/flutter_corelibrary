@@ -3,6 +3,5 @@
 
 part of 'hero.dart';
 
-/// The class-name scope of [Hero], hashed from
-/// `jaspr_class_scope|example/hero.dart#Hero`.
+/// The scope of [Hero]'s class names.
 const _$heroScope = ClassScope('Hero', '7en7oj');

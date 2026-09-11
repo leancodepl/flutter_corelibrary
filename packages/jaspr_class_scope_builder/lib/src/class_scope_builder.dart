@@ -33,8 +33,7 @@ final class ClassScopeBuilder implements Builder {
     for (final component in components) {
       scopes
         ..writeln()
-        ..writeln('/// The class-name scope of [$component], hashed from')
-        ..writeln('/// `${scopeSourceOf(input, component)}`.')
+        ..writeln("/// The scope of [$component]'s class names.")
         ..writeln(renderScope(input, component));
     }
 

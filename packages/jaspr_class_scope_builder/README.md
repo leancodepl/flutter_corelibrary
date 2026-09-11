@@ -3,8 +3,8 @@
 [![jaspr_class_scope_builder pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope_builder continuous integration badge][build-badge]][build-badge-link]
 
-Build-time generator for [jaspr_class_scope]: gives every Jaspr component CSS
-class names of its own, so two components can never end up styling each other.
+Build-time generator for [jaspr_class_scope]: gives every Jaspr component
+locally scoped CSS class names, so one component's styles cannot reach another.
 
 ## Usage
 
@@ -30,10 +30,10 @@ class Hero extends StatelessComponent {
 }
 ```
 
-`dart run build_runner build` writes `hero.scopes.dart` next to it, defining
-`_$heroScope`. `_grid` then renders as `grid` with a suffix belonging to this
-`Hero`; the same class under `lib/marketing/` gets a different one. Moving the
-file or renaming the class changes it. `CardGrid` gives `_$cardGridScope`; a
+`dart run build_runner build` writes `hero.scopes.dart` next to it, holding
+`Hero`'s scope. `_grid` then renders as `grid` with a suffix belonging to that
+scope; the same class under `lib/marketing/` gets its own. Moving the file or
+renaming the class changes the scope. `CardGrid` gives `_$cardGridScope`; a
 file with no annotated classes produces no output.
 
 ## The check phase

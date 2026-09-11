@@ -3,7 +3,8 @@ import 'package:glob/glob.dart';
 import 'package:jaspr_class_scope_builder/src/scoped_components.dart';
 import 'package:jaspr_class_scope_builder/src/suffix.dart';
 
-/// Fails the build when two components in this package took one suffix.
+/// Fails the build when two components in this package end up with the same
+/// suffix, which would put their class names in one scope.
 ///
 /// Hashes the sources rather than reading the generated part files, so it
 /// depends on nothing but the same input the generator hashes.

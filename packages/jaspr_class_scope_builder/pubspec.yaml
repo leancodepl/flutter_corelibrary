@@ -3,8 +3,9 @@ version: 0.1.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/jaspr_class_scope_builder
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
-  Build-time generator for jaspr_class_scope: gives every Jaspr component CSS
-  class names of its own, so two components can never end up styling each other.
+  Build-time generator for jaspr_class_scope: gives every Jaspr component
+  locally scoped CSS class names, so one component's styles cannot reach
+  another.
 
 topics:
   - build-runner

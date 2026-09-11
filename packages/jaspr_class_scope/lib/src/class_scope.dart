@@ -1,16 +1,16 @@
 import 'package:jaspr_class_scope/src/class_name.dart';
 
-/// The CSS class names of one component, each rendering as `<local>-<suffix>`.
+/// The locally scoped class names of one component.
 ///
 /// ```dart
 /// static const _class = _$heroScope;
 /// static final _grid = _class('grid'); // 'grid-lz7xyh'
 /// ```
 ///
-/// Two components can then both call something `grid` without their styles
-/// reaching each other.
+/// A name made here cannot style another component's markup, and a raw
+/// `'grid'` string elsewhere matches neither.
 final class ClassScope {
-  /// A scope for the component [name], whose classes end with [suffix].
+  /// The scope of [name]'s class names, which all end with [suffix].
   ///
   /// Written by `jaspr_class_scope_builder`, never by hand.
   const ClassScope(this.name, this.suffix);
@@ -18,7 +18,7 @@ final class ClassScope {
   /// The component this scope belongs to.
   final String name;
 
-  /// The six base-36 digits this scope's classes end with.
+  /// What makes this scope's class names local to it.
   final String suffix;
 
   /// The class [local] of this scope's component.

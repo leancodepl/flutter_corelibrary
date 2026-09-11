@@ -1,7 +1,7 @@
 import 'package:jaspr_class_scope/src/class_scope.dart';
 
-/// A CSS class name, spelled once for both the `classes:` attribute ([name])
-/// and the selector ([selector]) so the two cannot drift apart.
+/// A class name, spelled once for both the `classes:` attribute ([name]) and
+/// the selector ([selector]) so the two cannot drift apart.
 final class ClassName {
   /// A class rendered as written, because something outside the component —
   /// a script, a hand-written stylesheet — knows it by [name].
