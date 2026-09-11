@@ -6,8 +6,7 @@ import 'package:jaspr_class_scope_builder/src/suffix.dart';
 /// The extension of the part file the scopes are written to.
 const scopesExtension = '.scopes.dart';
 
-/// Where a package lists its scopes. Under `lib/`, the only directory of a
-/// dependency the build can read.
+/// Where a package lists its scopes for the check.
 const manifestPath = 'lib/jaspr_class_scope.scopes.json';
 
 /// The components [source] declares with `@scopedCss`.
