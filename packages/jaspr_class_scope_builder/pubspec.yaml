@@ -3,14 +3,15 @@ version: 0.1.0
 homepage: https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/jaspr_class_scope_builder
 repository: https://github.com/leancodepl/flutter_corelibrary
 description: >-
-  Generates the unique CSS class names that jaspr_class_scope gives Jaspr
-  components, one namespace per component, at build time.
+  Build-time generator for jaspr_class_scope: gives every Jaspr component CSS
+  class names of its own, so two components can never end up styling each other.
 
 topics:
   - build-runner
   - codegen
   - css
   - jaspr
+  - styling
 
 environment:
   sdk: '>=3.7.0 <4.0.0'

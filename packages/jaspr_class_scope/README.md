@@ -3,9 +3,8 @@
 [![jaspr_class_scope pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope continuous integration badge][build-badge]][build-badge-link]
 
-Unique CSS class names for [Jaspr] components. A component's classes belong to
-it alone, so two components can use the same name without their styles meeting,
-and nobody has to keep names unique by hand.
+Keeps one [Jaspr] component's styles out of another: every component gets
+scoped CSS class names of its own, so the same name can be reused anywhere.
 
 ## Usage
 

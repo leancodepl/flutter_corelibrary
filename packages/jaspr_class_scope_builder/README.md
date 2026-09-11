@@ -3,9 +3,8 @@
 [![jaspr_class_scope_builder pub.dev badge][pub-badge]][pub-badge-link]
 [![jaspr_class_scope_builder continuous integration badge][build-badge]][build-badge-link]
 
-Generates the unique CSS class names [jaspr_class_scope] gives Jaspr
-components: one namespace per component, derived from where the component is
-declared, so no two of them can collide.
+Build-time generator for [jaspr_class_scope]: gives every Jaspr component CSS
+class names of its own, so two components can never end up styling each other.
 
 ## Usage
 
@@ -40,10 +39,9 @@ const _$heroScope = ClassScope('Hero', 'lz7xyh');
 ```
 
 so `_grid` renders as `grid-lz7xyh`, while the same `Hero` under
-`lib/marketing/` renders as `grid-vldqky`. The suffix is the md5 of
-`package|path#Component`, so moving the file or renaming the class changes it.
-`CardGrid` gives `_$cardGridScope`; a file with no annotated classes produces
-no output.
+`lib/marketing/` renders as `grid-vldqky`. Moving the file or renaming the
+class changes the suffix. `CardGrid` gives `_$cardGridScope`; a file with no
+annotated classes produces no output.
 
 ## The check phase
 
