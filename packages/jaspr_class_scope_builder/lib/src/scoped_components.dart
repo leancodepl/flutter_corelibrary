@@ -14,7 +14,7 @@ List<String> scopedComponentsIn(String source) =>
     parseString(content: source, throwIfDiagnostics: false).unit.declarations
         .whereType<ClassDeclaration>()
         .where(_isScopedCss)
-        .map((declaration) => declaration.namePart.typeName.lexeme)
+        .map(_nameOf)
         .toList();
 
 /// What a component's suffix is hashed from: where it is declared.
@@ -27,6 +27,18 @@ String renderScope(AssetId asset, String component) {
   final suffix = classScopeSuffix(scopeSourceOf(asset, component));
 
   return "const ${constant}Scope = ClassScope('$component', '$suffix');";
+}
+
+// Read off the tokens rather than through `ClassDeclaration`'s own getters,
+// which moved in analyzer 14.3: this compiles against every analyzer a Jaspr
+// project might be pinned to.
+String _nameOf(ClassDeclaration declaration) {
+  var token = declaration.firstTokenAfterCommentAndMetadata;
+  while (token.lexeme != 'class') {
+    token = token.next!;
+  }
+
+  return token.next!.lexeme;
 }
 
 // Matched by the name the annotation is spelled with: resolving it costs a

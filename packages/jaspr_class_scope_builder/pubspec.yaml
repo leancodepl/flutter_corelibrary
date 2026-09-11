@@ -18,7 +18,7 @@ environment:
   sdk: '>=3.7.0 <4.0.0'
 
 dependencies:
-  analyzer: '>=14.3.0 <15.0.0'
+  analyzer: '>=12.1.0 <15.0.0'
   build: ^4.0.0
   crypto: ^3.0.0
   glob: ^2.1.0
