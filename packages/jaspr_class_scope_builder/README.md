@@ -33,10 +33,8 @@ class Hero extends StatelessComponent {
 `dart run build_runner build` writes `hero.scopes.dart` next to it, holding
 `Hero`'s scope. `_grid` then renders as `grid` with a suffix belonging to that
 scope; the same class under `lib/marketing/` gets its own. Moving the file or
-renaming the class changes the scope. `CardGrid` gives `_$CardGridScope`. The
-annotation is matched by where it is declared, not by its name, so a same-named
-annotation from elsewhere is left alone and `@scopedCss` reached through your
-own re-export still counts. A file that declares no `part` produces nothing.
+renaming the class changes the scope. `CardGrid` gives `_$CardGridScope`; a
+file that declares no `part` produces nothing.
 
 ## The check phase
 

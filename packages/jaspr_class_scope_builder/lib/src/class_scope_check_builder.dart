@@ -19,18 +19,16 @@ final class ClassScopeCheckBuilder implements Builder {
 
   @override
   Future<void> build(BuildStep buildStep) async {
-    // A set, because `packageConfig` lists this package too, and reading one
-    // manifest twice would read a clash into it.
-    final packages = {
-      buildStep.inputId.package,
-      ...(await buildStep.packageConfig).packages.map((it) => it.name),
-    };
+    // Every package in the build, this one included. Sorted, so that a clash
+    // is reported the same way on every machine.
+    final packages =
+        (await buildStep.packageConfig).packages.map((it) => it.name).toList()
+          ..sort();
 
     final owners = <String, String>{};
     final scopes = StringBuffer();
 
-    // Sorted, so that a clash is reported the same way on every machine.
-    for (final package in packages.toList()..sort()) {
+    for (final package in packages) {
       final manifest = AssetId(package, manifestAsset);
       if (!await buildStep.canRead(manifest)) {
         continue;
