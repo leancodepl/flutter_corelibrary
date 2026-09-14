@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:build/build.dart';
@@ -20,16 +19,18 @@ final class ClassScopeCheckBuilder implements Builder {
 
   @override
   Future<void> build(BuildStep buildStep) async {
-    // Sorted, so that a clash is reported the same way on every machine.
-    final packages = SplayTreeSet<String>.of([
+    // A set, because `packageConfig` lists this package too, and reading one
+    // manifest twice would read a clash into it.
+    final packages = {
       buildStep.inputId.package,
       ...(await buildStep.packageConfig).packages.map((it) => it.name),
-    ]);
+    };
 
     final owners = <String, String>{};
     final scopes = StringBuffer();
 
-    for (final package in packages) {
+    // Sorted, so that a clash is reported the same way on every machine.
+    for (final package in packages.toList()..sort()) {
       final manifest = AssetId(package, manifestAsset);
       if (!await buildStep.canRead(manifest)) {
         continue;
@@ -39,10 +40,8 @@ final class ClassScopeCheckBuilder implements Builder {
           (jsonDecode(await buildStep.readAsString(manifest)) as List<Object?>)
               .cast<Map<String, Object?>>();
 
-      for (final scope in listed) {
-        final suffix = scope['suffix']! as String;
-        final owner = scope['owner']! as String;
-
+      for (final {'suffix': suffix as String, 'owner': owner as String}
+          in listed) {
         final taken = owners[suffix];
         if (taken != null) {
           throw StateError(

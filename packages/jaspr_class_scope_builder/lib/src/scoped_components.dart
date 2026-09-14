@@ -69,8 +69,9 @@ bool _declaresScopes(CompilationUnit unit) => unit.directives
     .whereType<PartDirective>()
     .any((it) => it.uri.stringValue?.endsWith(scopesExtension) ?? false);
 
-// Matched by the name the annotation is spelled with, which the part directive
-// above has already tied to this package.
+// Matched by the name the annotation is spelled with. The part directive above
+// is what makes a name enough: another package's `@scopedCss` would have to sit
+// in a file that also asks for this builder's part file.
 bool _isScopedCss(ClassDeclaration declaration) =>
     declaration.metadata.any((annotation) {
       final name = annotation.name.name.split('.').last;
