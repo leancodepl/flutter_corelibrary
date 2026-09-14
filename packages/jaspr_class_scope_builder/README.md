@@ -30,11 +30,23 @@ class Hero extends StatelessComponent {
 }
 ```
 
-`dart run build_runner build` writes `hero.scopes.dart` next to it, holding
-`Hero`'s scope. `_grid` then renders as `grid` with a suffix belonging to that
-scope; the same class under `lib/marketing/` gets its own. Moving the file or
-renaming the class changes the scope. `CardGrid` gives `_$CardGridScope`; a
-file that declares no `part` produces nothing.
+Run `dart run build_runner build`. It writes `hero.scopes.dart` next to
+`hero.dart`:
+
+```dart
+part of 'hero.dart';
+
+const _$HeroScope = ClassScope('Hero', '7en7oj');
+```
+
+The suffix is derived from the package name, the file path and the class name.
+`_grid` renders as `grid-7en7oj`, and a `_class('grid')` in any other component
+renders with that component's suffix instead. Renaming or moving `Hero` changes
+it.
+
+Every `@scopedCss` class in the file gets a constant named after it, so
+`CardGrid` gives `_$CardGridScope`. A file without the `part` directive is
+skipped.
 
 ## The check phase
 
