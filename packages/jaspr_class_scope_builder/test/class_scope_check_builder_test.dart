@@ -3,6 +3,17 @@ import 'package:build_test/build_test.dart';
 import 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart';
 import 'package:test/test.dart';
 
+// The annotation, as the package under test's consumers import it.
+const _package = {
+  'jaspr_class_scope|lib/jaspr_class_scope.dart': '''
+final class ScopedCss {
+  const ScopedCss();
+}
+
+const scopedCss = ScopedCss();
+''',
+};
+
 String _component(String name) => """
 import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
@@ -19,6 +30,7 @@ Future<TestBuilderResult> _check(Map<String, String> sources) => testBuilders(
     r'site|$package$': '',
     r'site|lib/$lib$': '',
     r'other|lib/$lib$': '',
+    ..._package,
     ...sources,
   },
   rootPackage: 'site',

@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:jaspr_class_scope_builder/src/suffix.dart';
 
@@ -11,27 +12,42 @@ const scopesExtension = '.scopes.dart';
 /// because that is all another package's build sees of a dependency.
 const manifestAsset = 'lib/jaspr_class_scope.scopes.json';
 
-/// The components [source] declares with `@scopedCss`.
-///
-/// Parsed without resolution: the input cannot be resolved on a first build
-/// anyway, when it declares a part file that does not exist yet.
-List<String> scopedComponentsIn(String source) {
-  // The manifest reads every file of every package in the build, and an
-  // annotation cannot be written without its name, so most files stop here.
+/// The components [asset] declares with `@scopedCss`.
+Future<List<String>> scopedComponentsIn(
+  BuildStep buildStep,
+  AssetId asset,
+) async {
+  final source = await buildStep.readAsString(asset);
+
+  // Resolving is what the rest of this costs, and a file without the
+  // annotation's name, or without the part file to write the scopes into, has
+  // nothing for us either way.
   if (!source.contains('scopedCss') && !source.contains('ScopedCss')) {
     return const [];
   }
-
-  final unit = parseString(content: source, throwIfDiagnostics: false).unit;
-  if (!_declaresScopes(unit)) {
+  if (!_declaresScopes(
+    parseString(content: source, throwIfDiagnostics: false).unit,
+  )) {
     return const [];
   }
 
-  return unit.declarations
-      .whereType<ClassDeclaration>()
-      .where(_isScopedCss)
-      .map(_nameOf)
-      .toList();
+  // A part file can declare parts of its own, and resolving one as a library
+  // throws.
+  if (!await buildStep.resolver.isLibrary(asset)) {
+    return const [];
+  }
+
+  // The part file it declares does not exist on a first build, which is a
+  // resolution error and not a syntax one.
+  final library = await buildStep.resolver.libraryFor(
+    asset,
+    allowSyntaxErrors: true,
+  );
+
+  return [
+    for (final component in library.classes)
+      if (component.name case final name? when _isScopedCss(component)) name,
+  ];
 }
 
 /// What a component's suffix is hashed from: where it is declared.
@@ -49,32 +65,20 @@ String renderScope(AssetId asset, String component) {
   return "const _\$${component}Scope = ClassScope('$component', '$suffix');";
 }
 
-// Read off the tokens rather than through `ClassDeclaration`'s own getters,
-// which moved in analyzer 14.3: this compiles against every analyzer a Jaspr
-// project might be pinned to.
-String _nameOf(ClassDeclaration declaration) {
-  var token = declaration.firstTokenAfterCommentAndMetadata;
-  while (token.lexeme != 'class') {
-    token = token.next!;
-  }
-
-  return token.next!.lexeme;
-}
-
-// What says the annotation is this package's: the file asks for the part file
-// only this builder writes. An import cannot say it, since a project may
-// re-export the annotation, and resolving it would tie the builder to one
-// version of the analyzer.
+// The file asks for the part file this builder writes, which is both what
+// makes it ours to generate for and a reason not to resolve the rest.
 bool _declaresScopes(CompilationUnit unit) => unit.directives
     .whereType<PartDirective>()
     .any((it) => it.uri.stringValue?.endsWith(scopesExtension) ?? false);
 
-// Matched by the name the annotation is spelled with. The part directive above
-// is what makes a name enough: another package's `@scopedCss` would have to sit
-// in a file that also asks for this builder's part file.
-bool _isScopedCss(ClassDeclaration declaration) =>
-    declaration.metadata.any((annotation) {
-      final name = annotation.name.name.split('.').last;
+// Where the annotation is declared, not how it is spelled: a project may
+// re-export `scopedCss` under its own name, and another package may declare
+// something of the same name that is not ours.
+bool _isScopedCss(ClassElement component) =>
+    component.metadata.annotations.any((annotation) {
+      final uri = annotation.element?.library?.uri;
 
-      return name == 'scopedCss' || name == 'ScopedCss';
+      return uri != null &&
+          uri.scheme == 'package' &&
+          uri.pathSegments.first == 'jaspr_class_scope';
     });

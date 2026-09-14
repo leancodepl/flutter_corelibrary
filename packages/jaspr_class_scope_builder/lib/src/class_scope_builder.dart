@@ -15,7 +15,7 @@ final class ClassScopeBuilder implements Builder {
   @override
   Future<void> build(BuildStep buildStep) async {
     final input = buildStep.inputId;
-    final components = scopedComponentsIn(await buildStep.readAsString(input));
+    final components = await scopedComponentsIn(buildStep, input);
     if (components.isEmpty) {
       return;
     }

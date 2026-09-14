@@ -34,9 +34,7 @@ final class ScopesManifestBuilder implements Builder {
         continue;
       }
 
-      for (final component in scopedComponentsIn(
-        await buildStep.readAsString(asset),
-      )) {
+      for (final component in await scopedComponentsIn(buildStep, asset)) {
         scopes.add({
           'suffix': classScopeSuffix(scopeSourceOf(asset, component)),
           'owner': scopeOwnerOf(asset, component),

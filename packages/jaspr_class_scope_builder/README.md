@@ -34,8 +34,9 @@ class Hero extends StatelessComponent {
 `Hero`'s scope. `_grid` then renders as `grid` with a suffix belonging to that
 scope; the same class under `lib/marketing/` gets its own. Moving the file or
 renaming the class changes the scope. `CardGrid` gives `_$CardGridScope`. The
-`part` directive is what marks the file as yours: without it there is no
-output, whoever else's `@scopedCss` the file may carry.
+annotation is matched by where it is declared, not by its name, so a same-named
+annotation from elsewhere is left alone and `@scopedCss` reached through your
+own re-export still counts. A file that declares no `part` produces nothing.
 
 ## The check phase
 
