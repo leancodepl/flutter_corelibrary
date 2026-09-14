@@ -30,7 +30,7 @@ final class ClassScopeCheckBuilder implements Builder {
     final scopes = StringBuffer();
 
     for (final package in packages) {
-      final manifest = AssetId(package, manifestPath);
+      final manifest = AssetId(package, manifestAsset);
       if (!await buildStep.canRead(manifest)) {
         continue;
       }

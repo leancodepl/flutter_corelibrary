@@ -5,10 +5,9 @@ import 'package:glob/glob.dart';
 import 'package:jaspr_class_scope_builder/src/scoped_components.dart';
 import 'package:jaspr_class_scope_builder/src/suffix.dart';
 
-/// Lists this package's scopes into its `lib/`, the one directory of a
-/// dependency that another package's build can read. The check can glob only
-/// the package it runs in, so this is what lets it see a dependency's
-/// components.
+/// Lists this package's scopes where the check can read them. The check can
+/// glob only the package it runs in, so this is what lets it see a
+/// dependency's components.
 ///
 /// Hashes the sources, not the generated part files, so a change in how the
 /// generated code is spelled cannot leave the check checking nothing.
@@ -18,7 +17,7 @@ final class ScopesManifestBuilder implements Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => const {
-    r'lib/$lib$': [manifestPath],
+    r'lib/$lib$': [manifestAsset],
   };
 
   @override
