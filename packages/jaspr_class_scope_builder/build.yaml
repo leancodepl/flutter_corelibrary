@@ -1,5 +1,3 @@
-# Keep these extensions in step with `lib/src/`; build_runner reads this file
-# without loading Dart.
 builders:
   class_scope:
     import: 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart'

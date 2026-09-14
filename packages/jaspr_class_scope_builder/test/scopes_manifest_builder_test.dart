@@ -53,8 +53,6 @@ void main() {
         'site|lib/card.dart': _component('Card'),
       });
 
-      // The suffixes spelled out, for the same reason the generator's test
-      // spells one out.
       expect(manifest, [
         {'suffix': 'pgv5zb', 'owner': 'Card (site|lib/card.dart)'},
         {'suffix': 'jfw65v', 'owner': 'Hero (site|lib/hero.dart)'},
@@ -64,8 +62,7 @@ void main() {
     test('reads the sources, not the generated part files', () async {
       final manifest = await _manifestOf({
         'site|lib/hero.dart': _component('Hero'),
-        // A part file is a `.dart` file like any other, and whatever stands in
-        // it is not a component of its own.
+        // Whatever stands in a part file is not a component of its own.
         'site|lib/hero.scopes.dart': _component('Ghost'),
       });
 

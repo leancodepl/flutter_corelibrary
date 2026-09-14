@@ -5,12 +5,8 @@ import 'package:glob/glob.dart';
 import 'package:jaspr_class_scope_builder/src/scoped_components.dart';
 import 'package:jaspr_class_scope_builder/src/suffix.dart';
 
-/// Lists this package's scopes where the check can read them. The check can
-/// glob only the package it runs in, so this is what lets it see a
-/// dependency's components.
-///
-/// Hashes the sources, not the generated part files, so a change in how the
-/// generated code is spelled cannot leave the check checking nothing.
+/// Lists this package's scopes for the check, which can glob only the package
+/// it runs in.
 final class ScopesManifestBuilder implements Builder {
   /// The builder `build.yaml` instantiates.
   const ScopesManifestBuilder();
@@ -27,20 +23,15 @@ final class ScopesManifestBuilder implements Builder {
         await buildStep.findAssets(Glob('**.dart')).toList()
           ..sort();
 
-    final scopes = <Map<String, String>>[];
-
-    for (final asset in sources) {
-      if (asset.path.endsWith(scopesExtension)) {
-        continue;
-      }
-
-      for (final component in await scopedComponentsIn(buildStep, asset)) {
-        scopes.add({
-          'suffix': classScopeSuffix(scopeSourceOf(asset, component)),
-          'owner': scopeOwnerOf(asset, component),
-        });
-      }
-    }
+    final scopes = [
+      for (final asset in sources)
+        if (!asset.path.endsWith(scopesExtension))
+          for (final component in await scopedComponentsIn(buildStep, asset))
+            {
+              'suffix': classScopeSuffix(scopeSourceOf(asset, component)),
+              'owner': scopeOwnerOf(asset, component),
+            },
+    ];
 
     if (scopes.isEmpty) {
       return;

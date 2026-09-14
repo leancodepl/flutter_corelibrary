@@ -50,8 +50,6 @@ void main() {
 
       expect(output, contains('// dart format off'));
       expect(output, contains("part of 'hero.dart';"));
-      // The suffix of `site|lib/components/hero.dart#Hero`, spelled out: it is
-      // rendered into a page, so the path it is hashed from is a contract.
       expect(
         output,
         contains(r"const _$HeroScope = ClassScope('Hero', 'lz7xyh');"),

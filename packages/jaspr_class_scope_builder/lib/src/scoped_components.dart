@@ -7,9 +7,8 @@ import 'package:jaspr_class_scope_builder/src/suffix.dart';
 /// The extension of the part file the scopes are written to.
 const scopesExtension = '.scopes.dart';
 
-/// Where a package lists its scopes for the check. An asset of the build
-/// cache, never a file in anyone's `lib/`; the path has to begin with `lib/`
-/// because that is all another package's build sees of a dependency.
+/// Where a package lists its scopes for the check. A build cache asset; the
+/// path begins with `lib/` because that is all a build sees of a dependency.
 const manifestAsset = 'lib/jaspr_class_scope.scopes.json';
 
 /// The components [asset] declares with `@scopedCss`.
@@ -19,9 +18,7 @@ Future<List<String>> scopedComponentsIn(
 ) async {
   final source = await buildStep.readAsString(asset);
 
-  // Resolving is what the rest of this costs, and a file without the
-  // annotation's name, or without the part file to write the scopes into, has
-  // nothing for us either way.
+  // Resolving is the expensive part.
   if (!source.contains('scopedCss') && !source.contains('ScopedCss')) {
     return const [];
   }
@@ -31,18 +28,12 @@ Future<List<String>> scopedComponentsIn(
     return const [];
   }
 
-  // A part file can declare parts of its own, and resolving one as a library
-  // throws.
+  // Resolving a part file as a library throws.
   if (!await buildStep.resolver.isLibrary(asset)) {
     return const [];
   }
 
-  // The part file it declares does not exist on a first build, which is a
-  // resolution error and not a syntax one.
-  final library = await buildStep.resolver.libraryFor(
-    asset,
-    allowSyntaxErrors: true,
-  );
+  final library = await buildStep.resolver.libraryFor(asset);
 
   return [
     for (final component in library.classes)
@@ -65,15 +56,10 @@ String renderScope(AssetId asset, String component) {
   return "const _\$${component}Scope = ClassScope('$component', '$suffix');";
 }
 
-// The file asks for the part file this builder writes, which is both what
-// makes it ours to generate for and a reason not to resolve the rest.
 bool _declaresScopes(CompilationUnit unit) => unit.directives
     .whereType<PartDirective>()
     .any((it) => it.uri.stringValue?.endsWith(scopesExtension) ?? false);
 
-// Where the annotation is declared, not how it is spelled: a project may
-// re-export `scopedCss` under its own name, and another package may declare
-// something of the same name that is not ours.
 bool _isScopedCss(ClassElement component) =>
     component.metadata.annotations.any((annotation) {
       final uri = annotation.element?.library?.uri;
