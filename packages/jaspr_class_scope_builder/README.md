@@ -41,7 +41,7 @@ const _$HeroScope = ClassScope('Hero', '7en7oj');
 
 The suffix is derived from the package name, the file path and the class name,
 so `_grid` renders as `grid-7en7oj`, and two components with the same name get
-different suffixes. Renaming or moving `Hero` changes it.
+different suffixes. Renaming or moving `Hero` changes its suffix.
 
 Every `@scopedCss` class in the file gets a constant named after it, so
 `CardGrid` gives `_$CardGridScope`. A file without the `part` directive is
