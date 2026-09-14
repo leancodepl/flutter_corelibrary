@@ -5,4 +5,4 @@
 part of 'hero.dart';
 
 /// The scope of [Hero]'s class names.
-const _$heroScope = ClassScope('Hero', '7en7oj');
+const _$HeroScope = ClassScope('Hero', '7en7oj');

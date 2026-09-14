@@ -22,9 +22,12 @@ List<String> scopedComponentsIn(String source) {
     return const [];
   }
 
-  return parseString(content: source, throwIfDiagnostics: false)
-      .unit
-      .declarations
+  final unit = parseString(content: source, throwIfDiagnostics: false).unit;
+  if (!_declaresScopes(unit)) {
+    return const [];
+  }
+
+  return unit.declarations
       .whereType<ClassDeclaration>()
       .where(_isScopedCss)
       .map(_nameOf)
@@ -41,10 +44,9 @@ String scopeOwnerOf(AssetId asset, String component) =>
 
 /// The scope of [component] in [asset], as the part file spells it.
 String renderScope(AssetId asset, String component) {
-  final constant = '_\$${component[0].toLowerCase()}${component.substring(1)}';
   final suffix = classScopeSuffix(scopeSourceOf(asset, component));
 
-  return "const ${constant}Scope = ClassScope('$component', '$suffix');";
+  return "const _\$${component}Scope = ClassScope('$component', '$suffix');";
 }
 
 // Read off the tokens rather than through `ClassDeclaration`'s own getters,
@@ -59,8 +61,16 @@ String _nameOf(ClassDeclaration declaration) {
   return token.next!.lexeme;
 }
 
-// Matched by the name the annotation is spelled with: resolving it costs a
-// great deal more, and the class name is all this needs.
+// What says the annotation is this package's: the file asks for the part file
+// only this builder writes. An import cannot say it, since a project may
+// re-export the annotation, and resolving it would tie the builder to one
+// version of the analyzer.
+bool _declaresScopes(CompilationUnit unit) => unit.directives
+    .whereType<PartDirective>()
+    .any((it) => it.uri.stringValue?.endsWith(scopesExtension) ?? false);
+
+// Matched by the name the annotation is spelled with, which the part directive
+// above has already tied to this package.
 bool _isScopedCss(ClassDeclaration declaration) =>
     declaration.metadata.any((annotation) {
       final name = annotation.name.name.split('.').last;

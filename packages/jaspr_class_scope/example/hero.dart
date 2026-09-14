@@ -7,7 +7,7 @@ part 'hero.scopes.dart';
 
 @scopedCss
 class Hero {
-  static const _class = _$heroScope;
+  static const _class = _$HeroScope;
 
   static final _grid = _class('grid');
   static final _title = _class('title');

@@ -8,7 +8,7 @@ part 'hero.scopes.dart';
 
 @scopedCss
 class Hero extends StatelessComponent {
-  static const _class = _$heroScope;
+  static const _class = _$HeroScope;
 
   static final _grid = _class('grid');
 

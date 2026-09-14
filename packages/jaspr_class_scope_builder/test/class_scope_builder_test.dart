@@ -9,7 +9,7 @@ part 'hero.scopes.dart';
 
 @scopedCss
 class Hero {
-  static const _class = _$heroScope;
+  static const _class = _$HeroScope;
 }
 ''';
 
@@ -42,7 +42,7 @@ void main() {
       // rendered into a page, so the path it is hashed from is a contract.
       expect(
         output,
-        contains(r"const _$heroScope = ClassScope('Hero', 'lz7xyh');"),
+        contains(r"const _$HeroScope = ClassScope('Hero', 'lz7xyh');"),
       );
     });
 
@@ -71,6 +71,21 @@ void main() {
       );
     });
 
+    test('writes nothing for a file that declares no part', () async {
+      final written = await _build({
+        'site|lib/foreign.dart': '''
+
+@scopedCss
+class Foreign {}
+''',
+      });
+
+      expect(
+        written.testing.assetsWritten,
+        isNot(contains(AssetId('site', 'lib/foreign.scopes.dart'))),
+      );
+    });
+
     test('writes one scope per annotated component', () async {
       final written = await _build({
         'site|lib/cards.dart': '''
@@ -89,10 +104,10 @@ class NotAComponent {}
 
       final output = _scopesIn(written, 'lib/cards.scopes.dart');
 
-      expect(output, contains(r"const _$cardScope = ClassScope('Card'"));
+      expect(output, contains(r"const _$CardScope = ClassScope('Card'"));
       expect(
         output,
-        contains(r"const _$cardGridScope = ClassScope('CardGrid'"),
+        contains(r"const _$CardGridScope = ClassScope('CardGrid'"),
       );
       expect(output, isNot(contains('NotAComponent')));
     });

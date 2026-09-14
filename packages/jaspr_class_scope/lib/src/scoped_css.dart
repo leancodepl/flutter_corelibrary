@@ -5,7 +5,7 @@
 ///
 /// @scopedCss
 /// class Hero {
-///   static const _class = _$heroScope;
+///   static const _class = _$HeroScope;
 /// }
 /// ```
 const scopedCss = ScopedCss();

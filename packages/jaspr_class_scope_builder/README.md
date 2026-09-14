@@ -24,7 +24,7 @@ part 'hero.scopes.dart';
 
 @scopedCss
 class Hero extends StatelessComponent {
-  static const _class = _$heroScope;
+  static const _class = _$HeroScope;
 
   static final _grid = _class('grid');
 }
@@ -33,8 +33,9 @@ class Hero extends StatelessComponent {
 `dart run build_runner build` writes `hero.scopes.dart` next to it, holding
 `Hero`'s scope. `_grid` then renders as `grid` with a suffix belonging to that
 scope; the same class under `lib/marketing/` gets its own. Moving the file or
-renaming the class changes the scope. `CardGrid` gives `_$cardGridScope`; a
-file with no annotated classes produces no output.
+renaming the class changes the scope. `CardGrid` gives `_$CardGridScope`. The
+`part` directive is what marks the file as yours: without it there is no
+output, whoever else's `@scopedCss` the file may carry.
 
 ## The check phase
 

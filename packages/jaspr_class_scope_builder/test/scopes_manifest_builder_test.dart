@@ -8,6 +8,8 @@ import 'package:test/test.dart';
 String _component(String name) => """
 import 'package:jaspr_class_scope/jaspr_class_scope.dart';
 
+part '${name.toLowerCase()}.scopes.dart';
+
 @scopedCss
 class $name {}
 """;
