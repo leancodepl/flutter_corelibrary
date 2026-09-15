@@ -1,0 +1,7 @@
+# https://dart.dev/guides/libraries/private-files
+
+.dart_tool/
+build/
+coverage/
+doc/api/
+pubspec.lock

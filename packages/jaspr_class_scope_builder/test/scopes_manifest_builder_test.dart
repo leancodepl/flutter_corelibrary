@@ -1,0 +1,79 @@
+import 'dart:convert';
+
+import 'package:build/build.dart';
+import 'package:build_test/build_test.dart';
+import 'package:jaspr_class_scope_builder/jaspr_class_scope_builder.dart';
+import 'package:test/test.dart';
+
+// The annotation, as the package under test's consumers import it.
+const _package = {
+  'jaspr_class_scope|lib/jaspr_class_scope.dart': '''
+final class ScopedCss {
+  const ScopedCss();
+}
+
+const scopedCss = ScopedCss();
+''',
+};
+
+String _component(String name) => """
+import 'package:jaspr_class_scope/jaspr_class_scope.dart';
+
+part '${name.toLowerCase()}.scopes.dart';
+
+@scopedCss
+class $name {}
+""";
+
+Future<List<Object?>?> _manifestOf(Map<String, String> sources) async {
+  final result = await testBuilder(
+    const ScopesManifestBuilder(),
+    {r'site|lib/$lib$': '', ..._package, ...sources},
+    rootPackage: 'site',
+    flattenOutput: true,
+  );
+
+  expect(result.errors, isEmpty);
+
+  final manifest = AssetId('site', 'lib/jaspr_class_scope.scopes.json');
+  if (!result.readerWriter.testing.assetsWritten.contains(manifest)) {
+    return null;
+  }
+
+  return jsonDecode(result.readerWriter.testing.readString(manifest))
+      as List<Object?>;
+}
+
+void main() {
+  group('ScopesManifestBuilder', () {
+    test('lists every annotated component', () async {
+      final manifest = await _manifestOf({
+        'site|lib/hero.dart': _component('Hero'),
+        'site|lib/plain.dart': 'class Plain {}',
+        'site|lib/card.dart': _component('Card'),
+      });
+
+      expect(manifest, [
+        {'suffix': 'pgv5zb', 'owner': 'Card (site|lib/card.dart)'},
+        {'suffix': 'jfw65v', 'owner': 'Hero (site|lib/hero.dart)'},
+      ]);
+    });
+
+    test('reads the sources, not the generated part files', () async {
+      final manifest = await _manifestOf({
+        'site|lib/hero.dart': _component('Hero'),
+        // Whatever stands in a part file is not a component of its own.
+        'site|lib/hero.scopes.dart': _component('Ghost'),
+      });
+
+      expect(manifest, hasLength(1));
+    });
+
+    test('writes nothing for a package without annotated components', () async {
+      expect(
+        await _manifestOf({'site|lib/plain.dart': 'class Plain {}'}),
+        isNull,
+      );
+    });
+  });
+}

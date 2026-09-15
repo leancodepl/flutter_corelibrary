@@ -50,3 +50,11 @@
   - changed-files:
     - any-glob-to-any-file:
       - packages/leancode_cyberware_contract_base/**
+'p: jaspr_class_scope':
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/jaspr_class_scope/**
+'p: jaspr_class_scope_builder':
+  - changed-files:
+    - any-glob-to-any-file:
+      - packages/jaspr_class_scope_builder/**
