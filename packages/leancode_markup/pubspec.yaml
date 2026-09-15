@@ -16,11 +16,11 @@ dependencies:
     sdk: flutter
   logging: ^1.2.0
   meta: ^1.9.1
-  petitparser: ^6.0.1
+  petitparser: ">=6.0.1 <8.0.0"
 
 dev_dependencies:
   benchmark_harness: ^2.2.2
-  custom_lint: ^0.6.4
+  custom_lint: ">=0.6.4 <0.9.0"
   flutter_test:
     sdk: flutter
-  leancode_lint: ^12.0.0
+  leancode_lint: ">=12.0.0 <20.0.0"
