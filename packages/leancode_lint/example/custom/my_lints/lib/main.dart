@@ -19,6 +19,9 @@ final plugin = LeanCodeLintPlugin(
       'AppScaffold': [
         DesignSystemForbiddenItem(name: 'Scaffold', packageName: 'flutter'),
       ],
+      'AppColor': [
+        DesignSystemForbiddenItem(name: 'Color', packageName: 'dart:ui'),
+      ],
     },
   ),
 );

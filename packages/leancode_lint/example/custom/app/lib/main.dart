@@ -24,6 +24,14 @@ class const CustomExampleApp({super.key}) extends StatelessWidget {
   }
 }
 
+// Reported: "Color is forbidden within this design system."
+Widget explicitColor() => Container(color: const Color(0xFF00FF00));
+// Not reported, but it still builds a plain Color.
+Widget shorthandColor() => Container(color: const .new(0xFF00FF00));
+// Not reported: named constructor shorthand.
+Widget namedShorthandColor() =>
+    Container(color: const .fromARGB(255, 0, 255, 0));
+
 class const CustomExampleHome({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

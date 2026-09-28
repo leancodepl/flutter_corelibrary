@@ -24,3 +24,7 @@ class const AppScaffold({
     return Scaffold(appBar: appBar, body: body);
   }
 }
+
+// Base for AppColor.
+// ignore: my_lints/use_design_system_item_appcolor
+class AppColor(super.value) extends Color;
