@@ -46,7 +46,15 @@ class _Visitor(final UseInsteadType rule, final RuleContext context)
   @override
   void visitIdentifier(Identifier node) {
     if (node.element case final element?) {
-      _handleElement(element, node);
+      // Dot shorthands (e.g. `.new()`, `.named()`, `.staticMember`) don't
+      // name the type explicitly, so check the type declaring the member.
+      if (_isDotShorthandMemberName(node)) {
+        if (element.enclosingElement case final enclosingElement?) {
+          _handleElement(enclosingElement, node);
+        }
+      } else {
+        _handleElement(element, node);
+      }
     }
   }
 
@@ -72,6 +80,14 @@ class _Visitor(final UseInsteadType rule, final RuleContext context)
       // isExactly crashes sometimes
     }
   }
+
+  bool _isDotShorthandMemberName(Identifier node) => switch (node.parent) {
+    DotShorthandConstructorInvocation(:final constructorName) =>
+      constructorName == node,
+    DotShorthandInvocation(:final memberName) => memberName == node,
+    DotShorthandPropertyAccess(:final propertyName) => propertyName == node,
+    _ => false,
+  };
 
   bool _isInHide(AstNode node) {
     if (node.parent case final parent?) {
