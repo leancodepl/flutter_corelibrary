@@ -75,7 +75,7 @@ int? _commentErrorOffset(Token comment) {
 
 enum _CommentType(final String pluralName) {
   comment('comments'),
-  doc('doc comments');
+  doc('doc comments'),
 }
 
 class AddStartingSpaceToComment({required super.context})
