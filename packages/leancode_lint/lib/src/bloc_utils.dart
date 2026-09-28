@@ -26,7 +26,7 @@ String? getBlocSubject(String className, {required BlocType blocType}) =>
 
 enum BlocType() {
   bloc,
-  cubit
+  cubit,
 }
 
 BlocType? determineBlocType(Element? element) {

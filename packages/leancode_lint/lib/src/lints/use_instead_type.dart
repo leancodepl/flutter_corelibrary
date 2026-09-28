@@ -35,16 +35,26 @@ abstract base class UseInsteadType({
     registry
       ..addPrefixedIdentifier(this, visitor)
       ..addSimpleIdentifier(this, visitor)
-      ..addNamedType(this, visitor);
+      ..addNamedType(this, visitor)
+      ..addDotShorthandConstructorInvocation(this, visitor)
+      ..addDotShorthandInvocation(this, visitor)
+      ..addDotShorthandPropertyAccess(this, visitor);
   }
 }
 
 class _Visitor(final UseInsteadType rule, final RuleContext context)
-    extends GeneralizingAstVisitor<void> {
+    extends SimpleAstVisitor<void> {
   final TypeChecker checker = rule.getChecker(context);
 
   @override
-  void visitIdentifier(Identifier node) {
+  void visitPrefixedIdentifier(PrefixedIdentifier node) {
+    if (node.element case final element?) {
+      _handleElement(element, node);
+    }
+  }
+
+  @override
+  void visitSimpleIdentifier(SimpleIdentifier node) {
     if (node.element case final element?) {
       _handleElement(element, node);
     }
@@ -54,6 +64,28 @@ class _Visitor(final UseInsteadType rule, final RuleContext context)
   void visitNamedType(NamedType node) {
     if (node.element case final element?) {
       _handleElement(element, node);
+    }
+  }
+
+  // Dot shorthands don't name the type explicitly, so check the type declaring
+  // the referenced member instead.
+
+  @override
+  void visitDotShorthandConstructorInvocation(
+    DotShorthandConstructorInvocation node,
+  ) => _handleDotShorthandMember(node.constructorName);
+
+  @override
+  void visitDotShorthandInvocation(DotShorthandInvocation node) =>
+      _handleDotShorthandMember(node.memberName);
+
+  @override
+  void visitDotShorthandPropertyAccess(DotShorthandPropertyAccess node) =>
+      _handleDotShorthandMember(node.propertyName);
+
+  void _handleDotShorthandMember(SimpleIdentifier memberName) {
+    if (memberName.element?.enclosingElement case final enclosingElement?) {
+      _handleElement(enclosingElement, memberName);
     }
   }
 

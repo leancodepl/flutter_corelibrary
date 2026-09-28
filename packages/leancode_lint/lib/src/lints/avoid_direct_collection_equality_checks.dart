@@ -71,7 +71,7 @@ enum CollectionKind(
 }) {
   list('List', flutterFunction: 'listEquals', collectionClass: 'ListEquality'),
   set('Set', flutterFunction: 'setEquals', collectionClass: 'SetEquality'),
-  map('Map', flutterFunction: 'mapEquals', collectionClass: 'MapEquality');
+  map('Map', flutterFunction: 'mapEquals', collectionClass: 'MapEquality'),
 }
 
 /// Also matches subtypes of `List`, `Set` and `Map`.

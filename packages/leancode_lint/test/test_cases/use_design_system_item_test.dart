@@ -10,6 +10,8 @@ void main() {
     defineReflectiveTests(UseDesignSystemItemTextTest);
     defineReflectiveTests(UseDesignSystemItemScaffoldTest);
     defineReflectiveTests(UseDesignSystemItemWithSpacesTest);
+    defineReflectiveTests(UseDesignSystemItemColorTest);
+    defineReflectiveTests(UseDesignSystemItemStaticMembersTest);
   });
 }
 
@@ -59,6 +61,16 @@ import 'package:flutter/material.dart';
 
 void test() {
   [!RichText!](text: const TextSpan(text: 'abc'));
+}
+''');
+  }
+
+  Future<void> test_text_dot_shorthand_new_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+
+void test() {
+  const /*[0*/Text/*0]*/ text = ./*[1*/new/*1]*/('abc');
 }
 ''');
   }
@@ -133,5 +145,98 @@ void test() {
   ''',
       [lint(57, 9, name: 'use_design_system_item_this_or_that')],
     );
+  }
+}
+
+@reflectiveTest
+class UseDesignSystemItemColorTest() extends AnalysisRuleTest with MockFlutter {
+  @override
+  void setUp() {
+    rule = UseDesignSystemItem.fromConfig(
+      const .new(
+        designSystemItemReplacements: {
+          'AppColor': [.new(name: 'Color', packageName: 'dart:ui')],
+        },
+      ),
+    ).single;
+
+    super.setUp();
+  }
+
+  Future<void> test_explicit_constructor_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+
+Widget test() => Container(color: const [!Color!](0xFF00FF00));
+''');
+  }
+
+  Future<void> test_dot_shorthand_new_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+
+Widget test() => Container(color: const .[!new!](0xFF00FF00));
+''');
+  }
+
+  Future<void> test_dot_shorthand_named_constructor_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+
+Widget test() => Container(color: const .[!fromARGB!](255, 0, 255, 0));
+''');
+  }
+
+  Future<void> test_non_const_dot_shorthand_named_constructor_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+
+Widget test(int a) => Container(color: .[!fromARGB!](a, 0, 255, 0));
+''');
+  }
+
+  Future<void> test_dot_shorthand_for_other_type_not_flagged() async {
+    await assertNoDiagnostics('''
+import 'package:flutter/material.dart';
+
+Widget test() => const Text('abc', textAlign: .center);
+''');
+  }
+}
+
+@reflectiveTest
+class UseDesignSystemItemStaticMembersTest() extends AnalysisRuleTest {
+  @override
+  void setUp() {
+    rule = UseDesignSystemItem.fromConfig(
+      const .new(
+        designSystemItemReplacements: {
+          'AppSpacing': [.new(name: 'Spacing', packageName: 'test')],
+        },
+      ),
+    ).single;
+
+    super.setUp();
+  }
+
+  Future<void> test_dot_shorthand_static_members_flagged() async {
+    await assertDiagnosticsInRanges('''
+// ignore: use_design_system_item_AppSpacing
+class Spacing {
+  // ignore: use_design_system_item_AppSpacing
+  const Spacing._();
+
+  // ignore: use_design_system_item_AppSpacing
+  static const Spacing small = ._();
+
+  // ignore: use_design_system_item_AppSpacing
+  static Spacing of(int value) => small;
+}
+
+void test() {
+  /*[0*/Spacing/*0]*/ a = ./*[1*/small/*1]*/;
+  a = ./*[2*/of/*2]*/(1);
+}
+''');
   }
 }
