@@ -76,15 +76,6 @@ final ClassName? classes;
 (_class.root + classes).name; // just the root when classes is null
 ```
 
-A sum may start with a class that can be null, too; it is then null only when
-every part is:
-
-```dart
-final ClassName? extra;
-
-(extra + _class('primary'))?.name; // primary-<suffix> when extra is null
-```
-
 ---
 
 ## 🛠️ Maintained by LeanCode
