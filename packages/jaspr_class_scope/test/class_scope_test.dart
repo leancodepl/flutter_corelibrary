@@ -10,6 +10,45 @@ void main() {
       expect(heroScope('grid').name, 'grid-lz7xyh');
       expect(heroScope('grid').selector, '.grid-lz7xyh');
     });
+
+    test('renders its root as the component name in kebab case', () {
+      expect(heroScope.root.name, 'hero-lz7xyh');
+      expect(heroScope.root.selector, '.hero-lz7xyh');
+      expect(
+        const ClassScope('SiteFooter', 'lz7xyh').root.name,
+        'site-footer-lz7xyh',
+      );
+      expect(
+        const ClassScope('HTMLView', 'lz7xyh').root.name,
+        'html-view-lz7xyh',
+      );
+      expect(
+        const ClassScope('Step2Form', 'lz7xyh').root.name,
+        'step2-form-lz7xyh',
+      );
+    });
+
+    test('keeps its root a valid class name whatever the suffix', () {
+      // `-1gtfn5` alone would not be: a class cannot start with `-` and a
+      // digit.
+      expect(
+        const ClassScope('SiteFooter', '1gtfn5').root.name,
+        'site-footer-1gtfn5',
+      );
+      expect(
+        const ClassScope('_Private', '1gtfn5').root.name,
+        '_private-1gtfn5',
+      );
+      expect(
+        const ClassScope(r'$Generated', '1gtfn5').root.name,
+        '_generated-1gtfn5',
+      );
+    });
+
+    test('gives the root the same scope as its other classes', () {
+      expect(heroScope.root, heroScope('hero'));
+      expect(heroScope.root, isNot(const ClassScope('Hero', 'abc123').root));
+    });
   });
 
   group('ClassName', () {
@@ -23,6 +62,21 @@ void main() {
 
       expect(combined.name, 'button-lz7xyh primary');
       expect(combined.selector, '.button-lz7xyh.primary');
+    });
+
+    test('adds nothing for a null class', () {
+      const ClassName? none = null;
+
+      expect(heroScope('button') + none, heroScope('button'));
+      expect((heroScope('button') + none).selector, '.button-lz7xyh');
+      expect(
+        (heroScope('button') + none + const ClassName.shared('primary')).name,
+        'button-lz7xyh primary',
+      );
+      expect(
+        (heroScope('button') + const ClassName.shared('primary') + none).name,
+        'button-lz7xyh primary',
+      );
     });
 
     test('combines more than two classes, left to right', () {

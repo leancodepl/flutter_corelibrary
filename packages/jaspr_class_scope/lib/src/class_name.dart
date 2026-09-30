@@ -33,10 +33,12 @@ final class ClassName {
     final scope => '$_local-${scope.suffix}',
   };
 
-  /// This class and [other] on the same element.
-  ClassName operator +(ClassName other) => switch (_and) {
-    null => ClassName._(_local, _scope, other),
-    final and => ClassName._(_local, _scope, and + other),
+  /// This class and [other] on the same element; just this class when
+  /// [other] is null, so an optional class needs no special case.
+  ClassName operator +(ClassName? other) => switch ((other, _and)) {
+    (null, _) => this,
+    (final other?, null) => ClassName._(_local, _scope, other),
+    (final other?, final and?) => ClassName._(_local, _scope, and + other),
   };
 
   @override
