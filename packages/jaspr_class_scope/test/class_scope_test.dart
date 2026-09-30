@@ -79,6 +79,20 @@ void main() {
       );
     });
 
+    test('lets a null class start a sum', () {
+      const ClassName? none = null;
+      // A class the caller may or may not pass, as far as the type knows.
+      ClassName? maybe() => heroScope('button');
+
+      expect(none + heroScope('button'), heroScope('button'));
+      expect(none + none, isNull);
+      expect(
+        (maybe() + none + const ClassName.shared('primary'))?.name,
+        'button-lz7xyh primary',
+      );
+      expect((none + heroScope('button') + none)?.selector, '.button-lz7xyh');
+    });
+
     test('combines more than two classes, left to right', () {
       final combined =
           const ClassName.shared('a') +

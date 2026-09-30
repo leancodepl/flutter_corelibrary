@@ -35,10 +35,12 @@ final class ClassName {
 
   /// This class and [other] on the same element; just this class when
   /// [other] is null, so an optional class needs no special case.
-  ClassName operator +(ClassName? other) => switch ((other, _and)) {
-    (null, _) => this,
-    (final other?, null) => ClassName._(_local, _scope, other),
-    (final other?, final and?) => ClassName._(_local, _scope, and + other),
+  ClassName operator +(ClassName? other) => switch (other) {
+    null => this,
+    final other => switch (_and) {
+      null => ClassName._(_local, _scope, other),
+      final and => ClassName._(_local, _scope, and + other),
+    },
   };
 
   @override
@@ -49,4 +51,17 @@ final class ClassName {
 
   @override
   String toString() => name;
+}
+
+/// Lets an optional class start a sum too, not only end one.
+extension NullableClassName on ClassName? {
+  /// This class and [other] on the same element, leaving out whichever is
+  /// null; null only when both are.
+  ///
+  /// Dart has no overloading, so the sum is nullable even when [other] is
+  /// not: a sum that begins with a class known to be there stays non-null.
+  ClassName? operator +(ClassName? other) => switch (this) {
+    null => other,
+    final self => self + other,
+  };
 }
