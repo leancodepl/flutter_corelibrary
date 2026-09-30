@@ -50,13 +50,30 @@ written:
 static const copyButton = ClassName.shared('js-copy');
 ```
 
+## The component's own class
+
+`root` is the class of the component's outermost element, named after the
+component, so it needs no name of its own:
+
+```dart
+static final _root = _class.root; // `hero` with Hero's suffix
+```
+
 ## Two classes on one element
 
 ```dart
-final primary = _class('button') + _class('primary');
+final primary = _class.root + _class('primary');
 
 primary.name; // the two classes, space-separated
 primary.selector; // the two classes, for an element carrying both
+```
+
+Adding `null` adds nothing, which suits a class a caller may pass in:
+
+```dart
+final ClassName? classes;
+
+(_class.root + classes).name; // just the root when classes is null
 ```
 
 ---
