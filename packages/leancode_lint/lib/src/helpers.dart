@@ -6,6 +6,7 @@ import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/file_system/file_system.dart';
 // `PubPackage`, the only way to reach the parsed pubspec of the package owning
 // a file, has no public equivalent. The SDK's own
 // `depend_on_referenced_packages` reaches for it the same way.
@@ -18,6 +19,7 @@ import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/src/type_checker.dart';
 import 'package:leancode_lint/src/utils.dart';
 import 'package:meta/meta.dart';
+import 'package:yaml/yaml.dart';
 
 String typeParametersString(
   Iterable<TypeParameter> typeParameters, {
@@ -306,6 +308,159 @@ bool _isInPublicDir(String filePath, WorkspacePackage package) {
       pathContext.isWithin(inRoot(['bin']), filePath) ||
       filePath == inRoot(['hook', 'build.dart']) ||
       filePath == inRoot(['hook', 'link.dart']);
+}
+
+extension EnabledLints on ResolvedCorrectionProducer {
+  /// The names of the lints enabled for [file].
+  ///
+  /// `AnalysisOptions.lintRules` only lists rules registered in the current
+  /// isolate. In a plugin isolate those are this plugin's own rules: the SDK's
+  /// lints are discarded while the options file is parsed, so
+  /// `analysisOptions.isLintEnabled` answers `false` for every one of them no
+  /// matter what the user configured. The `linter.rules` section of the
+  /// options file governing [file], and of every file it includes, is read
+  /// again to recover them.
+  Set<String> get enabledLints {
+    final optionsFile = _optionsFileFor(file);
+    return {
+      for (final rule in analysisOptions.lintRules) rule.name,
+      if (optionsFile != null)
+        ...lintsEnabledIn(
+          optionsFile,
+          resolveUri: sessionHelper.session.uriConverter.uriToPath,
+        ),
+    };
+  }
+
+  /// The analysis options file governing [path]: the nearest
+  /// `analysis_options.yaml` between its folder and the context root, falling
+  /// back to the one the context root was created with.
+  File? _optionsFileFor(String path) {
+    final contextRoot = sessionHelper.session.analysisContext.contextRoot;
+    final provider = contextRoot.root.provider;
+    var folder = provider.getFile(path).parent;
+    while (true) {
+      final candidate = provider.getFile(
+        provider.pathContext.join(folder.path, 'analysis_options.yaml'),
+      );
+      if (candidate.exists) {
+        return candidate;
+      }
+      if (folder.isRoot || folder.path == contextRoot.root.path) {
+        return contextRoot.optionsFile;
+      }
+      folder = folder.parent;
+    }
+  }
+}
+
+/// The lints enabled by [optionsFile]: the `linter.rules` section of the file
+/// itself and of the files it includes, later files overriding earlier ones,
+/// the way the analyzer merges them.
+///
+/// [resolveUri] turns a `package:` (or any other absolute) include URI into a
+/// file path, as `UriConverter.uriToPath` does.
+@visibleForTesting
+Set<String> lintsEnabledIn(
+  File optionsFile, {
+  required String? Function(Uri uri) resolveUri,
+}) {
+  final rules = <String, bool>{};
+  final visited = <String>{};
+
+  void visit(File file) {
+    if (!visited.add(file.path) || !file.exists) {
+      return;
+    }
+    final YamlNode options;
+    try {
+      options = loadYamlNode(file.readAsStringSync());
+    } on YamlException {
+      return;
+    } on FileSystemException {
+      return;
+    }
+    if (options is! YamlMap) {
+      return;
+    }
+
+    // Included files come first so that this file's own rules win.
+    final Iterable<Object?> includes = switch (options['include']) {
+      final YamlList list => list,
+      final String include => [include],
+      _ => const <Object?>[],
+    };
+    for (final include in includes) {
+      if (include is String) {
+        final included = _resolveInclude(
+          include,
+          from: file,
+          resolveUri: resolveUri,
+        );
+        if (included != null) {
+          visit(included);
+        }
+      }
+    }
+
+    if (options['linter'] case final YamlMap linter) {
+      _collectRules(linter['rules'], into: rules);
+    }
+  }
+
+  visit(optionsFile);
+  return {
+    for (final MapEntry(key: name, value: enabled) in rules.entries)
+      if (enabled) name,
+  };
+}
+
+/// Collects the rules of a `linter.rules` [section] into [into], reading it
+/// the way the analyzer does: a list of names enables each of them, a map
+/// holds booleans or severities (of which only `disable` disables), and may
+/// group rules under a nested map.
+void _collectRules(Object? section, {required Map<String, bool> into}) {
+  switch (section) {
+    case final YamlList names:
+      for (final name in names) {
+        if (name is String) {
+          into[name.toLowerCase()] = true;
+        }
+      }
+    case final YamlMap entries:
+      for (final MapEntry(key: name, :value) in entries.entries) {
+        if (name is! String) {
+          continue;
+        }
+        switch (value) {
+          case bool():
+            into[name.toLowerCase()] = value;
+          case String():
+            into[name.toLowerCase()] = value != 'disable';
+          case YamlMap():
+            _collectRules(value, into: into);
+        }
+      }
+  }
+}
+
+File? _resolveInclude(
+  String include, {
+  required File from,
+  required String? Function(Uri uri) resolveUri,
+}) {
+  final provider = from.provider;
+  final pathContext = provider.pathContext;
+  if (pathContext.isAbsolute(include)) {
+    return provider.getFile(include);
+  }
+  if (Uri.tryParse(include) case final uri? when uri.hasScheme) {
+    final path = resolveUri(uri);
+    return path == null ? null : provider.getFile(path);
+  }
+  return provider.getFile(
+    pathContext.normalize(pathContext.join(from.parent.path, include)),
+  );
 }
 
 bool isExpressionExactlyType(
