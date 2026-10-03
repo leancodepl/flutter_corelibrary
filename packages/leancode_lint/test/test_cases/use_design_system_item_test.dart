@@ -12,6 +12,7 @@ void main() {
     defineReflectiveTests(UseDesignSystemItemWithSpacesTest);
     defineReflectiveTests(UseDesignSystemItemColorTest);
     defineReflectiveTests(UseDesignSystemItemStaticMembersTest);
+    defineReflectiveTests(UseDesignSystemItemPrefixedImportTest);
   });
 }
 
@@ -236,6 +237,91 @@ class Spacing {
 void test() {
   /*[0*/Spacing/*0]*/ a = ./*[1*/small/*1]*/;
   a = ./*[2*/of/*2]*/(1);
+}
+''');
+  }
+}
+
+@reflectiveTest
+class UseDesignSystemItemPrefixedImportTest()
+    extends AnalysisRuleTest
+    with MockFlutter {
+  @override
+  void setUp() {
+    rule = UseDesignSystemItem.fromConfig(
+      const .new(
+        designSystemItemReplacements: {
+          'AppColors': [
+            .new(name: 'Text', packageName: 'flutter'),
+            .new(name: 'Colors', packageName: 'flutter'),
+          ],
+        },
+      ),
+    ).single;
+
+    super.setUp();
+  }
+
+  Future<void> test_prefixed_constructor_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart' as m;
+
+void test() {
+  m.AppBar(
+    title: const [!m.Text!]('abc'),
+  );
+}
+''');
+  }
+
+  Future<void> test_prefixed_type_annotation_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart' as m;
+
+void test() {
+  /*[0*/m.Text?/*0]*/ text;
+  List</*[1*/m.Text/*1]*/> texts = [];
+}
+''');
+  }
+
+  Future<void> test_prefixed_static_member_access_flagged_once() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart' as m;
+
+void test() {
+  const color = m./*[0*/Colors/*0]*/.black;
+  m.Container(color: m./*[1*/Colors/*1]*/.red.shade200);
+}
+''');
+  }
+
+  Future<void> test_prefixed_dot_shorthand_flagged() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart' as m;
+
+void test() {
+  const /*[0*/m.Text/*0]*/ text = ./*[1*/new/*1]*/('abc');
+}
+''');
+  }
+
+  Future<void> test_unprefixed_static_member_access_flagged_once() async {
+    await assertDiagnosticsInRanges('''
+import 'package:flutter/material.dart';
+
+void test() {
+  const color = [!Colors!].black;
+}
+''');
+  }
+
+  Future<void> test_prefixed_hide_combinator_ignored() async {
+    await assertNoDiagnostics('''
+import 'package:flutter/material.dart' as m hide Text, Colors;
+
+void test() {
+  const m.SizedBox();
 }
 ''');
   }
