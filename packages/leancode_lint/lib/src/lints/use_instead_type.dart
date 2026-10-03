@@ -33,7 +33,6 @@ abstract base class UseInsteadType({
   ) {
     final visitor = _Visitor(this, context);
     registry
-      ..addPrefixedIdentifier(this, visitor)
       ..addSimpleIdentifier(this, visitor)
       ..addNamedType(this, visitor)
       ..addDotShorthandConstructorInvocation(this, visitor)
@@ -46,26 +45,10 @@ class _Visitor(final UseInsteadType rule, final RuleContext context)
     extends SimpleAstVisitor<void> {
   final TypeChecker checker = rule.getChecker(context);
 
-  @override
-  void visitPrefixedIdentifier(PrefixedIdentifier node) {
-    if (node.element case final element?) {
-      _handleElement(element, node);
-    }
-  }
-
+  // Covers `prefix.Type` too: the PrefixedIdentifier resolves to the same
+  // element as its `Type` identifier, which is visited on its own.
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
-    // `prefix.Type` is a PrefixedIdentifier that resolves to the same element
-    // as its `Type` part. It is reported as a whole in visitPrefixedIdentifier,
-    // so skip the inner identifier to avoid a duplicate report.
-    if (node.parent
-        case PrefixedIdentifier(
-          prefix: SimpleIdentifier(element: PrefixElement()),
-          :final identifier,
-        )
-        when identifier == node) {
-      return;
-    }
     if (node.element case final element?) {
       _handleElement(element, node);
     }

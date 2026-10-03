@@ -290,8 +290,8 @@ void test() {
 import 'package:flutter/material.dart' as m;
 
 void test() {
-  const color = /*[0*/m.Colors/*0]*/.black;
-  m.Container(color: /*[1*/m.Colors/*1]*/.red.shade200);
+  const color = m./*[0*/Colors/*0]*/.black;
+  m.Container(color: m./*[1*/Colors/*1]*/.red.shade200);
 }
 ''');
   }
