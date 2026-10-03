@@ -55,6 +55,13 @@ class _Visitor(final UseInsteadType rule, final RuleContext context)
 
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
+    // `prefix.Type` is a PrefixedIdentifier that resolves to the same element
+    // as its `Type` part. It is reported as a whole in visitPrefixedIdentifier,
+    // so skip the inner identifier to avoid a duplicate report.
+    if (node.parent case PrefixedIdentifier(:final prefix, :final identifier)
+        when identifier == node && prefix.element is PrefixElement) {
+      return;
+    }
     if (node.element case final element?) {
       _handleElement(element, node);
     }
