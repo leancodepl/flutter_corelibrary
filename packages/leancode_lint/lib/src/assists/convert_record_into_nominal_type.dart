@@ -1,6 +1,5 @@
 import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analysis_server_plugin/edit/dart/dart_fix_kind_priority.dart';
-import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer_plugin/utilities/assist/assist.dart';
@@ -12,17 +11,14 @@ import 'package:leancode_lint/src/helpers.dart';
 /// the order and split of positional/named parameters. This results
 /// in code where initialization just has to be prefixed with the type name.
 ///
-/// The shape of the class follows the lints enabled for the file, so that the
-/// result doesn't immediately trigger any of them:
+/// The class follows the lints enabled for the file:
 ///
-/// - `use_primary_constructors`: the constructor is declared in the class
-///   header,
+/// - `use_primary_constructors`: the constructor goes in the class header,
 /// - `use_declaring_parameters`: a primary constructor declares the fields in
-///   its parameters instead of the class body,
-/// - `empty_container_bodies`: a class left without members ends with `;`
-///   instead of `{}`,
+///   its parameters,
+/// - `empty_container_bodies`: a class without members ends with `;`,
 /// - `unnecessary_type_name_in_constructor`: a constructor in the class body
-///   is named `new` instead of repeating the class name.
+///   is named `new`.
 ///
 /// **Example**:
 ///
@@ -89,14 +85,13 @@ class ConvertRecordIntoNominalType({required super.context})
   }
 
   _ClassStyle _style() {
-    // The lints below only ever fire with primary constructors available, and
-    // the syntax they ask for doesn't parse without them.
-    final primaryConstructors = isEnabled(Feature.primary_constructors);
-    final options = analysisOptions;
+    // These lints only fire with primary constructors enabled, and their
+    // syntax doesn't parse without them.
+    final primaryConstructors = isEnabled(.primary_constructors);
     bool lint(String name) =>
-        primaryConstructors && options.isLintEnabled(name);
+        primaryConstructors && analysisOptions.isLintEnabled(name);
 
-    return _ClassStyle(
+    return .new(
       primaryConstructor: lint('use_primary_constructors'),
       declaringParameters: lint('use_declaring_parameters'),
       emptyBodyAsSemicolon: lint('empty_container_bodies'),
@@ -127,9 +122,6 @@ class ConvertRecordIntoNominalType({required super.context})
         }).toList() ??
         const <(String, TypeAnnotation)>[];
 
-    // A primary constructor can declare the fields right in its parameters,
-    // otherwise they are initialized from the parameters and declared in the
-    // class body.
     final declaresFieldsInParameters =
         style.primaryConstructor && style.declaringParameters;
     String parameter((String, TypeAnnotation) field, {required bool isNamed}) {
@@ -177,23 +169,17 @@ $fields}
   }
 }
 
-/// How the generated class is spelled, as dictated by the enabled lints.
-///
-/// With every flag off, the class has a constructor in its body, named after
-/// the class, with `this.` parameters and fields declared in the body.
+/// How the generated class is spelled, one flag per lint.
 class const _ClassStyle({
-  /// Declare the constructor in the class header (`use_primary_constructors`).
+  /// `use_primary_constructors`
   required final bool primaryConstructor,
 
-  /// Declare the fields in the primary constructor's parameters
-  /// (`use_declaring_parameters`).
+  /// `use_declaring_parameters`
   required final bool declaringParameters,
 
-  /// End a class with no members with `;` instead of `{}`
-  /// (`empty_container_bodies`).
+  /// `empty_container_bodies`
   required final bool emptyBodyAsSemicolon,
 
-  /// Name a constructor in the class body `new` instead of repeating the class
-  /// name (`unnecessary_type_name_in_constructor`).
+  /// `unnecessary_type_name_in_constructor`
   required final bool newKeyword,
 });

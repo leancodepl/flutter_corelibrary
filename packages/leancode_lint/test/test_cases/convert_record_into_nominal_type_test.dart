@@ -1,4 +1,3 @@
-import 'package:analysis_server_plugin/edit/dart/correction_producer.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/src/test_utilities/test_code_format.dart';
 import 'package:analyzer_plugin/protocol/protocol_common.dart';
@@ -15,8 +14,6 @@ void main() {
     defineReflectiveTests(ConvertRecordIntoNominalTypeLegacyLanguageTest);
   });
 }
-
-const _allLints = sdkLintStandIns;
 
 const _source = '''
 typedef ^MyType<T extends Object> = (String, OtherType hello, {int? named1, T named2});
@@ -135,7 +132,7 @@ class ConvertRecordIntoNominalTypeTest() extends _AssistTest {
   }
 
   Future<void> test_allLints() async {
-    createAnalysisOptionsFile(lints: _allLints);
+    createAnalysisOptionsFile(lints: sdkLintStandIns);
     await assertAssist(_source, _declaringParametersNoBodyClass);
   }
 
@@ -148,7 +145,7 @@ class ConvertRecordIntoNominalTypeTest() extends _AssistTest {
   }
 
   Future<void> test_allLints_emptyRecord() async {
-    createAnalysisOptionsFile(lints: _allLints);
+    createAnalysisOptionsFile(lints: sdkLintStandIns);
     await assertAssist('typedef ^Unit = ();\n', '''
 import 'package:meta/meta.dart';
 
@@ -188,7 +185,7 @@ linter:
   }
 
   Future<void> test_nestedOptionsFile() async {
-    createAnalysisOptionsFile(lints: _allLints);
+    createAnalysisOptionsFile(lints: sdkLintStandIns);
     // A nested options file stands on its own, it doesn't inherit the
     // enclosing one.
     newFile('$testPackageLibPath/nested/analysis_options.yaml', '''
@@ -203,26 +200,24 @@ linter:
     );
   }
 
-  /// Adds a `strict_lints` package whose options file enables all the lints
-  /// the assist cares about.
+  /// Adds a `strict_lints` package whose options file enables every lint.
   void _writeLintsPackage() {
     newPackage('strict_lints').addFile('lib/analysis_options.yaml', '''
 linter:
   rules:
-${_allLints.map((lint) => '    - $lint\n').join()}''');
+${sdkLintStandIns.map((lint) => '    - $lint\n').join()}''');
     writeTestPackageConfig2();
   }
 }
 
-/// Without primary constructors in the language, none of the lints apply and
-/// their syntax isn't available.
+/// Without primary constructors in the language, the lints don't apply.
 @reflectiveTest
 class ConvertRecordIntoNominalTypeLegacyLanguageTest() extends _AssistTest {
   @override
   String? get testPackageLanguageVersion => '3.12';
 
   Future<void> test_allLints() async {
-    createAnalysisOptionsFile(lints: _allLints);
+    createAnalysisOptionsFile(lints: sdkLintStandIns);
     await assertAssist(_source, _classicClass);
   }
 }
@@ -237,8 +232,7 @@ abstract class _AssistTest() extends PubPackageResolutionTest {
     super.setUp();
   }
 
-  /// Applies the assist at the `^` marker in [content] and asserts that the
-  /// file then reads [expected].
+  /// Applies the assist at the `^` in [content] and expects [expected].
   Future<void> assertAssist(
     String content,
     String expected, {
@@ -251,7 +245,7 @@ abstract class _AssistTest() extends PubPackageResolutionTest {
       file.path,
     ) as ResolvedLibraryResult;
     final producer = ConvertRecordIntoNominalType(
-      context: CorrectionProducerContext.createResolved(
+      context: .createResolved(
         libraryResult: library,
         unitResult: unit,
         selectionOffset: code.position.offset,
