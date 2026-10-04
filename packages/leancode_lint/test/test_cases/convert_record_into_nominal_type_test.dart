@@ -5,6 +5,7 @@ import 'package:analyzer_plugin/protocol/protocol_common.dart';
 import 'package:analyzer_plugin/utilities/change_builder/change_builder_core.dart';
 import 'package:analyzer_testing/src/analysis_rule/pub_package_resolution.dart';
 import 'package:leancode_lint/src/assists/convert_record_into_nominal_type.dart';
+import 'package:leancode_lint/src/sdk_lint_stand_ins.dart';
 import 'package:test/test.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
@@ -15,12 +16,7 @@ void main() {
   });
 }
 
-const _allLints = [
-  'empty_container_bodies',
-  'unnecessary_type_name_in_constructor',
-  'use_declaring_parameters',
-  'use_primary_constructors',
-];
+const _allLints = sdkLintStandIns;
 
 const _source = '''
 typedef ^MyType<T extends Object> = (String, OtherType hello, {int? named1, T named2});
@@ -234,6 +230,12 @@ class ConvertRecordIntoNominalTypeLegacyLanguageTest() extends _AssistTest {
 abstract class _AssistTest() extends PubPackageResolutionTest {
   @override
   bool get addMetaPackageDep => true;
+
+  @override
+  void setUp() {
+    registerSdkLintStandIns();
+    super.setUp();
+  }
 
   /// Applies the assist at the `^` marker in [content] and asserts that the
   /// file then reads [expected].

@@ -94,12 +94,12 @@ class ConvertRecordIntoNominalType({required super.context})
     if (!isEnabled(Feature.primary_constructors)) {
       return const _ClassStyle();
     }
-    final lints = enabledLints;
+    final options = analysisOptions;
     return _ClassStyle(
-      primaryConstructor: lints.contains('use_primary_constructors'),
-      declaringParameters: lints.contains('use_declaring_parameters'),
-      emptyBodyAsSemicolon: lints.contains('empty_container_bodies'),
-      newKeyword: lints.contains('unnecessary_type_name_in_constructor'),
+      primaryConstructor: options.isLintEnabled('use_primary_constructors'),
+      declaringParameters: options.isLintEnabled('use_declaring_parameters'),
+      emptyBodyAsSemicolon: options.isLintEnabled('empty_container_bodies'),
+      newKeyword: options.isLintEnabled('unnecessary_type_name_in_constructor'),
     );
   }
 
