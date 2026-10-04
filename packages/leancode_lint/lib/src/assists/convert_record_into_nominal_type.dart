@@ -134,11 +134,11 @@ class ConvertRecordIntoNominalType({required super.context})
     String parameter((String, TypeAnnotation) field, {required bool isNamed}) {
       final (name, type) = field;
       final required = isNamed && type.type?.nullabilitySuffix != .question
-          ? '${Keyword.REQUIRED.lexeme} '
+          ? 'required '
           : '';
       final declaration = declaresFieldsInParameters
-          ? '${Keyword.FINAL.lexeme} ${type.toSource()} $name'
-          : '${Keyword.THIS.lexeme}.$name';
+          ? 'final ${type.toSource()} $name'
+          : 'this.$name';
       return '    $required$declaration,\n';
     }
 
@@ -150,10 +150,7 @@ class ConvertRecordIntoNominalType({required super.context})
         ? ''
         : positionals
               .followedBy(named)
-              .map(
-                (e) =>
-                    '  ${Keyword.FINAL.lexeme} ${e.$2.toSource()} ${e.$1};\n',
-              )
+              .map((e) => '  final ${e.$2.toSource()} ${e.$1};\n')
               .join();
 
     if (style.primaryConstructor) {
@@ -162,16 +159,16 @@ class ConvertRecordIntoNominalType({required super.context})
           : ' {\n$fields}';
       return '''
 @immutable
-${Keyword.CLASS.lexeme} ${Keyword.CONST.lexeme} $name$typeParameters(
+class const $name$typeParameters(
 $parameters)$body
 ''';
     }
 
-    final constructorName = style.newKeyword ? Keyword.NEW.lexeme : name.lexeme;
+    final constructorName = style.newKeyword ? 'new' : name.lexeme;
     return '''
 @immutable
-${Keyword.CLASS.lexeme} $name$typeParameters {
-  ${Keyword.CONST.lexeme} $constructorName(
+class $name$typeParameters {
+  const $constructorName(
 $parameters);
 
 $fields}
