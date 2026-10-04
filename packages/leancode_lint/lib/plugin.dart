@@ -26,6 +26,7 @@ import 'package:leancode_lint/src/lints/use_align.dart';
 import 'package:leancode_lint/src/lints/use_dedicated_media_query_methods.dart';
 import 'package:leancode_lint/src/lints/use_design_system_item.dart';
 import 'package:leancode_lint/src/lints/use_padding.dart';
+import 'package:leancode_lint/src/sdk_lint_stand_ins.dart';
 
 export 'package:leancode_lint/config.dart';
 
@@ -40,6 +41,7 @@ final class LeanCodeLintPlugin({
 }) extends Plugin {
   @override
   void register(PluginRegistry registry) {
+    registerSdkLintStandIns();
     UseDesignSystemItem.fromConfig(config)
         .forEach(registry.registerWarningRule);
     registry
