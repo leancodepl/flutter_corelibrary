@@ -233,6 +233,8 @@ abstract class _AssistTest() extends PubPackageResolutionTest {
   }
 
   /// Applies the assist at the `^` in [content] and expects [expected].
+  // TODO: replace with a first-party solution
+  // See https://github.com/dart-lang/sdk/issues/61785
   Future<void> assertAssist(
     String content,
     String expected, {
