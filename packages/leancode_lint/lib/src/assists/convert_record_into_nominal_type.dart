@@ -91,15 +91,16 @@ class ConvertRecordIntoNominalType({required super.context})
   _ClassStyle _style() {
     // The lints below only ever fire with primary constructors available, and
     // the syntax they ask for doesn't parse without them.
-    if (!isEnabled(Feature.primary_constructors)) {
-      return const _ClassStyle();
-    }
+    final primaryConstructors = isEnabled(Feature.primary_constructors);
     final options = analysisOptions;
+    bool lint(String name) =>
+        primaryConstructors && options.isLintEnabled(name);
+
     return _ClassStyle(
-      primaryConstructor: options.isLintEnabled('use_primary_constructors'),
-      declaringParameters: options.isLintEnabled('use_declaring_parameters'),
-      emptyBodyAsSemicolon: options.isLintEnabled('empty_container_bodies'),
-      newKeyword: options.isLintEnabled('unnecessary_type_name_in_constructor'),
+      primaryConstructor: lint('use_primary_constructors'),
+      declaringParameters: lint('use_declaring_parameters'),
+      emptyBodyAsSemicolon: lint('empty_container_bodies'),
+      newKeyword: lint('unnecessary_type_name_in_constructor'),
     );
   }
 
@@ -178,21 +179,21 @@ $fields}
 
 /// How the generated class is spelled, as dictated by the enabled lints.
 ///
-/// Defaults to a constructor in the class body, named after the class, with
-/// `this.` parameters and fields declared in the body.
+/// With every flag off, the class has a constructor in its body, named after
+/// the class, with `this.` parameters and fields declared in the body.
 class const _ClassStyle({
   /// Declare the constructor in the class header (`use_primary_constructors`).
-  final bool primaryConstructor = false,
+  required final bool primaryConstructor,
 
   /// Declare the fields in the primary constructor's parameters
   /// (`use_declaring_parameters`).
-  final bool declaringParameters = false,
+  required final bool declaringParameters,
 
   /// End a class with no members with `;` instead of `{}`
   /// (`empty_container_bodies`).
-  final bool emptyBodyAsSemicolon = false,
+  required final bool emptyBodyAsSemicolon,
 
   /// Name a constructor in the class body `new` instead of repeating the class
   /// name (`unnecessary_type_name_in_constructor`).
-  final bool newKeyword = false,
+  required final bool newKeyword,
 });
