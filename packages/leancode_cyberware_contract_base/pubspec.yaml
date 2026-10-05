@@ -14,7 +14,7 @@ dependency_overrides:
 
 dependencies:
   bloc: ^9.0.0
-  equatable: ^2.0.7
+  equatable: ">=2.0.7 <4.0.0"
   flutter:
     sdk: flutter
   pub_semver: ^2.1.4
@@ -23,7 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  leancode_lint: ^22.0.0
+  leancode_lint: ">=22.0.0 <28.0.0"
 
 flutter:
   assets:
