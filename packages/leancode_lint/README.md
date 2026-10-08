@@ -604,7 +604,7 @@ final plugin = LeanCodeLintPlugin(
 
 Scores every function, method, constructor and closure with
 [Cognitive Complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf),
-the metric behind Biome's `noExcessiveCognitiveComplexity`, and reports those
+as SonarJS implements it, and reports those
 over the maximum (15 by default):
 
 - `if`, `else if`, `else`, `switch`, `?:`, loops, `catch` and a `break` or
@@ -613,8 +613,9 @@ over the maximum (15 by default):
   nested at
 - each run of the same operator in a chain of `&&` and `||` costs 1, so
   `a && b && c` costs 1 and `a && b || c` costs 2
-- a closure or local function is scored on its own, one level deeper than
-  where it sits
+- a closure or local function is scored on its own; only the first level of
+  nested functions adds a nesting level, as in SonarJS, so a `test` inside a
+  `group` inside `main` starts one level deep
 - `??`, `?.` and an early `return` cost nothing
 
 How a function is scored:

@@ -81,20 +81,23 @@ class C {
   }
 
   // Seven of the body's increments are nesting-sensitive, so one level deeper
-  // it scores 23.
+  // it scores 23. Only the first level of nested functions adds a level, so
+  // `i`, nested in `h`, scores the same.
   Future<void> test_nestedFunctionsAreScoredOnTheirOwn() async {
     final code =
         '''
 void f($_parameters) {
   if (a) {}
   int g() ${_body()}
-  final h = () ${_body()};
+  final h = () {
+    final i = () ${_body()};
+  };
 }
 ''';
     await assertDiagnostics(code, [
       lint(code.indexOf('g('), 1, messageContainsAll: ["'g'", ' 23,']),
       lint(
-        code.indexOf('()', code.indexOf('h =')),
+        code.indexOf('()', code.indexOf('i =')),
         2,
         messageContainsAll: ['closure', ' 23,'],
       ),

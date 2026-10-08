@@ -12,11 +12,12 @@ import 'package:leancode_lint/config.dart';
 /// Flags a function, method, constructor or closure whose cognitive complexity
 /// is over `LeanCodeLintConfig.cognitiveComplexity.maximum`.
 ///
-/// Scored like SonarSource's Cognitive Complexity, which Biome's
-/// `noExcessiveCognitiveComplexity` also implements: each break in the linear
-/// flow costs one, plus one per level it is nested at. As in Biome, a closure
-/// or local function is scored on its own, starting one level deeper than
-/// where it sits. `??`, `?.` and an early `return` cost nothing.
+/// Scored like SonarSource's Cognitive Complexity: each break in the linear
+/// flow costs one, plus one per level it is nested at. As in SonarJS, a
+/// closure or local function is scored on its own, and only the first level of
+/// nested functions adds a level, so `test` closures inside `group` inside
+/// `main` are not penalized for the test framework's structure. `??`, `?.` and
+/// an early `return` cost nothing.
 class CognitiveComplexity({required final CognitiveComplexityConfig config})
     extends AnalysisRule {
   this : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -83,10 +84,12 @@ class _Scorer(final AnalysisRule rule, final int maximum)
     extends RecursiveAstVisitor<void> {
   var _complexity = 0;
   var _nesting = 0;
+  var _functionDepth = 0;
 
   void score(String name, SourceRange at, List<AstNode> parts) {
     final enclosing = _complexity;
     _complexity = 0;
+    _functionDepth++;
     for (final part in parts) {
       part.accept(this);
     }
@@ -94,6 +97,7 @@ class _Scorer(final AnalysisRule rule, final int maximum)
       rule.reportAtSourceRange(at, arguments: [name, _complexity, maximum]);
     }
     _complexity = enclosing;
+    _functionDepth--;
   }
 
   void _structural() => _complexity += 1 + _nesting;
@@ -106,7 +110,10 @@ class _Scorer(final AnalysisRule rule, final int maximum)
 
   @override
   void visitFunctionExpression(FunctionExpression node) {
-    _nesting++;
+    final nests = _functionDepth == 1;
+    if (nests) {
+      _nesting++;
+    }
     if (node.parent case final FunctionDeclaration declaration) {
       score("'${declaration.name.lexeme}'", range.token(declaration.name), [
         node.body,
@@ -116,7 +123,9 @@ class _Scorer(final AnalysisRule rule, final int maximum)
         node.body,
       ]);
     }
-    _nesting--;
+    if (nests) {
+      _nesting--;
+    }
   }
 
   @override
