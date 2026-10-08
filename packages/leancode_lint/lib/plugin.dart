@@ -63,7 +63,7 @@ final class LeanCodeLintPlugin({
         CatchParameterNames(config: config.catchParameterNames),
       )
       ..registerWarningRule(AvoidCatchError())
-      ..registerWarningRule(
+      ..registerLintRule(
         CognitiveComplexity(config: config.cognitiveComplexity),
       )
       ..registerWarningRule(AvoidBuildContextInBlocs())

@@ -642,7 +642,17 @@ nesting, brings the score down.
 
 #### Configuration
 
-Configured via `LeanCodeLintConfig.cognitiveComplexity`:
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^27.1.0
+    diagnostics:
+      cognitive_complexity: true
+```
+
+The maximum is configured via `LeanCodeLintConfig.cognitiveComplexity`:
 
 ```dart
 import 'package:leancode_lint/plugin.dart';
