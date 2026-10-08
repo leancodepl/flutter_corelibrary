@@ -596,6 +596,68 @@ final plugin = LeanCodeLintPlugin(
 </details>
 
 <details>
+<summary><code>cognitive_complexity</code></summary>
+
+### `cognitive_complexity`
+
+**AVOID** functions that are hard to follow.
+
+Scores every function, method, constructor and closure with
+[Cognitive Complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf),
+the metric behind Biome's `noExcessiveCognitiveComplexity`, and reports those
+over the maximum (15 by default):
+
+- `if`, `else if`, `else`, `switch`, `?:`, loops, `catch` and a `break` or
+  `continue` to a label each cost 1
+- `if`, `switch`, `?:`, loops and `catch` cost 1 more for each level they are
+  nested at
+- each run of the same operator in a chain of `&&` and `||` costs 1, so
+  `a && b && c` costs 1 and `a && b || c` costs 2
+- a closure or local function is scored on its own, one level deeper than
+  where it sits
+- `??`, `?.` and an early `return` cost nothing
+
+How a function is scored:
+
+```dart
+int count(List<List<int>> rows, bool skipNegative) {
+  var n = 0;
+  for (final row in rows) { // +1
+    for (final x in row) { // +2 (nesting 1)
+      if (x > 0) { // +3 (nesting 2)
+        n++;
+      } else if (skipNegative && x < 0) { // +1, +1 for &&
+        continue;
+      } else { // +1
+        n--;
+      }
+    }
+  }
+  return n;
+} // 9
+```
+
+Extracting the loop body into a function, or returning early instead of
+nesting, brings the score down.
+
+#### Configuration
+
+Configured via `LeanCodeLintConfig.cognitiveComplexity`:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeanCodeLintPlugin(
+  name: 'my_lints',
+  config: LeanCodeLintConfig(
+    cognitiveComplexity: CognitiveComplexityConfig(maximum: 30),
+  ),
+);
+```
+
+</details>
+
+<details>
 <summary><code>hook_widget_does_not_use_hooks</code></summary>
 
 ### `hook_widget_does_not_use_hooks`

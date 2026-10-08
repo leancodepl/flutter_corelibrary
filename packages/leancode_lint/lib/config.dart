@@ -17,6 +17,9 @@ final class const LeanCodeLintConfig({
 
   /// Configuration for the `bloc_related_class_naming` rule.
   final BlocRelatedClassNamingConfig blocRelatedClassNaming = const .new(),
+
+  /// Configuration for the `cognitive_complexity` rule.
+  final CognitiveComplexityConfig cognitiveComplexity = const .new(),
 });
 
 /// Configuration for the `bloc_related_class_naming` rule.
@@ -33,6 +36,12 @@ class const BlocRelatedClassNamingConfig({
   final String eventSuffix = 'Event',
   final String presentationEventSuffix = 'PresentationEvent',
 });
+
+/// Configuration for the `cognitive_complexity` rule.
+///
+/// [maximum] is the highest cognitive complexity a function may have. The
+/// default, 15, is SonarSource's and Biome's.
+class const CognitiveComplexityConfig({final int maximum = 15});
 
 class const CatchParameterNamesConfig({
   final String exception = 'err',
