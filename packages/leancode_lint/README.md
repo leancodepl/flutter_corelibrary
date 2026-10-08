@@ -616,7 +616,8 @@ over the maximum (15 by default):
 - a closure or local function is scored on its own; only the first level of
   nested functions adds a nesting level, as in SonarJS, so a `test` inside a
   `group` inside `main` starts one level deep
-- `??`, `?.` and an early `return` cost nothing
+- null-aware operators (`?.`, `??`, `??=`, `!`, `...?`, `?x` in a collection),
+  an early `return` and a collection `if` (`[if (a) Widget()]`) cost nothing
 
 How a function is scored:
 

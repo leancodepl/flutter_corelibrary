@@ -16,8 +16,9 @@ import 'package:leancode_lint/config.dart';
 /// flow costs one, plus one per level it is nested at. As in SonarJS, a
 /// closure or local function is scored on its own, and only the first level of
 /// nested functions adds a level, so `test` closures inside `group` inside
-/// `main` are not penalized for the test framework's structure. `??`, `?.` and
-/// an early `return` cost nothing.
+/// `main` are not penalized for the test framework's structure. Null-aware
+/// operators, an early `return` and a collection `if` (a conditional child in a
+/// widget list, much like a JSX short-circuit SonarJS ignores) cost nothing.
 class CognitiveComplexity({required final CognitiveComplexityConfig config})
     extends AnalysisRule {
   this : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -146,27 +147,6 @@ class _Scorer(final AnalysisRule rule, final int maximum)
       case final elseStatement?:
         _complexity++;
         _nested(elseStatement);
-      case null:
-    }
-  }
-
-  @override
-  void visitIfElement(IfElement node) {
-    _structural();
-    _ifElement(node);
-  }
-
-  void _ifElement(IfElement node) {
-    node.expression.accept(this);
-    node.caseClause?.accept(this);
-    _nested(node.thenElement);
-    switch (node.elseElement) {
-      case final IfElement elseIf:
-        _complexity++;
-        _ifElement(elseIf);
-      case final elseElement?:
-        _complexity++;
-        _nested(elseElement);
       case null:
     }
   }

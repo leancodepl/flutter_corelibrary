@@ -7,6 +7,7 @@ void main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(CognitiveComplexityTest);
     defineReflectiveTests(CognitiveComplexityCustomMaximumTest);
+    defineReflectiveTests(CognitiveComplexityFreeConstructsTest);
   });
 }
 
@@ -118,6 +119,42 @@ class CognitiveComplexityCustomMaximumTest() extends AnalysisRuleTest {
   Future<void> test_atCustomMaximum() async {
     await assertNoDiagnostics('''
 int f($_parameters) ${_body()}
+''');
+  }
+}
+
+@reflectiveTest
+class CognitiveComplexityFreeConstructsTest() extends AnalysisRuleTest {
+  @override
+  void setUp() {
+    rule = CognitiveComplexity(
+      config: const CognitiveComplexityConfig(maximum: 0),
+    );
+    super.setUp();
+  }
+
+  Future<void> test_nullAwareOperatorsAndCollectionIf() async {
+    await assertNoDiagnostics('''
+class C {
+  int? x;
+  C? next;
+  List<int>? items;
+}
+
+List<int> f(C? c, int? limit, int? extra, bool a) {
+  c?.next?.x;
+  c?..x = 1;
+  c?.items?[0];
+  final n = limit ?? 0;
+  limit ??= n;
+  final d = c!;
+  return [
+    if (a) 1 else 2,
+    ?extra,
+    ...?d.items,
+    if (d case C(:final x?)) x,
+  ];
+}
 ''');
   }
 }
