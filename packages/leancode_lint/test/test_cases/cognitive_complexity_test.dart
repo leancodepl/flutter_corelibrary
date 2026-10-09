@@ -3,6 +3,8 @@ import 'package:leancode_lint/config.dart';
 import 'package:leancode_lint/src/lints/cognitive_complexity.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
+import '../assert_ranges.dart';
+
 void main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(CognitiveComplexityTest);
@@ -53,56 +55,51 @@ int f($_parameters) ${_body().replaceFirst('outer:', '').replaceFirst('continue 
   }
 
   Future<void> test_overMaximum() async {
-    final code =
-        '''
-int f($_parameters) ${_body()}
-''';
-    await assertDiagnostics(code, [
-      lint(code.indexOf('f('), 1, messageContainsAll: ["'f'", ' 16,']),
-    ]);
+    await assertDiagnosticsInRanges(
+      '''
+int /*[0*/f/*0]*/($_parameters) ${_body()}
+''',
+      messageContainsAll: [
+        ['function', ' 16,'],
+      ],
+    );
   }
 
   Future<void> test_methodAndConstructor() async {
-    final code =
-        '''
+    await assertDiagnosticsInRanges(
+      '''
 class C {
-  C.named($_parameters) ${_body().replaceAll('return ', 'limit = ')}
+  /*[0*/C.named/*0]*/($_parameters) ${_body().replaceAll('return ', 'limit = ')}
 
-  int m($_parameters) ${_body()}
+  int /*[1*/m/*1]*/($_parameters) ${_body()}
 }
-''';
-    await assertDiagnostics(code, [
-      lint(
-        code.indexOf('C.named'),
-        'C.named'.length,
-        messageContainsAll: ["'C.named'"],
-      ),
-      lint(code.indexOf('m('), 1, messageContainsAll: ["'m'"]),
-    ]);
+''',
+      messageContainsAll: [
+        ['constructor'],
+        ['method'],
+      ],
+    );
   }
 
   // Seven of the body's increments are nesting-sensitive, so one level deeper
   // it scores 23. Only the first level of nested functions adds a level, so
   // `i`, nested in `h`, scores the same.
   Future<void> test_nestedFunctionsAreScoredOnTheirOwn() async {
-    final code =
-        '''
+    await assertDiagnosticsInRanges(
+      '''
 void f($_parameters) {
   if (a) {}
-  int g() ${_body()}
+  int /*[0*/g/*0]*/() ${_body()}
   final h = () {
-    final i = () ${_body()};
+    final i = /*[1*/()/*1]*/ ${_body()};
   };
 }
-''';
-    await assertDiagnostics(code, [
-      lint(code.indexOf('g('), 1, messageContainsAll: ["'g'", ' 23,']),
-      lint(
-        code.indexOf('()', code.indexOf('i =')),
-        2,
-        messageContainsAll: ['closure', ' 23,'],
-      ),
-    ]);
+''',
+      messageContainsAll: [
+        ['function', ' 23,'],
+        ['closure', ' 23,'],
+      ],
+    );
   }
 }
 

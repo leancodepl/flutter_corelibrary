@@ -602,45 +602,15 @@ final plugin = LeanCodeLintPlugin(
 
 **AVOID** functions that are hard to follow.
 
-Scores every function, method, constructor and closure with
-[Cognitive Complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf),
-as SonarJS implements it, and reports those
-over the maximum (15 by default):
+Reports functions, methods, constructors and closures whose
+[Cognitive Complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf)
+is over the maximum (15 by default). Each `if`, `switch`, `?:`, loop and `catch`
+costs 1, plus 1 for each level it is nested at; each `else` and each run of `&&`
+or `||` costs 1. Unlike the original metric:
 
-- `if`, `else if`, `else`, `switch`, `?:`, loops, `catch` and a `break` or
-  `continue` to a label each cost 1
-- `if`, `switch`, `?:`, loops and `catch` cost 1 more for each level they are
-  nested at
-- each run of the same operator in a chain of `&&` and `||` costs 1, so
-  `a && b && c` costs 1 and `a && b || c` costs 2
-- a closure or local function is scored on its own; only the first level of
-  nested functions adds a nesting level, as in SonarJS, so a `test` inside a
-  `group` inside `main` starts one level deep
-- null-aware operators (`?.`, `??`, `??=`, `!`, `...?`, `?x` in a collection),
-  an early `return` and a collection `if` (`[if (a) Widget()]`) cost nothing
-
-How a function is scored:
-
-```dart
-int count(List<List<int>> rows, bool skipNegative) {
-  var n = 0;
-  for (final row in rows) { // +1
-    for (final x in row) { // +2 (nesting 1)
-      if (x > 0) { // +3 (nesting 2)
-        n++;
-      } else if (skipNegative && x < 0) { // +1, +1 for &&
-        continue;
-      } else { // +1
-        n--;
-      }
-    }
-  }
-  return n;
-} // 9
-```
-
-Extracting the loop body into a function, or returning early instead of
-nesting, brings the score down.
+- a closure is scored on its own, and only the first level of nested functions
+  adds a nesting level, so a `test` isn't penalized for sitting in a `group`
+- a collection `if` and null-aware operators (`?.`, `??`, `!`, ...) cost nothing
 
 #### Configuration
 

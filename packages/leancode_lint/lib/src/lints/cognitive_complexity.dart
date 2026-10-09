@@ -25,10 +25,10 @@ class CognitiveComplexity({required final CognitiveComplexityConfig config})
 
   static const code = LintCode(
     'cognitive_complexity',
-    '{0} has a cognitive complexity of {1}, over the maximum of {2}.',
+    'This {0} has a cognitive complexity of {1}, over the maximum of {2}.',
     correctionMessage:
-        'Try extracting part of it into a function, or returning early to '
-        'reduce nesting.',
+        'Extract part of it into a function, or return early to reduce '
+        'nesting.',
     severity: .WARNING,
   );
 
@@ -55,29 +55,23 @@ class _Visitor(final AnalysisRule rule, final int maximum)
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (node.parent is CompilationUnit) {
-      _Scorer(rule, maximum).score(
-        "'${node.name.lexeme}'",
-        range.token(node.name),
-        [node.functionExpression.body],
-      );
+      _Scorer(rule, maximum).score('function', range.token(node.name), [
+        node.functionExpression.body,
+      ]);
     }
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    _Scorer(
-      rule,
-      maximum,
-    ).score("'${node.name.lexeme}'", range.token(node.name), [node.body]);
+    _Scorer(rule, maximum).score('method', range.token(node.name), [node.body]);
   }
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    _Scorer(rule, maximum).score(
-      "'${[?node.typeName?.name, ?node.name?.lexeme].join('.')}'",
-      node.errorRange,
-      [...node.initializers, node.body],
-    );
+    _Scorer(
+      rule,
+      maximum,
+    ).score('constructor', node.errorRange, [...node.initializers, node.body]);
   }
 }
 
@@ -87,7 +81,7 @@ class _Scorer(final AnalysisRule rule, final int maximum)
   var _nesting = 0;
   var _functionDepth = 0;
 
-  void score(String name, SourceRange at, List<AstNode> parts) {
+  void score(String kind, SourceRange at, List<AstNode> parts) {
     final enclosing = _complexity;
     _complexity = 0;
     _functionDepth++;
@@ -95,7 +89,7 @@ class _Scorer(final AnalysisRule rule, final int maximum)
       part.accept(this);
     }
     if (_complexity > maximum) {
-      rule.reportAtSourceRange(at, arguments: [name, _complexity, maximum]);
+      rule.reportAtSourceRange(at, arguments: [kind, _complexity, maximum]);
     }
     _complexity = enclosing;
     _functionDepth--;
@@ -116,11 +110,9 @@ class _Scorer(final AnalysisRule rule, final int maximum)
       _nesting++;
     }
     if (node.parent case final FunctionDeclaration declaration) {
-      score("'${declaration.name.lexeme}'", range.token(declaration.name), [
-        node.body,
-      ]);
+      score('function', range.token(declaration.name), [node.body]);
     } else {
-      score('A closure', range.startEnd(node, node.parameters ?? node), [
+      score('closure', range.startEnd(node, node.parameters ?? node), [
         node.body,
       ]);
     }
