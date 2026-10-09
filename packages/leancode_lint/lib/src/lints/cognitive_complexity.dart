@@ -10,15 +10,44 @@ import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/config.dart';
 
 /// Flags a function, method, constructor or closure whose cognitive complexity
-/// is over `LeanCodeLintConfig.cognitiveComplexity.maximum`.
+/// is over `LeanCodeLintConfig.cognitiveComplexity.maximum` (15 by default).
 ///
-/// Scored like SonarSource's Cognitive Complexity: each break in the linear
-/// flow costs one, plus one per level it is nested at. As in SonarJS, a
-/// closure or local function is scored on its own, and only the first level of
-/// nested functions adds a level, so `test` closures inside `group` inside
-/// `main` are not penalized for the test framework's structure. Null-aware
-/// operators, an early `return` and a collection `if` (a conditional child in a
-/// widget list, much like a JSX short-circuit SonarJS ignores) cost nothing.
+/// Cognitive Complexity is SonarSource's measure of how hard code is to follow
+/// (https://www.sonarsource.com/docs/CognitiveComplexity.pdf). Unlike
+/// cyclomatic complexity, which counts paths, it charges for nesting, so three
+/// nested loops cost more than three loops one after another.
+///
+/// Scoring:
+///
+/// | Construct                                          | Cost              |
+/// | -------------------------------------------------- | ----------------- |
+/// | `if`, `switch` (statement or expression), `?:`     | 1 + nesting level |
+/// | `for`, `while`, `do`, collection `for`, `catch`    | 1 + nesting level |
+/// | `else if`, `else`                                  | 1                 |
+/// | `break` or `continue` to a label                   | 1                 |
+/// | each run of one operator in an `&&`/`              |                   |
+/// | collection `if`, `case` patterns, `when` guards    | 0                 |
+/// | `?.`, `?..`, `?[]`, `??`, `??=`, `!`, `...?`, `?x` | 0                 |
+/// | early `return`, `try`, `finally`                   | 0                 |
+///
+/// The bodies of the constructs costing "1 + nesting level", and the branches
+/// of `else`, nest one level deeper. A condition is scored at the level of its
+/// construct. `a && b && c` costs 1, `a && b || c` costs 2, and parentheses
+/// start a new chain.
+///
+/// Each function is reported on its own, at its name, a constructor's name, or
+/// a closure's parameters. Deviations from SonarSource's paper, and why:
+///
+/// - A closure or local function is scored on its own, and only the first
+///   level of nested functions adds a nesting level, as in SonarJS. Dart tests
+///   sit in `main`, so with every level counted, a `test` in a `group` would
+///   start two levels deep before its first `if`.
+/// - A collection `if` costs nothing: a conditional child in a widget list
+///   reads like JSX's `cond && <X/>`, which SonarJS ignores too. A collection
+///   `for` still costs like a loop.
+/// - `||` costs like `&&`. SonarJS ignores `||` because in JavaScript it also
+///   supplies defaults (`name || 'Anon'`); in Dart it only takes `bool`, and
+///   defaults use `??`, which is free.
 class CognitiveComplexity({required final CognitiveComplexityConfig config})
     extends AnalysisRule {
   this : super(name: code.lowerCaseName, description: code.problemMessage);

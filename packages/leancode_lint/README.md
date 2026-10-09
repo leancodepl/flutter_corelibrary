@@ -612,6 +612,9 @@ or `||` costs 1. Unlike the original metric:
   adds a nesting level, so a `test` isn't penalized for sitting in a `group`
 - a collection `if` and null-aware operators (`?.`, `??`, `!`, ...) cost nothing
 
+The full scoring table and the reasons for each deviation are in the
+[rule's documentation](./lib/src/lints/cognitive_complexity.dart).
+
 #### Configuration
 
 Disabled by default. Enable it in `analysis_options.yaml`:
