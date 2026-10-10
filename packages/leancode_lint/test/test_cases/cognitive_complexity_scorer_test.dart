@@ -95,4 +95,17 @@ class C {
       {'C.named': 1},
     );
   });
+
+  test('scores a primary constructor, but not its initializers', () {
+    expect(
+      _scores('''
+class C(bool a) {
+  this : assert(a ? true : false) {
+    if (a) {}
+  }
+}
+'''),
+      {'this': 1},
+    );
+  });
 }

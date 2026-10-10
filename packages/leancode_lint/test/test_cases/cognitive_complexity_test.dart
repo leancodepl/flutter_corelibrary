@@ -81,6 +81,19 @@ class C {
     );
   }
 
+  Future<void> test_primaryConstructor() async {
+    await assertDiagnosticsInRanges(
+      '''
+class C($_parameters) {
+  /*[0*/this/*0]*/ ${_body().replaceAll('return ', 'final _ = ')}
+}
+''',
+      messageContainsAll: [
+        ['constructor', ' 16,'],
+      ],
+    );
+  }
+
   // Seven of the body's increments are nesting-sensitive, so one level deeper
   // it scores 23. Only the first level of nested functions adds a level, so
   // `i`, nested in `h`, scores the same.

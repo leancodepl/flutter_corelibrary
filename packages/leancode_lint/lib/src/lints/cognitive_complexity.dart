@@ -36,8 +36,8 @@ import 'package:leancode_lint/config.dart';
 /// `a && b || c` costs 2, and parentheses start a new chain.
 ///
 /// Each function is reported on its own, at its name, a constructor's name, or
-/// a closure's parameters. A constructor's initializer list is not scored, like
-/// a field initializer. Deviations from SonarSource's paper, and why:
+/// a closure's parameters, or a primary constructor's `this`. A constructor's
+/// initializer list is not scored, like a field initializer. Deviations from SonarSource's paper, and why:
 ///
 /// - A closure or local function is scored on its own, and only the first
 ///   level of nested functions adds a nesting level, as in SonarJS. Dart tests
@@ -74,7 +74,8 @@ class CognitiveComplexity({required final CognitiveComplexityConfig config})
     registry
       ..addFunctionDeclaration(this, visitor)
       ..addMethodDeclaration(this, visitor)
-      ..addConstructorDeclaration(this, visitor);
+      ..addConstructorDeclaration(this, visitor)
+      ..addPrimaryConstructorBody(this, visitor);
   }
 }
 
@@ -92,6 +93,10 @@ class _Visitor(final AnalysisRule rule, final int maximum)
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) =>
+      _report(node);
+
+  @override
+  void visitPrimaryConstructorBody(PrimaryConstructorBody node) =>
       _report(node);
 
   void _report(Declaration declaration) {
@@ -113,8 +118,9 @@ final class ScoredFunction({
   required final int complexity,
 });
 
-/// Scores [declaration], a top-level function, a method or a constructor, and
-/// every function nested in it, each on its own.
+/// Scores [declaration], a top-level function, a method, a constructor or a
+/// primary constructor's body, and every function nested in it, each on its
+/// own.
 ///
 /// A constructor's initializer list is not scored, like a field initializer.
 List<ScoredFunction> scoreFunctions(Declaration declaration) {
@@ -138,6 +144,8 @@ List<ScoredFunction> scoreFunctions(Declaration declaration) {
         ),
         body,
       );
+    case PrimaryConstructorBody(:final thisKeyword, :final body):
+      scorer.score('constructor', range.token(thisKeyword), body);
   }
   return scorer.scored;
 }
