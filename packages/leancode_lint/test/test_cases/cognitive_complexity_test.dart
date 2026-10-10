@@ -57,7 +57,7 @@ int f($_parameters) ${_body().replaceFirst('outer:', '').replaceFirst('continue 
   Future<void> test_overMaximum() async {
     await assertDiagnosticsInRanges(
       '''
-int /*[0*/f/*0]*/($_parameters) ${_body()}
+int [!f!]($_parameters) ${_body()}
 ''',
       messageContainsAll: [
         ['function', ' 16,'],
@@ -85,7 +85,7 @@ class C {
     await assertDiagnosticsInRanges(
       '''
 class C($_parameters) {
-  /*[0*/this/*0]*/ ${_body().replaceAll('return ', 'final _ = ')}
+  [!this!] ${_body().replaceAll('return ', 'final _ = ')}
 }
 ''',
       messageContainsAll: [
