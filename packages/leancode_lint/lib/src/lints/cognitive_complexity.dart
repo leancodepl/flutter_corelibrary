@@ -25,18 +25,19 @@ import 'package:leancode_lint/config.dart';
 /// | `for`, `while`, `do`, collection `for`, `catch`    | 1 + nesting level |
 /// | `else if`, `else`                                  | 1                 |
 /// | `break` or `continue` to a label                   | 1                 |
-/// | each run of one operator in an `&&`/`              |                   |
+/// | each run of one logical operator in a chain       | 1                 |
 /// | collection `if`, `case` patterns, `when` guards    | 0                 |
 /// | `?.`, `?..`, `?[]`, `??`, `??=`, `!`, `...?`, `?x` | 0                 |
 /// | early `return`, `try`, `finally`                   | 0                 |
 ///
 /// The bodies of the constructs costing "1 + nesting level", and the branches
 /// of `else`, nest one level deeper. A condition is scored at the level of its
-/// construct. `a && b && c` costs 1, `a && b || c` costs 2, and parentheses
-/// start a new chain.
+/// construct. Logical operators are `&&` and `||`: `a && b && c` costs 1,
+/// `a && b || c` costs 2, and parentheses start a new chain.
 ///
 /// Each function is reported on its own, at its name, a constructor's name, or
-/// a closure's parameters. Deviations from SonarSource's paper, and why:
+/// a closure's parameters. A constructor's initializer list is not scored, like
+/// a field initializer. Deviations from SonarSource's paper, and why:
 ///
 /// - A closure or local function is scored on its own, and only the first
 ///   level of nested functions adds a nesting level, as in SonarJS. Dart tests
@@ -77,49 +78,64 @@ class CognitiveComplexity({required final CognitiveComplexityConfig config})
   }
 }
 
-// Only declarations outside any other function are visited here; the
-// functions nested in them are scored as the scorer reaches them.
 class _Visitor(final AnalysisRule rule, final int maximum)
     extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (node.parent is CompilationUnit) {
-      _Scorer(rule, maximum).score('function', range.token(node.name), [
-        node.functionExpression.body,
-      ]);
+      _report(node);
     }
   }
 
   @override
-  void visitMethodDeclaration(MethodDeclaration node) {
-    _Scorer(rule, maximum).score('method', range.token(node.name), [node.body]);
-  }
+  void visitMethodDeclaration(MethodDeclaration node) => _report(node);
 
   @override
-  void visitConstructorDeclaration(ConstructorDeclaration node) {
-    _Scorer(
-      rule,
-      maximum,
-    ).score('constructor', node.errorRange, [...node.initializers, node.body]);
+  void visitConstructorDeclaration(ConstructorDeclaration node) =>
+      _report(node);
+
+  void _report(Declaration declaration) {
+    for (final (:kind, :range, :complexity) in scoreFunctions(declaration)) {
+      if (complexity > maximum) {
+        rule.reportAtSourceRange(range, arguments: [kind, complexity, maximum]);
+      }
+    }
   }
 }
 
-class _Scorer(final AnalysisRule rule, final int maximum)
-    extends RecursiveAstVisitor<void> {
+/// A function's cognitive complexity, the kind of function it is, and where to
+/// report it.
+typedef ScoredFunction = ({String kind, SourceRange range, int complexity});
+
+/// Scores [declaration], a top-level function, a method or a constructor, and
+/// every function nested in it, each on its own.
+///
+/// A constructor's initializer list is not scored, like a field initializer.
+List<ScoredFunction> scoreFunctions(Declaration declaration) {
+  final scorer = _Scorer();
+  switch (declaration) {
+    case FunctionDeclaration(:final name, :final functionExpression):
+      scorer.score('function', range.token(name), functionExpression.body);
+    case MethodDeclaration(:final name, :final body):
+      scorer.score('method', range.token(name), body);
+    case ConstructorDeclaration(:final body):
+      scorer.score('constructor', declaration.errorRange, body);
+  }
+  return scorer.scored;
+}
+
+class _Scorer() extends RecursiveAstVisitor<void> {
+  final scored = <ScoredFunction>[];
   var _complexity = 0;
   var _nesting = 0;
   var _functionDepth = 0;
 
-  void score(String kind, SourceRange at, List<AstNode> parts) {
+  void score(String kind, SourceRange at, FunctionBody body) {
     final enclosing = _complexity;
     _complexity = 0;
     _functionDepth++;
-    for (final part in parts) {
-      part.accept(this);
-    }
-    if (_complexity > maximum) {
-      rule.reportAtSourceRange(at, arguments: [kind, _complexity, maximum]);
-    }
+    body.accept(this);
+    scored.add((kind: kind, range: at, complexity: _complexity));
     _complexity = enclosing;
     _functionDepth--;
   }
@@ -139,11 +155,13 @@ class _Scorer(final AnalysisRule rule, final int maximum)
       _nesting++;
     }
     if (node.parent case final FunctionDeclaration declaration) {
-      score('function', range.token(declaration.name), [node.body]);
+      score('function', range.token(declaration.name), node.body);
     } else {
-      score('closure', range.startEnd(node, node.parameters ?? node), [
+      score(
+        'closure',
+        range.startEnd(node, node.parameters ?? node),
         node.body,
-      ]);
+      );
     }
     if (nests) {
       _nesting--;
