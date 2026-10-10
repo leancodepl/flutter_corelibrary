@@ -96,6 +96,40 @@ class C {
     );
   });
 
+  test('reports a constructor without its type name at its keyword', () {
+    expect(
+      _scores('''
+class C {
+  new named(bool a) {
+    if (a) {}
+  }
+}
+'''),
+      {'new named': 1},
+    );
+    expect(
+      _scores('''
+class C {
+  new(bool a) {
+    if (a) {}
+  }
+}
+'''),
+      {'new': 1},
+    );
+    expect(
+      _scores('''
+class C {
+  factory make(bool a) {
+    if (a) {}
+    return C();
+  }
+}
+'''),
+      {'factory make': 1},
+    );
+  });
+
   test('scores a primary constructor, but not its initializers', () {
     expect(
       _scores('''

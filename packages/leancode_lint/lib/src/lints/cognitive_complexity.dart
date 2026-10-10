@@ -35,9 +35,10 @@ import 'package:leancode_lint/config.dart';
 /// construct. Logical operators are `&&` and `||`: `a && b && c` costs 1,
 /// `a && b || c` costs 2, and parentheses start a new chain.
 ///
-/// Each function is reported on its own, at its name, a constructor's name, or
-/// a closure's parameters, or a primary constructor's `this`. A constructor's
-/// initializer list is not scored, like a field initializer. Deviations from SonarSource's paper, and why:
+/// Each function is reported on its own, at its name, a closure's parameters
+/// or a primary constructor's `this`. A constructor's initializer list is not
+/// scored, like a field initializer. Deviations from SonarSource's paper, and
+/// why:
 ///
 /// - A closure or local function is scored on its own, and only the first
 ///   level of nested functions adds a nesting level, as in SonarJS. Dart tests
@@ -132,15 +133,19 @@ List<ScoredFunction> scoreFunctions(Declaration declaration) {
       scorer.score('method', range.token(name), body);
     case ConstructorDeclaration(
       :final typeName,
+      :final newKeyword,
+      :final factoryKeyword,
       :final name,
       :final parameters,
       :final body,
     ):
+      // `C.named`, or with the type name omitted, `new named` or `factory f`.
+      final keyword = newKeyword ?? factoryKeyword;
       scorer.score(
         'constructor',
         range.startEnd(
-          typeName ?? name ?? parameters,
-          name ?? typeName ?? parameters,
+          typeName ?? keyword ?? name ?? parameters,
+          name ?? typeName ?? keyword ?? parameters,
         ),
         body,
       );
