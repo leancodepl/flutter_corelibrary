@@ -12,7 +12,9 @@ Map<String, int> _scores(String code) {
     final declaration => declaration,
   };
   return {
-    for (final (:range, :complexity, kind: _) in scoreFunctions(declaration))
+    for (final ScoredFunction(:range, :complexity) in scoreFunctions(
+      declaration,
+    ))
       code.substring(range.offset, range.end): complexity,
   };
 }

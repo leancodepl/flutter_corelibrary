@@ -25,7 +25,7 @@ import 'package:leancode_lint/config.dart';
 /// | `for`, `while`, `do`, collection `for`, `catch`    | 1 + nesting level |
 /// | `else if`, `else`                                  | 1                 |
 /// | `break` or `continue` to a label                   | 1                 |
-/// | each run of one logical operator in a chain       | 1                 |
+/// | each run of one logical operator in a chain        | 1                 |
 /// | collection `if`, `case` patterns, `when` guards    | 0                 |
 /// | `?.`, `?..`, `?[]`, `??`, `??=`, `!`, `...?`, `?x` | 0                 |
 /// | early `return`, `try`, `finally`                   | 0                 |
@@ -95,7 +95,9 @@ class _Visitor(final AnalysisRule rule, final int maximum)
       _report(node);
 
   void _report(Declaration declaration) {
-    for (final (:kind, :range, :complexity) in scoreFunctions(declaration)) {
+    for (final ScoredFunction(:kind, :range, :complexity) in scoreFunctions(
+      declaration,
+    )) {
       if (complexity > maximum) {
         rule.reportAtSourceRange(range, arguments: [kind, complexity, maximum]);
       }
@@ -105,7 +107,11 @@ class _Visitor(final AnalysisRule rule, final int maximum)
 
 /// A function's cognitive complexity, the kind of function it is, and where to
 /// report it.
-typedef ScoredFunction = ({String kind, SourceRange range, int complexity});
+final class ScoredFunction({
+  required final String kind,
+  required final SourceRange range,
+  required final int complexity,
+});
 
 /// Scores [declaration], a top-level function, a method or a constructor, and
 /// every function nested in it, each on its own.
@@ -118,8 +124,20 @@ List<ScoredFunction> scoreFunctions(Declaration declaration) {
       scorer.score('function', range.token(name), functionExpression.body);
     case MethodDeclaration(:final name, :final body):
       scorer.score('method', range.token(name), body);
-    case ConstructorDeclaration(:final body):
-      scorer.score('constructor', declaration.errorRange, body);
+    case ConstructorDeclaration(
+      :final typeName,
+      :final name,
+      :final parameters,
+      :final body,
+    ):
+      scorer.score(
+        'constructor',
+        range.startEnd(
+          typeName ?? name ?? parameters,
+          name ?? typeName ?? parameters,
+        ),
+        body,
+      );
   }
   return scorer.scored;
 }
@@ -135,7 +153,7 @@ class _Scorer() extends RecursiveAstVisitor<void> {
     _complexity = 0;
     _functionDepth++;
     body.accept(this);
-    scored.add((kind: kind, range: at, complexity: _complexity));
+    scored.add(.new(kind: kind, range: at, complexity: _complexity));
     _complexity = enclosing;
     _functionDepth--;
   }
