@@ -72,6 +72,13 @@ void f(bool a) {
     );
   });
 
+  test('reports a closure at its parameters', () {
+    expect(_scores('void f() { final g = <T>(T x) { if (x == null) {} }; }'), {
+      'f': 0,
+      '(T x)': 2,
+    });
+  });
+
   test('scores a method and a constructor, but not its initializers', () {
     expect(
       _scores('''

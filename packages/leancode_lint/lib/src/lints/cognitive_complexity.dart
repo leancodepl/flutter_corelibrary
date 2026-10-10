@@ -157,11 +157,7 @@ class _Scorer() extends RecursiveAstVisitor<void> {
     if (node.parent case final FunctionDeclaration declaration) {
       score('function', range.token(declaration.name), node.body);
     } else {
-      score(
-        'closure',
-        range.startEnd(node, node.parameters ?? node),
-        node.body,
-      );
+      score('closure', range.node(node.parameters!), node.body);
     }
     if (nests) {
       _nesting--;
