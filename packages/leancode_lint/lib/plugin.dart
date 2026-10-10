@@ -14,6 +14,7 @@ import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
 import 'package:leancode_lint/src/lints/bloc_subclasses_naming.dart';
 import 'package:leancode_lint/src/lints/catch_parameter_names.dart';
+import 'package:leancode_lint/src/lints/cognitive_complexity.dart';
 import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:leancode_lint/src/lints/missing_equatable_props.dart';
@@ -62,6 +63,9 @@ final class LeanCodeLintPlugin({
         CatchParameterNames(config: config.catchParameterNames),
       )
       ..registerWarningRule(AvoidCatchError())
+      ..registerLintRule(
+        CognitiveComplexity(config: config.cognitiveComplexity),
+      )
       ..registerWarningRule(AvoidBuildContextInBlocs())
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(AvoidDirectCollectionEqualityChecks())

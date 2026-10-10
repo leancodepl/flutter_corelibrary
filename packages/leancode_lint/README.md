@@ -596,6 +596,53 @@ final plugin = LeanCodeLintPlugin(
 </details>
 
 <details>
+<summary><code>cognitive_complexity</code></summary>
+
+### `cognitive_complexity`
+
+**AVOID** functions that are hard to follow.
+
+Reports functions, methods, constructors and closures whose
+[Cognitive Complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf)
+is over the maximum (15 by default). Each `if`, `switch`, `?:`, loop and `catch`
+costs 1, plus 1 for each level it is nested at; each `else` and each run of `&&`
+or `||` costs 1. Unlike the original metric:
+
+- a closure is scored on its own, and only the first level of nested functions
+  adds a nesting level, so a `test` isn't penalized for sitting in a `group`
+- a collection `if` and null-aware operators (`?.`, `??`, `!`, ...) cost nothing
+
+The full scoring table and the reasons for each deviation are in the
+[rule's documentation](./lib/src/lints/cognitive_complexity.dart).
+
+#### Configuration
+
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^27.1.0
+    diagnostics:
+      cognitive_complexity: true
+```
+
+The maximum is configured via `LeanCodeLintConfig.cognitiveComplexity`:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeanCodeLintPlugin(
+  name: 'my_lints',
+  config: LeanCodeLintConfig(
+    cognitiveComplexity: CognitiveComplexityConfig(maximum: 30),
+  ),
+);
+```
+
+</details>
+
+<details>
 <summary><code>hook_widget_does_not_use_hooks</code></summary>
 
 ### `hook_widget_does_not_use_hooks`
