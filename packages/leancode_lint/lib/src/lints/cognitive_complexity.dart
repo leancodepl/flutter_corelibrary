@@ -131,24 +131,8 @@ List<ScoredFunction> scoreFunctions(Declaration declaration) {
       scorer.score('function', range.token(name), functionExpression.body);
     case MethodDeclaration(:final name, :final body):
       scorer.score('method', range.token(name), body);
-    case ConstructorDeclaration(
-      :final typeName,
-      :final newKeyword,
-      :final factoryKeyword,
-      :final name,
-      :final parameters,
-      :final body,
-    ):
-      // `C.named`, or with the type name omitted, `new named` or `factory f`.
-      final keyword = newKeyword ?? factoryKeyword;
-      scorer.score(
-        'constructor',
-        range.startEnd(
-          typeName ?? keyword ?? name ?? parameters,
-          name ?? typeName ?? keyword ?? parameters,
-        ),
-        body,
-      );
+    case ConstructorDeclaration(:final body):
+      scorer.score('constructor', declaration.errorRange, body);
     case PrimaryConstructorBody(:final thisKeyword, :final body):
       scorer.score('constructor', range.token(thisKeyword), body);
   }
