@@ -1218,22 +1218,33 @@ None.
 
 ### `prefer_dot_shorthand`
 
-**PREFER** a dot shorthand where the context type already names the type.
+**PREFER** dot shorthands over type names when the context type already
+determines the type.
 
-Reports `Alignment.center`, `int.parse(s)` or `Key(path, c)` where the context
-type is already `Alignment`, `int` or `Key`, so `.center`, `.parse(s)` or
-`.new(path, c)` would do. The context type comes from:
+When an expression has a context type, for example the type of the parameter
+it is passed to or the declared return type of the function it is returned
+from, a dot shorthand resolves against that type. This rule reports a static
+member, an enum value, or a constructor that is written with its type name
+even though the context type is the same type, so the type name is redundant.
 
-- an argument's parameter type, a default value, or a typed variable
-- a declared return type, or an assignment
-- the right operand of `==` or `!=`, or a constant pattern
-- the branches of `??`, `?:` and a switch expression
-- a collection literal with type arguments or a context of its own
+The rule determines the context type from where the expression appears:
 
-Type arguments stay unless they equal the context's. Annotation arguments are
-left alone, since tools read annotations with parsers of their own.
+- an argument, using the parameter's type
+- a variable initializer, a default value, or an assignment
+- a `return` statement or `=>` body, using the declared return type
+- the right operand of `==` or `!=`
+- a constant pattern
+- a branch of `??`, `?:`, or a switch expression
+- an element of a list, set, or map literal with explicit type arguments or a
+  context type
 
-The `Replace with a dot shorthand` quick fix rewrites the expression.
+Explicit type arguments are only removed when they are the same as the context
+type's. Arguments of annotations are not reported, because some tools (for
+example `package:test`) parse annotations themselves and do not support dot
+shorthands.
+
+The `Replace with a dot shorthand` quick fix removes the type name, or replaces
+it with `.new` for an unnamed constructor.
 
 **BAD:**
 
@@ -1265,8 +1276,8 @@ plugins:
       prefer_dot_shorthand: true
 ```
 
-The kinds of member it reports are set via `LeanCodeLintConfig.preferDotShorthand`,
-all of them on by default:
+The kinds of members that are reported can be configured via
+`LeanCodeLintConfig.preferDotShorthand`. All of them are enabled by default:
 
 ```dart
 import 'package:leancode_lint/plugin.dart';

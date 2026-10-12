@@ -14,9 +14,9 @@ import 'assert_ranges.dart';
 extension AssertFixesX on AnalysisRuleTest {
   // TODO: replace with a first-party solution
   // See https://github.com/dart-lang/sdk/issues/61889
-  /// Asserts the diagnostics marked in [content], as [assertDiagnosticsInRanges]
-  /// does, and that applying the fix of kind [fixKind] offered for each of
-  /// them (registered under [code]) turns the file into [fixed].
+  /// Asserts the diagnostics marked in [content], like
+  /// [assertDiagnosticsInRanges], and that applying the fix of kind [fixKind]
+  /// for each diagnostic with [code] results in [fixed].
   Future<void> assertFixes(
     String content, {
     required DiagnosticCode code,
@@ -44,7 +44,7 @@ extension AssertFixesX on AnalysisRuleTest {
       final fix = fixes.singleWhere((fix) => fix.kind == fixKind);
       edits.addAll(fix.change.getFileEdit(testFile.path)!.edits);
     }
-    // Later edits first, so earlier offsets stay valid as the text changes.
+    // Apply later edits first so that earlier offsets stay valid.
     edits.sort((a, b) => b.offset.compareTo(a.offset));
     expect(SourceEdit.applySequence(result.content, edits), fixed);
   }

@@ -17,33 +17,39 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/config.dart';
 
-/// Reports a static member, enum value or constructor spelled with its type
-/// name where the context type already names that type, so a dot shorthand
-/// would do: `.center` for `Alignment.center`, `.parse(s)` for
-/// `int.parse(s)`, `.new(path, c)` for `Key(path, c)`.
+/// Reports a static member, an enum value, or a constructor that is written
+/// with its type name even though the context type is the same type, so a
+/// dot shorthand could be used instead. For example, `Alignment.center`
+/// passed to a parameter of type `Alignment` is reported, and `.center` is
+/// suggested.
 ///
-/// The analyzer keeps no context types, so the rule derives them from the
-/// expression's parent:
+/// The analyzer does not store context types, so the rule determines them
+/// from the parent of the expression:
 ///
-/// - an argument: the parameter's type, when its type parameters are pinned
-///   by the receiver (`styles.add(.center)` on a `List<Alignment>`) or by the
-///   invocation's own context rather than by the argument itself
-/// - a typed variable's initializer, a default value, an assignment
-/// - a `return` or `=>` against a declared return type; an `async` body
-///   unwraps `Future<T>` and `FutureOr<T>`
-/// - the right operand of `==` or `!=`, a constant pattern
-/// - the branches of `??`, `?:` and a switch expression, parentheses
-/// - a list, set or map literal whose type arguments or context fix the
-///   element type
+/// - an argument, using the parameter's type. If the parameter's type
+///   contains type parameters, they must be determined by something other
+///   than the argument itself: by the receiver for an instance member
+///   (`styles.add(.center)` on a `List<Alignment>`), or by the context type
+///   of the invocation.
+/// - a variable initializer, a default value, or an assignment
+/// - a `return` statement or `=>` body, using the declared return type. In
+///   an `async` body, the type argument of `Future<T>` or `FutureOr<T>` is
+///   used.
+/// - the right operand of `==` or `!=`
+/// - a constant pattern, using the matched value type
+/// - a branch of `??`, `?:`, or a switch expression, and a parenthesized
+///   expression
+/// - an element of a list, set, or map literal with explicit type arguments
+///   or a context type
 ///
-/// `T?` and `FutureOr<T>` resolve to `T`. Type arguments stay unless they
-/// equal the context's. Annotation arguments are left alone: tools read
-/// annotations with parsers of their own (`package:test` evaluates
-/// `@Timeout(Duration(minutes: 1))` itself).
+/// A nullable context type and `FutureOr<T>` are resolved to the underlying
+/// type. Explicit type arguments are only removed when they are the same as
+/// the context type's. Arguments of annotations are not reported, because
+/// some tools parse annotations themselves and do not support dot shorthands
+/// (`package:test` evaluates `@Timeout(Duration(minutes: 1))` this way).
 ///
-/// `LeanCodeLintConfig.preferDotShorthand` picks the kinds of member to
-/// report: unnamed constructors, named constructors, static members and enum
-/// values, all of them by default.
+/// The kinds of members that are reported are configured via
+/// `LeanCodeLintConfig.preferDotShorthand`.
 class PreferDotShorthand({required final PreferDotShorthandConfig config})
     extends AnalysisRule {
   this : super(name: code.lowerCaseName, description: code.problemMessage);
@@ -103,7 +109,8 @@ class _Visitor(
     if (namespace == null || namespace.element != qualified.type) {
       return;
     }
-    // Written type arguments can only go when the context spells them too.
+    // Explicit type arguments can only be removed when they are the same as
+    // the context type's.
     if (qualified.parameterized case final written? when written != namespace) {
       return;
     }
@@ -118,7 +125,7 @@ class _Visitor(
   };
 }
 
-/// The kinds of member a dot shorthand can reach.
+/// The kinds of members that can be written as a dot shorthand.
 enum MemberKind() {
   unnamedConstructor,
   namedConstructor,
@@ -126,11 +133,11 @@ enum MemberKind() {
   enumValue,
 }
 
-/// A member reached through its type's name, `Alignment.center`,
-/// `int.parse(s)` or `Key(path, c)`, and what makes it a dot shorthand: the
-/// [typeRange] replaced by the [replacement]. [parameterized] is the written
-/// type when it carries type arguments, `List<int>` in
-/// `List<int>.filled(1, 0)`.
+/// A member accessed through its type name, such as `Alignment.center`,
+/// `int.parse(s)` or `Key(path, c)`. [typeRange] is the range of the type
+/// name, which the fix replaces with [replacement]. [parameterized] is the
+/// written type when it has explicit type arguments, for example `List<int>`
+/// in `List<int>.filled(1, 0)`.
 class const QualifiedMember({
   required final MemberKind kind,
   required final InterfaceElement type,
@@ -141,9 +148,9 @@ class const QualifiedMember({
   required final InterfaceType? parameterized,
 });
 
-/// [node] as a [QualifiedMember], or `null` when it is not a static member
-/// access, an enum value, a static method call or a constructor call spelled
-/// with its type name.
+/// Returns [node] as a [QualifiedMember], or `null` if it is not a static
+/// member access, an enum value, a static method call, or a constructor call
+/// written with its type name.
 QualifiedMember? qualifiedMemberOf(Expression node) => switch (node) {
   PrefixedIdentifier(
     prefix: Identifier(:final InterfaceElement element) &&
@@ -195,8 +202,9 @@ bool _isEnumValue(Element? element) => switch (element) {
   _ => false,
 };
 
-/// The type a dot shorthand in a context of type [type] resolves against:
-/// the type itself, its non-nullable form, or what its `FutureOr` wraps.
+/// Returns the type that a dot shorthand in a context of type [type]
+/// resolves against: the type made non-nullable, with `FutureOr` unwrapped.
+/// Returns `null` if the result is not an interface type.
 InterfaceType? namespaceOf(DartType type, TypeSystem typeSystem) {
   var namespace = typeSystem.promoteToNonNull(type);
   while (namespace.isDartAsyncFutureOr) {
@@ -210,12 +218,10 @@ InterfaceType? namespaceOf(DartType type, TypeSystem typeSystem) {
   };
 }
 
-/// The type the context imposes on [node], as far as a dot shorthand needs
-/// it: `null` when nothing does. The analyzer computes context types while
-/// resolving and keeps none of them, so this walks the parents instead. An
-/// annotation's arguments get `null` too: tools read annotations with
-/// parsers of their own (`package:test` evaluates `@Timeout` itself), and
-/// those may not know the shorthand.
+/// Returns the context type of [node], or `null` if it has none. The
+/// analyzer does not store context types, so this walks up the parents of
+/// [node]. Arguments of annotations get `null` on purpose: some tools parse
+/// annotations themselves and do not support dot shorthands.
 DartType? contextTypeOf(Expression node) {
   final parent = node.parent;
   return switch (parent) {
@@ -285,13 +291,14 @@ DartType? contextTypeOf(Expression node) {
   };
 }
 
-/// What [parameter]'s declaration says once substituted. Type parameters the
-/// declaration mentions have to be pinned by something other than the
-/// argument: the receiver's type, for an instance member's class parameters
-/// (`styles.add(.plain)` on a `List<Style>`), or else the context of the
-/// [invocation], which then needs a context type equal to its own type and a
-/// declared return type mentioning each of them (`T same<T>(T value)` called
-/// as `Style f() => same(.plain)`).
+/// Returns the type of [parameter] in [invocation]. If the declared type of
+/// the parameter contains type parameters, they must be determined by
+/// something other than the argument: by the receiver, for the class type
+/// parameters of an instance member (`styles.add(.plain)` on a
+/// `List<Style>`), or by the context type of [invocation], which then has to
+/// be equal to the invocation's type and be mentioned by the declared return
+/// type (`T same<T>(T value)` called as `Style f() => same(.plain)`).
+/// Otherwise returns `null`.
 DartType? _parameterType(
   FormalParameterElement? parameter,
   Expression invocation,
@@ -323,7 +330,7 @@ DartType? _parameterType(
   return pinned ? parameter.type : null;
 }
 
-/// The type parameters [type] mentions.
+/// Returns the type parameters that [type] refers to.
 Set<TypeParameterElement> _typeParametersIn(DartType type) => switch (type) {
   TypeParameterType(:final element) => {element},
   InterfaceType(:final typeArguments) => {
@@ -341,9 +348,9 @@ Set<TypeParameterElement> _typeParametersIn(DartType type) => switch (type) {
   _ => const {},
 };
 
-/// The type a `return` in [body] has to produce, from the declared return
-/// type of the function the body belongs to; `null` for a lambda, whose
-/// return type is only inferred, and for a generator.
+/// Returns the type that a `return` in [body] has to produce, based on the
+/// declared return type of the enclosing function. Returns `null` for a
+/// lambda, whose return type is inferred, and for a generator.
 DartType? _returnedTypeOf(FunctionBody? body) {
   if (body == null || body.isGenerator) {
     return null;
@@ -360,8 +367,8 @@ DartType? _returnedTypeOf(FunctionBody? body) {
   return body.isAsynchronous ? _futureArgument(declared) : declared;
 }
 
-/// `T` for a `Future<T>` or `FutureOr<T>` [type], which an `async` body
-/// returns a `T` into; `null` otherwise.
+/// Returns `T` if [type] is `Future<T>` or `FutureOr<T>`, which is the type
+/// an `async` body returns. Otherwise returns `null`.
 DartType? _futureArgument(DartType type) => switch (type) {
   InterfaceType(:final typeArguments)
       when type.isDartAsyncFuture || type.isDartAsyncFutureOr =>
@@ -369,8 +376,8 @@ DartType? _futureArgument(DartType type) => switch (type) {
   _ => null,
 };
 
-/// The context type of the elements of [element], a collection element
-/// standing in for its parent literal's elements.
+/// Returns the context type of the elements of [element], which is an `if`
+/// or `for` element inside a collection literal.
 DartType? _collectionContextOf(CollectionElement element) =>
     switch (element.parent) {
       final ListLiteral list => _elementTypeOf(list, 0),
@@ -380,9 +387,10 @@ DartType? _collectionContextOf(CollectionElement element) =>
       _ => null,
     };
 
-/// Type argument [index] of [literal]'s type, when its own type arguments or
-/// its context fix it rather than its elements: `[Style.plain]` alone infers
-/// `List<Style>` from the element, which a shorthand could no longer do.
+/// Returns type argument [index] of [literal]'s type if it is determined by
+/// the literal's explicit type arguments or by its context type. Otherwise
+/// returns `null`: without a context, `[Style.plain]` infers `List<Style>`
+/// from its element, which would not be possible with a shorthand.
 DartType? _elementTypeOf(TypedLiteral literal, int index) {
   if (literal.typeArguments case final arguments?) {
     return arguments.arguments.elementAtOrNull(index)?.type;
@@ -410,7 +418,7 @@ DartType _nonNull(DartType type) => switch (type) {
   _ => type,
 };
 
-/// Rewrites the flagged expression into its dot shorthand.
+/// Replaces the reported expression with a dot shorthand.
 class ReplaceWithDotShorthand({required super.context})
     extends ResolvedCorrectionProducer {
   static const kind = FixKind(

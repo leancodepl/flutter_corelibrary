@@ -21,7 +21,7 @@ const _style = '''
 enum Style { plain, bold }
 ''';
 
-// One member of each kind the rule can report.
+// Declarations with one member of each kind that the rule can report.
 const _kinds = '''
 enum Style { plain, bold }
 class Key {
@@ -51,8 +51,8 @@ abstract class _PreferDotShorthandTestBase() extends AnalysisRuleTest {
     await super.tearDown();
   }
 
-  /// Asserts the `prefer_dot_shorthand` diagnostics marked in [content] and
-  /// that applying every offered fix turns the file into [fixed].
+  /// Asserts the `prefer_dot_shorthand` diagnostics marked in [content], and
+  /// that applying all offered fixes results in [fixed].
   Future<void> assertShorthands(String content, {required String fixed}) =>
       assertFixes(
         content,
