@@ -1213,6 +1213,78 @@ None.
 
 </details>
 
+<details>
+<summary><code>prefer_dot_shorthand</code></summary>
+
+### `prefer_dot_shorthand`
+
+**PREFER** a dot shorthand where the context type already names the type.
+
+Reports a static member, enum value or constructor spelled with its type name
+(`Alignment.center`, `int.parse(s)`, `Key(path, c)`) where the context type
+already names that type, so `.center`, `.parse(s)` or `.new(path, c)` would do.
+The context comes from an argument's parameter type, a typed variable, a
+declared return type, an assignment, the right operand of `==` or `!=`, a
+default value, the branches of `??`, `?:` and a switch expression, a constant
+pattern, and the elements of a collection literal whose type arguments or
+context fix the element type. Written type arguments go only when they equal
+the context's. Annotation arguments are exempt: tools read annotations with
+parsers of their own, and those may not know the shorthand.
+
+The `Replace with a dot shorthand` quick fix deletes the type name, or replaces
+it with `.new` for an unnamed constructor.
+
+**BAD:**
+
+```dart
+Widget build(BuildContext context) => Align(
+  alignment: Alignment.center,
+  child: Padding(padding: EdgeInsets.all(8)),
+);
+```
+
+**GOOD:**
+
+```dart
+Widget build(BuildContext context) => Align(
+  alignment: .center,
+  child: Padding(padding: .all(8)),
+);
+```
+
+#### Configuration
+
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^27.1.0
+    diagnostics:
+      prefer_dot_shorthand: true
+```
+
+The kinds of member it reports are configured via
+`LeanCodeLintConfig.preferDotShorthand`, each of them on by default:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeanCodeLintPlugin(
+  name: 'my_lints',
+  config: LeanCodeLintConfig(
+    preferDotShorthand: PreferDotShorthandConfig(
+      unnamedConstructors: true, // `.new(1)` for `Key(1)`
+      namedConstructors: true, // `.named(1)` for `Key.named(1)`
+      staticMembers: false, // `.parse(s)` for `int.parse(s)`
+      enumValues: true, // `.center` for `Alignment.center`
+    ),
+  ),
+);
+```
+
+</details>
+
 ## Disabling custom lint rules
 
 To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
