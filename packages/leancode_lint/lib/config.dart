@@ -46,14 +46,14 @@ class const BlocRelatedClassNamingConfig({
 /// default, 15, is SonarSource's and Biome's.
 class const CognitiveComplexityConfig({final int maximum = 15});
 
-/// Configuration for the `prefer_dot_shorthand` rule: which kinds of member
-/// spelled with their type name it reports where a dot shorthand would do.
+/// Configuration for the `prefer_dot_shorthand` rule: the kinds of member it
+/// reports, all of them by default.
 ///
-/// - [unnamedConstructors]: `Key(1)` where `.new(1)` would do
-/// - [namedConstructors]: `Key.named(1)` where `.named(1)` would do
-/// - [staticMembers]: static methods, getters and fields, `int.parse(s)` and
-///   `double.infinity` where `.parse(s)` and `.infinity` would do
-/// - [enumValues]: `Alignment.center` where `.center` would do
+/// - [unnamedConstructors]: `.new(1)` for `Key(1)`
+/// - [namedConstructors]: `.named(1)` for `Key.named(1)`
+/// - [staticMembers]: `.parse(s)` for `int.parse(s)`, `.infinity` for
+///   `double.infinity`
+/// - [enumValues]: `.center` for `Alignment.center`
 class const PreferDotShorthandConfig({
   final bool unnamedConstructors = true,
   final bool namedConstructors = true,

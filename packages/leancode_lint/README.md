@@ -1220,19 +1220,20 @@ None.
 
 **PREFER** a dot shorthand where the context type already names the type.
 
-Reports a static member, enum value or constructor spelled with its type name
-(`Alignment.center`, `int.parse(s)`, `Key(path, c)`) where the context type
-already names that type, so `.center`, `.parse(s)` or `.new(path, c)` would do.
-The context comes from an argument's parameter type, a typed variable, a
-declared return type, an assignment, the right operand of `==` or `!=`, a
-default value, the branches of `??`, `?:` and a switch expression, a constant
-pattern, and the elements of a collection literal whose type arguments or
-context fix the element type. Written type arguments go only when they equal
-the context's. Annotation arguments are exempt: tools read annotations with
-parsers of their own, and those may not know the shorthand.
+Reports `Alignment.center`, `int.parse(s)` or `Key(path, c)` where the context
+type is already `Alignment`, `int` or `Key`, so `.center`, `.parse(s)` or
+`.new(path, c)` would do. The context type comes from:
 
-The `Replace with a dot shorthand` quick fix deletes the type name, or replaces
-it with `.new` for an unnamed constructor.
+- an argument's parameter type, a default value, or a typed variable
+- a declared return type, or an assignment
+- the right operand of `==` or `!=`, or a constant pattern
+- the branches of `??`, `?:` and a switch expression
+- a collection literal with type arguments or a context of its own
+
+Type arguments stay unless they equal the context's. Annotation arguments are
+left alone, since tools read annotations with parsers of their own.
+
+The `Replace with a dot shorthand` quick fix rewrites the expression.
 
 **BAD:**
 
@@ -1264,8 +1265,8 @@ plugins:
       prefer_dot_shorthand: true
 ```
 
-The kinds of member it reports are configured via
-`LeanCodeLintConfig.preferDotShorthand`, each of them on by default:
+The kinds of member it reports are set via `LeanCodeLintConfig.preferDotShorthand`,
+all of them on by default:
 
 ```dart
 import 'package:leancode_lint/plugin.dart';
@@ -1274,10 +1275,10 @@ final plugin = LeanCodeLintPlugin(
   name: 'my_lints',
   config: LeanCodeLintConfig(
     preferDotShorthand: PreferDotShorthandConfig(
-      unnamedConstructors: true, // `.new(1)` for `Key(1)`
-      namedConstructors: true, // `.named(1)` for `Key.named(1)`
-      staticMembers: false, // `.parse(s)` for `int.parse(s)`
-      enumValues: true, // `.center` for `Alignment.center`
+      unnamedConstructors: true, // Key(1)
+      namedConstructors: true, // Key.named(1)
+      staticMembers: false, // int.parse(s), double.infinity
+      enumValues: true, // Alignment.center
     ),
   ),
 );

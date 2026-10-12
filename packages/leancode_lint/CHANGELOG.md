@@ -1,6 +1,6 @@
 # Unreleased
 
-- Add [`prefer_dot_shorthand`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_dot_shorthand), which reports a static member, enum value or constructor spelled with its type name where the context type already names that type, with a quick fix that rewrites it to a dot shorthand. It is disabled by default, and `LeanCodeLintConfig.preferDotShorthand` picks the kinds of member it reports.
+- Add [`prefer_dot_shorthand`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#prefer_dot_shorthand), which reports `Alignment.center`, `int.parse(s)` or `Key(1)` where the context type already names the type, with a quick fix. It is disabled by default, and `LeanCodeLintConfig.preferDotShorthand` picks the kinds of member it reports.
 - Add [`cognitive_complexity`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#cognitive_complexity), which reports functions whose cognitive complexity is over a configurable maximum (15 by default). It is disabled by default.
 - Require `analyzer: '>=13.1.0 <15.0.0'`
 - Fix [`use_design_system_item`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_design_system_item) not reporting forbidden items used via dot shorthands (e.g. `.new()`, `.fromARGB()`, `.staticMember`).

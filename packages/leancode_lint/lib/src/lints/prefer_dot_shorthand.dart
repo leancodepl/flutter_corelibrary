@@ -17,35 +17,32 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/config.dart';
 
-/// Flags a static member, enum value or constructor spelled with its type
-/// name where the context type already names that type, so a dot shorthand
-/// (`.center`, `.parse(s)`, `.new(path, c)`) would do.
+/// Flags `Alignment.center`, `int.parse(s)` or `Key(path, c)` where the
+/// context type is already `Alignment`, `int` or `Key`, so `.center`,
+/// `.parse(s)` or `.new(path, c)` would do.
 ///
-/// `LeanCodeLintConfig.preferDotShorthand` picks the kinds of member the
-/// rule reports: unnamed constructors, named constructors, static members
-/// (methods, getters and fields) and enum values, all of them by default.
+/// The analyzer keeps no context types, so the rule derives them from the
+/// expression's parent:
 ///
-/// The analyzer computes context types while resolving and keeps none of
-/// them, so the rule derives the context itself from where the expression
-/// sits: an argument (through the parameter's type), a typed variable's
-/// initializer, a `return` against a declared return type (`Future<T>` and
-/// `FutureOr<T>` unwrap for an `async` body), an assignment, the right
-/// operand of `==` or `!=`, a default value, the branches of `??`, `?:` and a
-/// switch expression, a constant pattern (through the matched value type),
-/// and the elements of a list, set or map literal whose type arguments or
-/// context fix the element type. `T?` and `FutureOr<T>` resolve to `T`.
+/// - an argument: the parameter's type, when its type parameters are pinned
+///   by the receiver (`styles.add(.center)` on a `List<Alignment>`) or by the
+///   invocation's own context rather than by the argument itself
+/// - a typed variable's initializer, a default value, an assignment
+/// - a `return` or `=>` against a declared return type; an `async` body
+///   unwraps `Future<T>` and `FutureOr<T>`
+/// - the right operand of `==` or `!=`, a constant pattern
+/// - the branches of `??`, `?:` and a switch expression, parentheses
+/// - a list, set or map literal whose type arguments or context fix the
+///   element type
 ///
-/// Written type arguments go only when they equal the context's
-/// (`List<int> f() => .filled(1, 0)`), and a parameter whose declared type
-/// mentions type parameters counts only when something other than the
-/// argument pins them: the receiver's type for an instance member
-/// (`styles.add(.center)` on a `List<Alignment>`), or the invocation's
-/// context when it equals the invocation's own type and the declared return
-/// type mentions them (`Style f() => same(.plain)`).
+/// `T?` and `FutureOr<T>` resolve to `T`. Type arguments stay unless they
+/// equal the context's. Annotation arguments are left alone: tools read
+/// annotations with parsers of their own (`package:test` evaluates
+/// `@Timeout(Duration(minutes: 1))` itself).
 ///
-/// Annotation arguments are exempt: tools read annotations with parsers of
-/// their own (`package:test` evaluates `@Timeout(Duration(minutes: 1))`
-/// itself), and those may not know the shorthand.
+/// `LeanCodeLintConfig.preferDotShorthand` picks the kinds of member to
+/// report: unnamed constructors, named constructors, static members and enum
+/// values, all of them by default.
 class PreferDotShorthand({required final PreferDotShorthandConfig config})
     extends AnalysisRule {
   this : super(name: code.lowerCaseName, description: code.problemMessage);
