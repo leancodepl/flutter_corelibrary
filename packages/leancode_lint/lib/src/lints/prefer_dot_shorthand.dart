@@ -4,10 +4,8 @@ import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
 import 'package:analyzer/error/error.dart';
@@ -249,17 +247,14 @@ DartType? contextTypeOf(Expression node) {
       _returnedTypeOf(parent),
     AssignmentExpression(:final rightHandSide, :final operator)
         when rightHandSide == node &&
-            (operator.type == TokenType.EQ ||
-                operator.type == TokenType.QUESTION_QUESTION_EQ) =>
+            (operator.type == .EQ || operator.type == .QUESTION_QUESTION_EQ) =>
       parent.writeType,
     BinaryExpression(:final rightOperand, :final operator)
         when rightOperand == node &&
-            (operator.type == TokenType.EQ_EQ ||
-                operator.type == TokenType.BANG_EQ) =>
+            (operator.type == .EQ_EQ || operator.type == .BANG_EQ) =>
       parent.leftOperand.staticType,
     BinaryExpression(:final rightOperand, :final operator)
-        when rightOperand == node &&
-            operator.type == TokenType.QUESTION_QUESTION =>
+        when rightOperand == node && operator.type == .QUESTION_QUESTION =>
       contextTypeOf(parent),
     ParenthesizedExpression() => contextTypeOf(parent),
     ConditionalExpression(:final thenExpression, :final elseExpression)
@@ -411,11 +406,10 @@ DartType? _elementTypeOf(TypedLiteral literal, int index) {
 }
 
 DartType _nonNull(DartType type) => switch (type) {
-  InterfaceType(nullabilitySuffix: NullabilitySuffix.question) =>
-    type.element.instantiate(
-      typeArguments: type.typeArguments,
-      nullabilitySuffix: NullabilitySuffix.none,
-    ),
+  InterfaceType(nullabilitySuffix: .question) => type.element.instantiate(
+    typeArguments: type.typeArguments,
+    nullabilitySuffix: .none,
+  ),
   _ => type,
 };
 
