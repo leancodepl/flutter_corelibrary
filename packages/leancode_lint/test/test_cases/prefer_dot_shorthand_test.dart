@@ -32,9 +32,9 @@ class Key {
 }
 ''';
 
-abstract class _PreferDotShorthandTestBase() extends AnalysisRuleTest {
-  PreferDotShorthandConfig get config;
-
+abstract class _PreferDotShorthandTestBase(
+  final PreferDotShorthandConfig config,
+) extends AnalysisRuleTest {
   @override
   void setUp() {
     rule = PreferDotShorthand(config: config);
@@ -64,8 +64,7 @@ abstract class _PreferDotShorthandTestBase() extends AnalysisRuleTest {
 
 @reflectiveTest
 class PreferDotShorthandTest() extends _PreferDotShorthandTestBase {
-  @override
-  PreferDotShorthandConfig get config => const .new();
+  this : super(const .new());
 
   Future<void> test_argument() async {
     await assertShorthands(
@@ -384,8 +383,7 @@ final c = Box(Style.plain);
 @reflectiveTest
 class PreferDotShorthandWithoutUnnamedConstructorsTest()
     extends _PreferDotShorthandTestBase {
-  @override
-  PreferDotShorthandConfig get config => const .new(unnamedConstructors: false);
+  this : super(const .new(unnamedConstructors: false));
 
   Future<void> test_reportsTheOtherKinds() async {
     await assertDiagnosticsInRanges('''
@@ -401,8 +399,7 @@ int e() => /*[3*/int.parse('1')/*3]*/;
 @reflectiveTest
 class PreferDotShorthandWithoutNamedConstructorsTest()
     extends _PreferDotShorthandTestBase {
-  @override
-  PreferDotShorthandConfig get config => const .new(namedConstructors: false);
+  this : super(const .new(namedConstructors: false));
 
   Future<void> test_reportsTheOtherKinds() async {
     await assertDiagnosticsInRanges('''
@@ -418,8 +415,7 @@ int e() => /*[3*/int.parse('1')/*3]*/;
 @reflectiveTest
 class PreferDotShorthandWithoutStaticMembersTest()
     extends _PreferDotShorthandTestBase {
-  @override
-  PreferDotShorthandConfig get config => const .new(staticMembers: false);
+  this : super(const .new(staticMembers: false));
 
   Future<void> test_reportsTheOtherKinds() async {
     await assertDiagnosticsInRanges('''
@@ -435,8 +431,7 @@ int e() => int.parse('1');
 @reflectiveTest
 class PreferDotShorthandWithoutEnumValuesTest()
     extends _PreferDotShorthandTestBase {
-  @override
-  PreferDotShorthandConfig get config => const .new(enumValues: false);
+  this : super(const .new(enumValues: false));
 
   Future<void> test_reportsTheOtherKinds() async {
     await assertDiagnosticsInRanges('''
