@@ -105,13 +105,14 @@ class _Visitor(
     if (context == null) {
       return;
     }
-    final namespace = namespaceOf(context, typeSystem);
-    if (namespace == null || namespace.element != qualified.type) {
+    final shorthandType = shorthandTypeOf(context, typeSystem);
+    if (shorthandType == null || shorthandType.element != qualified.type) {
       return;
     }
     // Explicit type arguments can only be removed when they are the same as
     // the context type's.
-    if (qualified.parameterized case final written? when written != namespace) {
+    if (qualified.parameterized case final written?
+        when written != shorthandType) {
       return;
     }
     rule.reportAtNode(node, arguments: [qualified.typeName, qualified.member]);
@@ -205,14 +206,14 @@ bool _isEnumValue(Element? element) => switch (element) {
 /// Returns the type that a dot shorthand in a context of type [type]
 /// resolves against: the type made non-nullable, with `FutureOr` unwrapped.
 /// Returns `null` if the result is not an interface type.
-InterfaceType? namespaceOf(DartType type, TypeSystem typeSystem) {
-  var namespace = typeSystem.promoteToNonNull(type);
-  while (namespace.isDartAsyncFutureOr) {
-    namespace = typeSystem.promoteToNonNull(
-      (namespace as InterfaceType).typeArguments.single,
+InterfaceType? shorthandTypeOf(DartType type, TypeSystem typeSystem) {
+  var shorthandType = typeSystem.promoteToNonNull(type);
+  while (shorthandType.isDartAsyncFutureOr) {
+    shorthandType = typeSystem.promoteToNonNull(
+      (shorthandType as InterfaceType).typeArguments.single,
     );
   }
-  return switch (namespace) {
+  return switch (shorthandType) {
     final InterfaceType interface => interface,
     _ => null,
   };
