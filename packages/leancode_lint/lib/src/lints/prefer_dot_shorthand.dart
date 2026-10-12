@@ -4,6 +4,7 @@ import 'package:analyzer/analysis_rule/analysis_rule.dart';
 import 'package:analyzer/analysis_rule/rule_context.dart';
 import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -245,16 +246,23 @@ DartType? contextTypeOf(Expression node) {
       _returnedTypeOf(parent.thisOrAncestorOfType<FunctionBody>()),
     ExpressionFunctionBody(:final expression) when expression == node =>
       _returnedTypeOf(parent),
-    AssignmentExpression(:final rightHandSide, :final operator)
-        when rightHandSide == node &&
-            (operator.type == .EQ || operator.type == .QUESTION_QUESTION_EQ) =>
+    AssignmentExpression(
+      :final rightHandSide,
+      operator: Token(type: .EQ || .QUESTION_QUESTION_EQ),
+    )
+        when rightHandSide == node =>
       parent.writeType,
-    BinaryExpression(:final rightOperand, :final operator)
-        when rightOperand == node &&
-            (operator.type == .EQ_EQ || operator.type == .BANG_EQ) =>
+    BinaryExpression(
+      :final rightOperand,
+      operator: Token(type: .EQ_EQ || .BANG_EQ),
+    )
+        when rightOperand == node =>
       parent.leftOperand.staticType,
-    BinaryExpression(:final rightOperand, :final operator)
-        when rightOperand == node && operator.type == .QUESTION_QUESTION =>
+    BinaryExpression(
+      :final rightOperand,
+      operator: Token(type: .QUESTION_QUESTION),
+    )
+        when rightOperand == node =>
       contextTypeOf(parent),
     ParenthesizedExpression() => contextTypeOf(parent),
     ConditionalExpression(:final thenExpression, :final elseExpression)
