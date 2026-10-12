@@ -122,7 +122,7 @@ enum MemberKind() {
   unnamedConstructor,
   namedConstructor,
   staticMember,
-  enumValue
+  enumValue,
 }
 
 /// A member reached through its type's name, `Alignment.center`,
