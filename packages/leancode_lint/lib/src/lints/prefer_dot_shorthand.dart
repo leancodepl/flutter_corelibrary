@@ -17,9 +17,10 @@ import 'package:analyzer_plugin/utilities/fixes/fixes.dart';
 import 'package:analyzer_plugin/utilities/range_factory.dart';
 import 'package:leancode_lint/config.dart';
 
-/// Flags `Alignment.center`, `int.parse(s)` or `Key(path, c)` where the
-/// context type is already `Alignment`, `int` or `Key`, so `.center`,
-/// `.parse(s)` or `.new(path, c)` would do.
+/// Reports a static member, enum value or constructor spelled with its type
+/// name where the context type already names that type, so a dot shorthand
+/// would do: `.center` for `Alignment.center`, `.parse(s)` for
+/// `int.parse(s)`, `.new(path, c)` for `Key(path, c)`.
 ///
 /// The analyzer keeps no context types, so the rule derives them from the
 /// expression's parent:
