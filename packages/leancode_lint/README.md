@@ -1213,6 +1213,90 @@ None.
 
 </details>
 
+<details>
+<summary><code>prefer_dot_shorthand</code></summary>
+
+### `prefer_dot_shorthand`
+
+**PREFER** dot shorthands over type names when the context type already
+determines the type.
+
+When an expression has a context type, for example the type of the parameter
+it is passed to or the declared return type of the function it is returned
+from, a dot shorthand resolves against that type. This rule reports a static
+member, an enum value, or a constructor that is written with its type name
+even though the context type is the same type, so the type name is redundant.
+
+The rule determines the context type from where the expression appears:
+
+- an argument, using the parameter's type
+- a variable initializer, a default value, or an assignment
+- a `return` statement or `=>` body, using the declared return type
+- the right operand of `==` or `!=`
+- a constant pattern
+- a branch of `??`, `?:`, or a switch expression
+- an element of a list, set, or map literal with explicit type arguments or a
+  context type
+
+Explicit type arguments are only removed when they are the same as the context
+type's. Arguments of annotations are not reported, because some tools (for
+example `package:test`) parse annotations themselves and do not support dot
+shorthands.
+
+The `Replace with a dot shorthand` quick fix removes the type name, or replaces
+it with `.new` for an unnamed constructor.
+
+**BAD:**
+
+```dart
+Widget build(BuildContext context) => Align(
+  alignment: Alignment.center,
+  child: Padding(padding: EdgeInsets.all(8)),
+);
+```
+
+**GOOD:**
+
+```dart
+Widget build(BuildContext context) => Align(
+  alignment: .center,
+  child: Padding(padding: .all(8)),
+);
+```
+
+#### Configuration
+
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^27.1.0
+    diagnostics:
+      prefer_dot_shorthand: true
+```
+
+The kinds of members that are reported can be configured via
+`LeanCodeLintConfig.preferDotShorthand`. All of them are enabled by default:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeanCodeLintPlugin(
+  name: 'my_lints',
+  config: LeanCodeLintConfig(
+    preferDotShorthand: PreferDotShorthandConfig(
+      unnamedConstructors: true, // Key(1)
+      namedConstructors: true, // Key.named(1)
+      staticMembers: false, // int.parse(s), double.infinity
+      enumValues: true, // Alignment.center
+    ),
+  ),
+);
+```
+
+</details>
+
 ## Disabling custom lint rules
 
 To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:
