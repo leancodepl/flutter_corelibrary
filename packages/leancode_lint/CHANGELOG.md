@@ -3,6 +3,7 @@
 - Add [`cognitive_complexity`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#cognitive_complexity), which reports functions whose cognitive complexity is over a configurable maximum (15 by default). It is disabled by default.
 - Require `analyzer: '>=13.1.0 <15.0.0'`
 - Fix [`use_design_system_item`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_design_system_item) not reporting forbidden items used via dot shorthands (e.g. `.new()`, `.fromARGB()`, `.staticMember`).
+- Fix [`use_design_system_item`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_design_system_item) reporting forbidden items twice when accessed through an import prefix (e.g. `m.Colors.red`).
 
 # 27.0.0
 
