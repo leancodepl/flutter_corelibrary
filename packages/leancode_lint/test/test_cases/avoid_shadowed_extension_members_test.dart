@@ -1,6 +1,6 @@
 /*
  * AI-Provenance:
- *   model: unknown
+ *   model: claude-fable-5-1
  *   harness: Claude Code
  */
 
