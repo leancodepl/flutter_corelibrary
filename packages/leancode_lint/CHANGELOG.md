@@ -1,5 +1,6 @@
 # Unreleased
 
+- Add [`avoid_shadowed_extension_members`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#avoid_shadowed_extension_members), which reports an extension member that an instance member of the extension's `on` type shadows: the instance member always wins, so the extension member is only reachable through an explicit extension override.
 - Add [`cognitive_complexity`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#cognitive_complexity), which reports functions whose cognitive complexity is over a configurable maximum (15 by default). It is disabled by default.
 - Require `analyzer: '>=13.1.0 <15.0.0'`
 - Fix [`use_design_system_item`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_design_system_item) not reporting forbidden items used via dot shorthands (e.g. `.new()`, `.fromARGB()`, `.staticMember`).
