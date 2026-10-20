@@ -441,6 +441,54 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_shadowed_extension_members</code></summary>
+
+### `avoid_shadowed_extension_members`
+
+**AVOID** declaring an extension member with the same name as an instance
+member of the extension's `on` type.
+
+When the receiver's static type has an instance member with the same base name
+as an extension member, the instance member always wins: the extension member
+is only reachable through an explicit extension override, so every call that
+looks like a call of it calls the instance member instead. Such a member is
+almost always a mistake, e.g. one written before the `on` type gained the member
+itself, and tests of it silently test the instance member.
+
+The `on` type's whole interface counts, inherited and abstract members
+included, and a getter, setter or method shadows an extension member of any of
+these kinds. Static members never shadow. For a type parameter, its bound's
+interface counts; a nullable `on` type has only `Object`'s members, and naming an
+extension member like one of those is already a compile-time error.
+
+**BAD:**
+
+```dart
+import 'package:intl/intl.dart';
+
+extension DateFormatParsing on DateFormat {
+  // `DateFormat.tryParse` wins: this is never called.
+  DateTime? tryParse(String? input) => input == null ? null : parse(input);
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:intl/intl.dart';
+
+extension DateFormatParsing on DateFormat {
+  DateTime? parseOrNull(String? input) => input == null ? null : parse(input);
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
