@@ -6,6 +6,7 @@
 - The "convert record into nominal type" assist now shapes the generated class after the lints enabled for the file, so that the result doesn't trip [`use_primary_constructors`](https://dart.dev/tools/linter-rules/use_primary_constructors), [`use_declaring_parameters`](https://dart.dev/tools/linter-rules/use_declaring_parameters), [`empty_container_bodies`](https://dart.dev/tools/linter-rules/empty_container_bodies) or [`unnecessary_type_name_in_constructor`](https://dart.dev/tools/linter-rules/unnecessary_type_name_in_constructor).
 - Require `analyzer: '>=13.1.0 <15.0.0'`
 - Fix [`use_design_system_item`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_design_system_item) not reporting forbidden items used via dot shorthands (e.g. `.new()`, `.fromARGB()`, `.staticMember`).
+- Fix [`use_design_system_item`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#use_design_system_item) reporting forbidden items twice when accessed through an import prefix (e.g. `m.Colors.red`).
 
 # 27.0.0
 
