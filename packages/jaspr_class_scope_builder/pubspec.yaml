@@ -19,7 +19,7 @@ environment:
 
 dependencies:
   analyzer: '>=12.1.0 <15.0.0'
-  build: ^4.0.0
+  build: ">=4.0.0 <6.0.0"
   crypto: ^3.0.0
   glob: ^2.1.0
 
