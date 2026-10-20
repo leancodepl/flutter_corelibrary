@@ -20,6 +20,9 @@ final class const LeanCodeLintConfig({
 
   /// Configuration for the `cognitive_complexity` rule.
   final CognitiveComplexityConfig cognitiveComplexity = const .new(),
+
+  /// Configuration for the `prefer_dot_shorthand` rule.
+  final PreferDotShorthandConfig preferDotShorthand = const .new(),
 });
 
 /// Configuration for the `bloc_related_class_naming` rule.
@@ -42,6 +45,23 @@ class const BlocRelatedClassNamingConfig({
 /// [maximum] is the highest cognitive complexity a function may have. The
 /// default, 15, is SonarSource's and Biome's.
 class const CognitiveComplexityConfig({final int maximum = 15});
+
+/// Configuration for the `prefer_dot_shorthand` rule.
+///
+/// Each flag enables reporting one kind of member. All of them are enabled by
+/// default.
+///
+/// - [unnamedConstructors]: `Key(1)`, which can be written as `.new(1)`
+/// - [namedConstructors]: `Key.named(1)`, which can be written as `.named(1)`
+/// - [staticMembers]: static methods, getters and fields, such as
+///   `int.parse(s)` and `double.infinity`
+/// - [enumValues]: `Alignment.center`, which can be written as `.center`
+class const PreferDotShorthandConfig({
+  final bool unnamedConstructors = true,
+  final bool namedConstructors = true,
+  final bool staticMembers = true,
+  final bool enumValues = true,
+});
 
 class const CatchParameterNamesConfig({
   final String exception = 'err',
