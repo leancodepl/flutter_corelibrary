@@ -16,6 +16,6 @@
 ///
 /// See also:
 /// - https://github.com/mogol/flutter_secure_storage
-library login_client_flutter;
+library;
 
 export 'src/flutter_secure_credentials_storage.dart';
