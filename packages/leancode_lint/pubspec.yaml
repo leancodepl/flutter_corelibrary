@@ -26,4 +26,4 @@ dependencies:
 dev_dependencies:
   analyzer_testing: '>=0.2.6 <4.0.0'
   test: ^1.31.2
-  test_reflective_loader: ^0.4.0
+  test_reflective_loader: ">=0.4.0 <0.7.0"
