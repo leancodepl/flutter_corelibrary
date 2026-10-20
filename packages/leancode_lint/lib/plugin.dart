@@ -10,6 +10,7 @@ import 'package:leancode_lint/src/lints/avoid_catch_error.dart';
 import 'package:leancode_lint/src/lints/avoid_conditional_hooks.dart';
 import 'package:leancode_lint/src/lints/avoid_context_read_in_build.dart';
 import 'package:leancode_lint/src/lints/avoid_direct_collection_equality_checks.dart';
+import 'package:leancode_lint/src/lints/avoid_shadowed_extension_members.dart';
 import 'package:leancode_lint/src/lints/avoid_single_child_in_multi_child_widget.dart';
 import 'package:leancode_lint/src/lints/bloc_related_class_naming.dart';
 import 'package:leancode_lint/src/lints/bloc_subclasses_naming.dart';
@@ -20,6 +21,7 @@ import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
 import 'package:leancode_lint/src/lints/missing_equatable_props.dart';
 import 'package:leancode_lint/src/lints/never_discard_build_context.dart';
 import 'package:leancode_lint/src/lints/prefer_abstract_final_class.dart';
+import 'package:leancode_lint/src/lints/prefer_dot_shorthand.dart';
 import 'package:leancode_lint/src/lints/prefer_equatable_mixin.dart';
 import 'package:leancode_lint/src/lints/prefix_widgets_returning_slivers.dart';
 import 'package:leancode_lint/src/lints/start_comments_with_space.dart';
@@ -65,9 +67,12 @@ final class LeanCodeLintPlugin({
         CatchParameterNames(config: config.catchParameterNames),
       )
       ..registerWarningRule(AvoidCatchError())
+      ..registerWarningRule(AvoidShadowedExtensionMembers())
       ..registerLintRule(
         CognitiveComplexity(config: config.cognitiveComplexity),
       )
+      ..registerLintRule(PreferDotShorthand(config: config.preferDotShorthand))
+      ..registerFixForRule(PreferDotShorthand.code, ReplaceWithDotShorthand.new)
       ..registerWarningRule(AvoidBuildContextInBlocs())
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(AvoidDirectCollectionEqualityChecks())

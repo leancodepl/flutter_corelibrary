@@ -441,6 +441,54 @@ None.
 </details>
 
 <details>
+<summary><code>avoid_shadowed_extension_members</code></summary>
+
+### `avoid_shadowed_extension_members`
+
+**AVOID** declaring an extension member with the same name as an instance
+member of the extension's `on` type.
+
+When the receiver's static type has an instance member with the same base name
+as an extension member, the instance member always wins: the extension member
+is only reachable through an explicit extension override, so every call that
+looks like a call of it calls the instance member instead. Such a member is
+almost always a mistake, e.g. one written before the `on` type gained the member
+itself, and tests of it silently test the instance member.
+
+The `on` type's whole interface counts, inherited and abstract members
+included, and a getter, setter or method shadows an extension member of any of
+these kinds. Static members never shadow. For a type parameter, its bound's
+interface counts; a nullable `on` type has only `Object`'s members, and naming an
+extension member like one of those is already a compile-time error.
+
+**BAD:**
+
+```dart
+import 'package:intl/intl.dart';
+
+extension DateFormatParsing on DateFormat {
+  // `DateFormat.tryParse` wins: this is never called.
+  DateTime? tryParse(String? input) => input == null ? null : parse(input);
+}
+```
+
+**GOOD:**
+
+```dart
+import 'package:intl/intl.dart';
+
+extension DateFormatParsing on DateFormat {
+  DateTime? parseOrNull(String? input) => input == null ? null : parse(input);
+}
+```
+
+#### Configuration
+
+None.
+
+</details>
+
+<details>
 <summary><code>bloc_related_class_naming</code></summary>
 
 ### `bloc_related_class_naming`
@@ -1210,6 +1258,90 @@ abstract final class MyConstants {
 #### Configuration
 
 None.
+
+</details>
+
+<details>
+<summary><code>prefer_dot_shorthand</code></summary>
+
+### `prefer_dot_shorthand`
+
+**PREFER** dot shorthands over type names when the context type already
+determines the type.
+
+When an expression has a context type, for example the type of the parameter
+it is passed to or the declared return type of the function it is returned
+from, a dot shorthand resolves against that type. This rule reports a static
+member, an enum value, or a constructor that is written with its type name
+even though the context type is the same type, so the type name is redundant.
+
+The rule determines the context type from where the expression appears:
+
+- an argument, using the parameter's type
+- a variable initializer, a default value, or an assignment
+- a `return` statement or `=>` body, using the declared return type
+- the right operand of `==` or `!=`
+- a constant pattern
+- a branch of `??`, `?:`, or a switch expression
+- an element of a list, set, or map literal with explicit type arguments or a
+  context type
+
+Explicit type arguments are only removed when they are the same as the context
+type's. Arguments of annotations are not reported, because some tools (for
+example `package:test`) parse annotations themselves and do not support dot
+shorthands.
+
+The `Replace with a dot shorthand` quick fix removes the type name, or replaces
+it with `.new` for an unnamed constructor.
+
+**BAD:**
+
+```dart
+Widget build(BuildContext context) => Align(
+  alignment: Alignment.center,
+  child: Padding(padding: EdgeInsets.all(8)),
+);
+```
+
+**GOOD:**
+
+```dart
+Widget build(BuildContext context) => Align(
+  alignment: .center,
+  child: Padding(padding: .all(8)),
+);
+```
+
+#### Configuration
+
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^27.1.0
+    diagnostics:
+      prefer_dot_shorthand: true
+```
+
+The kinds of members that are reported can be configured via
+`LeanCodeLintConfig.preferDotShorthand`. All of them are enabled by default:
+
+```dart
+import 'package:leancode_lint/plugin.dart';
+
+final plugin = LeanCodeLintPlugin(
+  name: 'my_lints',
+  config: LeanCodeLintConfig(
+    preferDotShorthand: PreferDotShorthandConfig(
+      unnamedConstructors: true, // Key(1)
+      namedConstructors: true, // Key.named(1)
+      staticMembers: false, // int.parse(s), double.infinity
+      enumValues: true, // Alignment.center
+    ),
+  ),
+);
+```
 
 </details>
 
