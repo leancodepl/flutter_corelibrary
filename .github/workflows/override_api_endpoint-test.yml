@@ -3,7 +3,6 @@ name: override_api_endpoint test
 on:
   push:
     branches: [master]
-    tags-ignore: ['override_api_endpoint-v*']
     paths:
       - 'packages/override_api_endpoint/**'
       - '.github/workflows/override_api_endpoint-test.yml'
@@ -31,10 +30,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7.0.1
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.23.0
         with:
           channel: ${{ matrix.channel }}
           flutter-version: ${{ matrix.version }}
@@ -65,10 +64,10 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@v7.0.1
 
       - name: Score with pana
         continue-on-error: true
-        uses: leancodepl/mobile-tools/.github/actions/pana-score@e9f138c252f8e2254c88273367958fcc6bb39cad # pana-score-v1.3
+        uses: leancodepl/mobile-tools/.github/actions/pana-score@pana-score-v1.3
         with:
           path: packages/override_api_endpoint

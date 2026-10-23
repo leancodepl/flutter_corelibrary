@@ -1,0 +1,39 @@
+# AI-Provenance:
+#   model: claude-opus-5-5
+#   harness: Claude Code
+
+name: lockfile
+
+# Fails when .github/workflows/actions.lock is missing an action that a
+# workflow uses, or when a locked commit no longer matches its tag upstream.
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/**'
+
+jobs:
+  verify:
+    name: Verify workflow lockfile
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install gh actions-lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh extension install github/gh-actions-lock --pin v0.3.0
+
+      - name: Verify lockfile
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh actions-lock --verify

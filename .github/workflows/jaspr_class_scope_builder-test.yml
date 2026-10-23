@@ -3,7 +3,6 @@ name: jaspr_class_scope_builder test
 on:
   push:
     branches: [master]
-    tags-ignore: ['jaspr_class_scope_builder-v*']
     paths:
       - 'packages/jaspr_class_scope_builder/**'
       - '.github/workflows/jaspr_class_scope_builder-test.yml'
@@ -30,10 +29,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
 
       - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
+        uses: dart-lang/setup-dart@v1.8.1
         with:
           sdk: ${{ matrix.dart_release }}
 
@@ -41,7 +40,7 @@ jobs:
         run: dart --version
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         with:
           path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
@@ -73,10 +72,10 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@v7.0.1
 
       - name: Score with pana
         continue-on-error: true
-        uses: leancodepl/mobile-tools/.github/actions/pana-score@e9f138c252f8e2254c88273367958fcc6bb39cad # pana-score-v1.3
+        uses: leancodepl/mobile-tools/.github/actions/pana-score@pana-score-v1.3
         with:
           path: packages/jaspr_class_scope_builder
