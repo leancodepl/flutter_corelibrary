@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
       
       - name: Label Pull Request
-        uses: actions/labeler@v5
+        uses: actions/labeler@v7.0.0

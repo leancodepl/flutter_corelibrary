@@ -149,3 +149,12 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: widen
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    groups:
+      all_dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "weekly"
