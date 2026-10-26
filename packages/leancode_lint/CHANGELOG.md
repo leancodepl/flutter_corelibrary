@@ -1,3 +1,10 @@
+# Unreleased
+
+- Add new opt-in accessibility lints. They are disabled by default.
+  - [`localized_semantics_label`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#localized_semantics_label), which reports a string literal with hardcoded text passed as screen reader text (`semanticsLabel`, `semanticLabel`, and the text arguments of `Semantics`).
+  - [`icon_only_button_requires_label`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#icon_only_button_requires_label), which reports an `Icon` without a `semanticLabel` that is the only content of an `IconButton` or `FloatingActionButton` without a `tooltip`, or of an `InkWell`, `InkResponse` or `GestureDetector`.
+  - [`on_tap_hint_requires_hint`](https://github.com/leancodepl/flutter_corelibrary/tree/master/packages/leancode_lint#on_tap_hint_requires_hint), which reports `Semantics` with `onTapHint` or `onLongPressHint` but no `hint`. iOS ignores hint overrides, so VoiceOver users would get no hint.
+
 # 28.0.0
 
 - Add new custom lints:

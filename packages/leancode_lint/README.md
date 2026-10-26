@@ -1345,6 +1345,151 @@ final plugin = LeanCodeLintPlugin(
 
 </details>
 
+<details>
+<summary><code>localized_semantics_label</code></summary>
+
+### `localized_semantics_label`
+
+**DO** use localized strings for text read by screen readers.
+
+A screen reader reads a hardcoded label exactly as it is written, in a single
+language. This rule reports a string literal with text in it that is passed as:
+
+- a `semanticsLabel` or `semanticLabel` argument of any widget or function,
+  which covers `Text`, `Icon`, `Image` and design system widgets
+- `label`, `value`, `increasedValue`, `decreasedValue`, `hint`, `tooltip`,
+  `onTapHint` or `onLongPressHint` of `Semantics`, `SemanticsProperties`,
+  `SemanticsHintOverrides` or `CustomSemanticsAction`
+
+A literal is only reported when its own text contains a letter, so
+`'${l10n.price}: $amount'` and `''` are fine. Both branches of `?:` and `??` are
+checked.
+
+**BAD:**
+
+```dart
+Text('/', semanticsLabel: 'BreadCrumbSeparator');
+Semantics(label: 'Cart', child: cart);
+```
+
+**GOOD:**
+
+```dart
+Text('/', semanticsLabel: l10n.breadcrumbSeparator);
+Semantics(label: l10n.cart, child: cart);
+```
+
+#### Configuration
+
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^28.1.0
+    diagnostics:
+      localized_semantics_label: true
+```
+
+</details>
+
+<details>
+<summary><code>icon_only_button_requires_label</code></summary>
+
+### `icon_only_button_requires_label`
+
+**DO** give icon-only buttons a label for screen readers.
+
+An `Icon` has no semantics of its own unless it has a `semanticLabel`, so a
+button that only contains an icon is announced just as "button", or not at
+all. This rule reports an `Icon` without a `semanticLabel` that is:
+
+- the `icon` or `selectedIcon` of an `IconButton` without a `tooltip`
+- the `child` of a `FloatingActionButton` without a `tooltip`
+- the `child` of an `InkWell`, `InkResponse` or `GestureDetector` that doesn't
+  set `excludeFromSemantics: true`
+
+It isn't reported when the tappable widget is wrapped, in the same widget
+expression, in a `Tooltip` or a `Semantics` with a `label`.
+
+**BAD:**
+
+```dart
+IconButton(onPressed: close, icon: Icon(Icons.close));
+GestureDetector(onTap: close, child: Icon(Icons.close));
+```
+
+**GOOD:**
+
+```dart
+IconButton(onPressed: close, tooltip: l10n.close, icon: Icon(Icons.close));
+GestureDetector(
+  onTap: close,
+  child: Icon(Icons.close, semanticLabel: l10n.close),
+);
+```
+
+#### Configuration
+
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^28.1.0
+    diagnostics:
+      icon_only_button_requires_label: true
+```
+
+</details>
+
+<details>
+<summary><code>on_tap_hint_requires_hint</code></summary>
+
+### `on_tap_hint_requires_hint`
+
+**DO** set `hint` together with `onTapHint` or `onLongPressHint`.
+
+`onTapHint` and `onLongPressHint` (and `SemanticsProperties.hintOverrides`)
+only change the hint Android reads for an action ("double tap to ..."). iOS
+always ignores them, so without a `hint` VoiceOver users get no hint at all.
+This rule reports them on a `Semantics` or `SemanticsProperties` without a
+`hint`.
+
+Android reads `hint` as well, so if the two would repeat each other there, set
+`hint` only on iOS.
+
+**BAD:**
+
+```dart
+Semantics(onTapHint: l10n.openCart, onTap: openCart, child: cart);
+```
+
+**GOOD:**
+
+```dart
+Semantics(
+  hint: Platform.isIOS ? l10n.openCart : null,
+  onTapHint: l10n.openCart,
+  onTap: openCart,
+  child: cart,
+);
+```
+
+#### Configuration
+
+Disabled by default. Enable it in `analysis_options.yaml`:
+
+```yaml
+plugins:
+  leancode_lint:
+    version: ^28.1.0
+    diagnostics:
+      on_tap_hint_requires_hint: true
+```
+
+</details>
+
 ## Disabling custom lint rules
 
 To disable a particular custom lint rule, set the rule to false in `analysis_options.yaml`. For example, to disable `prefix_widgets_returning_slivers`:

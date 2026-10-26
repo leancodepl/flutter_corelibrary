@@ -18,8 +18,11 @@ import 'package:leancode_lint/src/lints/catch_parameter_names.dart';
 import 'package:leancode_lint/src/lints/cognitive_complexity.dart';
 import 'package:leancode_lint/src/lints/constructor_parameters_and_fields_should_have_the_same_order.dart';
 import 'package:leancode_lint/src/lints/hook_widget_does_not_use_hooks.dart';
+import 'package:leancode_lint/src/lints/icon_only_button_requires_label.dart';
+import 'package:leancode_lint/src/lints/localized_semantics_label.dart';
 import 'package:leancode_lint/src/lints/missing_equatable_props.dart';
 import 'package:leancode_lint/src/lints/never_discard_build_context.dart';
+import 'package:leancode_lint/src/lints/on_tap_hint_requires_hint.dart';
 import 'package:leancode_lint/src/lints/prefer_abstract_final_class.dart';
 import 'package:leancode_lint/src/lints/prefer_dot_shorthand.dart';
 import 'package:leancode_lint/src/lints/prefer_equatable_mixin.dart';
@@ -73,6 +76,9 @@ final class LeanCodeLintPlugin({
       )
       ..registerLintRule(PreferDotShorthand(config: config.preferDotShorthand))
       ..registerFixForRule(PreferDotShorthand.code, ReplaceWithDotShorthand.new)
+      ..registerLintRule(LocalizedSemanticsLabel())
+      ..registerLintRule(IconOnlyButtonRequiresLabel())
+      ..registerLintRule(OnTapHintRequiresHint())
       ..registerWarningRule(AvoidBuildContextInBlocs())
       ..registerWarningRule(AvoidConditionalHooks())
       ..registerWarningRule(AvoidDirectCollectionEqualityChecks())

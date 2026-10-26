@@ -402,3 +402,13 @@ abstract class ChangeWidgetNameFix({
     );
   }
 }
+
+/// Returns the value passed to the named argument [name] of [arguments], or
+/// `null` when the argument is missing or is the `null` literal.
+Expression? namedArgumentValue(ArgumentList arguments, String name) =>
+    switch (arguments.arguments.whereType<NamedArgument>().firstWhereOrNull(
+      (argument) => argument.name.lexeme == name,
+    )) {
+      NamedArgument(argumentExpression: NullLiteral()) || null => null,
+      NamedArgument(:final argumentExpression) => argumentExpression,
+    };
