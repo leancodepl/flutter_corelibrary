@@ -52,6 +52,15 @@ export 'src/painting/text_span.dart';
       _changeNotifierMock,
     );
 
+    newFile(
+      join(flutterRootPath, 'lib', 'src', 'material', 'icon_button.dart'),
+      _iconButtonMock,
+    );
+
+    appendFile(join(flutterRootPath, 'lib', 'material.dart'), '''
+export 'src/material/icon_button.dart';
+''');
+
     appendFile(join(flutterRootPath, 'lib', 'foundation.dart'), '''
 export 'src/foundation/change_notifier.dart';
 ''');
@@ -99,6 +108,87 @@ class Wrap extends Widget {
 class RichText extends Widget {
   const RichText({super.key, required this.text});
   final InlineSpan text;
+}
+
+class Semantics extends Widget {
+  const Semantics({
+    super.key,
+    this.child,
+    bool? button,
+    String? label,
+    String? value,
+    String? increasedValue,
+    String? decreasedValue,
+    String? hint,
+    String? tooltip,
+    String? onTapHint,
+    String? onLongPressHint,
+    VoidCallback? onTap,
+  });
+  const Semantics.fromProperties({
+    super.key,
+    this.child,
+    required SemanticsProperties properties,
+  });
+  final Widget? child;
+}
+
+class SemanticsProperties {
+  const SemanticsProperties({
+    String? label,
+    String? value,
+    String? hint,
+    String? tooltip,
+    SemanticsHintOverrides? hintOverrides,
+  });
+}
+
+class SemanticsHintOverrides {
+  const SemanticsHintOverrides({String? onTapHint, String? onLongPressHint});
+}
+
+class CustomSemanticsAction {
+  const CustomSemanticsAction({required String label});
+}
+''';
+
+const _iconButtonMock = '''
+import 'package:flutter/widgets.dart';
+
+class IconButton extends StatelessWidget {
+  const IconButton({
+    super.key,
+    required VoidCallback? onPressed,
+    String? tooltip,
+    Widget? selectedIcon,
+    required Widget icon,
+  });
+  const IconButton.filled({
+    super.key,
+    required VoidCallback? onPressed,
+    String? tooltip,
+    required Widget icon,
+  });
+}
+
+class FloatingActionButton extends StatelessWidget {
+  const FloatingActionButton({
+    super.key,
+    Widget? child,
+    String? tooltip,
+    required VoidCallback? onPressed,
+  });
+  const FloatingActionButton.extended({
+    super.key,
+    String? tooltip,
+    required VoidCallback? onPressed,
+    Widget? icon,
+    required Widget label,
+  });
+}
+
+class Tooltip extends StatelessWidget {
+  const Tooltip({super.key, String? message, Widget? child});
 }
 ''';
 
